@@ -1,0 +1,3546 @@
+####################################
+# MERCHANTS AND TRADERS MOD
+# Political & Ruler Interaction Events
+####################################
+#
+# Event namespace: mt_politics
+#
+# 0001-0004: Ruler Demands
+# 0005-0008: Court Politics
+# 0009-0012: Diplomatic Events
+# 0013-0016: Conflicts
+# 0017-0020: Influence & Power
+# 0021-0023: Succession Events
+# 0024-0025: Additional Political Events
+#
+####################################
+
+namespace = mt_politics
+
+####################################
+# RULER DEMANDS (0001-0004)
+####################################
+
+# 0001: Ruler demands "loan" (shakedown)
+mt_politics.0001 = {
+	type = character_event
+	title = mt_politics.0001.t
+	desc = mt_politics.0001.desc
+	theme = stewardship
+
+	left_portrait = {
+		character = root
+		animation = worry
+	}
+
+	right_portrait = {
+		character = scope:demanding_ruler
+		animation = personality_bold
+	}
+
+	trigger = {
+		OR = {
+			has_trait = wandering_merchant
+			has_trait = trade_post_owner
+			has_trait = trading_company_head
+			has_trait = merchant_prince
+		}
+		gold >= 100
+		exists = liege
+		liege = {
+			gold < 200
+			NOT = { has_relation_friend = root }
+		}
+	}
+
+	mean_time_to_happen = {
+		months = 48
+
+		modifier = {
+			factor = 0.6
+			gold >= 500
+		}
+
+		modifier = {
+			factor = 0.7
+			liege = { has_trait = greedy }
+		}
+
+		modifier = {
+			factor = 1.5
+			liege = { has_trait = just }
+		}
+	}
+
+	immediate = {
+		liege = { save_scope_as = demanding_ruler }
+	}
+
+	# Pay the "loan"
+	option = {
+		name = mt_politics.0001.a
+
+		remove_short_term_gold = 150
+
+		scope:demanding_ruler = {
+			add_opinion = {
+				target = root
+				modifier = grateful_opinion
+				opinion = 20
+			}
+		}
+
+		add_prestige = -50
+		add_stress = 15
+
+		ai_chance = {
+			base = 50
+
+			modifier = {
+				add = 30
+				has_trait = craven
+			}
+
+			modifier = {
+				add = 20
+				gold >= 300
+			}
+		}
+	}
+
+	# Refuse and risk consequences
+	option = {
+		name = mt_politics.0001.b
+
+		trigger = {
+			gold >= 200
+		}
+
+		scope:demanding_ruler = {
+			add_opinion = {
+				target = root
+				modifier = refused_request_opinion
+				opinion = -40
+			}
+		}
+
+		add_prestige = 100
+		add_stress = 30
+
+		# Risk of arrest or confiscation
+		random = {
+			chance = 40
+			trigger_event = {
+				id = mt_politics.0024
+				days = { 30 90 }
+			}
+		}
+
+		ai_chance = {
+			base = 25
+
+			modifier = {
+				add = 40
+				has_trait = brave
+			}
+
+			modifier = {
+				add = 30
+				has_trait = arrogant
+			}
+
+			modifier = {
+				add = -20
+				gold < 500
+			}
+		}
+	}
+
+	# Negotiate a smaller amount
+	option = {
+		name = mt_politics.0001.c
+
+		trigger = {
+			diplomacy >= 12
+		}
+
+		remove_short_term_gold = 75
+
+		scope:demanding_ruler = {
+			add_opinion = {
+				target = root
+				modifier = pleased_opinion
+				opinion = 10
+			}
+		}
+
+		add_diplomacy_lifestyle_xp = 50
+		add_stress = -10
+
+		ai_chance = {
+			base = 60
+
+			modifier = {
+				add = 30
+				diplomacy >= 14
+			}
+
+			modifier = {
+				add = 20
+				has_trait = diplomat
+			}
+		}
+	}
+}
+
+# 0002: Ruler wants you to finance war
+mt_politics.0002 = {
+	type = character_event
+	title = mt_politics.0002.t
+	desc = mt_politics.0002.desc
+	theme = martial
+
+	left_portrait = {
+		character = root
+		animation = personality_rational
+	}
+
+	right_portrait = {
+		character = scope:war_ruler
+		animation = marshal
+	}
+
+	trigger = {
+		OR = {
+			has_trait = trade_post_owner
+			has_trait = trading_company_head
+			has_trait = merchant_prince
+		}
+		gold >= 200
+		exists = liege
+		liege = {
+			is_at_war = yes
+			gold < 300
+		}
+	}
+
+	mean_time_to_happen = {
+		months = 60
+
+		modifier = {
+			factor = 0.5
+			liege = {
+				any_character_war = {
+					is_defender = liege
+				}
+			}
+		}
+	}
+
+	immediate = {
+		liege = { save_scope_as = war_ruler }
+	}
+
+	# Fund the war effort generously
+	option = {
+		name = mt_politics.0002.a
+
+		remove_short_term_gold = 300
+
+		scope:war_ruler = {
+			add_gold = 300
+			add_opinion = {
+				target = root
+				modifier = grateful_opinion
+				opinion = 40
+			}
+		}
+
+		add_prestige = 150
+
+		# May gain council position if war succeeds
+		random = {
+			chance = 30
+			set_variable = {
+				name = mt_war_supporter
+				value = yes
+				days = 730
+			}
+		}
+
+		ai_chance = {
+			base = 40
+
+			modifier = {
+				add = 30
+				gold >= 800
+			}
+
+			modifier = {
+				add = 20
+				has_trait = ambitious
+			}
+		}
+	}
+
+	# Provide modest support
+	option = {
+		name = mt_politics.0002.b
+
+		remove_short_term_gold = 150
+
+		scope:war_ruler = {
+			add_gold = 150
+			add_opinion = {
+				target = root
+				modifier = pleased_opinion
+				opinion = 15
+			}
+		}
+
+		add_prestige = 50
+
+		ai_chance = {
+			base = 50
+		}
+	}
+
+	# Refuse - stay neutral
+	option = {
+		name = mt_politics.0002.c
+
+		scope:war_ruler = {
+			add_opinion = {
+				target = root
+				modifier = disappointed_opinion
+				opinion = -20
+			}
+		}
+
+		add_stress = 20
+
+		# Preserve your wealth
+		add_gold = 50
+
+		ai_chance = {
+			base = 25
+
+			modifier = {
+				add = 30
+				gold < 400
+			}
+
+			modifier = {
+				add = 20
+				has_trait = greedy
+			}
+		}
+	}
+}
+
+# 0003: Ruler seizing merchant assets
+mt_politics.0003 = {
+	type = character_event
+	title = mt_politics.0003.t
+	desc = mt_politics.0003.desc
+	theme = intrigue
+
+	left_portrait = {
+		character = root
+		animation = shock
+	}
+
+	right_portrait = {
+		character = scope:seizing_ruler
+		animation = personality_bold
+	}
+
+	trigger = {
+		OR = {
+			has_trait = wandering_merchant
+			has_trait = trade_post_owner
+			has_trait = trading_company_head
+			has_trait = merchant_prince
+		}
+		gold >= 150
+		exists = liege
+		liege = {
+			gold < 100
+			OR = {
+				has_trait = greedy
+				has_trait = ambitious
+				is_at_war = yes
+			}
+		}
+	}
+
+	mean_time_to_happen = {
+		months = 72
+
+		modifier = {
+			factor = 0.5
+			liege = { has_trait = arbitrary }
+		}
+
+		modifier = {
+			factor = 2.0
+			liege = { has_trait = just }
+		}
+	}
+
+	immediate = {
+		liege = { save_scope_as = seizing_ruler }
+	}
+
+	# Accept the seizure quietly
+	option = {
+		name = mt_politics.0003.a
+
+		remove_short_term_gold = 200
+		add_prestige = -100
+		add_stress = 40
+
+		# At least you stay safe
+		scope:seizing_ruler = {
+			add_opinion = {
+				target = root
+				modifier = compliant_opinion
+				opinion = 10
+			}
+		}
+
+		ai_chance = {
+			base = 30
+
+			modifier = {
+				add = 40
+				has_trait = craven
+			}
+		}
+	}
+
+	# Organize resistance with other merchants
+	option = {
+		name = mt_politics.0003.b
+
+		trigger = {
+			intrigue >= 12
+			gold >= 300
+		}
+
+		remove_short_term_gold = 150
+
+		scope:seizing_ruler = {
+			add_opinion = {
+				target = root
+				modifier = resisted_opinion
+				opinion = -30
+			}
+		}
+
+		add_prestige = 150
+
+		# Resistance may succeed
+		random = {
+			chance = 40
+			add_gold = 200
+			trigger_event = {
+				id = mt_politics.0018
+				days = 90
+			}
+		}
+
+		random = {
+			chance = 60
+			add_stress = 30
+			remove_short_term_gold = 100
+		}
+
+		ai_chance = {
+			base = 40
+
+			modifier = {
+				add = 30
+				has_trait = brave
+			}
+
+			modifier = {
+				add = 20
+				intrigue >= 14
+			}
+		}
+	}
+
+	# Flee to another realm
+	option = {
+		name = mt_politics.0003.c
+
+		trigger = {
+			any_neighboring_realm_same_rank_owner = {
+				NOT = { this = scope:seizing_ruler }
+			}
+		}
+
+		remove_short_term_gold = 100
+		add_prestige = -50
+
+		# Move to new realm
+		random_neighboring_realm_same_rank_owner = {
+			limit = {
+				NOT = { this = scope:seizing_ruler }
+			}
+			root = {
+				set_liege = prev
+			}
+		}
+
+		add_stress = -20
+
+		ai_chance = {
+			base = 30
+
+			modifier = {
+				add = 30
+				has_trait = ambitious
+			}
+		}
+	}
+}
+
+# 0004: Ruler offers tax exemption for loyalty
+mt_politics.0004 = {
+	type = character_event
+	title = mt_politics.0004.t
+	desc = mt_politics.0004.desc
+	theme = diplomacy
+
+	left_portrait = {
+		character = root
+		animation = personality_content
+	}
+
+	right_portrait = {
+		character = scope:offering_ruler
+		animation = personality_honorable
+	}
+
+	trigger = {
+		OR = {
+			has_trait = trade_post_owner
+			has_trait = trading_company_head
+			has_trait = merchant_prince
+		}
+		gold >= 300
+		exists = liege
+		liege = {
+			gold >= 200
+			opinion = {
+				target = root
+				value >= 30
+			}
+		}
+	}
+
+	mean_time_to_happen = {
+		months = 60
+
+		modifier = {
+			factor = 0.7
+			liege = {
+				opinion = {
+					target = root
+					value >= 50
+				}
+			}
+		}
+	}
+
+	immediate = {
+		liege = { save_scope_as = offering_ruler }
+	}
+
+	# Pledge fealty and accept exemption
+	option = {
+		name = mt_politics.0004.a
+
+		scope:offering_ruler = {
+			add_opinion = {
+				target = root
+				modifier = loyal_opinion
+				opinion = 30
+			}
+		}
+
+		add_character_modifier = {
+			modifier = mt_tax_exempt
+			years = 20
+		}
+
+		add_prestige = 100
+		add_gold = 100
+
+		ai_chance = {
+			base = 60
+
+			modifier = {
+				add = 20
+				has_trait = content
+			}
+		}
+	}
+
+	# Stay independent
+	option = {
+		name = mt_politics.0004.b
+
+		add_prestige = 200
+		add_stress = 20
+
+		scope:offering_ruler = {
+			add_opinion = {
+				target = root
+				modifier = disappointed_opinion
+				opinion = -15
+			}
+		}
+
+		# Maintain your freedom
+		add_character_modifier = {
+			modifier = mt_independent_merchant
+			years = 10
+		}
+
+		ai_chance = {
+			base = 40
+
+			modifier = {
+				add = 30
+				has_trait = ambitious
+			}
+
+			modifier = {
+				add = 20
+				gold >= 800
+			}
+		}
+	}
+}
+
+####################################
+# COURT POLITICS (0005-0008)
+####################################
+
+# 0005: Invited to royal court
+mt_politics.0005 = {
+	type = character_event
+	title = mt_politics.0005.t
+	desc = mt_politics.0005.desc
+	theme = diplomacy
+
+	left_portrait = {
+		character = root
+		animation = personality_honorable
+	}
+
+	right_portrait = {
+		character = scope:royal_host
+		animation = personality_bold
+	}
+
+	trigger = {
+		OR = {
+			has_trait = trading_company_head
+			has_trait = merchant_prince
+		}
+		gold >= 500
+		exists = liege
+		liege = {
+			is_ruler = yes
+			tier >= tier_duchy
+		}
+		NOT = { has_character_flag = attended_royal_court }
+	}
+
+	mean_time_to_happen = {
+		months = 36
+
+		modifier = {
+			factor = 0.6
+			liege = {
+				opinion = {
+					target = root
+					value >= 40
+				}
+			}
+		}
+	}
+
+	immediate = {
+		liege = { save_scope_as = royal_host }
+		add_character_flag = {
+			flag = attended_royal_court
+			years = 5
+		}
+	}
+
+	# Propose favorable trade policies
+	option = {
+		name = mt_politics.0005.a
+
+		trigger = {
+			diplomacy >= 14
+		}
+
+		remove_short_term_gold = 100
+
+		scope:royal_host = {
+			add_opinion = {
+				target = root
+				modifier = helpful_opinion
+				opinion = 25
+			}
+		}
+
+		add_prestige = 200
+		add_diplomacy_lifestyle_xp = 100
+
+		# May gain economic advisor role
+		random = {
+			chance = 25
+			add_character_modifier = {
+				modifier = mt_royal_advisor
+				years = 10
+			}
+		}
+
+		ai_chance = {
+			base = 60
+
+			modifier = {
+				add = 30
+				diplomacy >= 16
+			}
+		}
+	}
+
+	# Offer loans to nobles
+	option = {
+		name = mt_politics.0005.b
+
+		remove_short_term_gold = 200
+
+		scope:royal_host = {
+			add_opinion = {
+				target = root
+				modifier = grateful_opinion
+				opinion = 20
+			}
+		}
+
+		add_gold = 50
+		add_prestige = 150
+
+		# Gain connections
+		random_list = {
+			50 = {
+				trigger_event = {
+					id = mt_politics.0006
+					days = { 60 180 }
+				}
+			}
+			50 = {
+				add_gold = 150
+			}
+		}
+
+		ai_chance = {
+			base = 50
+
+			modifier = {
+				add = 20
+				gold >= 800
+			}
+		}
+	}
+
+	# Simply enjoy the prestige
+	option = {
+		name = mt_politics.0005.c
+
+		add_prestige = 250
+		add_stress = -30
+
+		scope:royal_host = {
+			add_opinion = {
+				target = root
+				modifier = friendly_opinion
+				opinion = 10
+			}
+		}
+
+		ai_chance = {
+			base = 30
+		}
+	}
+}
+
+# 0006: Noble asks for secret loan
+mt_politics.0006 = {
+	type = character_event
+	title = mt_politics.0006.t
+	desc = mt_politics.0006.desc
+	theme = intrigue
+
+	left_portrait = {
+		character = root
+		animation = personality_rational
+	}
+
+	right_portrait = {
+		character = scope:noble_debtor
+		animation = worry
+	}
+
+	trigger = {
+		OR = {
+			has_trait = trade_post_owner
+			has_trait = trading_company_head
+			has_trait = merchant_prince
+		}
+		gold >= 200
+		any_vassal_or_below = {
+			is_ruler = yes
+			gold < 50
+			tier >= tier_county
+		}
+	}
+
+	mean_time_to_happen = {
+		months = 48
+	}
+
+	immediate = {
+		random_vassal_or_below = {
+			limit = {
+				is_ruler = yes
+				gold < 50
+				tier >= tier_county
+			}
+			save_scope_as = noble_debtor
+		}
+	}
+
+	# Grant the loan - high risk, high reward
+	option = {
+		name = mt_politics.0006.a
+
+		remove_short_term_gold = 150
+
+		scope:noble_debtor = {
+			add_opinion = {
+				target = root
+				modifier = grateful_opinion
+				opinion = 30
+			}
+			add_hook = {
+				type = debt_hook
+				target = root
+			}
+		}
+
+		# Chance they repay with interest
+		random_list = {
+			40 = {
+				trigger_event = {
+					id = mt_politics.0025
+					days = { 180 365 }
+				}
+			}
+			30 = {
+				# They repay the basic amount
+				trigger_event = {
+					id = mt_politics.0015
+					days = { 180 365 }
+				}
+			}
+			30 = {
+				# They default - lose money
+			}
+		}
+
+		ai_chance = {
+			base = 50
+
+			modifier = {
+				add = 30
+				has_trait = greedy
+			}
+
+			modifier = {
+				add = 20
+				intrigue >= 12
+			}
+		}
+	}
+
+	# Refuse politely
+	option = {
+		name = mt_politics.0006.b
+
+		scope:noble_debtor = {
+			add_opinion = {
+				target = root
+				modifier = disappointed_opinion
+				opinion = -10
+			}
+		}
+
+		add_stress = -10
+
+		ai_chance = {
+			base = 50
+
+			modifier = {
+				add = 30
+				gold < 400
+			}
+		}
+	}
+}
+
+# 0007: Spymaster investigates your activities
+mt_politics.0007 = {
+	type = character_event
+	title = mt_politics.0007.t
+	desc = mt_politics.0007.desc
+	theme = intrigue
+
+	left_portrait = {
+		character = root
+		animation = worry
+	}
+
+	right_portrait = {
+		character = scope:investigating_spymaster
+		animation = schadenfreude
+	}
+
+	trigger = {
+		OR = {
+			has_trait = trade_post_owner
+			has_trait = trading_company_head
+			has_trait = merchant_prince
+		}
+		gold >= 300
+		exists = liege
+		liege = {
+			exists = cp:councillor_spymaster
+		}
+	}
+
+	mean_time_to_happen = {
+		months = 60
+
+		modifier = {
+			factor = 0.6
+			liege = {
+				opinion = {
+					target = root
+					value < 20
+				}
+			}
+		}
+	}
+
+	immediate = {
+		liege = {
+			cp:councillor_spymaster = {
+				save_scope_as = investigating_spymaster
+			}
+		}
+	}
+
+	# Keep clean books - nothing to hide
+	option = {
+		name = mt_politics.0007.a
+
+		trigger = {
+			stewardship >= 12
+		}
+
+		add_prestige = 100
+		add_stress = 20
+
+		scope:investigating_spymaster = {
+			add_opinion = {
+				target = root
+				modifier = honest_opinion
+				opinion = 15
+			}
+		}
+
+		ai_chance = {
+			base = 50
+
+			modifier = {
+				add = 40
+				has_trait = just
+			}
+
+			modifier = {
+				add = 30
+				stewardship >= 14
+			}
+		}
+	}
+
+	# Bribe the spymaster
+	option = {
+		name = mt_politics.0007.b
+
+		trigger = {
+			intrigue >= 10
+		}
+
+		remove_short_term_gold = 100
+
+		scope:investigating_spymaster = {
+			add_gold = 100
+			add_opinion = {
+				target = root
+				modifier = bribed_opinion
+				opinion = 20
+			}
+		}
+
+		add_intrigue_lifestyle_xp = 75
+
+		# Risk of being exposed later
+		random = {
+			chance = 20
+			add_stress = 40
+			add_prestige = -150
+		}
+
+		ai_chance = {
+			base = 60
+
+			modifier = {
+				add = 30
+				has_trait = deceitful
+			}
+
+			modifier = {
+				add = 20
+				intrigue >= 14
+			}
+		}
+	}
+
+	# Confuse the investigation with paperwork
+	option = {
+		name = mt_politics.0007.c
+
+		trigger = {
+			learning >= 12
+		}
+
+		add_stress = 15
+
+		scope:investigating_spymaster = {
+			add_opinion = {
+				target = root
+				modifier = frustration_opinion
+				opinion = -10
+			}
+		}
+
+		# Investigation stalls
+		add_character_modifier = {
+			modifier = mt_investigation_stalled
+			years = 3
+		}
+
+		ai_chance = {
+			base = 40
+
+			modifier = {
+				add = 30
+				learning >= 14
+			}
+		}
+	}
+}
+
+# 0008: Rival merchant bribing officials against you
+mt_politics.0008 = {
+	type = character_event
+	title = mt_politics.0008.t
+	desc = mt_politics.0008.desc
+	theme = intrigue
+
+	left_portrait = {
+		character = root
+		animation = anger
+	}
+
+	right_portrait = {
+		character = scope:rival_merchant
+		animation = schadenfreude
+	}
+
+	trigger = {
+		OR = {
+			has_trait = trade_post_owner
+			has_trait = trading_company_head
+			has_trait = merchant_prince
+		}
+		gold >= 200
+		any_courtier = {
+			OR = {
+				has_trait = trade_post_owner
+				has_trait = trading_company_head
+			}
+			NOT = { has_relation_friend = root }
+		}
+	}
+
+	mean_time_to_happen = {
+		months = 48
+	}
+
+	immediate = {
+		random_courtier = {
+			limit = {
+				OR = {
+					has_trait = trade_post_owner
+					has_trait = trading_company_head
+				}
+				NOT = { has_relation_friend = root }
+			}
+			save_scope_as = rival_merchant
+		}
+	}
+
+	# Counter-bribe more aggressively
+	option = {
+		name = mt_politics.0008.a
+
+		remove_short_term_gold = 200
+
+		scope:rival_merchant = {
+			add_opinion = {
+				target = root
+				modifier = rivalry_opinion
+				opinion = -30
+			}
+		}
+
+		# Success in maintaining position
+		add_prestige = 100
+
+		random = {
+			chance = 70
+			add_character_modifier = {
+				modifier = mt_official_backing
+				years = 5
+			}
+		}
+
+		ai_chance = {
+			base = 50
+
+			modifier = {
+				add = 30
+				gold >= 600
+			}
+		}
+	}
+
+	# Expose their corruption
+	option = {
+		name = mt_politics.0008.b
+
+		trigger = {
+			intrigue >= 12
+		}
+
+		add_intrigue_lifestyle_xp = 100
+
+		scope:rival_merchant = {
+			add_prestige = -200
+			add_stress = 40
+		}
+
+		add_prestige = 150
+
+		# Gain reputation for justice
+		random = {
+			chance = 40
+			add_character_modifier = {
+				modifier = mt_corruption_fighter
+				years = 10
+			}
+		}
+
+		ai_chance = {
+			base = 60
+
+			modifier = {
+				add = 30
+				has_trait = just
+			}
+
+			modifier = {
+				add = 20
+				intrigue >= 14
+			}
+		}
+	}
+
+	# Ignore and focus on better business
+	option = {
+		name = mt_politics.0008.c
+
+		add_stress = 20
+		add_gold = 100
+
+		scope:rival_merchant = {
+			add_opinion = {
+				target = root
+				modifier = disappointed_opinion
+				opinion = -10
+			}
+		}
+
+		# May lose some standing
+		add_prestige = -50
+
+		ai_chance = {
+			base = 30
+
+			modifier = {
+				add = 30
+				has_trait = calm
+			}
+		}
+	}
+}
+
+####################################
+# DIPLOMATIC EVENTS (0009-0012)
+####################################
+
+# 0009: Foreign ruler wants trade agreement
+mt_politics.0009 = {
+	type = character_event
+	title = mt_politics.0009.t
+	desc = mt_politics.0009.desc
+	theme = diplomacy
+
+	left_portrait = {
+		character = root
+		animation = personality_content
+	}
+
+	right_portrait = {
+		character = scope:foreign_ruler
+		animation = personality_honorable
+	}
+
+	trigger = {
+		OR = {
+			has_trait = trading_company_head
+			has_trait = merchant_prince
+		}
+		gold >= 400
+		any_independent_ruler = {
+			NOT = { this = root.liege }
+			tier >= tier_duchy
+			capital_province = {
+				squared_distance = {
+					target = root.capital_province
+					value <= 90000
+				}
+			}
+		}
+	}
+
+	mean_time_to_happen = {
+		months = 60
+
+		modifier = {
+			factor = 0.7
+			diplomacy >= 14
+		}
+	}
+
+	immediate = {
+		random_independent_ruler = {
+			limit = {
+				NOT = { this = root.liege }
+				tier >= tier_duchy
+				capital_province = {
+					squared_distance = {
+						target = root.capital_province
+						value <= 90000
+					}
+				}
+			}
+			save_scope_as = foreign_ruler
+		}
+	}
+
+	# Expand internationally - invest heavily
+	option = {
+		name = mt_politics.0009.a
+
+		remove_short_term_gold = 300
+
+		scope:foreign_ruler = {
+			add_opinion = {
+				target = root
+				modifier = trade_partner_opinion
+				opinion = 40
+			}
+		}
+
+		add_prestige = 250
+		add_gold = 100
+
+		add_character_modifier = {
+			modifier = mt_international_trader
+			years = 15
+		}
+
+		ai_chance = {
+			base = 60
+
+			modifier = {
+				add = 30
+				has_trait = ambitious
+			}
+
+			modifier = {
+				add = 20
+				gold >= 800
+			}
+		}
+	}
+
+	# Limited agreement
+	option = {
+		name = mt_politics.0009.b
+
+		remove_short_term_gold = 150
+
+		scope:foreign_ruler = {
+			add_opinion = {
+				target = root
+				modifier = trade_partner_opinion
+				opinion = 20
+			}
+		}
+
+		add_prestige = 150
+		add_gold = 50
+
+		ai_chance = {
+			base = 50
+		}
+	}
+
+	# Decline - stay local
+	option = {
+		name = mt_politics.0009.c
+
+		add_stress = -10
+
+		scope:foreign_ruler = {
+			add_opinion = {
+				target = root
+				modifier = disappointed_opinion
+				opinion = -15
+			}
+		}
+
+		# Focus on local markets
+		add_gold = 100
+
+		ai_chance = {
+			base = 25
+
+			modifier = {
+				add = 30
+				gold < 600
+			}
+		}
+	}
+}
+
+# 0010: War between realms affects your routes
+mt_politics.0010 = {
+	type = character_event
+	title = mt_politics.0010.t
+	desc = mt_politics.0010.desc
+	theme = martial
+
+	left_portrait = {
+		character = root
+		animation = worry
+	}
+
+	right_portrait = {
+		character = scope:warring_ruler
+		animation = war
+	}
+
+	trigger = {
+		OR = {
+			has_trait = trade_post_owner
+			has_trait = trading_company_head
+			has_trait = merchant_prince
+		}
+		gold >= 200
+		exists = liege
+		liege = {
+			is_at_war = yes
+			any_character_war = {
+				is_attacker = liege
+			}
+		}
+	}
+
+	mean_time_to_happen = {
+		months = 36
+
+		modifier = {
+			factor = 0.6
+			liege = {
+				any_character_war = {
+					is_attacker = liege
+					count >= 2
+				}
+			}
+		}
+	}
+
+	immediate = {
+		liege = { save_scope_as = warring_ruler }
+	}
+
+	# Support your liege's war
+	option = {
+		name = mt_politics.0010.a
+
+		remove_short_term_gold = 250
+
+		scope:warring_ruler = {
+			add_gold = 250
+			add_opinion = {
+				target = root
+				modifier = loyal_opinion
+				opinion = 35
+			}
+		}
+
+		add_prestige = 200
+
+		# If war succeeds, gain rewards
+		random = {
+			chance = 40
+			trigger_event = {
+				id = mt_politics.0025
+				days = { 180 365 }
+			}
+		}
+
+		ai_chance = {
+			base = 50
+
+			modifier = {
+				add = 30
+				liege = {
+					opinion = {
+						target = root
+						value >= 40
+					}
+				}
+			}
+		}
+	}
+
+	# Stay neutral and protect caravans
+	option = {
+		name = mt_politics.0010.b
+
+		remove_short_term_gold = 100
+
+		add_character_modifier = {
+			modifier = mt_protected_caravans
+			years = 3
+		}
+
+		# Maintain trade despite war
+		add_gold = 150
+
+		ai_chance = {
+			base = 60
+
+			modifier = {
+				add = 20
+				has_trait = cautious
+			}
+		}
+	}
+
+	# Profit from both sides
+	option = {
+		name = mt_politics.0010.c
+
+		trigger = {
+			intrigue >= 12
+		}
+
+		add_gold = 300
+		add_intrigue_lifestyle_xp = 100
+
+		scope:warring_ruler = {
+			add_opinion = {
+				target = root
+				modifier = suspicious_opinion
+				opinion = -20
+			}
+		}
+
+		# Risk of being caught
+		random = {
+			chance = 30
+			add_prestige = -200
+			add_stress = 40
+		}
+
+		ai_chance = {
+			base = 40
+
+			modifier = {
+				add = 40
+				has_trait = greedy
+			}
+
+			modifier = {
+				add = 20
+				has_trait = deceitful
+			}
+		}
+	}
+}
+
+# 0011: Marriage alliance proposed
+mt_politics.0011 = {
+	type = character_event
+	title = mt_politics.0011.t
+	desc = mt_politics.0011.desc
+	theme = diplomacy
+
+	left_portrait = {
+		character = root
+		animation = personality_rational
+	}
+
+	right_portrait = {
+		character = scope:noble_suitor
+		animation = personality_content
+	}
+
+	trigger = {
+		OR = {
+			has_trait = trading_company_head
+			has_trait = merchant_prince
+		}
+		gold >= 500
+		is_married = no
+		age >= 16
+		age <= 45
+		any_vassal_or_below = {
+			is_ruler = yes
+			tier >= tier_county
+			any_child = {
+				is_married = no
+				age >= 16
+				age <= 35
+			}
+		}
+	}
+
+	mean_time_to_happen = {
+		months = 48
+
+		modifier = {
+			factor = 0.6
+			gold >= 1000
+		}
+	}
+
+	immediate = {
+		random_vassal_or_below = {
+			limit = {
+				is_ruler = yes
+				tier >= tier_county
+				any_child = {
+					is_married = no
+					age >= 16
+					age <= 35
+				}
+			}
+			random_child = {
+				limit = {
+					is_married = no
+					age >= 16
+					age <= 35
+				}
+				save_scope_as = noble_suitor
+			}
+		}
+	}
+
+	# Accept - gain political power
+	option = {
+		name = mt_politics.0011.a
+
+		trigger = {
+			can_marry_character_trigger = { CHARACTER = scope:noble_suitor }
+		}
+
+		marry = scope:noble_suitor
+
+		add_prestige = 300
+
+		scope:noble_suitor = {
+			if = {
+				limit = { exists = father }
+				father = {
+					add_opinion = {
+						target = root
+						modifier = family_opinion
+						opinion = 40
+					}
+				}
+			}
+		}
+
+		add_character_modifier = {
+			modifier = mt_noble_marriage
+			years = 20
+		}
+
+		ai_chance = {
+			base = 60
+
+			modifier = {
+				add = 30
+				has_trait = ambitious
+			}
+		}
+	}
+
+	# Refuse - maintain independence
+	option = {
+		name = mt_politics.0011.b
+
+		add_prestige = 100
+		add_gold = 200
+
+		scope:noble_suitor = {
+			if = {
+				limit = { exists = father }
+				father = {
+					add_opinion = {
+						target = root
+						modifier = disappointed_opinion
+						opinion = -20
+					}
+				}
+			}
+		}
+
+		add_character_modifier = {
+			modifier = mt_independent_merchant
+			years = 10
+		}
+
+		ai_chance = {
+			base = 40
+
+			modifier = {
+				add = 30
+				has_trait = independent
+			}
+		}
+	}
+}
+
+# 0012: Invited to peace negotiations
+mt_politics.0012 = {
+	type = character_event
+	title = mt_politics.0012.t
+	desc = mt_politics.0012.desc
+	theme = diplomacy
+
+	left_portrait = {
+		character = root
+		animation = personality_honorable
+	}
+
+	right_portrait = {
+		character = scope:peace_ruler
+		animation = personality_content
+	}
+
+	trigger = {
+		OR = {
+			has_trait = trading_company_head
+			has_trait = merchant_prince
+		}
+		gold >= 600
+		diplomacy >= 12
+		exists = liege
+		liege = {
+			is_at_war = yes
+			any_character_war = {
+				is_defender = liege
+			}
+		}
+	}
+
+	mean_time_to_happen = {
+		months = 60
+
+		modifier = {
+			factor = 0.7
+			diplomacy >= 16
+		}
+	}
+
+	immediate = {
+		liege = { save_scope_as = peace_ruler }
+	}
+
+	# Advocate for peace and trade
+	option = {
+		name = mt_politics.0012.a
+
+		trigger = {
+			diplomacy >= 14
+		}
+
+		add_diplomacy_lifestyle_xp = 150
+
+		scope:peace_ruler = {
+			add_opinion = {
+				target = root
+				modifier = helpful_opinion
+				opinion = 30
+			}
+		}
+
+		add_prestige = 300
+
+		# May help end the war
+		random = {
+			chance = 30
+			scope:peace_ruler = {
+				every_character_war = {
+					limit = { is_defender = scope:peace_ruler }
+					end_war = white_peace
+				}
+			}
+			add_gold = 200
+		}
+
+		ai_chance = {
+			base = 70
+
+			modifier = {
+				add = 30
+				diplomacy >= 16
+			}
+		}
+	}
+
+	# Focus on economic recovery plans
+	option = {
+		name = mt_politics.0012.b
+
+		trigger = {
+			stewardship >= 12
+		}
+
+		add_stewardship_lifestyle_xp = 100
+
+		scope:peace_ruler = {
+			add_opinion = {
+				target = root
+				modifier = helpful_opinion
+				opinion = 20
+			}
+		}
+
+		add_prestige = 200
+		add_gold = 150
+
+		ai_chance = {
+			base = 50
+		}
+	}
+
+	# Decline - stay out of politics
+	option = {
+		name = mt_politics.0012.c
+
+		add_stress = -20
+
+		scope:peace_ruler = {
+			add_opinion = {
+				target = root
+				modifier = disappointed_opinion
+				opinion = -10
+			}
+		}
+
+		ai_chance = {
+			base = 20
+		}
+	}
+}
+
+####################################
+# CONFLICTS (0013-0016)
+####################################
+
+# 0013: Accused of spying via trade routes
+mt_politics.0013 = {
+	type = character_event
+	title = mt_politics.0013.t
+	desc = mt_politics.0013.desc
+	theme = intrigue
+
+	left_portrait = {
+		character = root
+		animation = shock
+	}
+
+	right_portrait = {
+		character = scope:accusing_ruler
+		animation = anger
+	}
+
+	trigger = {
+		OR = {
+			has_trait = trade_post_owner
+			has_trait = trading_company_head
+			has_trait = merchant_prince
+		}
+		gold >= 200
+		exists = liege
+		liege = {
+			any_neighboring_top_liege_realm_owner = {
+				is_at_war = yes
+			}
+		}
+	}
+
+	mean_time_to_happen = {
+		months = 60
+	}
+
+	immediate = {
+		liege = {
+			random_neighboring_top_liege_realm_owner = {
+				limit = { is_at_war = yes }
+				save_scope_as = accusing_ruler
+			}
+		}
+	}
+
+	# Defend yourself publicly
+	option = {
+		name = mt_politics.0013.a
+
+		trigger = {
+			diplomacy >= 12
+		}
+
+		add_diplomacy_lifestyle_xp = 100
+
+		scope:accusing_ruler = {
+			add_opinion = {
+				target = root
+				modifier = suspicious_opinion
+				opinion = -20
+			}
+		}
+
+		add_prestige = 150
+
+		random = {
+			chance = 60
+			add_character_modifier = {
+				modifier = mt_cleared_name
+				years = 10
+			}
+		}
+
+		ai_chance = {
+			base = 60
+
+			modifier = {
+				add = 30
+				diplomacy >= 14
+			}
+		}
+	}
+
+	# Prove your innocence with evidence
+	option = {
+		name = mt_politics.0013.b
+
+		trigger = {
+			learning >= 12
+		}
+
+		remove_short_term_gold = 100
+
+		scope:accusing_ruler = {
+			add_opinion = {
+				target = root
+				modifier = honest_opinion
+				opinion = 10
+			}
+		}
+
+		add_prestige = 200
+
+		ai_chance = {
+			base = 50
+
+			modifier = {
+				add = 30
+				has_trait = just
+			}
+		}
+	}
+
+	# Lay low and wait it out
+	option = {
+		name = mt_politics.0013.c
+
+		add_stress = 40
+		add_prestige = -100
+
+		# Lose some trade opportunities
+		remove_short_term_gold = 150
+
+		ai_chance = {
+			base = 30
+
+			modifier = {
+				add = 30
+				has_trait = craven
+			}
+		}
+	}
+}
+
+# 0014: Ruler wants to nationalize your trade company
+mt_politics.0014 = {
+	type = character_event
+	title = mt_politics.0014.t
+	desc = mt_politics.0014.desc
+	theme = stewardship
+
+	left_portrait = {
+		character = root
+		animation = shock
+	}
+
+	right_portrait = {
+		character = scope:nationalizing_ruler
+		animation = personality_bold
+	}
+
+	trigger = {
+		OR = {
+			has_trait = trading_company_head
+			has_trait = merchant_prince
+		}
+		gold >= 500
+		exists = liege
+		liege = {
+			gold < 300
+			OR = {
+				has_trait = ambitious
+				has_trait = greedy
+			}
+		}
+	}
+
+	mean_time_to_happen = {
+		months = 84
+
+		modifier = {
+			factor = 0.5
+			liege = { has_trait = arbitrary }
+		}
+	}
+
+	immediate = {
+		liege = { save_scope_as = nationalizing_ruler }
+	}
+
+	# Fight it legally and politically
+	option = {
+		name = mt_politics.0014.a
+
+		trigger = {
+			diplomacy >= 14
+			gold >= 600
+		}
+
+		remove_short_term_gold = 400
+
+		scope:nationalizing_ruler = {
+			add_opinion = {
+				target = root
+				modifier = resisted_opinion
+				opinion = -40
+			}
+		}
+
+		add_prestige = 200
+
+		# May succeed in stopping it
+		random = {
+			chance = 50
+			add_gold = 300
+			add_character_modifier = {
+				modifier = mt_protected_company
+				years = 15
+			}
+		}
+
+		random = {
+			chance = 50
+			add_stress = 50
+			remove_short_term_gold = 200
+		}
+
+		ai_chance = {
+			base = 60
+
+			modifier = {
+				add = 30
+				has_trait = brave
+			}
+
+			modifier = {
+				add = 20
+				diplomacy >= 16
+			}
+		}
+	}
+
+	# Accept compensation
+	option = {
+		name = mt_politics.0014.b
+
+		add_gold = 800
+		add_prestige = -200
+
+		scope:nationalizing_ruler = {
+			add_opinion = {
+				target = root
+				modifier = compliant_opinion
+				opinion = 20
+			}
+		}
+
+		# Lose merchant status
+		remove_trait = trading_company_head
+		add_trait = trade_post_owner
+
+		ai_chance = {
+			base = 40
+
+			modifier = {
+				add = 40
+				has_trait = content
+			}
+		}
+	}
+
+	# Flee with your assets
+	option = {
+		name = mt_politics.0014.c
+
+		trigger = {
+			any_neighboring_realm_same_rank_owner = {
+				NOT = { this = scope:nationalizing_ruler }
+			}
+		}
+
+		remove_short_term_gold = 200
+		add_prestige = -100
+
+		# Move to new realm
+		random_neighboring_realm_same_rank_owner = {
+			limit = {
+				NOT = { this = scope:nationalizing_ruler }
+			}
+			root = {
+				set_liege = prev
+			}
+		}
+
+		add_gold = 300
+
+		ai_chance = {
+			base = 50
+
+			modifier = {
+				add = 30
+				has_trait = ambitious
+			}
+		}
+	}
+}
+
+# 0015: Noble defaulted on debt to you
+mt_politics.0015 = {
+	type = character_event
+	title = mt_politics.0015.t
+	desc = mt_politics.0015.desc
+	theme = intrigue
+
+	left_portrait = {
+		character = root
+		animation = anger
+	}
+
+	right_portrait = {
+		character = scope:debtor_noble
+		animation = worry
+	}
+
+	trigger = {
+		OR = {
+			has_trait = trade_post_owner
+			has_trait = trading_company_head
+			has_trait = merchant_prince
+		}
+		gold >= 300
+		any_vassal_or_below = {
+			is_ruler = yes
+			gold < 100
+			root = {
+				has_hook_of_type = {
+					type = debt_hook
+					target = prev
+				}
+			}
+		}
+	}
+
+	mean_time_to_happen = {
+		months = 36
+	}
+
+	immediate = {
+		random_vassal_or_below = {
+			limit = {
+				is_ruler = yes
+				gold < 100
+				root = {
+					has_hook_of_type = {
+						type = debt_hook
+						target = prev
+					}
+				}
+			}
+			save_scope_as = debtor_noble
+		}
+	}
+
+	# Take legal action
+	option = {
+		name = mt_politics.0015.a
+
+		trigger = {
+			learning >= 12
+		}
+
+		remove_hook = {
+			type = debt_hook
+			target = scope:debtor_noble
+		}
+
+		scope:debtor_noble = {
+			add_opinion = {
+				target = root
+				modifier = angry_opinion
+				opinion = -30
+			}
+		}
+
+		# Reclaim some assets
+		add_gold = 150
+		add_prestige = 100
+
+		ai_chance = {
+			base = 50
+
+			modifier = {
+				add = 30
+				has_trait = just
+			}
+		}
+	}
+
+	# Seize their assets
+	option = {
+		name = mt_politics.0015.b
+
+		trigger = {
+			intrigue >= 12
+		}
+
+		remove_hook = {
+			type = debt_hook
+			target = scope:debtor_noble
+		}
+
+		scope:debtor_noble = {
+			add_opinion = {
+				target = root
+				modifier = hatred_opinion
+				opinion = -50
+			}
+			add_prestige = -150
+		}
+
+		add_gold = 250
+		add_prestige = -50
+
+		ai_chance = {
+			base = 40
+
+			modifier = {
+				add = 40
+				has_trait = greedy
+			}
+
+			modifier = {
+				add = 20
+				intrigue >= 14
+			}
+		}
+	}
+
+	# Write it off - maintain goodwill
+	option = {
+		name = mt_politics.0015.c
+
+		remove_hook = {
+			type = debt_hook
+			target = scope:debtor_noble
+		}
+
+		scope:debtor_noble = {
+			add_opinion = {
+				target = root
+				modifier = grateful_opinion
+				opinion = 40
+			}
+		}
+
+		add_prestige = 150
+		add_piety = 100
+
+		ai_chance = {
+			base = 40
+
+			modifier = {
+				add = 30
+				has_trait = generous
+			}
+
+			modifier = {
+				add = 20
+				has_trait = compassionate
+			}
+		}
+	}
+}
+
+# 0016: Two realms bidding for your exclusive service
+mt_politics.0016 = {
+	type = character_event
+	title = mt_politics.0016.t
+	desc = mt_politics.0016.desc
+	theme = diplomacy
+
+	left_portrait = {
+		character = root
+		animation = personality_content
+	}
+
+	right_portrait = {
+		character = scope:bidding_ruler_1
+		animation = personality_bold
+	}
+
+	trigger = {
+		OR = {
+			has_trait = trading_company_head
+			has_trait = merchant_prince
+		}
+		gold >= 700
+		exists = liege
+		liege = {
+			any_neighboring_top_liege_realm_owner = {
+				is_at_war = no
+				tier >= tier_duchy
+			}
+		}
+	}
+
+	mean_time_to_happen = {
+		months = 60
+
+		modifier = {
+			factor = 0.7
+			gold >= 1200
+		}
+	}
+
+	immediate = {
+		liege = { save_scope_as = bidding_ruler_1 }
+		liege = {
+			random_neighboring_top_liege_realm_owner = {
+				limit = {
+					is_at_war = no
+					tier >= tier_duchy
+				}
+				save_scope_as = bidding_ruler_2
+			}
+		}
+	}
+
+	# Choose your current liege
+	option = {
+		name = mt_politics.0016.a
+
+		add_gold = 400
+
+		scope:bidding_ruler_1 = {
+			add_opinion = {
+				target = root
+				modifier = loyal_opinion
+				opinion = 40
+			}
+		}
+
+		scope:bidding_ruler_2 = {
+			add_opinion = {
+				target = root
+				modifier = disappointed_opinion
+				opinion = -20
+			}
+		}
+
+		add_character_modifier = {
+			modifier = mt_exclusive_trader
+			years = 15
+		}
+
+		ai_chance = {
+			base = 50
+
+			modifier = {
+				add = 30
+				liege = {
+					opinion = {
+						target = root
+						value >= 40
+					}
+				}
+			}
+		}
+	}
+
+	# Choose the foreign realm
+	option = {
+		name = mt_politics.0016.b
+
+		add_gold = 600
+
+		scope:bidding_ruler_2 = {
+			add_opinion = {
+				target = root
+				modifier = loyal_opinion
+				opinion = 40
+			}
+			root = {
+				set_liege = scope:bidding_ruler_2
+			}
+		}
+
+		scope:bidding_ruler_1 = {
+			add_opinion = {
+				target = root
+				modifier = betrayed_opinion
+				opinion = -50
+			}
+		}
+
+		add_character_modifier = {
+			modifier = mt_exclusive_trader
+			years = 15
+		}
+
+		ai_chance = {
+			base = 30
+
+			modifier = {
+				add = 40
+				has_trait = ambitious
+			}
+
+			modifier = {
+				add = 30
+				has_trait = greedy
+			}
+		}
+	}
+
+	# Play both sides
+	option = {
+		name = mt_politics.0016.c
+
+		trigger = {
+			intrigue >= 14
+		}
+
+		add_gold = 800
+
+		scope:bidding_ruler_1 = {
+			add_opinion = {
+				target = root
+				modifier = suspicious_opinion
+				opinion = -10
+			}
+		}
+
+		scope:bidding_ruler_2 = {
+			add_opinion = {
+				target = root
+				modifier = suspicious_opinion
+				opinion = -10
+			}
+		}
+
+		add_prestige = 100
+
+		# Risk of being caught
+		random = {
+			chance = 40
+			add_prestige = -300
+			add_stress = 60
+		}
+
+		ai_chance = {
+			base = 40
+
+			modifier = {
+				add = 40
+				has_trait = deceitful
+			}
+
+			modifier = {
+				add = 30
+				intrigue >= 16
+			}
+		}
+	}
+}
+
+####################################
+# INFLUENCE & POWER (0017-0020)
+####################################
+
+# 0017: Ruler notices your wealth - council position offered
+mt_politics.0017 = {
+	type = character_event
+	title = mt_politics.0017.t
+	desc = mt_politics.0017.desc
+	theme = stewardship
+
+	left_portrait = {
+		character = root
+		animation = personality_honorable
+	}
+
+	right_portrait = {
+		character = scope:offering_ruler
+		animation = personality_bold
+	}
+
+	trigger = {
+		OR = {
+			has_trait = trading_company_head
+			has_trait = merchant_prince
+		}
+		gold >= 1000
+		exists = liege
+		liege = {
+			tier >= tier_duchy
+			NOT = {
+				any_councillor = {
+					this = root
+				}
+			}
+		}
+		NOT = {
+			has_council_position = councillor_steward
+		}
+	}
+
+	mean_time_to_happen = {
+		months = 48
+
+		modifier = {
+			factor = 0.6
+			gold >= 1500
+		}
+
+		modifier = {
+			factor = 0.7
+			stewardship >= 14
+		}
+	}
+
+	immediate = {
+		liege = { save_scope_as = offering_ruler }
+	}
+
+	# Accept council position
+	option = {
+		name = mt_politics.0017.a
+
+		scope:offering_ruler = {
+			add_opinion = {
+				target = root
+				modifier = loyal_opinion
+				opinion = 30
+			}
+		}
+
+		add_prestige = 400
+
+		# Chance to become steward
+		random = {
+			chance = 60
+			add_character_modifier = {
+				modifier = mt_financial_advisor
+				years = 20
+			}
+		}
+
+		ai_chance = {
+			base = 70
+
+			modifier = {
+				add = 30
+				has_trait = ambitious
+			}
+		}
+	}
+
+	# Decline - focus on trade
+	option = {
+		name = mt_politics.0017.b
+
+		add_gold = 300
+
+		scope:offering_ruler = {
+			add_opinion = {
+				target = root
+				modifier = disappointed_opinion
+				opinion = -15
+			}
+		}
+
+		add_character_modifier = {
+			modifier = mt_independent_merchant
+			years = 10
+		}
+
+		ai_chance = {
+			base = 30
+
+			modifier = {
+				add = 30
+				has_trait = independent
+			}
+		}
+	}
+}
+
+# 0018: Merchants form coalition, elect you leader
+mt_politics.0018 = {
+	type = character_event
+	title = mt_politics.0018.t
+	desc = mt_politics.0018.desc
+	theme = diplomacy
+
+	left_portrait = {
+		character = root
+		animation = happiness
+	}
+
+	trigger = {
+		OR = {
+			has_trait = trading_company_head
+			has_trait = merchant_prince
+		}
+		gold >= 800
+		prestige_level >= 3
+		NOT = { has_character_flag = merchant_coalition_leader }
+	}
+
+	mean_time_to_happen = {
+		months = 72
+
+		modifier = {
+			factor = 0.7
+			diplomacy >= 14
+		}
+
+		modifier = {
+			factor = 0.8
+			prestige_level >= 4
+		}
+	}
+
+	immediate = {
+		add_character_flag = {
+			flag = merchant_coalition_leader
+			years = 10
+		}
+	}
+
+	# Accept leadership
+	option = {
+		name = mt_politics.0018.a
+
+		add_prestige = 500
+
+		add_character_modifier = {
+			modifier = mt_coalition_leader
+			years = 20
+		}
+
+		# Gain political influence
+		if = {
+			limit = { exists = liege }
+			liege = {
+				add_opinion = {
+					target = root
+					modifier = powerful_vassal_opinion
+					opinion = -10
+				}
+			}
+		}
+
+		ai_chance = {
+			base = 80
+
+			modifier = {
+				add = 20
+				has_trait = ambitious
+			}
+		}
+	}
+
+	# Decline - too much responsibility
+	option = {
+		name = mt_politics.0018.b
+
+		add_stress = -30
+		add_gold = 200
+
+		add_prestige = -100
+
+		ai_chance = {
+			base = 20
+
+			modifier = {
+				add = 30
+				has_trait = content
+			}
+		}
+	}
+}
+
+# 0019: Fund cathedral construction
+mt_politics.0019 = {
+	type = character_event
+	title = mt_politics.0019.t
+	desc = mt_politics.0019.desc
+	theme = diplomacy
+
+	left_portrait = {
+		character = root
+		animation = personality_honorable
+	}
+
+	right_portrait = {
+		character = scope:bishop
+		animation = personality_content
+	}
+
+	trigger = {
+		OR = {
+			has_trait = trading_company_head
+			has_trait = merchant_prince
+		}
+		gold >= 1000
+		exists = capital_province
+		capital_province = {
+			exists = faith
+		}
+		any_courtier = {
+			has_council_position = councillor_court_chaplain
+		}
+	}
+
+	mean_time_to_happen = {
+		months = 60
+
+		modifier = {
+			factor = 0.7
+			piety_level >= 2
+		}
+	}
+
+	immediate = {
+		random_courtier = {
+			limit = {
+				has_council_position = councillor_court_chaplain
+			}
+			save_scope_as = bishop
+		}
+	}
+
+	# Fund generously
+	option = {
+		name = mt_politics.0019.a
+
+		remove_short_term_gold = 800
+
+		add_prestige = 600
+		add_piety = 400
+
+		scope:bishop = {
+			add_opinion = {
+				target = root
+				modifier = pious_opinion
+				opinion = 50
+			}
+		}
+
+		if = {
+			limit = { exists = liege }
+			liege = {
+				add_opinion = {
+					target = root
+					modifier = pious_opinion
+					opinion = 30
+				}
+			}
+		}
+
+		add_character_modifier = {
+			modifier = mt_cathedral_patron
+			years = 30
+		}
+
+		ai_chance = {
+			base = 60
+
+			modifier = {
+				add = 30
+				piety_level >= 3
+			}
+		}
+	}
+
+	# Modest contribution
+	option = {
+		name = mt_politics.0019.b
+
+		remove_short_term_gold = 400
+
+		add_prestige = 300
+		add_piety = 200
+
+		scope:bishop = {
+			add_opinion = {
+				target = root
+				modifier = pious_opinion
+				opinion = 25
+			}
+		}
+
+		ai_chance = {
+			base = 50
+		}
+	}
+
+	# Decline
+	option = {
+		name = mt_politics.0019.c
+
+		scope:bishop = {
+			add_opinion = {
+				target = root
+				modifier = disappointed_opinion
+				opinion = -20
+			}
+		}
+
+		add_stress = 20
+
+		ai_chance = {
+			base = 20
+
+			modifier = {
+				add = 30
+				gold < 1200
+			}
+		}
+	}
+}
+
+# 0020: Broker peace deal between warring merchants
+mt_politics.0020 = {
+	type = character_event
+	title = mt_politics.0020.t
+	desc = mt_politics.0020.desc
+	theme = diplomacy
+
+	left_portrait = {
+		character = root
+		animation = personality_honorable
+	}
+
+	right_portrait = {
+		character = scope:merchant_1
+		animation = anger
+	}
+
+	trigger = {
+		OR = {
+			has_trait = trading_company_head
+			has_trait = merchant_prince
+		}
+		diplomacy >= 12
+		gold >= 400
+		any_courtier = {
+			OR = {
+				has_trait = trade_post_owner
+				has_trait = trading_company_head
+			}
+			any_relation = {
+				type = rival
+				OR = {
+					has_trait = trade_post_owner
+					has_trait = trading_company_head
+				}
+			}
+		}
+	}
+
+	mean_time_to_happen = {
+		months = 48
+
+		modifier = {
+			factor = 0.7
+			diplomacy >= 16
+		}
+	}
+
+	immediate = {
+		random_courtier = {
+			limit = {
+				OR = {
+					has_trait = trade_post_owner
+					has_trait = trading_company_head
+				}
+				any_relation = {
+					type = rival
+					OR = {
+						has_trait = trade_post_owner
+						has_trait = trading_company_head
+					}
+				}
+			}
+			save_scope_as = merchant_1
+			random_relation = {
+				type = rival
+				limit = {
+					OR = {
+						has_trait = trade_post_owner
+						has_trait = trading_company_head
+					}
+				}
+				save_scope_as = merchant_2
+			}
+		}
+	}
+
+	# Broker peace successfully
+	option = {
+		name = mt_politics.0020.a
+
+		trigger = {
+			diplomacy >= 14
+		}
+
+		remove_short_term_gold = 200
+
+		add_diplomacy_lifestyle_xp = 150
+
+		scope:merchant_1 = {
+			add_opinion = {
+				target = root
+				modifier = grateful_opinion
+				opinion = 30
+			}
+			remove_relation_rival = scope:merchant_2
+		}
+
+		scope:merchant_2 = {
+			add_opinion = {
+				target = root
+				modifier = grateful_opinion
+				opinion = 30
+			}
+		}
+
+		add_prestige = 300
+
+		add_character_modifier = {
+			modifier = mt_merchant_mediator
+			years = 15
+		}
+
+		ai_chance = {
+			base = 70
+
+			modifier = {
+				add = 30
+				diplomacy >= 16
+			}
+		}
+	}
+
+	# Take a side
+	option = {
+		name = mt_politics.0020.b
+
+		scope:merchant_1 = {
+			add_opinion = {
+				target = root
+				modifier = grateful_opinion
+				opinion = 40
+			}
+		}
+
+		scope:merchant_2 = {
+			add_opinion = {
+				target = root
+				modifier = angry_opinion
+				opinion = -40
+			}
+		}
+
+		add_gold = 200
+
+		ai_chance = {
+			base = 30
+		}
+	}
+
+	# Stay out of it
+	option = {
+		name = mt_politics.0020.c
+
+		add_stress = -20
+
+		scope:merchant_1 = {
+			add_opinion = {
+				target = root
+				modifier = disappointed_opinion
+				opinion = -10
+			}
+		}
+
+		scope:merchant_2 = {
+			add_opinion = {
+				target = root
+				modifier = disappointed_opinion
+				opinion = -10
+			}
+		}
+
+		ai_chance = {
+			base = 20
+		}
+	}
+}
+
+####################################
+# SUCCESSION EVENTS (0021-0023)
+####################################
+
+# 0021: Ruler dies, heir uncertain about merchants
+mt_politics.0021 = {
+	type = character_event
+	title = mt_politics.0021.t
+	desc = mt_politics.0021.desc
+	theme = diplomacy
+
+	left_portrait = {
+		character = root
+		animation = worry
+	}
+
+	right_portrait = {
+		character = scope:new_ruler
+		animation = personality_bold
+	}
+
+	trigger = {
+		OR = {
+			has_trait = trade_post_owner
+			has_trait = trading_company_head
+			has_trait = merchant_prince
+		}
+		gold >= 300
+		exists = liege
+	}
+
+	on_trigger_fail = {
+		# Event fires when liege changes
+	}
+
+	immediate = {
+		liege = { save_scope_as = new_ruler }
+	}
+
+	# Gift to secure relationship
+	option = {
+		name = mt_politics.0021.a
+
+		remove_short_term_gold = 300
+
+		scope:new_ruler = {
+			add_gold = 300
+			add_opinion = {
+				target = root
+				modifier = grateful_opinion
+				opinion = 30
+			}
+		}
+
+		add_prestige = 150
+
+		ai_chance = {
+			base = 60
+
+			modifier = {
+				add = 30
+				gold >= 800
+			}
+		}
+	}
+
+	# Prove your value with information
+	option = {
+		name = mt_politics.0021.b
+
+		trigger = {
+			intrigue >= 12
+		}
+
+		add_intrigue_lifestyle_xp = 75
+
+		scope:new_ruler = {
+			add_opinion = {
+				target = root
+				modifier = helpful_opinion
+				opinion = 25
+			}
+		}
+
+		add_prestige = 100
+
+		ai_chance = {
+			base = 50
+
+			modifier = {
+				add = 30
+				intrigue >= 14
+			}
+		}
+	}
+
+	# Wait and see
+	option = {
+		name = mt_politics.0021.c
+
+		add_stress = 30
+
+		# Uncertain outcome
+		random = {
+			chance = 50
+			scope:new_ruler = {
+				add_opinion = {
+					target = root
+					modifier = neutral_opinion
+					opinion = 10
+				}
+			}
+		}
+
+		ai_chance = {
+			base = 30
+		}
+	}
+}
+
+# 0022: Succession crisis - support candidate
+mt_politics.0022 = {
+	type = character_event
+	title = mt_politics.0022.t
+	desc = mt_politics.0022.desc
+	theme = intrigue
+
+	left_portrait = {
+		character = root
+		animation = personality_rational
+	}
+
+	right_portrait = {
+		character = scope:candidate_1
+		animation = personality_bold
+	}
+
+	trigger = {
+		OR = {
+			has_trait = trading_company_head
+			has_trait = merchant_prince
+		}
+		gold >= 500
+		exists = liege
+		liege = {
+			any_child = {
+				is_adult = yes
+				count >= 2
+			}
+		}
+	}
+
+	mean_time_to_happen = {
+		months = 96
+
+		modifier = {
+			factor = 0.5
+			liege = {
+				health < 2
+			}
+		}
+	}
+
+	immediate = {
+		liege = {
+			random_child = {
+				limit = { is_adult = yes }
+				save_scope_as = candidate_1
+			}
+			random_child = {
+				limit = {
+					is_adult = yes
+					NOT = { this = scope:candidate_1 }
+				}
+				save_scope_as = candidate_2
+			}
+		}
+	}
+
+	# Support first candidate with gold
+	option = {
+		name = mt_politics.0022.a
+
+		remove_short_term_gold = 400
+
+		scope:candidate_1 = {
+			add_gold = 400
+			add_opinion = {
+				target = root
+				modifier = loyal_opinion
+				opinion = 50
+			}
+		}
+
+		scope:candidate_2 = {
+			add_opinion = {
+				target = root
+				modifier = hostile_opinion
+				opinion = -30
+			}
+		}
+
+		# If they win, great rewards
+		random = {
+			chance = 50
+			trigger_event = {
+				id = mt_politics.0025
+				days = { 365 730 }
+			}
+		}
+
+		ai_chance = {
+			base = 50
+		}
+	}
+
+	# Support second candidate with gold
+	option = {
+		name = mt_politics.0022.b
+
+		remove_short_term_gold = 400
+
+		scope:candidate_2 = {
+			add_gold = 400
+			add_opinion = {
+				target = root
+				modifier = loyal_opinion
+				opinion = 50
+			}
+		}
+
+		scope:candidate_1 = {
+			add_opinion = {
+				target = root
+				modifier = hostile_opinion
+				opinion = -30
+			}
+		}
+
+		# If they win, great rewards
+		random = {
+			chance = 50
+			trigger_event = {
+				id = mt_politics.0025
+				days = { 365 730 }
+			}
+		}
+
+		ai_chance = {
+			base = 50
+		}
+	}
+
+	# Stay neutral
+	option = {
+		name = mt_politics.0022.c
+
+		add_stress = 20
+
+		# Safe but no special benefits
+		add_gold = 100
+
+		ai_chance = {
+			base = 40
+
+			modifier = {
+				add = 30
+				has_trait = cautious
+			}
+		}
+	}
+}
+
+# 0023: Your heir wants political career instead
+mt_politics.0023 = {
+	type = character_event
+	title = mt_politics.0023.t
+	desc = mt_politics.0023.desc
+	theme = diplomacy
+
+	left_portrait = {
+		character = root
+		animation = worry
+	}
+
+	right_portrait = {
+		character = scope:ambitious_heir
+		animation = personality_bold
+	}
+
+	trigger = {
+		OR = {
+			has_trait = trading_company_head
+			has_trait = merchant_prince
+		}
+		gold >= 600
+		any_child = {
+			is_adult = yes
+			diplomacy >= 12
+			is_heir_of = root
+		}
+	}
+
+	mean_time_to_happen = {
+		months = 72
+	}
+
+	immediate = {
+		random_child = {
+			limit = {
+				is_adult = yes
+				diplomacy >= 12
+				is_heir_of = root
+			}
+			save_scope_as = ambitious_heir
+		}
+	}
+
+	# Support their political ambitions
+	option = {
+		name = mt_politics.0023.a
+
+		remove_short_term_gold = 500
+
+		scope:ambitious_heir = {
+			add_diplomacy_lifestyle_xp = 200
+			add_opinion = {
+				target = root
+				modifier = grateful_opinion
+				opinion = 40
+			}
+		}
+
+		add_prestige = 300
+
+		# They may gain position
+		random = {
+			chance = 40
+			scope:ambitious_heir = {
+				add_character_modifier = {
+					modifier = mt_political_connections
+					years = 20
+				}
+			}
+		}
+
+		ai_chance = {
+			base = 60
+
+			modifier = {
+				add = 30
+				has_trait = ambitious
+			}
+		}
+	}
+
+	# Convince them to continue merchant legacy
+	option = {
+		name = mt_politics.0023.b
+
+		trigger = {
+			diplomacy >= 14
+		}
+
+		add_diplomacy_lifestyle_xp = 100
+
+		scope:ambitious_heir = {
+			add_opinion = {
+				target = root
+				modifier = disappointed_opinion
+				opinion = -20
+			}
+			add_gold = 300
+		}
+
+		add_character_modifier = {
+			modifier = mt_merchant_dynasty
+			years = 20
+		}
+
+		ai_chance = {
+			base = 50
+
+			modifier = {
+				add = 30
+				stewardship >= 14
+			}
+		}
+	}
+
+	# Let them choose
+	option = {
+		name = mt_politics.0023.c
+
+		scope:ambitious_heir = {
+			add_opinion = {
+				target = root
+				modifier = respectful_opinion
+				opinion = 20
+			}
+		}
+
+		add_stress = -20
+
+		ai_chance = {
+			base = 40
+		}
+	}
+}
+
+####################################
+# FOLLOW-UP EVENTS (0024-0025)
+####################################
+
+# 0024: Consequences of refusing ruler's demand
+mt_politics.0024 = {
+	type = character_event
+	title = mt_politics.0024.t
+	desc = mt_politics.0024.desc
+	theme = intrigue
+
+	left_portrait = {
+		character = root
+		animation = shock
+	}
+
+	right_portrait = {
+		character = scope:angry_ruler
+		animation = anger
+	}
+
+	immediate = {
+		liege = { save_scope_as = angry_ruler }
+	}
+
+	# Pay fine to avoid worse
+	option = {
+		name = mt_politics.0024.a
+
+		remove_short_term_gold = 250
+		add_prestige = -150
+
+		scope:angry_ruler = {
+			add_opinion = {
+				target = root
+				modifier = compliant_opinion
+				opinion = 10
+			}
+		}
+
+		ai_chance = {
+			base = 60
+		}
+	}
+
+	# Stand firm despite pressure
+	option = {
+		name = mt_politics.0024.b
+
+		trigger = {
+			gold >= 400
+		}
+
+		remove_short_term_gold = 150
+		add_stress = 50
+
+		scope:angry_ruler = {
+			add_opinion = {
+				target = root
+				modifier = defiant_opinion
+				opinion = -50
+			}
+		}
+
+		add_prestige = 200
+
+		ai_chance = {
+			base = 40
+
+			modifier = {
+				add = 30
+				has_trait = brave
+			}
+		}
+	}
+}
+
+# 0025: Political investment pays off
+mt_politics.0025 = {
+	type = character_event
+	title = mt_politics.0025.t
+	desc = mt_politics.0025.desc
+	theme = stewardship
+
+	left_portrait = {
+		character = root
+		animation = happiness
+	}
+
+	immediate = {
+		if = {
+			limit = { exists = liege }
+			liege = { save_scope_as = grateful_ruler }
+		}
+	}
+
+	# Accept rewards
+	option = {
+		name = mt_politics.0025.a
+
+		add_gold = 500
+		add_prestige = 300
+
+		if = {
+			limit = { exists = liege }
+			liege = {
+				add_opinion = {
+					target = root
+					modifier = grateful_opinion
+					opinion = 40
+				}
+			}
+		}
+
+		add_character_modifier = {
+			modifier = mt_successful_investor
+			years = 15
+		}
+
+		ai_chance = {
+			base = 100
+		}
+	}
+}
