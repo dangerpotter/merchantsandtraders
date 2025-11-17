@@ -635,3 +635,138 @@ mt_trade_routes_collapsed = {
 	# Visual indicator of crisis
 	health = -0.25						# Health penalty from stress
 }
+
+####################################
+# RULER TRADE POLICY MODIFIERS
+####################################
+
+# Applied when rulers enact specific trade policies
+# These are character-level modifiers that affect realm trade
+
+# Trade Taxation Policy - Extract gold from merchants
+# Duration: Until revoked
+mt_trade_taxation_policy = {
+	icon = "gfx/interface/icons/modifiers/county_modifier_development.dds"
+
+	# Direct income from taxing trade
+	monthly_income = 2.0					# +2 gold per month base
+
+	# But merchants don't like it
+	# (Merchant opinion handled in decision effects)
+
+	# Route health penalty
+	# (Handled through scripted effects on routes)
+}
+
+# Merchant Protection Policy - Spend gold to protect merchants
+# Duration: Until revoked
+mt_merchant_protection_policy = {
+	icon = "gfx/interface/icons/modifiers/county_modifier_development.dds"
+
+	# Costs money to maintain
+	monthly_income = -1.0					# -1 gold per month per route
+
+	# But merchants appreciate it
+	# (Merchant opinion handled in decision effects)
+
+	# Route health bonus
+	# (Handled through scripted effects on routes)
+
+	# Attracts more trade
+	monthly_prestige = 0.2
+}
+
+# Trade Monopoly Granted - Ruler grants exclusive rights
+# Applied to ruler who granted monopoly
+# Duration: Until revoked
+mt_trade_monopoly_granted = {
+	icon = "gfx/interface/icons/modifiers/diplomacy.dds"
+
+	# Prestige cost
+	monthly_prestige = -0.3					# Controversial decision
+
+	# All merchants except chosen one are angry
+	# (Handled through opinion modifiers in decision)
+}
+
+# Trade Monopoly Holder - Character has exclusive trade rights
+# Applied to merchant who received monopoly
+# Duration: Until revoked
+mt_trade_monopoly_holder = {
+	icon = "gfx/interface/icons/modifiers/diplomacy.dds"
+
+	# Massive profit boost
+	monthly_income_mult = 0.50				# +50% income from monopoly
+	tax_mult = 0.30							# +30% taxes
+
+	# Prestige from royal favor
+	monthly_prestige = 0.5
+
+	# But other merchants hate you
+	# (Handled through opinion modifiers)
+}
+
+# Foreign Merchants Active - Invited foreign merchants
+# Duration: Permanent (until banned)
+mt_foreign_merchants_active = {
+	icon = "gfx/interface/icons/modifiers/county_modifier_development.dds"
+
+	# Economic benefits
+	monthly_income = 1.5					# +1.5 gold from foreign trade
+	development_growth = 0.05				# +0.05 development per month
+
+	# Cultural exchange
+	monthly_prestige = 0.15
+
+	# More trade activity
+	tax_mult = 0.10							# +10% taxes from increased trade
+}
+
+# Merchant Activity Banned - No merchants allowed
+# Duration: Until revoked
+mt_merchant_activity_banned = {
+	icon = "gfx/interface/icons/modifiers/county_modifier_control.dds"
+
+	# Economic isolation
+	monthly_income = -2.0					# -2 gold (lost trade revenue)
+	development_growth = -0.10				# -0.10 development per month
+	tax_mult = -0.20						# -20% taxes (no merchant activity)
+
+	# Merchants hate this
+	# (Handled through opinion modifiers)
+
+	# But may prevent exploitation
+	monthly_control_growth = 0.1			# +0.1 control (isolation)
+
+	# Opinion penalty
+	county_opinion_add = -10				# People want trade
+}
+
+# Merchant Opinion Modifiers - How merchants view rulers
+
+# Merchant Approval - Protects merchants
+mt_merchant_approval = {
+	icon = "gfx/interface/icons/modifiers/diplomacy.dds"
+
+	# Good relations with merchant class
+	general_opinion = 5
+	monthly_prestige = 0.1
+}
+
+# Merchant Resentment - Heavy taxation
+mt_merchant_resentment = {
+	icon = "gfx/interface/icons/modifiers/county_modifier_control.dds"
+
+	# Bad relations with merchant class
+	general_opinion = -5
+	monthly_prestige = -0.1
+}
+
+# Merchant Fury - Banned or heavily restricted
+mt_merchant_fury = {
+	icon = "gfx/interface/icons/modifiers/county_modifier_control.dds"
+
+	# Very bad relations with merchant class
+	general_opinion = -15
+	monthly_prestige = -0.25
+}
