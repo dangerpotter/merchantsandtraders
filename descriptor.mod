@@ -6,3 +6,4 @@ tags = {
 	"Trade"
 }
 supported_version = "1.12.*"
+path = "mod/merchantsandtraders"
