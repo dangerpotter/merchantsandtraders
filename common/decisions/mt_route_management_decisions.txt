@@ -1,0 +1,696 @@
+﻿# ==============================================================================
+# MERCHANTS AND TRADERS - TRADE ROUTE MANAGEMENT DECISIONS
+# ==============================================================================
+# This file contains player decisions for managing trade routes, making the
+# mod feel like running a business with strategic resource allocation choices.
+#
+# DESIGN PHILOSOPHY:
+# - Feel like business decisions, not just mechanical actions
+# - Clear costs and benefits for player evaluation
+# - AI makes sensible economic choices
+# - Tough trade-offs between expansion and consolidation
+# ==============================================================================
+
+# ==============================================================================
+# DECISION 1: Establish New Trade Route
+# ==============================================================================
+# Cost: 50 gold
+# Opens a decision to establish a new trade route from capital to a target county
+# Player selects destination and goods; route auto-calculates optimal path
+# ==============================================================================
+establish_new_trade_route_decision = {
+	# Decision appears in the main decision list
+	picture = "gfx/interface/illustrations/decisions/decision_personal_religious.dds"
+	major = yes
+
+	# AI configuration
+	ai_check_interval = 60
+
+	desc = establish_new_trade_route_decision_desc
+	selection_tooltip = establish_new_trade_route_decision_tooltip
+
+	# Can only be taken by characters
+	is_shown = {
+		# Must be a merchant (any tier)
+		OR = {
+			has_trait = wandering_merchant
+			has_trait = trade_post_owner
+			has_trait = trading_company_head
+			has_trait = merchant_prince
+		}
+
+		# Must be alive and not imprisoned
+		is_alive = yes
+		is_imprisoned = no
+	}
+
+	is_valid = {
+		# Must have enough gold
+		gold >= 50
+
+		# Must not have reached route limit for tier
+		trigger_if = {
+			limit = { has_trait = wandering_merchant }
+			OR = {
+				NOT = { exists = var:mt_active_route_count }
+				var:mt_active_route_count < 1
+			}
+		}
+		trigger_else_if = {
+			limit = { has_trait = trade_post_owner }
+			OR = {
+				NOT = { exists = var:mt_active_route_count }
+				var:mt_active_route_count < 3
+			}
+		}
+		trigger_else_if = {
+			limit = { has_trait = trading_company_head }
+			OR = {
+				NOT = { exists = var:mt_active_route_count }
+				var:mt_active_route_count < 7
+			}
+		}
+		trigger_else_if = {
+			limit = { has_trait = merchant_prince }
+			OR = {
+				NOT = { exists = var:mt_active_route_count }
+				var:mt_active_route_count < 15
+			}
+		}
+
+		# Must have a capital county as origin
+		exists = capital_county
+
+		# Capital must produce tradeable goods
+		capital_county = {
+			OR = {
+				has_luxury_good_trigger = yes
+				has_common_good_trigger = yes
+				has_regional_good_trigger = yes
+			}
+		}
+
+		# Must have trade rights (decent diplomacy)
+		diplomacy >= 8
+	}
+
+	# Cost to establish route
+	cost = {
+		gold = 50
+	}
+
+	effect = {
+		# Save character for scoping
+		save_scope_as = merchant_character
+
+		# Trigger event chain to select destination and goods
+		# Event will handle the actual route creation
+		trigger_event = {
+			id = mt_route_decisions.0001
+			days = 1
+		}
+
+		# Add cooldown flag (can't spam route creation)
+		add_character_flag = {
+			flag = mt_recently_established_route
+			days = 30
+		}
+
+		# Notification
+		send_interface_toast = {
+			title = establish_new_trade_route_decision_toast
+			left_icon = root
+
+			custom_tooltip = establish_new_trade_route_decision_effect_tooltip
+		}
+	}
+
+	# AI weight - AI will establish routes if profitable
+	ai_potential = {
+		is_any_merchant_trigger = yes
+		gold >= 100  # AI wants buffer
+	}
+
+	ai_will_do = {
+		base = 70
+
+		# More likely if has lots of gold
+		modifier = {
+			add = 20
+			gold >= 200
+		}
+
+		# Less likely if low on gold
+		modifier = {
+			add = -30
+			gold < 100
+		}
+
+		# More likely if has good diplomacy (better at trading)
+		modifier = {
+			add = 10
+			diplomacy >= 12
+		}
+
+		# Much more likely if capital produces luxury goods
+		modifier = {
+			add = 30
+			capital_county = {
+				has_luxury_good_trigger = yes
+			}
+		}
+
+		# Less likely if at war
+		modifier = {
+			add = -40
+			is_at_war = yes
+		}
+	}
+}
+
+# ==============================================================================
+# DECISION 2: Close Trade Route
+# ==============================================================================
+# Cost: Free
+# Shows active routes and allows closing one to free up capacity
+# Useful when routes become unprofitable or dangerous
+# ==============================================================================
+close_trade_route_decision = {
+	picture = "gfx/interface/illustrations/decisions/decision_personal_religious.dds"
+
+	ai_check_interval = 30
+
+	desc = close_trade_route_decision_desc
+	selection_tooltip = close_trade_route_decision_tooltip
+
+	is_shown = {
+		# Must be a merchant
+		is_any_merchant_trigger = yes
+
+		# Must have at least one active route
+		has_active_trade_routes_trigger = yes
+	}
+
+	is_valid = {
+		# Always valid if you have routes
+		has_active_trade_routes_trigger = yes
+	}
+
+	# Free to close routes
+	cost = {
+		gold = 0
+	}
+
+	effect = {
+		save_scope_as = merchant_character
+
+		# Trigger event to select which route to close
+		# Event shows list of routes with profit/loss info
+		trigger_event = {
+			id = mt_route_decisions.0101
+			days = 1
+		}
+
+		send_interface_toast = {
+			title = close_trade_route_decision_toast
+			left_icon = root
+
+			custom_tooltip = close_trade_route_decision_effect_tooltip
+		}
+	}
+
+	ai_potential = {
+		has_active_trade_routes_trigger = yes
+	}
+
+	ai_will_do = {
+		base = 0
+
+		# AI will close unprofitable routes
+		# Check each route slot for unprofitability
+		modifier = {
+			add = 90
+			OR = {
+				# Route 0 losing money for extended period
+				AND = {
+					exists = var:mt_route_0_profit
+					var:mt_route_0_profit <= 0
+					has_variable_flag = {
+						flag = mt_route_0_unprofitable
+						days >= 180  # 6 months
+					}
+				}
+				# Route 1 losing money
+				AND = {
+					exists = var:mt_route_1_profit
+					var:mt_route_1_profit <= 0
+					has_variable_flag = {
+						flag = mt_route_1_unprofitable
+						days >= 180
+					}
+				}
+				# Route 2 losing money
+				AND = {
+					exists = var:mt_route_2_profit
+					var:mt_route_2_profit <= 0
+					has_variable_flag = {
+						flag = mt_route_2_unprofitable
+						days >= 180
+					}
+				}
+				# Route 3 losing money
+				AND = {
+					exists = var:mt_route_3_profit
+					var:mt_route_3_profit <= 0
+					has_variable_flag = {
+						flag = mt_route_3_unprofitable
+						days >= 180
+					}
+				}
+				# Route 4 losing money
+				AND = {
+					exists = var:mt_route_4_profit
+					var:mt_route_4_profit <= 0
+					has_variable_flag = {
+						flag = mt_route_4_unprofitable
+						days >= 180
+					}
+				}
+			}
+		}
+
+		# Very likely if route is critically damaged
+		modifier = {
+			add = 80
+			OR = {
+				route_is_critical_trigger = { route_id = 0 }
+				route_is_critical_trigger = { route_id = 1 }
+				route_is_critical_trigger = { route_id = 2 }
+				route_is_critical_trigger = { route_id = 3 }
+				route_is_critical_trigger = { route_id = 4 }
+			}
+		}
+	}
+}
+
+# ==============================================================================
+# DECISION 3: Reroute Trade Goods
+# ==============================================================================
+# Cost: 25 gold
+# Change destination or goods for existing route without closing it
+# Useful when markets crash or wars block current path
+# 6 month cooldown per route
+# ==============================================================================
+reroute_trade_goods_decision = {
+	picture = "gfx/interface/illustrations/decisions/decision_personal_religious.dds"
+
+	ai_check_interval = 60
+
+	desc = reroute_trade_goods_decision_desc
+	selection_tooltip = reroute_trade_goods_decision_tooltip
+
+	is_shown = {
+		# Must be a merchant
+		is_any_merchant_trigger = yes
+
+		# Must have at least one active route
+		has_active_trade_routes_trigger = yes
+	}
+
+	is_valid = {
+		# Must have routes
+		has_active_trade_routes_trigger = yes
+
+		# Must have enough gold
+		gold >= 25
+
+		# Must not have recently rerouted (cooldown)
+		NOT = {
+			has_character_flag = mt_recently_rerouted
+		}
+	}
+
+	cost = {
+		gold = 25
+	}
+
+	effect = {
+		save_scope_as = merchant_character
+
+		# Trigger event to select route and new destination/goods
+		trigger_event = {
+			id = mt_route_decisions.0201
+			days = 1
+		}
+
+		# Add cooldown (6 months)
+		add_character_flag = {
+			flag = mt_recently_rerouted
+			days = 180
+		}
+
+		send_interface_toast = {
+			title = reroute_trade_goods_decision_toast
+			left_icon = root
+
+			custom_tooltip = reroute_trade_goods_decision_effect_tooltip
+		}
+	}
+
+	ai_potential = {
+		has_active_trade_routes_trigger = yes
+		gold >= 50  # AI wants buffer
+	}
+
+	ai_will_do = {
+		base = 0
+
+		# AI will reroute if current route is unprofitable
+		modifier = {
+			add = 60
+			OR = {
+				AND = {
+					exists = var:mt_route_0_profit
+					var:mt_route_0_profit <= 5
+				}
+				AND = {
+					exists = var:mt_route_1_profit
+					var:mt_route_1_profit <= 5
+				}
+				AND = {
+					exists = var:mt_route_2_profit
+					var:mt_route_2_profit <= 5
+				}
+				AND = {
+					exists = var:mt_route_3_profit
+					var:mt_route_3_profit <= 5
+				}
+				AND = {
+					exists = var:mt_route_4_profit
+					var:mt_route_4_profit <= 5
+				}
+			}
+		}
+
+		# More likely if route health is poor
+		modifier = {
+			add = 40
+			OR = {
+				route_needs_maintenance_trigger = { route_id = 0 }
+				route_needs_maintenance_trigger = { route_id = 1 }
+				route_needs_maintenance_trigger = { route_id = 2 }
+				route_needs_maintenance_trigger = { route_id = 3 }
+				route_needs_maintenance_trigger = { route_id = 4 }
+			}
+		}
+
+		# Much more likely if at war (routes through war zones)
+		modifier = {
+			add = 50
+			is_at_war = yes
+		}
+
+		# Less likely if low on funds
+		modifier = {
+			add = -40
+			gold < 50
+		}
+	}
+}
+
+# ==============================================================================
+# DECISION 4: Inspect Route Health
+# ==============================================================================
+# Cost: Free
+# Detailed report on all active routes showing health, danger, profit margins
+# 1 month cooldown to prevent spam
+# ==============================================================================
+inspect_route_health_decision = {
+	picture = "gfx/interface/illustrations/decisions/decision_personal_religious.dds"
+
+	ai_check_interval = 90
+
+	desc = inspect_route_health_decision_desc
+	selection_tooltip = inspect_route_health_decision_tooltip
+
+	is_shown = {
+		# Must be a merchant
+		is_any_merchant_trigger = yes
+
+		# Must have at least one active route
+		has_active_trade_routes_trigger = yes
+	}
+
+	is_valid = {
+		# Must have routes
+		has_active_trade_routes_trigger = yes
+
+		# Cooldown check
+		NOT = {
+			has_character_flag = mt_recently_inspected_routes
+		}
+	}
+
+	cost = {
+		gold = 0
+	}
+
+	effect = {
+		save_scope_as = merchant_character
+
+		# Recalculate all route health before displaying
+		if = {
+			limit = { exists = var:mt_route_0_node_0 }
+			calculate_route_health_effect = { route_id = 0 }
+			calculate_route_profit_effect = { route_id = 0 }
+		}
+		if = {
+			limit = { exists = var:mt_route_1_node_0 }
+			calculate_route_health_effect = { route_id = 1 }
+			calculate_route_profit_effect = { route_id = 1 }
+		}
+		if = {
+			limit = { exists = var:mt_route_2_node_0 }
+			calculate_route_health_effect = { route_id = 2 }
+			calculate_route_profit_effect = { route_id = 2 }
+		}
+		if = {
+			limit = { exists = var:mt_route_3_node_0 }
+			calculate_route_health_effect = { route_id = 3 }
+			calculate_route_profit_effect = { route_id = 3 }
+		}
+		if = {
+			limit = { exists = var:mt_route_4_node_0 }
+			calculate_route_health_effect = { route_id = 4 }
+			calculate_route_profit_effect = { route_id = 4 }
+		}
+
+		# Trigger detailed inspection event
+		trigger_event = {
+			id = mt_route_decisions.0301
+			days = 1
+		}
+
+		# Add cooldown (1 month)
+		add_character_flag = {
+			flag = mt_recently_inspected_routes
+			days = 30
+		}
+
+		send_interface_toast = {
+			title = inspect_route_health_decision_toast
+			left_icon = root
+
+			custom_tooltip = inspect_route_health_decision_effect_tooltip
+		}
+	}
+
+	ai_potential = {
+		has_active_trade_routes_trigger = yes
+	}
+
+	ai_will_do = {
+		base = 30
+
+		# More likely if has many routes (big business to manage)
+		modifier = {
+			add = 20
+			var:mt_active_route_count >= 5
+		}
+
+		# More likely if has high stewardship (detail-oriented)
+		modifier = {
+			add = 15
+			stewardship >= 12
+		}
+
+		# Less likely if only one route (easy to track)
+		modifier = {
+			add = -20
+			var:mt_active_route_count = 1
+		}
+
+		# More likely if any route is struggling
+		modifier = {
+			add = 40
+			OR = {
+				route_needs_maintenance_trigger = { route_id = 0 }
+				route_needs_maintenance_trigger = { route_id = 1 }
+				route_needs_maintenance_trigger = { route_id = 2 }
+				route_needs_maintenance_trigger = { route_id = 3 }
+				route_needs_maintenance_trigger = { route_id = 4 }
+			}
+		}
+	}
+}
+
+# ==============================================================================
+# DECISION 5: Emergency Close All Routes
+# ==============================================================================
+# Cost: Free, but lose 25 prestige
+# Closes all routes immediately to prevent losses during crisis
+# Used when bankrupt or in desperate wartime situation
+# ==============================================================================
+emergency_close_all_routes_decision = {
+	picture = "gfx/interface/illustrations/decisions/decision_personal_religious.dds"
+
+	ai_check_interval = 30
+
+	desc = emergency_close_all_routes_decision_desc
+	selection_tooltip = emergency_close_all_routes_decision_tooltip
+	confirm_click_sound = "event:/SFX/UI/Notifications/TopBar/war_declared"
+
+	is_shown = {
+		# Must be a merchant
+		is_any_merchant_trigger = yes
+
+		# Must have at least one active route
+		has_active_trade_routes_trigger = yes
+
+		# Must be in crisis situation
+		OR = {
+			is_at_war = yes
+			gold < 10
+			has_variable = mt_bankrupt
+		}
+	}
+
+	is_valid = {
+		# Must have routes to close
+		has_active_trade_routes_trigger = yes
+	}
+
+	cost = {
+		gold = 0
+		prestige = 25
+	}
+
+	effect = {
+		save_scope_as = merchant_character
+
+		# Close all routes
+		if = {
+			limit = { exists = var:mt_route_0_node_0 }
+			close_trade_route_effect = { route_id = 0 }
+		}
+		if = {
+			limit = { exists = var:mt_route_1_node_0 }
+			close_trade_route_effect = { route_id = 1 }
+		}
+		if = {
+			limit = { exists = var:mt_route_2_node_0 }
+			close_trade_route_effect = { route_id = 2 }
+		}
+		if = {
+			limit = { exists = var:mt_route_3_node_0 }
+			close_trade_route_effect = { route_id = 3 }
+		}
+		if = {
+			limit = { exists = var:mt_route_4_node_0 }
+			close_trade_route_effect = { route_id = 4 }
+		}
+
+		# Reset route count
+		remove_variable = mt_active_route_count
+
+		# Add temporary modifier showing business collapse
+		add_character_modifier = {
+			modifier = mt_trade_routes_collapsed
+			days = 365
+		}
+
+		# Add recovery cooldown - can't establish new routes for 3 months
+		add_character_flag = {
+			flag = mt_emergency_closure
+			days = 90
+		}
+
+		send_interface_toast = {
+			title = emergency_close_all_routes_decision_toast
+			left_icon = root
+
+			custom_tooltip = emergency_close_all_routes_decision_effect_tooltip
+
+			# Show impact
+			show_as_tooltip = {
+				add_prestige = -25
+			}
+		}
+	}
+
+	ai_potential = {
+		has_active_trade_routes_trigger = yes
+		OR = {
+			gold < 20
+			is_at_war = yes
+		}
+	}
+
+	ai_will_do = {
+		base = 0
+
+		# Very likely if bankrupt
+		modifier = {
+			add = 80
+			gold <= 0
+		}
+
+		# Likely if nearly bankrupt with active route costs
+		modifier = {
+			add = 60
+			gold < 10
+			var:mt_active_route_count >= 3
+		}
+
+		# Likely if at war and routes are losing money
+		modifier = {
+			add = 70
+			is_at_war = yes
+			OR = {
+				AND = {
+					exists = var:mt_route_0_profit
+					var:mt_route_0_profit <= 0
+				}
+				AND = {
+					exists = var:mt_route_1_profit
+					var:mt_route_1_profit <= 0
+				}
+			}
+		}
+
+		# Less likely if still profitable
+		modifier = {
+			add = -60
+			OR = {
+				AND = {
+					exists = var:mt_route_0_profit
+					var:mt_route_0_profit >= 10
+				}
+				AND = {
+					exists = var:mt_route_1_profit
+					var:mt_route_1_profit >= 10
+				}
+			}
+		}
+	}
+}
