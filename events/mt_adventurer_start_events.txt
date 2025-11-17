@@ -1,0 +1,943 @@
+####################################
+# MERCHANTS AND TRADERS MOD
+# Adventurer Start Events
+####################################
+#
+# Event Namespace: mt_start
+#
+# Event Series:
+# mt_start.0001 - Welcome to merchant life (after becoming wandering merchant)
+# mt_start.0002 - Game start: offer merchant career option
+# mt_start.0003 - Meet another merchant (tutorial about trade rights)
+#
+# mt_start.0010-0013 - Purchase starting goods selection events
+# mt_start.0020-0025 - Manual trading events
+# mt_start.0030-0035 - Random trade opportunity events
+#
+####################################
+
+namespace = mt_start
+
+# ==============================================================================
+# EVENT: Welcome to Merchant Life
+# ==============================================================================
+# Fires after character takes "become wandering merchant" decision
+# Introduces the player to the merchant system and explains next steps
+# ==============================================================================
+mt_start.0001 = {
+	type = character_event
+	title = mt_start.0001.t
+	desc = mt_start.0001.desc
+	theme = stewardship
+
+	left_portrait = {
+		character = root
+		animation = personality_rational
+	}
+
+	# Tutorial option - Explains the full progression system
+	option = {
+		name = mt_start.0001.a
+
+		# Show detailed tooltip about merchant progression
+		custom_tooltip = mt_merchant_progression_tutorial
+
+		# Small stress relief for choosing this path
+		add_stress = -10
+
+		# Add some starting reputation
+		change_variable = {
+			name = mt_reputation
+			add = 5
+		}
+
+		ai_chance = {
+			base = 100
+		}
+	}
+
+	# Ambitious option - Just start trading immediately
+	option = {
+		name = mt_start.0001.b
+
+		trigger = {
+			OR = {
+				has_trait = ambitious
+				has_trait = greedy
+			}
+		}
+
+		custom_tooltip = mt_ready_to_trade
+
+		# Bonus gold for being eager
+		add_gold = 5
+
+		ai_chance = {
+			base = 50
+			modifier = {
+				add = 50
+				has_trait = ambitious
+			}
+		}
+	}
+}
+
+# ==============================================================================
+# EVENT: Game Start - Offer Merchant Career
+# ==============================================================================
+# Fires at game start for appropriate characters
+# Offers option to start as a merchant immediately
+# ==============================================================================
+mt_start.0002 = {
+	type = character_event
+	title = mt_start.0002.t
+	desc = mt_start.0002.desc
+	theme = stewardship
+
+	left_portrait = {
+		character = root
+		animation = thinking
+	}
+
+	# Only fires once per new game, triggered by on_action
+	trigger = {
+		is_ai = no
+		is_adult = yes
+		stewardship >= 8
+		gold >= 20
+
+		NOT = { has_trait = wandering_merchant }
+	}
+
+	immediate = {
+		# Save current location for context
+		if = {
+			limit = { exists = capital_province }
+			capital_province = {
+				save_scope_as = home_location
+			}
+		}
+	}
+
+	# YES - Start as merchant immediately
+	option = {
+		name = mt_start.0002.a
+
+		# Take the decision automatically
+		add_trait = wandering_merchant
+
+		# Initialize variables
+		set_variable = {
+			name = mt_active_routes
+			value = 0
+		}
+		set_variable = {
+			name = mt_owned_trade_posts
+			value = 0
+		}
+		set_variable = {
+			name = mt_max_trade_routes
+			value = 1
+		}
+		set_variable = {
+			name = mt_reputation
+			value = 0
+		}
+		set_variable = {
+			name = mt_carrying_goods
+			value = 0
+		}
+
+		# Grant abilities
+		grant_merchant_abilities_effect = yes
+
+		# Pay the cost
+		remove_short_term_gold = 20
+
+		# Starting bonus: some extra gold
+		add_gold = 10
+
+		custom_tooltip = mt_merchant_career_started
+
+		ai_chance = {
+			base = 100
+		}
+	}
+
+	# NO - Maybe later
+	option = {
+		name = mt_start.0002.b
+
+		custom_tooltip = mt_merchant_career_declined
+
+		# Can still take the decision manually later
+
+		ai_chance = {
+			base = 0
+		}
+	}
+}
+
+# ==============================================================================
+# EVENT: Meet Another Merchant
+# ==============================================================================
+# Random event introducing trade rights and merchant network concepts
+# Fires from yearly pulse for new merchants
+# ==============================================================================
+mt_start.0003 = {
+	type = character_event
+	title = mt_start.0003.t
+	desc = mt_start.0003.desc
+	theme = stewardship
+
+	left_portrait = {
+		character = root
+		animation = personality_honorable
+	}
+
+	right_portrait = {
+		character = scope:other_merchant
+		animation = personality_rational
+	}
+
+	trigger = {
+		has_trait = wandering_merchant
+		has_variable = mt_reputation
+		var:mt_reputation < 50
+	}
+
+	immediate = {
+		# Find or create another merchant character for this event
+		# In practice, you'd search for existing merchants
+		# For now, we'll use a courtier or generate context
+		if = {
+			limit = {
+				exists = liege
+				liege = {
+					any_courtier = {
+						NOT = { this = root }
+						is_adult = yes
+						stewardship >= 8
+					}
+				}
+			}
+			liege = {
+				random_courtier = {
+					limit = {
+						NOT = { this = root }
+						is_adult = yes
+						stewardship >= 8
+					}
+					save_scope_as = other_merchant
+				}
+			}
+		}
+		else = {
+			# If no suitable courtier, just use root as placeholder
+			save_scope_as = other_merchant
+		}
+	}
+
+	# Learn about trade rights
+	option = {
+		name = mt_start.0003.a
+
+		custom_tooltip = mt_learned_about_trade_rights
+
+		# Gain reputation for networking
+		change_variable = {
+			name = mt_reputation
+			add = 5
+		}
+
+		# Gain some stewardship XP
+		add_stewardship_skill = 1
+
+		ai_chance = {
+			base = 100
+		}
+	}
+
+	# Ask about merchant guilds
+	option = {
+		name = mt_start.0003.b
+
+		custom_tooltip = mt_learned_about_guilds
+
+		# Future: could unlock guild mechanics
+		# For now, just reputation gain
+		change_variable = {
+			name = mt_reputation
+			add = 3
+		}
+
+		ai_chance = {
+			base = 50
+		}
+	}
+
+	# Offer to trade together sometime
+	option = {
+		name = mt_start.0003.c
+
+		trigger = {
+			scope:other_merchant = {
+				NOT = { this = root }
+			}
+		}
+
+		# Improve opinion with other merchant
+		reverse_add_opinion = {
+			target = scope:other_merchant
+			modifier = friendliness_opinion
+			opinion = 10
+		}
+
+		custom_tooltip = mt_merchant_friend_made
+
+		ai_chance = {
+			base = 75
+			modifier = {
+				add = 25
+				has_trait = gregarious
+			}
+		}
+	}
+}
+
+# ==============================================================================
+# EVENT: Purchase Starting Goods - Selection
+# ==============================================================================
+# Triggered by purchase_starting_goods_decision
+# Presents three tiers of goods to purchase
+# ==============================================================================
+mt_start.0010 = {
+	type = character_event
+	title = mt_start.0010.t
+	desc = mt_start.0010.desc
+	theme = stewardship
+
+	left_portrait = {
+		character = root
+		animation = thinking
+	}
+
+	# OPTION A: Common Goods (Grain, Wool) - 10 gold, low profit
+	option = {
+		name = mt_start.0010.a
+
+		trigger = {
+			gold >= 10
+		}
+
+		# Pay for goods
+		remove_short_term_gold = 10
+
+		# Set goods type (1 = common)
+		set_variable = {
+			name = mt_carrying_goods
+			value = 1
+		}
+		set_variable = {
+			name = mt_goods_type
+			value = flag:common
+		}
+		set_variable = {
+			name = mt_goods_purchase_price
+			value = 10
+		}
+
+		# Mark as purchased
+		set_variable = {
+			name = mt_purchased_starting_goods
+			value = yes
+		}
+
+		custom_tooltip = mt_purchased_common_goods
+		custom_tooltip = mt_common_goods_profit_range
+
+		# Tutorial: Explain selling
+		custom_tooltip = mt_can_now_trade_manually
+
+		ai_chance = {
+			base = 100
+			modifier = {
+				factor = 0.5
+				gold >= 30
+			}
+			modifier = {
+				factor = 0.1
+				gold >= 100
+			}
+		}
+	}
+
+	# OPTION B: Regional Goods (Wine, Furs) - 30 gold, medium profit
+	option = {
+		name = mt_start.0010.b
+
+		trigger = {
+			gold >= 30
+		}
+
+		remove_short_term_gold = 30
+
+		set_variable = {
+			name = mt_carrying_goods
+			value = 2
+		}
+		set_variable = {
+			name = mt_goods_type
+			value = flag:regional
+		}
+		set_variable = {
+			name = mt_goods_purchase_price
+			value = 30
+		}
+
+		set_variable = {
+			name = mt_purchased_starting_goods
+			value = yes
+		}
+
+		custom_tooltip = mt_purchased_regional_goods
+		custom_tooltip = mt_regional_goods_profit_range
+
+		custom_tooltip = mt_can_now_trade_manually
+
+		ai_chance = {
+			base = 100
+			modifier = {
+				factor = 2
+				gold >= 50
+			}
+			modifier = {
+				factor = 0.3
+				gold >= 100
+			}
+		}
+	}
+
+	# OPTION C: Luxury Goods (Silk, Spices) - 100 gold, high profit
+	option = {
+		name = mt_start.0010.c
+
+		trigger = {
+			gold >= 100
+		}
+
+		remove_short_term_gold = 100
+
+		set_variable = {
+			name = mt_carrying_goods
+			value = 3
+		}
+		set_variable = {
+			name = mt_goods_type
+			value = flag:luxury
+		}
+		set_variable = {
+			name = mt_goods_purchase_price
+			value = 100
+		}
+
+		set_variable = {
+			name = mt_purchased_starting_goods
+			value = yes
+		}
+
+		custom_tooltip = mt_purchased_luxury_goods
+		custom_tooltip = mt_luxury_goods_profit_range
+
+		custom_tooltip = mt_can_now_trade_manually
+
+		ai_chance = {
+			base = 100
+			modifier = {
+				factor = 5
+				gold >= 150
+			}
+		}
+	}
+
+	# OPTION D: Cancel - Not ready yet
+	option = {
+		name = mt_start.0010.d
+
+		custom_tooltip = mt_purchase_cancelled
+
+		ai_chance = {
+			base = 0
+		}
+	}
+}
+
+# ==============================================================================
+# EVENT: Manual Trade - Market Selection
+# ==============================================================================
+# Triggered by manual_trade_goods_decision
+# Shows nearby counties and their buy prices for your goods
+# ==============================================================================
+mt_start.0020 = {
+	type = character_event
+	title = mt_start.0020.t
+	desc = mt_start.0020.desc
+	theme = stewardship
+
+	left_portrait = {
+		character = root
+		animation = personality_rational
+	}
+
+	trigger = {
+		has_variable = mt_carrying_goods
+		var:mt_carrying_goods > 0
+	}
+
+	immediate = {
+		# Calculate sell prices for different markets
+		# Prices vary by:
+		# - Distance (farther = higher prices)
+		# - Local demand (high development = higher demand)
+		# - Goods tier (luxury goods have bigger margins)
+
+		# Save current location
+		if = {
+			limit = { exists = location }
+			location = {
+				county = {
+					save_scope_as = current_county
+				}
+			}
+		}
+
+		# Find nearby wealthy county for high price option
+		if = {
+			limit = { exists = capital_province }
+			capital_province = {
+				county = {
+					random_neighboring_county = {
+						limit = {
+							development_level >= 15
+						}
+						save_scope_as = wealthy_market
+					}
+				}
+			}
+		}
+
+		# Calculate base sell price
+		if = {
+			limit = {
+				has_variable = mt_goods_type
+				var:mt_goods_type = flag:common
+			}
+			# Common goods: 15-25 gold (50-150% profit)
+			set_variable = {
+				name = mt_local_market_price
+				value = 15
+			}
+			set_variable = {
+				name = mt_distant_market_price
+				value = 20
+			}
+			set_variable = {
+				name = mt_wealthy_market_price
+				value = 25
+			}
+		}
+		else_if = {
+			limit = {
+				has_variable = mt_goods_type
+				var:mt_goods_type = flag:regional
+			}
+			# Regional goods: 45-75 gold (50-150% profit)
+			set_variable = {
+				name = mt_local_market_price
+				value = 45
+			}
+			set_variable = {
+				name = mt_distant_market_price
+				value = 60
+			}
+			set_variable = {
+				name = mt_wealthy_market_price
+				value = 75
+			}
+		}
+		else_if = {
+			limit = {
+				has_variable = mt_goods_type
+				var:mt_goods_type = flag:luxury
+			}
+			# Luxury goods: 150-300 gold (50-200% profit)
+			set_variable = {
+				name = mt_local_market_price
+				value = 150
+			}
+			set_variable = {
+				name = mt_distant_market_price
+				value = 225
+			}
+			set_variable = {
+				name = mt_wealthy_market_price
+				value = 300
+			}
+		}
+	}
+
+	# OPTION A: Sell at local market (lower price, immediate)
+	option = {
+		name = mt_start.0020.a
+
+		# Gain gold from sale
+		add_gold = var:mt_local_market_price
+
+		# Calculate profit
+		if = {
+			limit = { has_variable = mt_goods_purchase_price }
+			set_variable = {
+				name = mt_last_trade_profit
+				value = var:mt_local_market_price
+			}
+			change_variable = {
+				name = mt_last_trade_profit
+				subtract = var:mt_goods_purchase_price
+			}
+		}
+
+		# Clear goods
+		set_variable = {
+			name = mt_carrying_goods
+			value = 0
+		}
+		remove_variable = mt_goods_type
+
+		# Gain small reputation
+		change_variable = {
+			name = mt_reputation
+			add = 2
+		}
+
+		custom_tooltip = mt_sold_at_local_market
+
+		# Show profit in tooltip
+		if = {
+			limit = {
+				has_variable = mt_last_trade_profit
+				var:mt_last_trade_profit > 0
+			}
+			custom_tooltip = mt_trade_profit_gained
+		}
+
+		ai_chance = {
+			base = 50
+		}
+	}
+
+	# OPTION B: Travel to distant market (medium price, takes time)
+	option = {
+		name = mt_start.0020.b
+
+		# Gain more gold
+		add_gold = var:mt_distant_market_price
+
+		# Calculate profit
+		if = {
+			limit = { has_variable = mt_goods_purchase_price }
+			set_variable = {
+				name = mt_last_trade_profit
+				value = var:mt_distant_market_price
+			}
+			change_variable = {
+				name = mt_last_trade_profit
+				subtract = var:mt_goods_purchase_price
+			}
+		}
+
+		# Clear goods
+		set_variable = {
+			name = mt_carrying_goods
+			value = 0
+		}
+		remove_variable = mt_goods_type
+
+		# Gain medium reputation
+		change_variable = {
+			name = mt_reputation
+			add = 3
+		}
+
+		# Gain stewardship XP for smart trading
+		add_stewardship_lifestyle_xp = 20
+
+		custom_tooltip = mt_sold_at_distant_market
+		custom_tooltip = mt_travel_time_spent
+
+		if = {
+			limit = {
+				has_variable = mt_last_trade_profit
+				var:mt_last_trade_profit > 0
+			}
+			custom_tooltip = mt_trade_profit_gained
+		}
+
+		ai_chance = {
+			base = 100
+			modifier = {
+				factor = 1.5
+				has_trait = patient
+			}
+		}
+	}
+
+	# OPTION C: Seek wealthy buyers (highest price, risky)
+	option = {
+		name = mt_start.0020.c
+
+		trigger = {
+			exists = scope:wealthy_market
+		}
+
+		# Roll for success (80% chance)
+		random_list = {
+			80 = {
+				# SUCCESS - Excellent sale
+				add_gold = var:mt_wealthy_market_price
+
+				# Calculate profit
+				if = {
+					limit = { has_variable = mt_goods_purchase_price }
+					set_variable = {
+						name = mt_last_trade_profit
+						value = var:mt_wealthy_market_price
+					}
+					change_variable = {
+						name = mt_last_trade_profit
+						subtract = var:mt_goods_purchase_price
+					}
+				}
+
+				# Clear goods
+				set_variable = {
+					name = mt_carrying_goods
+					value = 0
+				}
+				remove_variable = mt_goods_type
+
+				# Significant reputation gain
+				change_variable = {
+					name = mt_reputation
+					add = 5
+				}
+
+				# Large stewardship XP
+				add_stewardship_lifestyle_xp = 50
+
+				custom_tooltip = mt_sold_to_wealthy_buyer
+				custom_tooltip = mt_excellent_deal
+
+				if = {
+					limit = {
+						has_variable = mt_last_trade_profit
+						var:mt_last_trade_profit > 0
+					}
+					custom_tooltip = mt_trade_profit_gained
+				}
+			}
+			20 = {
+				# FAILURE - No buyer found, must sell at local price
+				add_gold = var:mt_local_market_price
+
+				# Clear goods
+				set_variable = {
+					name = mt_carrying_goods
+					value = 0
+				}
+				remove_variable = mt_goods_type
+
+				# Small reputation hit
+				change_variable = {
+					name = mt_reputation
+					subtract = 1
+				}
+
+				custom_tooltip = mt_no_wealthy_buyer_found
+				custom_tooltip = mt_settled_for_local_price
+			}
+		}
+
+		ai_chance = {
+			base = 75
+			modifier = {
+				factor = 1.5
+				has_trait = ambitious
+			}
+			modifier = {
+				factor = 0.5
+				has_trait = content
+			}
+		}
+	}
+
+	# OPTION D: Keep goods for now (cancel trade)
+	option = {
+		name = mt_start.0020.d
+
+		custom_tooltip = mt_kept_goods
+
+		# No cooldown applied since trade didn't happen
+		remove_variable = mt_manual_trade_cooldown
+
+		ai_chance = {
+			base = 5
+		}
+	}
+}
+
+# ==============================================================================
+# EVENT: Random Trade Opportunity
+# ==============================================================================
+# Fires from monthly pulse for wandering merchants carrying goods
+# Offers a random favorable trading opportunity
+# ==============================================================================
+mt_start.0030 = {
+	type = character_event
+	title = mt_start.0030.t
+	desc = mt_start.0030.desc
+	theme = stewardship
+
+	left_portrait = {
+		character = root
+		animation = happiness
+	}
+
+	trigger = {
+		has_trait = wandering_merchant
+		has_variable = mt_carrying_goods
+		var:mt_carrying_goods > 0
+	}
+
+	immediate = {
+		# Calculate special opportunity price (higher than normal)
+		if = {
+			limit = {
+				has_variable = mt_goods_type
+				var:mt_goods_type = flag:common
+			}
+			set_variable = {
+				name = mt_opportunity_price
+				value = 30  # 200% profit
+			}
+		}
+		else_if = {
+			limit = {
+				has_variable = mt_goods_type
+				var:mt_goods_type = flag:regional
+			}
+			set_variable = {
+				name = mt_opportunity_price
+				value = 90  # 200% profit
+			}
+		}
+		else_if = {
+			limit = {
+				has_variable = mt_goods_type
+				var:mt_goods_type = flag:luxury
+			}
+			set_variable = {
+				name = mt_opportunity_price
+				value = 350  # 250% profit
+			}
+		}
+	}
+
+	# TAKE THE OPPORTUNITY - Sell immediately
+	option = {
+		name = mt_start.0030.a
+
+		add_gold = var:mt_opportunity_price
+
+		# Calculate profit
+		if = {
+			limit = { has_variable = mt_goods_purchase_price }
+			set_variable = {
+				name = mt_last_trade_profit
+				value = var:mt_opportunity_price
+			}
+			change_variable = {
+				name = mt_last_trade_profit
+				subtract = var:mt_goods_purchase_price
+			}
+		}
+
+		# Clear goods
+		set_variable = {
+			name = mt_carrying_goods
+			value = 0
+		}
+		remove_variable = mt_goods_type
+
+		# Large reputation boost for seizing opportunity
+		change_variable = {
+			name = mt_reputation
+			add = 10
+		}
+
+		# Stewardship XP
+		add_stewardship_lifestyle_xp = 75
+
+		# Prestige for successful deal
+		add_prestige = 25
+
+		custom_tooltip = mt_opportunity_seized
+		custom_tooltip = mt_exceptional_profit
+
+		if = {
+			limit = {
+				has_variable = mt_last_trade_profit
+				var:mt_last_trade_profit > 0
+			}
+			custom_tooltip = mt_trade_profit_gained
+		}
+
+		ai_chance = {
+			base = 100
+		}
+	}
+
+	# DECLINE - Wait for better opportunity
+	option = {
+		name = mt_start.0030.b
+
+		trigger = {
+			OR = {
+				has_trait = greedy
+				has_trait = ambitious
+			}
+		}
+
+		# No immediate effect, keeps carrying goods
+		custom_tooltip = mt_opportunity_declined
+
+		# Small stress for passing up profit
+		add_stress = 5
+
+		ai_chance = {
+			base = 5
+		}
+	}
+}
+
+# ==============================================================================
+# NOTES FOR ADDITIONAL EVENTS
+# ==============================================================================
+# Future events to consider:
+# - mt_start.0040: Bandit attack while traveling (lose goods or pay ransom)
+# - mt_start.0041: Weather delays trade (cooldown extended)
+# - mt_start.0042: Meet traveling noble who wants to buy (instant high price)
+# - mt_start.0043: Discover new trade good source (hint about goods production)
+# - mt_start.0050: First trade post opportunity (transition to tier 2)
+# - mt_start.0051: Rival merchant competition (reputation challenge)
+# - mt_start.0052: Guild invitation (unlock guild benefits)
+# ==============================================================================

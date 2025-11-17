@@ -1,0 +1,400 @@
+####################################
+# MERCHANTS AND TRADERS MOD
+# Adventurer Start On-Actions
+####################################
+#
+# This file contains on_action hooks for adventurer merchant initialization
+# and startup mechanics
+#
+# ON_ACTIONS:
+# - on_game_start: Initialize merchant system for existing merchants
+# - on_character_creation: Offer merchant start option for new adventurers
+# - yearly_pulse: Check for merchant progression and cleanup
+#
+####################################
+
+# ==============================================================================
+# GAME START INITIALIZATION
+# ==============================================================================
+# Fires when a save game is loaded
+# Ensures all merchant characters have proper variables initialized
+# ==============================================================================
+on_game_start = {
+	on_actions = {
+		mt_initialize_merchants_on_load
+	}
+}
+
+mt_initialize_merchants_on_load = {
+	trigger = {
+		# Only process merchant characters
+		OR = {
+			has_trait = wandering_merchant
+			has_trait = trade_post_owner
+			has_trait = trading_company_head
+			has_trait = merchant_prince
+		}
+	}
+
+	effect = {
+		# Check if merchant variables are initialized
+		# If not, initialize them based on trait tier
+
+		# Initialize active routes if missing
+		if = {
+			limit = { NOT = { has_variable = mt_active_routes } }
+			set_variable = {
+				name = mt_active_routes
+				value = 0
+			}
+		}
+
+		# Initialize reputation if missing
+		if = {
+			limit = { NOT = { has_variable = mt_reputation } }
+			set_variable = {
+				name = mt_reputation
+				value = 0
+			}
+		}
+
+		# Initialize carrying goods if missing
+		if = {
+			limit = { NOT = { has_variable = mt_carrying_goods } }
+			set_variable = {
+				name = mt_carrying_goods
+				value = 0
+			}
+		}
+
+		# Initialize owned trade posts if missing
+		if = {
+			limit = { NOT = { has_variable = mt_owned_trade_posts } }
+			set_variable = {
+				name = mt_owned_trade_posts
+				value = 0
+			}
+		}
+
+		# Grant tier-appropriate abilities if missing
+		if = {
+			limit = { NOT = { has_variable = mt_can_carry_goods } }
+			grant_merchant_abilities_effect = yes
+		}
+
+		# Set max trade routes based on tier
+		if = {
+			limit = {
+				has_trait = wandering_merchant
+				NOT = { has_variable = mt_max_trade_routes }
+			}
+			set_variable = {
+				name = mt_max_trade_routes
+				value = 1
+			}
+		}
+		if = {
+			limit = {
+				has_trait = trade_post_owner
+				NOT = { has_variable = mt_max_trade_routes }
+			}
+			set_variable = {
+				name = mt_max_trade_routes
+				value = 3
+			}
+		}
+		if = {
+			limit = {
+				has_trait = trading_company_head
+				NOT = { has_variable = mt_max_trade_routes }
+			}
+			set_variable = {
+				name = mt_max_trade_routes
+				value = 10
+			}
+		}
+		if = {
+			limit = {
+				has_trait = merchant_prince
+				NOT = { has_variable = mt_max_trade_routes }
+			}
+			set_variable = {
+				name = mt_max_trade_routes
+				value = 999
+			}
+		}
+
+		# Debug log
+		debug_log = "Initialized merchant variables on game load"
+	}
+}
+
+# ==============================================================================
+# CHARACTER CREATION
+# ==============================================================================
+# Fires when a new character is created (including adventurer starts)
+# Offers option to start as a wandering merchant if playing as adventurer
+# ==============================================================================
+on_game_start_after_lobby = {
+	on_actions = {
+		mt_adventurer_start_option
+	}
+}
+
+mt_adventurer_start_option = {
+	trigger = {
+		# Only trigger for player character at game start
+		this = root
+		is_ai = no
+
+		# Check if this is a new game (not loading a save)
+		NOT = { has_global_variable = mt_game_initialized }
+
+		# Character should be appropriate for merchant start
+		is_adult = yes
+		is_alive = yes
+
+		# Ideal for unlanded characters
+		# But also available for landed characters who want to focus on trade
+	}
+
+	effect = {
+		# Set global flag so this only fires once per new game
+		set_global_variable = {
+			name = mt_game_initialized
+			value = yes
+		}
+
+		# If player is unlanded or low-tier landed, offer merchant start
+		if = {
+			limit = {
+				OR = {
+					is_landed = no
+					highest_held_title_tier <= tier_county
+				}
+				stewardship >= 8
+				gold >= 20
+			}
+
+			# Trigger event asking if player wants to start as merchant
+			trigger_event = {
+				id = mt_start.0002
+				days = 3
+			}
+		}
+	}
+}
+
+# ==============================================================================
+# YEARLY PULSE - MERCHANT PROGRESSION CHECKS
+# ==============================================================================
+# Fires once per year for merchant characters
+# Checks if they qualify for tier-up, manages cooldowns, cleans up old flags
+# ==============================================================================
+on_yearly_pulse = {
+	on_actions = {
+		mt_yearly_merchant_update
+	}
+}
+
+mt_yearly_merchant_update = {
+	trigger = {
+		# Only for merchant characters
+		OR = {
+			has_trait = wandering_merchant
+			has_trait = trade_post_owner
+			has_trait = trading_company_head
+			has_trait = merchant_prince
+		}
+	}
+
+	effect = {
+		# Check if character qualifies for tier upgrade
+		check_merchant_tier_up_effect = yes
+
+		# Update reputation based on current status
+		calculate_merchant_reputation_effect = yes
+
+		# Check for bankruptcy conditions (very low gold + failed routes)
+		if = {
+			limit = {
+				gold < 10
+				has_variable = mt_failed_routes
+				var:mt_failed_routes >= 2
+			}
+
+			# Trigger potential bankruptcy
+			random = {
+				chance = 30
+				merchant_bankruptcy_effect = yes
+			}
+		}
+
+		# Clear temporary flags older than 1 year
+		if = {
+			limit = { has_variable = mt_bankrupt }
+			# Bankruptcy flag auto-expires after 1 year (set in effect)
+		}
+
+		# Random merchant events (opportunities, complications)
+		random = {
+			chance = 20
+			trigger_event = {
+				id = mt_start.0003
+				days = { 1 30 }
+			}
+		}
+	}
+}
+
+# ==============================================================================
+# MONTHLY PULSE - MANUAL TRADE OPPORTUNITIES
+# ==============================================================================
+# For wandering merchants, occasionally trigger random trade opportunities
+# ==============================================================================
+on_monthly_pulse = {
+	on_actions = {
+		mt_wandering_merchant_monthly
+	}
+}
+
+mt_wandering_merchant_monthly = {
+	trigger = {
+		# Only for wandering merchants (tier 1)
+		has_trait = wandering_merchant
+
+		# Must be carrying goods
+		has_variable = mt_carrying_goods
+		var:mt_carrying_goods > 0
+
+		# Not on cooldown
+		NOT = { has_variable = mt_manual_trade_cooldown }
+	}
+
+	effect = {
+		# Small chance (10%) for random trade opportunity event
+		random = {
+			chance = 10
+
+			# Trigger event about favorable market conditions nearby
+			trigger_event = {
+				id = mt_start.0030
+				days = { 1 7 }
+			}
+		}
+	}
+}
+
+# ==============================================================================
+# CHARACTER DEATH - CLEANUP
+# ==============================================================================
+# When a merchant dies, handle their trade operations
+# (Expansion: could add inheritance mechanics later)
+# ==============================================================================
+on_death = {
+	on_actions = {
+		mt_merchant_death_cleanup
+	}
+}
+
+mt_merchant_death_cleanup = {
+	trigger = {
+		# Only for merchant characters
+		OR = {
+			has_trait = wandering_merchant
+			has_trait = trade_post_owner
+			has_trait = trading_company_head
+			has_trait = merchant_prince
+		}
+	}
+
+	effect = {
+		# Currently, merchant operations don't transfer on death
+		# (Could add heir inheritance mechanics in future)
+
+		# If character was carrying goods, they're lost
+		if = {
+			limit = {
+				has_variable = mt_carrying_goods
+				var:mt_carrying_goods > 0
+			}
+
+			# Goods are lost (could trigger event for heir to recover some)
+			set_variable = {
+				name = mt_carrying_goods
+				value = 0
+			}
+		}
+
+		# Trade routes continue automatically (managed by separate system)
+		# Trade posts remain and could be inherited
+
+		# Log for debugging
+		debug_log = "Merchant character died, cleaning up variables"
+	}
+}
+
+# ==============================================================================
+# WAR START - DISRUPT MANUAL TRADING
+# ==============================================================================
+# If a wandering merchant's location goes to war, disrupt their trading
+# ==============================================================================
+on_war_started = {
+	on_actions = {
+		mt_war_disrupts_manual_trade
+	}
+}
+
+mt_war_disrupts_manual_trade = {
+	effect = {
+		# Check all wandering merchants
+		every_player = {
+			limit = {
+				has_trait = wandering_merchant
+				has_variable = mt_carrying_goods
+				var:mt_carrying_goods > 0
+
+				# Check if they're in affected territory
+				exists = location
+				location = {
+					county = {
+						OR = {
+							holder = {
+								is_at_war_with = scope:attacker
+							}
+							holder = {
+								is_at_war_with = scope:defender
+							}
+						}
+					}
+				}
+			}
+
+			# Send notification that trade is disrupted
+			send_interface_toast = {
+				title = mt_manual_trade_disrupted
+				left_icon = root
+
+				custom_tooltip = mt_manual_trade_disrupted_desc
+			}
+
+			# Add temporary cooldown
+			set_variable = {
+				name = mt_manual_trade_cooldown
+				value = yes
+				days = 30
+			}
+		}
+	}
+}
+
+# ==============================================================================
+# NOTES FOR FUTURE EXPANSION
+# ==============================================================================
+# Additional on_actions that could be added:
+# - on_prisoner_released: Restore trading ability after imprisonment
+# - on_bankruptcy: Complete merchant failure handling
+# - on_join_court: New opportunities when joining a powerful court
+# - on_pilgrimage_start: Special trade opportunities during pilgrimage
+# - on_title_gain: Landed merchants get new trading options
+# ==============================================================================

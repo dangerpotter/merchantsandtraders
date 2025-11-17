@@ -1,0 +1,453 @@
+####################################
+# MERCHANTS AND TRADERS MOD
+# Adventurer Start Decisions
+####################################
+#
+# This file contains decisions that allow unlanded adventurers and courtiers
+# to begin their merchant career and establish their first trade operations
+#
+# DECISION FLOW:
+# 1. become_wandering_merchant_decision - Start merchant career
+# 2. purchase_starting_goods_decision - Buy first goods to trade
+# 3. manual_trade_goods_decision - Manually sell goods at markets (before automation)
+#
+####################################
+
+# ==============================================================================
+# DECISION: Become a Wandering Merchant
+# ==============================================================================
+# Allows unlanded adventurers and courtiers to start their merchant career
+# This is the entry point into the entire merchant system
+# Costs gold but provides the wandering_merchant trait and initializes variables
+# ==============================================================================
+become_wandering_merchant_decision = {
+	# Decision shows up in Decisions menu
+	picture = "gfx/interface/illustrations/decisions/decision_merchant_career.dds"
+
+	# Sorting and display
+	sort_order = 50
+
+	# Basic decision properties
+	major = no
+
+	desc = become_wandering_merchant_decision_desc
+
+	# ==============================================================================
+	# SELECTION REQUIREMENTS - Who can see this decision?
+	# ==============================================================================
+	is_shown = {
+		# Must be an adult
+		is_adult = yes
+
+		# Must NOT already be a merchant
+		NOT = { has_trait = wandering_merchant }
+		NOT = { has_trait = trade_post_owner }
+		NOT = { has_trait = trading_company_head }
+		NOT = { has_trait = merchant_prince }
+
+		# Must be alive and not incapable
+		is_alive = yes
+		is_incapable = no
+	}
+
+	# ==============================================================================
+	# AVAILABILITY - When can this decision be taken?
+	# ==============================================================================
+	is_valid = {
+		# Must have minimum stewardship (shows merchant aptitude)
+		stewardship >= 8
+
+		# Must not be at war (can't start merchant career while fighting)
+		is_at_war = no
+
+		# Must not be imprisoned
+		is_imprisoned = no
+
+		# Custom tooltip for clarity
+		custom_description = {
+			text = must_be_unlanded_or_courtier
+			# Ideal for unlanded, but landed can also become merchants
+			trigger_if = {
+				limit = { is_landed = yes }
+				always = yes
+			}
+			trigger_else = {
+				always = yes
+			}
+		}
+	}
+
+	# ==============================================================================
+	# COST
+	# ==============================================================================
+	cost = {
+		gold = 20
+	}
+
+	# ==============================================================================
+	# EFFECTS - What happens when you take this decision?
+	# ==============================================================================
+	effect = {
+		# Add the wandering merchant trait
+		add_trait = wandering_merchant
+
+		# Remove incompatible lifestyle traits
+		if = {
+			limit = { has_trait = lifestyle_traveler }
+			remove_trait = lifestyle_traveler
+		}
+		if = {
+			limit = { has_trait = lifestyle_hunter }
+			remove_trait = lifestyle_hunter
+		}
+		if = {
+			limit = { has_trait = lifestyle_reveler }
+			remove_trait = lifestyle_reveler
+		}
+
+		# Initialize merchant variables
+		# Active trade routes (starts at 0)
+		set_variable = {
+			name = mt_active_routes
+			value = 0
+		}
+
+		# Owned trade posts (starts at 0)
+		set_variable = {
+			name = mt_owned_trade_posts
+			value = 0
+		}
+
+		# Maximum allowed routes (tier 1 = 1 route)
+		set_variable = {
+			name = mt_max_trade_routes
+			value = 1
+		}
+
+		# Initialize reputation at 0
+		set_variable = {
+			name = mt_reputation
+			value = 0
+		}
+
+		# Set flag indicating character is carrying no goods yet
+		set_variable = {
+			name = mt_carrying_goods
+			value = 0
+		}
+
+		# Set cooldown for manual trading (can trade immediately after starting)
+		set_variable = {
+			name = mt_last_manual_trade_date
+			value = 0
+		}
+
+		# Grant basic merchant abilities
+		grant_merchant_abilities_effect = yes
+
+		# Fire welcome event introducing the merchant system
+		trigger_event = {
+			id = mt_start.0001
+			days = 1
+		}
+
+		# Small prestige gain for taking initiative
+		add_prestige = 10
+
+		# Debug logging
+		debug_log = "Character became wandering merchant"
+		debug_log_scopes = yes
+	}
+
+	# ==============================================================================
+	# AI BEHAVIOR
+	# ==============================================================================
+	ai_potential = {
+		# Only unlanded AI characters consider this
+		is_landed = no
+
+		# Must have decent stewardship
+		stewardship >= 10
+
+		# Should have some starting gold
+		gold >= 30
+
+		# Not in important positions
+		is_councillor = no
+	}
+
+	ai_will_do = {
+		base = 15
+
+		# More likely if high stewardship
+		modifier = {
+			factor = 2
+			stewardship >= 12
+		}
+		modifier = {
+			factor = 3
+			stewardship >= 15
+		}
+
+		# More likely if greedy
+		modifier = {
+			factor = 1.5
+			has_trait = greedy
+		}
+		modifier = {
+			factor = 1.3
+			has_trait = ambitious
+		}
+
+		# Less likely if content or humble
+		modifier = {
+			factor = 0.5
+			has_trait = content
+		}
+		modifier = {
+			factor = 0.7
+			has_trait = humble
+		}
+
+		# More likely if poor
+		modifier = {
+			factor = 2
+			gold < 100
+		}
+
+		# Less likely if already wealthy
+		modifier = {
+			factor = 0.3
+			gold >= 500
+		}
+	}
+}
+
+# ==============================================================================
+# DECISION: Purchase Starting Goods
+# ==============================================================================
+# First-time decision to purchase goods for manual trading
+# Offers three tiers: common (cheap, low profit), regional (medium), luxury (expensive, high profit)
+# One-time decision that unlocks manual trading
+# ==============================================================================
+purchase_starting_goods_decision = {
+	picture = "gfx/interface/illustrations/decisions/decision_trade_goods.dds"
+
+	sort_order = 51
+
+	major = no
+
+	desc = purchase_starting_goods_decision_desc
+
+	# ==============================================================================
+	# SELECTION
+	# ==============================================================================
+	is_shown = {
+		# Must have wandering merchant trait
+		has_trait = wandering_merchant
+
+		# Must not be carrying goods already
+		has_variable = mt_carrying_goods
+		var:mt_carrying_goods = 0
+
+		# Must not have any active automated routes yet (this is for beginners)
+		has_variable = mt_active_routes
+		var:mt_active_routes = 0
+
+		# Must not have already purchased starting goods
+		NOT = { has_variable = mt_purchased_starting_goods }
+	}
+
+	is_valid = {
+		# Must not be at war
+		is_at_war = no
+
+		# Must not be imprisoned
+		is_imprisoned = no
+
+		# Must have at least 10 gold (minimum for cheapest goods)
+		gold >= 10
+	}
+
+	# ==============================================================================
+	# SELECTION - Three options presented to player
+	# ==============================================================================
+	# This decision uses a widget approach with three buttons
+
+	widget = {
+		gui = "decision_view_widget"
+		# The actual choice is made in the effect based on which option they select
+	}
+
+	# Cost varies by selection (handled in effect)
+	cost = {
+		gold = 0  # Cost is handled in the effect based on choice
+	}
+
+	# ==============================================================================
+	# EFFECTS - Player chooses which goods tier to buy
+	# ==============================================================================
+	effect = {
+		# This decision will open an event that lets player choose
+		# We trigger the selection event instead of handling here
+		trigger_event = {
+			id = mt_start.0010
+		}
+	}
+
+	# ==============================================================================
+	# AI BEHAVIOR
+	# ==============================================================================
+	ai_potential = {
+		has_trait = wandering_merchant
+		has_variable = mt_carrying_goods
+		var:mt_carrying_goods = 0
+	}
+
+	ai_will_do = {
+		base = 80
+
+		# AI picks based on gold available
+		# Low gold: common goods
+		# Medium gold: regional goods
+		# High gold: luxury goods
+
+		modifier = {
+			factor = 2
+			gold >= 20
+		}
+	}
+
+	# AI selection logic (simplified - actual choice in event)
+	ai_check_interval = 60  # Check monthly
+}
+
+# ==============================================================================
+# DECISION: Manually Trade Goods
+# ==============================================================================
+# Allows wandering merchants carrying goods to manually sell them at markets
+# Shows available counties within range and their current market prices
+# 3-month cooldown represents travel time between markets
+# This is how early merchants make money before automating with trade routes
+# ==============================================================================
+manual_trade_goods_decision = {
+	picture = "gfx/interface/illustrations/decisions/decision_market_trade.dds"
+
+	sort_order = 52
+
+	major = no
+
+	desc = manual_trade_goods_decision_desc
+
+	# ==============================================================================
+	# SELECTION
+	# ==============================================================================
+	is_shown = {
+		# Must be a wandering merchant
+		has_trait = wandering_merchant
+
+		# Must be carrying goods
+		has_variable = mt_carrying_goods
+		var:mt_carrying_goods > 0
+	}
+
+	is_valid = {
+		# Must not be at war
+		is_at_war = no
+
+		# Must not be imprisoned
+		is_imprisoned = no
+
+		# Must not be on cooldown
+		custom_description = {
+			text = manual_trade_cooldown_expired
+			NOT = { has_variable = mt_manual_trade_cooldown }
+		}
+
+		# Must have access to markets (not in hostile territory)
+		custom_description = {
+			text = must_have_market_access
+			trigger_if = {
+				limit = { exists = location }
+				location = {
+					county = {
+						# Must not be under siege
+						NOT = { is_county_capital_barony = { is_under_siege = yes } }
+						# Must not be occupied by enemies
+						NOT = {
+							holder = {
+								is_at_war_with = root
+							}
+						}
+					}
+				}
+			}
+			trigger_else = {
+				always = yes
+			}
+		}
+	}
+
+	# No direct gold cost (you're selling goods)
+	cost = {
+		gold = 0
+	}
+
+	# ==============================================================================
+	# EFFECTS
+	# ==============================================================================
+	effect = {
+		# This opens an event that shows available markets and prices
+		# Player selects which county to trade in
+		# Different counties have different demand = different prices
+		trigger_event = {
+			id = mt_start.0020
+		}
+
+		# Set cooldown (3 months)
+		set_variable = {
+			name = mt_manual_trade_cooldown
+			value = yes
+			days = 90
+		}
+	}
+
+	# ==============================================================================
+	# AI BEHAVIOR
+	# ==============================================================================
+	ai_potential = {
+		has_trait = wandering_merchant
+		has_variable = mt_carrying_goods
+		var:mt_carrying_goods > 0
+	}
+
+	ai_will_do = {
+		base = 90
+
+		# AI always trades when carrying goods and cooldown expired
+		# AI picks highest profit market automatically in event
+
+		modifier = {
+			factor = 2
+			# Urgent if low on gold
+			gold < 50
+		}
+
+		modifier = {
+			factor = 1.5
+			has_trait = greedy
+		}
+	}
+
+	ai_check_interval = 30  # Check monthly
+}
+
+# ==============================================================================
+# ADDITIONAL DECISIONS (Stubs for future expansion)
+# ==============================================================================
+# These can be added later:
+# - establish_first_trade_post_decision (when enough gold accumulated)
+# - negotiate_trade_rights_decision (for access to foreign markets)
+# - hire_caravan_guards_decision (protection for valuable goods)
+# - join_merchant_guild_decision (access to better prices and protection)
+# ==============================================================================
