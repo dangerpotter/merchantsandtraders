@@ -1,0 +1,150 @@
+####################################
+# Merchants and Traders - Core Effects
+# Version: 0.1.0
+####################################
+
+# This file contains core scripted effects for the Merchants and Traders mod
+# Effects are reusable script blocks that perform actions on scopes
+
+####################################
+# MERCHANT MANAGEMENT EFFECTS
+####################################
+
+# Effect: Initialize a character as a merchant
+# Scope: Character
+# Usage: character = { mt_initialize_merchant_effect = yes }
+mt_initialize_merchant_effect = {
+	# TODO: Add merchant trait
+	# TODO: Set initial merchant level (Adventurer)
+	# TODO: Initialize merchant variables (capital, reputation, etc.)
+	# TODO: Trigger merchant initialization events
+}
+
+# Effect: Upgrade merchant level
+# Scope: Character
+# Usage: character = { mt_upgrade_merchant_level_effect = yes }
+mt_upgrade_merchant_level_effect = {
+	# TODO: Check current merchant level
+	# TODO: Remove old merchant trait
+	# TODO: Add new merchant trait
+	# TODO: Update merchant variables
+	# TODO: Trigger upgrade events and notifications
+}
+
+####################################
+# TRADE ROUTE EFFECTS
+####################################
+
+# Effect: Create trade route between two counties
+# Scope: County (origin)
+# Usage: county = { mt_create_trade_route_effect = { target = scope:destination_county } }
+mt_create_trade_route_effect = {
+	# TODO: Validate route possibility
+	# TODO: Calculate route profitability
+	# TODO: Store route data in variables
+	# TODO: Apply ongoing route effects
+	# TODO: Trigger route creation events
+}
+
+# Effect: Destroy trade route
+# Scope: County
+# Usage: county = { mt_destroy_trade_route_effect = { target = scope:destination_county } }
+mt_destroy_trade_route_effect = {
+	# TODO: Remove route variables
+	# TODO: Remove route modifiers
+	# TODO: Refund any invested resources
+	# TODO: Trigger route destruction events
+}
+
+# Effect: Update all trade routes for a character
+# Scope: Character
+# Usage: character = { mt_update_trade_routes_effect = yes }
+mt_update_trade_routes_effect = {
+	# TODO: Iterate through all owned routes
+	# TODO: Recalculate profitability
+	# TODO: Update route modifiers
+	# TODO: Handle route maintenance costs
+}
+
+####################################
+# TRADE GOODS EFFECTS
+####################################
+
+# Effect: Add trade good to county
+# Scope: County
+# Usage: county = { mt_add_trade_good_effect = { good = trade_good_silk } }
+mt_add_trade_good_effect = {
+	# TODO: Add trade good flag/variable
+	# TODO: Apply trade good modifiers
+	# TODO: Update local supply
+	# TODO: Trigger trade good events
+}
+
+# Effect: Remove trade good from county
+# Scope: County
+# Usage: county = { mt_remove_trade_good_effect = { good = trade_good_silk } }
+mt_remove_trade_good_effect = {
+	# TODO: Remove trade good flag/variable
+	# TODO: Remove trade good modifiers
+	# TODO: Update local supply
+	# TODO: Trigger removal events
+}
+
+# Effect: Calculate trade good demand
+# Scope: County
+# Usage: county = { mt_calculate_demand_effect = { good = trade_good_silk } }
+mt_calculate_demand_effect = {
+	# TODO: Check local production vs consumption
+	# TODO: Factor in population and development
+	# TODO: Consider cultural preferences
+	# TODO: Store demand value in variable
+}
+
+####################################
+# ECONOMIC EFFECTS
+####################################
+
+# Effect: Apply trade income to character
+# Scope: Character
+# Usage: character = { mt_apply_trade_income_effect = yes }
+mt_apply_trade_income_effect = {
+	# TODO: Calculate total trade income from all sources
+	# TODO: Apply income to character's gold
+	# TODO: Trigger income notification if significant
+	# TODO: Update trade income statistics
+}
+
+# Effect: Update county trade modifiers
+# Scope: County
+# Usage: county = { mt_update_county_trade_modifiers_effect = yes }
+mt_update_county_trade_modifiers_effect = {
+	# TODO: Calculate total trade activity
+	# TODO: Apply development modifiers
+	# TODO: Apply prosperity modifiers
+	# TODO: Apply tax modifiers
+	# TODO: Update trade power variable
+}
+
+####################################
+# UTILITY EFFECTS
+####################################
+
+# Effect: Clean up merchant data on character death
+# Scope: Character (dead)
+# Usage: character = { mt_cleanup_merchant_data_effect = yes }
+mt_cleanup_merchant_data_effect = {
+	# TODO: Transfer trade routes to heir/liege
+	# TODO: Clean up character variables
+	# TODO: Handle merchant succession
+	# TODO: Trigger cleanup events
+}
+
+# Effect: Debug - Reset all merchant data for character
+# Scope: Character
+# Usage: character = { mt_debug_reset_merchant_effect = yes }
+mt_debug_reset_merchant_effect = {
+	# TODO: Remove all merchant traits
+	# TODO: Clear all merchant variables
+	# TODO: Remove all trade routes
+	# TODO: Reset to default state
+}

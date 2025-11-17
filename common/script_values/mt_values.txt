@@ -1,0 +1,398 @@
+####################################
+# Merchants and Traders - Script Values
+# Version: 0.1.0
+####################################
+
+# This file contains scripted values for calculations in the Merchants and Traders mod
+# Script values are dynamic numerical calculations that can be used throughout the mod
+
+####################################
+# MERCHANT PROGRESSION VALUES
+####################################
+
+# Value: Cost to become a merchant (gold)
+# Scope: Character
+# Usage: value = mt_merchant_startup_cost_value
+mt_merchant_startup_cost_value = {
+	value = 50
+
+	# TODO: Adjust based on character location
+	# if = {
+	#     limit = { capital_province = { geographical_region = world_europe_west } }
+	#     multiply = 1.5
+	# }
+
+	# TODO: Adjust based on current economic situation
+	# if = {
+	#     limit = { capital_county = { development_level >= 10 } }
+	#     multiply = 1.2
+	# }
+
+	# Round to nearest 5
+	# round = yes
+}
+
+# Value: Cost to upgrade merchant level
+# Scope: Character
+# Usage: value = mt_merchant_upgrade_cost_value
+mt_merchant_upgrade_cost_value = {
+	value = 100
+
+	# TODO: Scale based on current merchant level
+	# if = {
+	#     limit = { mt_is_adventurer_merchant_trigger = yes }
+	#     multiply = 1.0  # Base cost for Adventurer -> Trade Post
+	# }
+	# if = {
+	#     limit = { mt_is_trade_post_merchant_trigger = yes }
+	#     multiply = 2.0  # Higher cost for Trade Post -> Company
+	# }
+	# if = {
+	#     limit = { mt_is_company_merchant_trigger = yes }
+	#     multiply = 5.0  # Highest cost for Company -> Republic
+	# }
+
+	# TODO: Factor in character's current wealth
+	# TODO: Factor in number of existing trade routes
+}
+
+# Value: Merchant reputation/experience gain rate
+# Scope: Character
+# Usage: value = mt_merchant_reputation_gain_value
+mt_merchant_reputation_gain_value = {
+	value = 1
+
+	# TODO: Bonus for stewardship skill
+	# add = {
+	#     value = stewardship
+	#     multiply = 0.1
+	# }
+
+	# TODO: Bonus for diplomat trait
+	# if = {
+	#     limit = { has_trait = education_diplomat }
+	#     multiply = 1.2
+	# }
+
+	# TODO: Bonus from active trade routes
+	# TODO: Penalty from failed trades
+}
+
+####################################
+# TRADE ROUTE VALUES
+####################################
+
+# Value: Base trade route income
+# Scope: County (origin)
+# Usage: value = mt_trade_route_base_income_value
+mt_trade_route_base_income_value = {
+	value = 0.5
+
+	# TODO: Scale with origin county development
+	# add = {
+	#     value = development_level
+	#     multiply = 0.1
+	# }
+
+	# TODO: Scale with destination county development
+	# TODO: Bonus for coastal routes
+	# TODO: Bonus for luxury goods
+}
+
+# Value: Trade route maintenance cost
+# Scope: County (origin)
+# Usage: value = mt_trade_route_maintenance_value
+mt_trade_route_maintenance_value = {
+	value = 0.2
+
+	# TODO: Scale with route distance
+	# TODO: Increase for dangerous routes
+	# TODO: Reduce for well-protected routes
+	# TODO: Reduce for coastal routes (cheaper than overland)
+}
+
+# Value: Trade route distance (abstract units)
+# Scope: County (origin, requires target parameter)
+# Usage: value = mt_trade_route_distance_value
+mt_trade_route_distance_value = {
+	value = 1
+
+	# TODO: Calculate actual distance between counties
+	# TODO: Add penalty for terrain (mountains, forests)
+	# TODO: Reduce for river routes
+	# TODO: Modify for cultural/religious boundaries
+
+	# Placeholder - will need complex calculation
+	# max = 100  # Maximum distance
+	# min = 1    # Minimum distance
+}
+
+# Value: Trade route profitability
+# Scope: County (origin)
+# Usage: value = mt_trade_route_profit_value
+mt_trade_route_profit_value = {
+	value = 0
+
+	# TODO: Base income minus maintenance
+	# add = mt_trade_route_base_income_value
+	# subtract = mt_trade_route_maintenance_value
+
+	# TODO: Factor in trade good price differences
+	# TODO: Factor in supply and demand
+	# TODO: Factor in security (losses from bandits)
+	# TODO: Factor in political stability
+
+	# min = 0  # Can't have negative profit (route would close)
+}
+
+# Value: Maximum trade routes for merchant
+# Scope: Character
+# Usage: value = mt_max_trade_routes_value
+mt_max_trade_routes_value = {
+	value = 1
+
+	# TODO: Scale with merchant level
+	# if = {
+	#     limit = { mt_is_adventurer_merchant_trigger = yes }
+	#     value = 1
+	# }
+	# if = {
+	#     limit = { mt_is_trade_post_merchant_trigger = yes }
+	#     value = 3
+	# }
+	# if = {
+	#     limit = { mt_is_company_merchant_trigger = yes }
+	#     value = 10
+	# }
+	# if = {
+	#     limit = { mt_is_merchant_republic_trigger = yes }
+	#     value = 25
+	# }
+
+	# TODO: Bonus from stewardship
+	# TODO: Bonus from special buildings
+}
+
+####################################
+# TRADE GOODS VALUES
+####################################
+
+# Value: Trade good base price
+# Scope: None (uses parameter)
+# Usage: value = mt_trade_good_base_price_value
+mt_trade_good_base_price_value = {
+	value = 10
+
+	# TODO: Different prices for different goods
+	# TODO: Luxury goods worth more
+	# TODO: Common goods worth less
+	# TODO: Regional price variations
+}
+
+# Value: Trade good supply in county
+# Scope: County
+# Usage: value = mt_trade_good_supply_value
+mt_trade_good_supply_value = {
+	value = 0
+
+	# TODO: Base production from county
+	# if = {
+	#     limit = { development_level >= 5 }
+	#     add = 10
+	# }
+
+	# TODO: Bonuses from buildings
+	# TODO: Bonuses from terrain
+	# TODO: Bonuses from special resources
+	# TODO: Penalties from disasters/war
+}
+
+# Value: Trade good demand in county
+# Scope: County
+# Usage: value = mt_trade_good_demand_value
+mt_trade_good_demand_value = {
+	value = 5
+
+	# TODO: Scale with county population/development
+	# add = {
+	#     value = development_level
+	#     multiply = 0.5
+	# }
+
+	# TODO: Scale with county prosperity
+	# TODO: Cultural preferences for certain goods
+	# TODO: Reduced demand during famine/plague
+}
+
+# Value: Trade good price multiplier (supply vs demand)
+# Scope: County
+# Usage: value = mt_trade_good_price_multiplier_value
+mt_trade_good_price_multiplier_value = {
+	value = 1.0
+
+	# TODO: Calculate supply/demand ratio
+	# if = {
+	#     limit = {
+	#         # High demand, low supply
+	#     }
+	#     value = 2.0
+	# }
+	# if = {
+	#     limit = {
+	#         # Low demand, high supply
+	#     }
+	#     value = 0.5
+	# }
+
+	# min = 0.1   # Minimum multiplier
+	# max = 5.0   # Maximum multiplier
+}
+
+####################################
+# ECONOMIC VALUES
+####################################
+
+# Value: County trade power
+# Scope: County
+# Usage: value = mt_county_trade_power_value
+mt_county_trade_power_value = {
+	value = 0
+
+	# TODO: Base from development
+	# add = development_level
+
+	# TODO: Bonus from number of trade routes
+	# TODO: Bonus from trade goods produced
+	# TODO: Bonus from trade buildings
+	# TODO: Bonus from coastal location
+	# TODO: Bonus from special modifiers
+
+	# max = 100  # Maximum trade power
+}
+
+# Value: County development bonus from trade
+# Scope: County
+# Usage: value = mt_trade_development_bonus_value
+mt_trade_development_bonus_value = {
+	value = 0
+
+	# TODO: Scale with trade power
+	# add = {
+	#     value = mt_county_trade_power_value
+	#     multiply = 0.01
+	# }
+
+	# TODO: Bonus from diverse trade goods
+	# TODO: Bonus from long-established trade routes
+
+	# max = 2  # Maximum development bonus from trade
+}
+
+# Value: Ruler trade income
+# Scope: Character
+# Usage: value = mt_ruler_trade_income_value
+mt_ruler_trade_income_value = {
+	value = 0
+
+	# TODO: Sum income from all realm counties with trade
+	# every_held_title = {
+	#     limit = {
+	#         tier = tier_county
+	#         county = { mt_has_trade_routes_trigger = yes }
+	#     }
+	#     add = { # Income from this county's trade
+	#         value = county.mt_trade_route_profit_value
+	#         multiply = 0.1  # Ruler gets 10% tax on trade
+	#     }
+	# }
+
+	# TODO: Bonus if character is merchant
+	# if = {
+	#     limit = { mt_is_merchant_trigger = yes }
+	#     multiply = 1.5
+	# }
+}
+
+####################################
+# MODIFIER VALUES
+####################################
+
+# Value: Banditry risk modifier
+# Scope: County
+# Usage: value = mt_banditry_risk_value
+mt_banditry_risk_value = {
+	value = 0.1  # Base 10% risk
+
+	# TODO: Increase in low control counties
+	# if = {
+	#     limit = { county_control < 50 }
+	#     add = 0.2
+	# }
+
+	# TODO: Increase during war
+	# TODO: Decrease with high development
+	# TODO: Decrease with garrison buildings
+
+	# min = 0.0   # No risk
+	# max = 0.9   # Maximum 90% risk
+}
+
+# Value: Trade route security rating
+# Scope: County (origin)
+# Usage: value = mt_route_security_value
+mt_route_security_value = {
+	value = 1.0  # Full security
+
+	# TODO: Reduce for banditry
+	# subtract = mt_banditry_risk_value
+
+	# TODO: Reduce if counties are hostile
+	# TODO: Reduce during war
+	# TODO: Bonus from military presence
+
+	# min = 0.1   # Minimum 10% security
+	# max = 1.0   # Maximum 100% security
+}
+
+####################################
+# TIME AND FREQUENCY VALUES
+####################################
+
+# Value: Days between trade route updates
+# Scope: Any
+# Usage: value = mt_trade_route_update_frequency_value
+mt_trade_route_update_frequency_value = {
+	value = 30  # Update every 30 days (roughly monthly)
+
+	# TODO: Could make this variable based on game speed
+	# TODO: Could reduce for active merchants
+}
+
+# Value: Days between merchant income payments
+# Scope: Any
+# Usage: value = mt_merchant_income_frequency_value
+mt_merchant_income_frequency_value = {
+	value = 90  # Pay every 90 days (quarterly)
+
+	# TODO: Could vary by merchant level
+}
+
+####################################
+# UTILITY VALUES
+####################################
+
+# Value: AI merchant chance modifier
+# Scope: Character
+# Usage: value = mt_ai_merchant_chance_value
+mt_ai_merchant_chance_value = {
+	value = 10  # Base 10% chance
+
+	# TODO: Increase for high stewardship
+	# TODO: Increase for greedy characters
+	# TODO: Increase in wealthy counties
+	# TODO: Decrease for warrior cultures
+	# TODO: Decrease for religious zealots
+
+	# min = 0
+	# max = 100
+}

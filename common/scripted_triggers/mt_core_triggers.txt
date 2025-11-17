@@ -1,0 +1,279 @@
+####################################
+# Merchants and Traders - Core Triggers
+# Version: 0.1.0
+####################################
+
+# This file contains core scripted triggers for the Merchants and Traders mod
+# Triggers are reusable conditional checks that return true or false
+
+####################################
+# MERCHANT STATUS TRIGGERS
+####################################
+
+# Trigger: Check if character is a merchant
+# Scope: Character
+# Usage: character = { mt_is_merchant_trigger = yes }
+mt_is_merchant_trigger = {
+	# TODO: Check for any merchant trait
+	# OR = {
+	#     has_trait = merchant_adventurer
+	#     has_trait = merchant_trade_post
+	#     has_trait = merchant_company
+	#     has_trait = merchant_republic
+	# }
+}
+
+# Trigger: Check if character is an adventurer merchant
+# Scope: Character
+# Usage: character = { mt_is_adventurer_merchant_trigger = yes }
+mt_is_adventurer_merchant_trigger = {
+	# TODO: has_trait = merchant_adventurer
+}
+
+# Trigger: Check if character is a trade post merchant
+# Scope: Character
+# Usage: character = { mt_is_trade_post_merchant_trigger = yes }
+mt_is_trade_post_merchant_trigger = {
+	# TODO: has_trait = merchant_trade_post
+}
+
+# Trigger: Check if character is a trade company merchant
+# Scope: Character
+# Usage: character = { mt_is_company_merchant_trigger = yes }
+mt_is_company_merchant_trigger = {
+	# TODO: has_trait = merchant_company
+}
+
+# Trigger: Check if character is a merchant republic
+# Scope: Character
+# Usage: character = { mt_is_merchant_republic_trigger = yes }
+mt_is_merchant_republic_trigger = {
+	# TODO: has_trait = merchant_republic
+}
+
+# Trigger: Check if character can become a merchant
+# Scope: Character
+# Usage: character = { mt_can_become_merchant_trigger = yes }
+mt_can_become_merchant_trigger = {
+	# TODO: Check character is adult
+	# TODO: Check character is not incapable
+	# TODO: Check character doesn't already have merchant trait
+	# TODO: Check character has minimum gold threshold
+	# age >= 16
+	# NOT = { mt_is_merchant_trigger = yes }
+	# is_incapable = no
+	# gold >= 50
+}
+
+# Trigger: Check if merchant can upgrade to next level
+# Scope: Character
+# Usage: character = { mt_can_upgrade_merchant_trigger = yes }
+mt_can_upgrade_merchant_trigger = {
+	# TODO: Check current merchant level
+	# TODO: Check upgrade requirements (gold, prestige, trade routes, etc.)
+	# TODO: Verify maximum level not reached
+}
+
+####################################
+# TRADE ROUTE TRIGGERS
+####################################
+
+# Trigger: Check if county can have trade routes
+# Scope: County
+# Usage: county = { mt_can_have_trade_routes_trigger = yes }
+mt_can_have_trade_routes_trigger = {
+	# TODO: County is not uninhabited
+	# TODO: County has minimum development
+	# TODO: County is not under siege
+	# development_level >= 1
+	# is_occupied = no
+}
+
+# Trigger: Check if trade route can be created between two counties
+# Scope: County (origin)
+# Usage: county = { mt_can_create_trade_route_trigger = { target = scope:destination } }
+mt_can_create_trade_route_trigger = {
+	# TODO: Check both counties can have trade routes
+	# TODO: Check distance is within limits
+	# TODO: Check route doesn't already exist
+	# TODO: Check political relations (war, hostility, etc.)
+}
+
+# Trigger: Check if county has any active trade routes
+# Scope: County
+# Usage: county = { mt_has_trade_routes_trigger = yes }
+mt_has_trade_routes_trigger = {
+	# TODO: Check for trade route variables or flags
+	# has_variable = mt_active_trade_routes
+	# var:mt_active_trade_routes > 0
+}
+
+# Trigger: Check if trade route is profitable
+# Scope: County (with route context)
+# Usage: county = { mt_is_route_profitable_trigger = { target = scope:destination } }
+mt_is_route_profitable_trigger = {
+	# TODO: Calculate revenue vs costs
+	# TODO: Check route hasn't been unprofitable for too long
+	# TODO: Factor in route security and losses
+}
+
+####################################
+# TRADE GOODS TRIGGERS
+####################################
+
+# Trigger: Check if county produces a specific trade good
+# Scope: County
+# Usage: county = { mt_produces_trade_good_trigger = { good = trade_good_silk } }
+mt_produces_trade_good_trigger = {
+	# TODO: Check for trade good flag/variable
+	# has_variable = mt_trade_good_silk
+}
+
+# Trigger: Check if county has demand for a trade good
+# Scope: County
+# Usage: county = { mt_has_demand_for_good_trigger = { good = trade_good_silk } }
+mt_has_demand_for_good_trigger = {
+	# TODO: Check local production vs consumption
+	# TODO: NOT = { mt_produces_trade_good_trigger = { good = $good$ } }
+	# TODO: Check demand variable > threshold
+}
+
+# Trigger: Check if county can produce trade goods
+# Scope: County
+# Usage: county = { mt_can_produce_trade_goods_trigger = yes }
+mt_can_produce_trade_goods_trigger = {
+	# TODO: Check minimum development level
+	# TODO: Check for required terrain or special buildings
+	# TODO: Not in famine or major disaster
+	# development_level >= 3
+}
+
+# Trigger: Check if trade good is luxury good
+# Scope: None (uses parameters)
+# Usage: mt_is_luxury_good_trigger = { good = trade_good_silk }
+mt_is_luxury_good_trigger = {
+	# TODO: Check against list of luxury goods
+	# OR = {
+	#     $good$ = trade_good_silk
+	#     $good$ = trade_good_spices
+	#     $good$ = trade_good_gems
+	# }
+}
+
+####################################
+# ECONOMIC TRIGGERS
+####################################
+
+# Trigger: Check if county has strong trade economy
+# Scope: County
+# Usage: county = { mt_has_strong_trade_trigger = yes }
+mt_has_strong_trade_trigger = {
+	# TODO: Check number of trade routes
+	# TODO: Check trade income/volume
+	# TODO: Check for trade buildings
+	# mt_has_trade_routes_trigger = yes
+	# var:mt_trade_power >= 50
+}
+
+# Trigger: Check if character earns trade income
+# Scope: Character
+# Usage: character = { mt_earns_trade_income_trigger = yes }
+mt_earns_trade_income_trigger = {
+	# TODO: Check if merchant OR owns counties with trade
+	# TODO: Check for trade income modifiers
+	# OR = {
+	#     mt_is_merchant_trigger = yes
+	#     any_held_title = {
+	#         tier = tier_county
+	#         county = { mt_has_trade_routes_trigger = yes }
+	#     }
+	# }
+}
+
+# Trigger: Check if realm benefits from trade
+# Scope: Character (ruler)
+# Usage: character = { mt_realm_benefits_from_trade_trigger = yes }
+mt_realm_benefits_from_trade_trigger = {
+	# TODO: Check any realm county has trade
+	# TODO: Check total realm trade income
+	# any_held_title = {
+	#     tier = tier_county
+	#     county = { mt_has_strong_trade_trigger = yes }
+	# }
+}
+
+####################################
+# GEOGRAPHIC TRIGGERS
+####################################
+
+# Trigger: Check if county is coastal
+# Scope: County
+# Usage: county = { mt_is_coastal_trigger = yes }
+mt_is_coastal_trigger = {
+	# TODO: Check if county is next to sea
+	# any_county_province = {
+	#     geographical_region = world_europe_seas
+	# }
+	# OR check CK3's built-in coastal check
+}
+
+# Trigger: Check if trade route is coastal/maritime
+# Scope: County (origin)
+# Usage: county = { mt_is_maritime_route_trigger = { target = scope:destination } }
+mt_is_maritime_route_trigger = {
+	# TODO: Check both counties are coastal
+	# TODO: OR check if route crosses sea zones
+	# mt_is_coastal_trigger = yes
+	# scope:destination = { mt_is_coastal_trigger = yes }
+}
+
+# Trigger: Check if counties are in same trade region
+# Scope: County (origin)
+# Usage: county = { mt_same_trade_region_trigger = { target = scope:destination } }
+mt_same_trade_region_trigger = {
+	# TODO: Compare trade region variables/flags
+	# TODO: Check geographic proximity
+}
+
+####################################
+# POLITICAL TRIGGERS
+####################################
+
+# Trigger: Check if trade is safe between counties
+# Scope: County (origin)
+# Usage: county = { mt_trade_is_safe_trigger = { target = scope:destination } }
+mt_trade_is_safe_trigger = {
+	# TODO: Check not at war with destination holder
+	# TODO: Check provinces not occupied by hostiles
+	# TODO: Check banditry levels
+	# TODO: Check realm stability
+}
+
+# Trigger: Check if character's realm supports merchants
+# Scope: Character
+# Usage: character = { mt_realm_supports_merchants_trigger = yes }
+mt_realm_supports_merchants_trigger = {
+	# TODO: Check liege has merchant-friendly laws/decisions
+	# TODO: Check realm is not hostile to merchants
+	# TODO: Check cultural acceptance of merchants
+}
+
+####################################
+# UTILITY TRIGGERS
+####################################
+
+# Trigger: Debug mode check
+# Scope: Any
+# Usage: mt_debug_mode_trigger = yes
+mt_debug_mode_trigger = {
+	# TODO: Check for debug flag
+	# has_global_variable = mt_debug_mode
+}
+
+# Trigger: Check if mod is fully initialized
+# Scope: Any
+# Usage: mt_mod_initialized_trigger = yes
+mt_mod_initialized_trigger = {
+	# TODO: Check for initialization flag
+	# has_global_variable = mt_mod_initialized
+}
