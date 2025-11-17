@@ -1,0 +1,405 @@
+l_english:
+ ############################################
+ # MERCHANTS AND TRADERS MOD - MERCHANT PORTFOLIO GUI
+ # English localization for Merchant Portfolio Window
+ ############################################
+
+ #####################
+ # WINDOW TITLE & MAIN HEADERS
+ #####################
+
+ MT_MERCHANT_PORTFOLIO_TITLE:0 "Merchant Portfolio"
+ MT_STATUS_OVERVIEW:0 "Status Overview"
+ MT_PROGRESSION_TRACKER:0 "Career Progression"
+ MT_ASSETS:0 "Assets"
+ MT_MARKET_OVERVIEW:0 "Market Overview"
+ MT_TRADE_STATISTICS:0 "Trade Statistics"
+ MT_QUICK_ACTIONS:0 "Quick Actions"
+
+ #####################
+ # MERCHANT STATUS OVERVIEW
+ #####################
+
+ MT_TOTAL_WEALTH:0 "Total Wealth"
+ MT_MONTHLY_INCOME:0 "Monthly Income"
+ MT_MONTHLY_EXPENSES:0 "Monthly Expenses"
+ MT_NET_MONTHLY_PROFIT:0 "Net Monthly Profit"
+ MT_TOTAL_ROUTES:0 "Active Routes"
+ MT_TRADE_POSTS_OWNED:0 "Trade Posts"
+ MT_MERCHANT_REPUTATION:0 "Reputation"
+
+ #####################
+ # STATUS TOOLTIPS
+ #####################
+
+ MT_MERCHANT_TIER_TOOLTIP:0 "#bold Merchant Tier#!\n\nYour current merchant tier determines:\n• Maximum trade routes\n• Available business actions\n• Income multipliers\n• Merchant reputation with other traders\n\nAdvance your tier by meeting progression requirements."
+
+ MT_MONTHLY_INCOME_TOOLTIP:0 "#bold Monthly Income Breakdown#!\n\n#P Income Sources:#!\nTrade Routes: [GetTradeRouteIncome|+V] Gold\nTrade Posts: [GetTradePostIncome|+V] Gold\nMonopolies: [GetMonopolyIncome|+V] Gold\nOther: [GetOtherIncome|+V] Gold\n\n#bold Total: [GetTotalIncome|+V] Gold/month#!"
+
+ MT_MONTHLY_EXPENSES_TOOLTIP:0 "#bold Monthly Expenses Breakdown#!\n\n#N Expenses:#!\nGuard Salaries: -[GetGuardSalaries|V] Gold\nAgent Salaries: -[GetAgentSalaries|V] Gold\nTaxes & Fees: -[GetTaxesFees|V] Gold\nMaintenance: -[GetMaintenance|V] Gold\n\n#bold Total: -[GetTotalExpenses|V] Gold/month#!"
+
+ MT_NET_PROFIT_TOOLTIP:0 "#bold Net Monthly Profit#!\n\nTotal Income: [GetTotalIncome|+V] Gold\nTotal Expenses: -[GetTotalExpenses|V] Gold\n\n#bold Net Profit: [GetNetProfit|V] Gold/month#!\n\nThis is your actual monthly profit after all expenses."
+
+ MT_TOTAL_ROUTES_TOOLTIP:0 "#bold Trade Routes#!\n\nCurrent Active Routes: [GetActiveRoutes]\nMaximum Capacity: [GetMaxRoutes]\n\n#weak Increase capacity by:#!\n• Advancing merchant tier\n• Building trade infrastructure\n• Establishing trade posts"
+
+ MT_TRADE_POSTS_TOOLTIP:0 "#bold Trade Posts#!\n\nYou currently own [GetTradePostCount] trade post(s).\n\n#weak Trade posts provide:#!\n• Fixed monthly income\n• Trading base in the region\n• Increased route capacity\n• Storage for goods\n• Access to local markets"
+
+ MT_REPUTATION_TOOLTIP:0 "#bold Merchant Reputation#!\n\nCurrent Reputation: [GetReputationScore]/100\n\n#weak Reputation affects:#!\n• Trade deal success rates\n• Access to exclusive markets\n• Negotiations with rulers\n• Agent hiring costs\n• Tier progression requirements\n\n#weak Improve reputation by:#!\n• Completing successful trades\n• Establishing trade posts\n• Fulfilling contracts\n• Charitable donations"
+
+ #####################
+ # PROGRESSION TRACKER
+ #####################
+
+ MT_CURRENT_TIER:0 "Current Tier:"
+ MT_NEXT_TIER_REQUIREMENTS:0 "Requirements for Next Tier:"
+ MT_GOLD_REQUIREMENT:0 "Gold"
+ MT_ROUTES_REQUIREMENT:0 "Trade Routes"
+ MT_REPUTATION_REQUIREMENT:0 "Reputation"
+ MT_RANK_UP:0 "Advance Tier"
+
+ MT_RANK_UP_TOOLTIP:0 "#bold Advance to Next Tier#!\n\nMeet all requirements to advance your merchant career.\n\n#weak Current Progress:#!\n[GetProgressSummary]\n\n#weak Next Tier Benefits:#!\n[GetNextTierBenefits]"
+
+ # Merchant Tier Names (from traits file)
+ MT_TIER_WANDERING_MERCHANT:0 "Wandering Merchant"
+ MT_TIER_TRADE_POST_OWNER:0 "Trade Post Owner"
+ MT_TIER_TRADING_COMPANY_HEAD:0 "Trading Company Head"
+ MT_TIER_MERCHANT_PRINCE:0 "Merchant Prince"
+
+ # Tier Descriptions
+ MT_TIER_WANDERING_MERCHANT_DESC:0 "An entry-level merchant who travels with their goods, seeking profitable opportunities."
+ MT_TIER_TRADE_POST_OWNER_DESC:0 "An established merchant with a permanent trading location and multiple routes."
+ MT_TIER_TRADING_COMPANY_HEAD_DESC:0 "A prominent merchant managing an extensive trade network with employees."
+ MT_TIER_MERCHANT_PRINCE_DESC:0 "An elite merchant with vast wealth and influence rivaling nobility."
+
+ # Tier Requirements
+ MT_REQ_TIER_2:0 "#weak Requirements:#!\n• 500 Gold\n• 3 Active Trade Routes\n• 40 Reputation\n• 1 Trade Post"
+
+ MT_REQ_TIER_3:0 "#weak Requirements:#!\n• 2000 Gold\n• 7 Active Trade Routes\n• 70 Reputation\n• 3 Trade Posts\n• 2 Merchant Agents"
+
+ MT_REQ_TIER_4:0 "#weak Requirements:#!\n• 10000 Gold\n• 15 Active Trade Routes\n• 100 Reputation\n• 5 Trade Posts\n• 5 Merchant Agents\n• 1 Monopoly or Exclusive Contract"
+
+ # Progress Display
+ MT_PROGRESS_FORMAT:0 "[current]/[required]"
+ MT_PROGRESS_COMPLETE:0 "#P Complete!#!"
+ MT_PROGRESS_INCOMPLETE:0 "[current]/[required]"
+
+ #####################
+ # ASSETS SECTION
+ #####################
+
+ # Tab Labels
+ MT_TRADE_POSTS_TAB:0 "Posts"
+ MT_AGENTS_TAB:0 "Agents"
+ MT_SPECIAL_TAB:0 "Special"
+
+ # Trade Post Entry
+ MT_TRADE_POST_STATUS_ACTIVE:0 "#P Active#!"
+ MT_TRADE_POST_STATUS_DAMAGED:0 "#Y Damaged#!"
+ MT_TRADE_POST_STATUS_INACTIVE:0 "#N Inactive#!"
+
+ # Agent Roles
+ MT_AGENT_ROLE_TRADER:0 "Trader"
+ MT_AGENT_ROLE_NEGOTIATOR:0 "Negotiator"
+ MT_AGENT_ROLE_GUARD_CAPTAIN:0 "Guard Captain"
+ MT_AGENT_ROLE_SCOUT:0 "Scout"
+ MT_AGENT_ROLE_ADMINISTRATOR:0 "Administrator"
+
+ # Special Assets
+ MT_SPECIAL_MONOPOLY:0 "Trade Monopoly"
+ MT_SPECIAL_EXCLUSIVE_CONTRACT:0 "Exclusive Contract"
+ MT_SPECIAL_MERCHANT_GUILD:0 "Merchant Guild Membership"
+ MT_SPECIAL_TRADE_LICENSE:0 "Royal Trade License"
+ MT_SPECIAL_WAREHOUSE:0 "Warehouse"
+
+ # Special Asset Descriptions
+ MT_SPECIAL_MONOPOLY_DESC:0 "Exclusive trading rights for specific goods"
+ MT_SPECIAL_EXCLUSIVE_CONTRACT_DESC:0 "Sole supplier to a noble house"
+ MT_SPECIAL_MERCHANT_GUILD_DESC:0 "Member of prestigious merchant guild"
+ MT_SPECIAL_TRADE_LICENSE_DESC:0 "Official permission from ruler"
+ MT_SPECIAL_WAREHOUSE_DESC:0 "Storage facility for bulk goods"
+
+ # Empty States
+ MT_NO_TRADE_POSTS:0 "No trade posts established.\n\nEstablish trade posts to secure permanent trading locations and increase your income."
+ MT_NO_AGENTS:0 "No merchant agents hired.\n\nHire agents to manage your trade empire more effectively."
+ MT_NO_SPECIAL_ASSETS:0 "No special assets acquired.\n\nGain monopolies, contracts, and other special assets through successful business ventures."
+
+ #####################
+ # MARKET OVERVIEW
+ #####################
+
+ MT_CURRENT_PRICES:0 "Current Market Prices by Region"
+ MT_OPPORTUNITIES_TOOLTIP:0 "#bold Profitable Opportunities#!\n\nThese are the most profitable trade opportunities currently available based on market conditions:\n\n[GetOpportunitiesList]"
+
+ # Supply/Demand Indicators
+ MT_SUPPLY_HIGH:0 "#Y Oversupplied#!"
+ MT_SUPPLY_NORMAL:0 "Normal"
+ MT_SUPPLY_LOW:0 "#P High Demand#!"
+
+ # Market Events
+ MT_MARKET_EVENT_SHORTAGE:0 "Shortage"
+ MT_MARKET_EVENT_SURPLUS:0 "Surplus"
+ MT_MARKET_EVENT_WAR_DISRUPTION:0 "War Disruption"
+ MT_MARKET_EVENT_FESTIVAL:0 "Festival Demand"
+ MT_MARKET_EVENT_HARVEST:0 "Harvest Season"
+
+ # Trend Icons Tooltips
+ MT_TREND_UP_TOOLTIP:0 "#P Rising Prices#!\n\nDemand exceeds supply. Good time to sell."
+ MT_TREND_DOWN_TOOLTIP:0 "#N Falling Prices#!\n\nSupply exceeds demand. Good time to buy."
+ MT_TREND_STABLE_TOOLTIP:0 "Stable Prices\n\nMarket is balanced."
+
+ #####################
+ # TRADE STATISTICS
+ #####################
+
+ MT_LIFETIME_PROFIT:0 "Total Lifetime Profit"
+ MT_MOST_PROFITABLE_ROUTE:0 "Most Profitable Route Ever"
+ MT_MOST_TRADED_GOOD:0 "Most Traded Good"
+ MT_LONGEST_ROUTE:0 "Longest Active Route"
+ MT_TOTAL_GOODS_MOVED:0 "Total Goods Traded"
+ MT_MILESTONES:0 "Milestones Achieved"
+
+ # Placeholder Values
+ MT_NO_ROUTES_YET:0 "No routes established yet"
+ MT_NO_GOODS_YET:0 "No goods traded yet"
+ MT_GOODS_COUNT_FORMAT:0 "[count] units"
+
+ # Milestones
+ MT_MILESTONE_FIRST_ROUTE:0 "#P First Steps#! - Established your first trade route"
+ MT_MILESTONE_FIRST_PROFIT:0 "#P Profitable Venture#! - Earned your first 100 gold from trade"
+ MT_MILESTONE_BIG_PROFIT:0 "#P Trade Baron#! - Earned 1000 gold from a single route"
+ MT_MILESTONE_FIVE_ROUTES:0 "#P Expanding Network#! - Maintained 5 active routes"
+ MT_MILESTONE_TEN_ROUTES:0 "#P Trade Empire#! - Maintained 10 active routes"
+ MT_MILESTONE_FIRST_POST:0 "#P Permanent Presence#! - Established your first trade post"
+ MT_MILESTONE_FIRST_AGENT:0 "#P Delegation#! - Hired your first merchant agent"
+ MT_MILESTONE_REPUTATION_50:0 "#P Rising Star#! - Reached 50 reputation"
+ MT_MILESTONE_REPUTATION_100:0 "#P Legendary Merchant#! - Reached 100 reputation"
+ MT_MILESTONE_MONOPOLY:0 "#P Market Control#! - Acquired a trade monopoly"
+ MT_MILESTONE_TIER_2:0 "#P Trade Post Owner#! - Advanced to tier 2"
+ MT_MILESTONE_TIER_3:0 "#P Trading Company Head#! - Advanced to tier 3"
+ MT_MILESTONE_TIER_4:0 "#P Merchant Prince#! - Achieved the highest merchant tier"
+
+ # Milestone States
+ MT_MILESTONE_UNLOCKED:0 "#high"
+ MT_MILESTONE_LOCKED:0 "#weak"
+
+ #####################
+ # QUICK ACTIONS
+ #####################
+
+ MT_SCOUT_OPPORTUNITIES:0 "Scout Opportunities"
+ MT_ESTABLISH_POST:0 "Establish Trade Post"
+ MT_HIRE_AGENT:0 "Hire Merchant Agent"
+ MT_VIEW_ROUTES:0 "View Trade Routes"
+ MT_MERCHANT_DECISIONS:0 "Available Decisions:"
+
+ # Action Tooltips
+ MT_SCOUT_OPPORTUNITIES_TOOLTIP:0 "#bold Scout Trade Opportunities#!\n\nSend scouts to explore potential new trade routes and markets.\n\n#weak Cost:#! 50 Gold\n#weak Duration:#! 30 days\n\n#weak Potential Results:#!\n• Discover profitable new routes\n• Find rare trade goods\n• Establish contacts in distant markets\n• Unlock new trading regions"
+
+ MT_ESTABLISH_POST_TOOLTIP:0 "#bold Establish Trade Post#!\n\nBuild a permanent trading location to expand your business operations.\n\n#weak Cost:#! [GetTradePostCost|V] Gold\n\n#weak Benefits:#!\n• Fixed monthly income\n• +1 route capacity\n• Regional market access\n• Storage for goods\n• Can hire local agents\n\n#weak Requirements:#!\n• Must own or control the county\n• Sufficient gold\n• Merchant tier 2 or higher"
+
+ MT_HIRE_AGENT_TOOLTIP:0 "#bold Hire Merchant Agent#!\n\nRecruit a skilled character to assist with your trading operations.\n\n#weak Cost:#! [GetAgentHireCost|V] Gold (one-time)\n#weak Salary:#! [GetAgentSalary|V] Gold/month\n\n#weak Agent Benefits:#!\n• Manage trade routes automatically\n• Improve route profitability\n• Negotiate better deals\n• Provide intelligence on markets\n• Protect against fraud and theft\n\n#weak Requirements:#!\n• Merchant tier 2 or higher\n• Available agent capacity"
+
+ MT_VIEW_ROUTES_TOOLTIP:0 "#bold View Trade Routes#!\n\nOpen the trade route management window to view and manage all your active routes.\n\nClick to open detailed route management."
+
+ # Action Button States
+ MT_ACTION_AVAILABLE:0 "Click to perform this action"
+ MT_ACTION_UNAVAILABLE:0 "Requirements not met"
+ MT_ACTION_INSUFFICIENT_GOLD:0 "Insufficient gold"
+ MT_ACTION_MAX_CAPACITY:0 "Maximum capacity reached"
+
+ #####################
+ # PERFORMANCE INDICATORS
+ #####################
+
+ MT_PERFORMANCE_EXCELLENT:0 "#P Excellent#!"
+ MT_PERFORMANCE_GOOD:0 "#P Good#!"
+ MT_PERFORMANCE_AVERAGE:0 "#Y Average#!"
+ MT_PERFORMANCE_POOR:0 "#N Poor#!"
+
+ MT_PERFORMANCE_EXCELLENT_TOOLTIP:0 "This agent is performing exceptionally well, significantly boosting profits."
+ MT_PERFORMANCE_GOOD_TOOLTIP:0 "This agent is performing well and contributing positively."
+ MT_PERFORMANCE_AVERAGE_TOOLTIP:0 "This agent is performing adequately but could improve."
+ MT_PERFORMANCE_POOR_TOOLTIP:0 "This agent is underperforming and may need replacement."
+
+ #####################
+ # PROFIT COLORS
+ #####################
+
+ # Used for dynamic color coding of profit values
+ MT_PROFIT_VERY_HIGH:0 "#P"
+ MT_PROFIT_HIGH:0 "#P"
+ MT_PROFIT_POSITIVE:0 "#high"
+ MT_PROFIT_NEUTRAL:0 "#Y"
+ MT_PROFIT_NEGATIVE:0 "#N"
+
+ #####################
+ # SPECIAL REQUIREMENTS
+ #####################
+
+ MT_SPECIAL_REQ_MONOPOLY:0 "Acquire at least one trade monopoly"
+ MT_SPECIAL_REQ_GUILD_MEMBERSHIP:0 "Join a merchant guild"
+ MT_SPECIAL_REQ_ROYAL_FAVOR:0 "Gain royal favor (opinion 50+)"
+ MT_SPECIAL_REQ_WAREHOUSE:0 "Build a warehouse"
+ MT_SPECIAL_REQ_EXCLUSIVE_CONTRACT:0 "Secure an exclusive contract"
+
+ #####################
+ # NOTIFICATIONS & MESSAGES
+ #####################
+
+ MT_TIER_ADVANCED_TITLE:0 "#P Merchant Tier Advanced!#!"
+ MT_TIER_ADVANCED_DESC:0 "Congratulations! You have advanced to [tier_name].\n\nYou now have access to new opportunities and increased capacity."
+
+ MT_MILESTONE_ACHIEVED_TITLE:0 "#P Milestone Achieved!#!"
+ MT_MILESTONE_ACHIEVED_DESC:0 "You have achieved: [milestone_name]\n\n[milestone_desc]"
+
+ MT_OPPORTUNITY_DISCOVERED_TITLE:0 "#P Opportunity Discovered!#!"
+ MT_OPPORTUNITY_DISCOVERED_DESC:0 "Your scouts have discovered a profitable trade opportunity:\n\n[opportunity_details]"
+
+ #####################
+ # ERROR MESSAGES
+ #####################
+
+ MT_ERROR_INSUFFICIENT_GOLD_POST:0 "#N Error:#! You need [required_gold|V] gold to establish a trade post."
+ MT_ERROR_INSUFFICIENT_TIER:0 "#N Error:#! You must be at least [required_tier] to perform this action."
+ MT_ERROR_MAX_POSTS:0 "#N Error:#! You have reached your maximum trade post limit."
+ MT_ERROR_MAX_AGENTS:0 "#N Error:#! You have reached your maximum agent capacity."
+ MT_ERROR_NO_VALID_LOCATION:0 "#N Error:#! No valid location available for this action."
+ MT_ERROR_ALREADY_IN_PROGRESS:0 "#N Error:#! This action is already in progress."
+
+ #####################
+ # DETAILED TOOLTIPS
+ #####################
+
+ MT_TOOLTIP_MERCHANT_WEALTH:0 "#bold Total Wealth#!\n\nYour current gold treasury: [GetGold|V] Gold\n\n#weak This represents:#!\n• Liquid capital for investments\n• Emergency reserves\n• Tier advancement requirements\n• Business expansion funding\n\n#weak Increase wealth by:#!\n• Establishing profitable trade routes\n• Building trade posts\n• Acquiring monopolies\n• Efficient cost management"
+
+ MT_TOOLTIP_ROUTE_CAPACITY:0 "#bold Route Capacity#!\n\nCurrent: [GetActiveRoutes]/[GetMaxRoutes]\n\n#weak Capacity by Tier:#!\nWandering Merchant: 2 routes\nTrade Post Owner: 5 routes\nTrading Company Head: 12 routes\nMerchant Prince: 25 routes\n\n#weak Bonus Capacity:#!\nTrade Posts: +[GetTradePostBonus] routes\nSpecial Buildings: +[GetBuildingBonus] routes"
+
+ MT_TOOLTIP_AGENT_CAPACITY:0 "#bold Agent Capacity#!\n\nCurrent Agents: [GetActiveAgents]/[GetMaxAgents]\n\n#weak Agent Types:#!\n• Traders: Manage routes automatically\n• Negotiators: Improve deal terms\n• Guard Captains: Enhance route security\n• Scouts: Discover opportunities\n• Administrators: Reduce costs\n\n#weak Capacity by Tier:#!\nWandering Merchant: 0 agents\nTrade Post Owner: 2 agents\nTrading Company Head: 6 agents\nMerchant Prince: 15 agents"
+
+ #####################
+ # CONFIRMATION DIALOGS
+ #####################
+
+ MT_CONFIRM_RANK_UP_TITLE:0 "Advance Merchant Tier?"
+ MT_CONFIRM_RANK_UP_DESC:0 "Are you ready to advance from [current_tier] to [next_tier]?\n\n#weak New Benefits:#!\n[benefits_list]\n\n#weak Cost:#! [cost|V] Gold"
+ MT_CONFIRM_RANK_UP_ACCEPT:0 "Advance"
+ MT_CONFIRM_RANK_UP_CANCEL:0 "Not Yet"
+
+ MT_CONFIRM_HIRE_AGENT_TITLE:0 "Hire Merchant Agent?"
+ MT_CONFIRM_HIRE_AGENT_DESC:0 "Hire [agent_name] as your merchant agent?\n\n#weak Role:#! [agent_role]\n#weak Skills:#!\n[agent_skills]\n\n#weak Cost:#! [hire_cost|V] Gold\n#weak Monthly Salary:#! [salary|V] Gold/month"
+ MT_CONFIRM_HIRE_AGENT_ACCEPT:0 "Hire"
+ MT_CONFIRM_HIRE_AGENT_CANCEL:0 "Cancel"
+
+ MT_CONFIRM_ESTABLISH_POST_TITLE:0 "Establish Trade Post?"
+ MT_CONFIRM_ESTABLISH_POST_DESC:0 "Establish a trade post in [county_name]?\n\n#weak Benefits:#!\n• +[income|V] Gold/month base income\n• +1 route capacity\n• Access to regional markets\n• Storage facilities\n\n#weak Cost:#! [cost|V] Gold"
+ MT_CONFIRM_ESTABLISH_POST_ACCEPT:0 "Establish"
+ MT_CONFIRM_ESTABLISH_POST_CANCEL:0 "Cancel"
+
+ #####################
+ # TUTORIAL HINTS
+ #####################
+
+ MT_HINT_FIRST_OPEN:0 "#bold Welcome to Your Merchant Portfolio!#!\n\nThis is your central hub for managing your trading empire. Here you can:\n\n• Monitor your wealth and income\n• Track progression toward higher merchant tiers\n• Manage assets like trade posts and agents\n• View market conditions and opportunities\n• Review your trading statistics\n• Access quick actions and decisions\n\nClick on any section to learn more!"
+
+ MT_HINT_NO_ROUTES:0 "You don't have any active trade routes yet.\n\nClick '#T View Trade Routes#!' to establish your first route and start earning profits!"
+
+ MT_HINT_CAN_RANK_UP:0 "#P You can advance to the next tier!#!\n\nYou've met all requirements. Click '#T Advance Tier#!' in the Progression section to upgrade your merchant status!"
+
+ MT_HINT_LOW_PROFIT:0 "#O Low Profitability#!\n\nYour net monthly profit is low. Consider:\n\n• Optimizing trade routes\n• Reducing unnecessary expenses\n• Hiring agents to improve efficiency\n• Exploring new market opportunities"
+
+ #####################
+ # MERCHANT DECISION CATEGORIES
+ #####################
+
+ MT_DECISION_CATEGORY_EXPANSION:0 "Expansion"
+ MT_DECISION_CATEGORY_TRADE:0 "Trade Operations"
+ MT_DECISION_CATEGORY_DIPLOMACY:0 "Diplomacy"
+ MT_DECISION_CATEGORY_MANAGEMENT:0 "Management"
+
+ #####################
+ # CONTEXTUAL INFORMATION
+ #####################
+
+ MT_INFO_WANDERING_MERCHANT:0 "As a Wandering Merchant, you are just beginning your trading career. Focus on establishing reliable routes and building your reputation."
+
+ MT_INFO_TRADE_POST_OWNER:0 "As a Trade Post Owner, you have a solid foundation. Expand your network and consider hiring agents to help manage your growing business."
+
+ MT_INFO_TRADING_COMPANY_HEAD:0 "As a Trading Company Head, you manage a significant trade empire. Focus on efficiency, monopolies, and expanding into new markets."
+
+ MT_INFO_MERCHANT_PRINCE:0 "As a Merchant Prince, you have achieved the pinnacle of mercantile success. Your wealth and influence rival nobility. Continue to expand your empire and maintain your legendary status."
+
+ #####################
+ # ACCESSIBILITY & HELP
+ #####################
+
+ MT_HELP_REPUTATION:0 "#bold Merchant Reputation#!\n\nReputation represents your standing in the merchant community.\n\n#weak Gain reputation by:#!\n• Successful trade deals\n• Establishing trade posts\n• Fulfilling contracts on time\n• Charitable donations\n• Honest business practices\n\n#weak Lose reputation by:#!\n• Failed deliveries\n• Breaking contracts\n• Dishonest dealings\n• Bankruptcy"
+
+ MT_HELP_PROFITABILITY:0 "#bold Understanding Profitability#!\n\nNet Monthly Profit = Income - Expenses\n\n#P Income Sources:#!\n• Trade route profits\n• Trade post base income\n• Monopoly bonuses\n• Special contracts\n\n#N Expenses:#!\n• Guard salaries\n• Agent salaries\n• Maintenance costs\n• Taxes and fees\n\n#weak Maximize profit by:#!\n• Choosing profitable routes\n• Managing expenses carefully\n• Hiring efficient agents\n• Acquiring monopolies"
+
+ MT_HELP_TIER_SYSTEM:0 "#bold Merchant Tier System#!\n\nAdvance through four merchant tiers:\n\n#bold 1. Wandering Merchant#!\nStarting tier. Limited capacity.\n\n#bold 2. Trade Post Owner#!\nEstablished merchant. Multiple routes.\n\n#bold 3. Trading Company Head#!\nExtensive network. Hired staff.\n\n#bold 4. Merchant Prince#!\nLegendary status. Maximum capacity.\n\nEach tier unlocks new opportunities and increases your income potential."
+
+ #####################
+ # FORMATTING HELPERS
+ #####################
+
+ MT_GOLD_FORMAT:0 "[value|V]"
+ MT_GOLD_WITH_ICON:0 "[value|V] £gold"
+ MT_PERCENTAGE_FORMAT:0 "[value]%"
+ MT_COUNT_FORMAT:0 "[count]"
+
+ #####################
+ # SEASON & TIME REFERENCES
+ #####################
+
+ MT_MARKET_SEASON_SPRING:0 "Spring Markets"
+ MT_MARKET_SEASON_SUMMER:0 "Summer Markets"
+ MT_MARKET_SEASON_AUTUMN:0 "Autumn Harvest"
+ MT_MARKET_SEASON_WINTER:0 "Winter Trade"
+
+ #####################
+ # CLOSE BUTTON
+ #####################
+
+ MT_CLOSE_WINDOW:0 "Close"
+ MT_CLOSE_TOOLTIP:0 "Close the Merchant Portfolio window"
+
+ #####################
+ # PLACEHOLDER TEXT
+ #####################
+
+ MT_PLACEHOLDER_NO_DATA:0 "No data available"
+ MT_PLACEHOLDER_CALCULATING:0 "Calculating..."
+ MT_PLACEHOLDER_LOADING:0 "Loading..."
+ MT_PLACEHOLDER_COMING_SOON:0 "Coming soon"
+
+ #####################
+ # AGENT SKILL DESCRIPTIONS
+ #####################
+
+ MT_AGENT_SKILL_TRADING:0 "Trading: [value]"
+ MT_AGENT_SKILL_NEGOTIATION:0 "Negotiation: [value]"
+ MT_AGENT_SKILL_SECURITY:0 "Security: [value]"
+ MT_AGENT_SKILL_SCOUTING:0 "Scouting: [value]"
+ MT_AGENT_SKILL_ADMINISTRATION:0 "Administration: [value]"
+
+ MT_AGENT_SKILL_TRADING_DESC:0 "Improves route profitability"
+ MT_AGENT_SKILL_NEGOTIATION_DESC:0 "Reduces costs and increases prices"
+ MT_AGENT_SKILL_SECURITY_DESC:0 "Protects routes from bandits and theft"
+ MT_AGENT_SKILL_SCOUTING_DESC:0 "Discovers new opportunities faster"
+ MT_AGENT_SKILL_ADMINISTRATION_DESC:0 "Reduces operating costs"
+
+ #####################
+ # MARKET REGION NAMES
+ #####################
+
+ MT_REGION_EUROPE_WEST:0 "Western Europe"
+ MT_REGION_EUROPE_EAST:0 "Eastern Europe"
+ MT_REGION_MEDITERRANEAN:0 "Mediterranean"
+ MT_REGION_MIDDLE_EAST:0 "Middle East"
+ MT_REGION_ASIA:0 "Asia"
+ MT_REGION_AFRICA:0 "Africa"
+ MT_REGION_SCANDINAVIA:0 "Scandinavia"
+
+ #####################
+ # END OF LOCALIZATION
+ #####################
