@@ -1,0 +1,815 @@
+####################################
+# Merchants and Traders - Ruler Trade Policy Decisions
+# Version: 0.1.0
+####################################
+
+# This file contains major policy decisions rulers can make regarding trade in their realm
+# These decisions have significant diplomatic and economic consequences
+# They represent fundamental approaches to merchant activity and trade regulation
+
+####################################
+# DECISION 1: ESTABLISH TRADE TAXATION
+####################################
+
+establish_trade_taxation_decision = {
+	picture = "gfx/interface/illustrations/decisions/decision_realm.dds"
+
+	desc = establish_trade_taxation_decision_desc
+	selection_tooltip = establish_trade_taxation_decision_tooltip
+
+	major = yes
+
+	is_shown = {
+		# Must be a landed ruler
+		is_landed = yes
+
+		# Must not already have taxation policy active
+		NOT = { has_character_modifier = mt_trade_taxation_policy }
+
+		# Must not have protection policy active (mutually exclusive)
+		NOT = { has_character_modifier = mt_merchant_protection_policy }
+
+		# Must not have banned merchants
+		NOT = { has_character_modifier = mt_merchant_activity_banned }
+	}
+
+	is_valid = {
+		# Must have merchants operating in your realm
+		# TODO: Add proper trigger when merchant system is implemented
+		# any_sub_realm_county = {
+		#     any_county_province = {
+		#         has_province_modifier = active_trade_route
+		#     }
+		# }
+
+		# For now, just require being a ruler
+		is_ruler = yes
+	}
+
+	effect = {
+		# Apply taxation policy modifier
+		add_character_modifier = {
+			modifier = mt_trade_taxation_policy
+			desc = mt_trade_taxation_policy_desc
+		}
+
+		# Merchants resent heavy taxation
+		add_character_modifier = {
+			modifier = mt_merchant_resentment
+			years = 10
+			desc = mt_merchant_resentment_desc
+		}
+
+		# Apply route health penalties to all routes in realm
+		# TODO: Implement when route system is ready
+		# every_sub_realm_county = {
+		#     if = {
+		#         limit = { has_county_modifier = active_trade_route_1 }
+		#         add_county_modifier = {
+		#             modifier = route_health_penalty
+		#             years = -1  # Permanent until policy revoked
+		#         }
+		#     }
+		# }
+
+		# Notification
+		custom_tooltip = establish_trade_taxation_decision_effect_tooltip
+	}
+
+	ai_check_interval = 60
+
+	ai_potential = {
+		# AI considers this if they want more income
+		is_at_war = no
+		short_term_gold < 100
+	}
+
+	ai_will_do = {
+		base = 0
+
+		modifier = {
+			add = 40
+			# Greedy characters more likely
+			has_trait = greedy
+		}
+
+		modifier = {
+			add = 30
+			# Struggling financially
+			short_term_gold < 50
+		}
+
+		modifier = {
+			add = 20
+			# At war and need funds
+			is_at_war = yes
+		}
+
+		modifier = {
+			add = -50
+			# Just rulers less likely
+			has_trait = just
+		}
+
+		modifier = {
+			add = -30
+			# High stewardship rulers understand long-term costs
+			stewardship >= 15
+		}
+	}
+}
+
+####################################
+# REVOKE TRADE TAXATION
+####################################
+
+revoke_trade_taxation_decision = {
+	picture = "gfx/interface/illustrations/decisions/decision_realm.dds"
+
+	desc = revoke_trade_taxation_decision_desc
+	selection_tooltip = revoke_trade_taxation_decision_tooltip
+
+	is_shown = {
+		# Must have taxation policy active
+		has_character_modifier = mt_trade_taxation_policy
+	}
+
+	is_valid = {
+		is_ruler = yes
+	}
+
+	effect = {
+		# Remove taxation policy
+		remove_character_modifier = mt_trade_taxation_policy
+
+		# Remove merchant resentment
+		remove_character_modifier = mt_merchant_resentment
+
+		# Merchants appreciate the change
+		add_character_modifier = {
+			modifier = mt_merchant_approval
+			years = 5
+			desc = mt_merchant_approval_desc
+		}
+
+		# Remove route health penalties
+		# TODO: Implement when route system is ready
+
+		custom_tooltip = revoke_trade_taxation_decision_effect_tooltip
+	}
+
+	ai_check_interval = 60
+
+	ai_will_do = {
+		base = 0
+
+		modifier = {
+			add = 30
+			# AI revokes if they have plenty of gold
+			short_term_gold > 500
+		}
+
+		modifier = {
+			add = 40
+			# Just rulers more likely to revoke
+			has_trait = just
+		}
+	}
+}
+
+####################################
+# DECISION 2: PROTECT MERCHANT CARAVANS
+####################################
+
+protect_merchant_caravans_decision = {
+	picture = "gfx/interface/illustrations/decisions/decision_realm.dds"
+
+	desc = protect_merchant_caravans_decision_desc
+	selection_tooltip = protect_merchant_caravans_decision_tooltip
+
+	major = yes
+
+	is_shown = {
+		# Must be a landed ruler
+		is_landed = yes
+
+		# Must not already have protection policy active
+		NOT = { has_character_modifier = mt_merchant_protection_policy }
+
+		# Must not have taxation policy active (mutually exclusive)
+		NOT = { has_character_modifier = mt_trade_taxation_policy }
+
+		# Must not have banned merchants
+		NOT = { has_character_modifier = mt_merchant_activity_banned }
+	}
+
+	is_valid = {
+		# Must have merchants operating in your realm
+		is_ruler = yes
+
+		# Must have enough gold to afford protection costs
+		# TODO: Make this dynamic based on number of routes
+		# For now: 1 gold/month * estimated routes
+		gold >= 50
+	}
+
+	is_valid_showing_failures_only = {
+		gold >= 50
+	}
+
+	cost = {
+		# No upfront cost, but ongoing monthly cost via modifier
+		gold = 0
+	}
+
+	effect = {
+		# Apply protection policy modifier
+		add_character_modifier = {
+			modifier = mt_merchant_protection_policy
+			desc = mt_merchant_protection_policy_desc
+		}
+
+		# Merchants appreciate protection
+		add_character_modifier = {
+			modifier = mt_merchant_approval
+			years = 10
+			desc = mt_merchant_approval_desc
+		}
+
+		# Apply route health bonuses to all routes in realm
+		# TODO: Implement when route system is ready
+		# every_sub_realm_county = {
+		#     if = {
+		#         limit = { has_county_modifier = active_trade_route_1 }
+		#         add_county_modifier = {
+		#             modifier = route_health_bonus
+		#             years = -1  # Permanent until policy revoked
+		#         }
+		#     }
+		# }
+
+		# Notification
+		custom_tooltip = protect_merchant_caravans_decision_effect_tooltip
+	}
+
+	ai_check_interval = 60
+
+	ai_potential = {
+		# AI considers if they have gold and want development
+		is_at_war = no
+		short_term_gold > 200
+	}
+
+	ai_will_do = {
+		base = 0
+
+		modifier = {
+			add = 60
+			# Just rulers more likely
+			has_trait = just
+		}
+
+		modifier = {
+			add = 50
+			# Plenty of gold
+			short_term_gold > 500
+		}
+
+		modifier = {
+			add = 40
+			# Wants development
+			any_sub_realm_county = {
+				development_level < 20
+			}
+		}
+
+		modifier = {
+			add = -50
+			# Greedy characters less likely
+			has_trait = greedy
+		}
+
+		modifier = {
+			add = -60
+			# Can't afford it
+			short_term_gold < 100
+		}
+	}
+}
+
+####################################
+# REVOKE MERCHANT PROTECTION
+####################################
+
+revoke_merchant_protection_decision = {
+	picture = "gfx/interface/illustrations/decisions/decision_realm.dds"
+
+	desc = revoke_merchant_protection_decision_desc
+	selection_tooltip = revoke_merchant_protection_decision_tooltip
+
+	is_shown = {
+		# Must have protection policy active
+		has_character_modifier = mt_merchant_protection_policy
+	}
+
+	is_valid = {
+		is_ruler = yes
+	}
+
+	effect = {
+		# Remove protection policy
+		remove_character_modifier = mt_merchant_protection_policy
+
+		# Remove merchant approval
+		remove_character_modifier = mt_merchant_approval
+
+		# Merchants are disappointed
+		add_character_modifier = {
+			modifier = mt_merchant_resentment
+			years = 3
+			desc = mt_merchant_resentment_desc
+		}
+
+		# Remove route health bonuses
+		# TODO: Implement when route system is ready
+
+		custom_tooltip = revoke_merchant_protection_decision_effect_tooltip
+	}
+
+	ai_check_interval = 60
+
+	ai_will_do = {
+		base = 0
+
+		modifier = {
+			add = 50
+			# AI revokes if struggling financially
+			short_term_gold < 50
+		}
+
+		modifier = {
+			add = 30
+			# At war and need funds
+			is_at_war = yes
+		}
+	}
+}
+
+####################################
+# DECISION 3: GRANT TRADE MONOPOLY
+####################################
+
+grant_trade_monopoly_decision = {
+	picture = "gfx/interface/illustrations/decisions/decision_monopoly.dds"
+
+	desc = grant_trade_monopoly_decision_desc
+	selection_tooltip = grant_trade_monopoly_decision_tooltip
+
+	major = yes
+
+	is_shown = {
+		# Must be King or Emperor
+		highest_held_title_tier >= tier_kingdom
+
+		# Must not already have granted monopoly
+		NOT = { has_character_modifier = mt_trade_monopoly_granted }
+
+		# Must not have banned merchants
+		NOT = { has_character_modifier = mt_merchant_activity_banned }
+
+		# TODO: Must have at least one merchant in court when merchant system implemented
+	}
+
+	is_valid = {
+		# Must have prestige to spend
+		prestige >= 100
+
+		# TODO: Must select a specific merchant character
+		# For now just check they have courtiers
+		any_courtier = {
+			count >= 1
+		}
+	}
+
+	is_valid_showing_failures_only = {
+		prestige >= 100
+	}
+
+	cost = {
+		prestige = 100
+	}
+
+	effect = {
+		# Apply monopoly granted modifier to ruler
+		add_character_modifier = {
+			modifier = mt_trade_monopoly_granted
+			desc = mt_trade_monopoly_granted_desc
+		}
+
+		# TODO: When merchant system exists, choose specific merchant and give them monopoly
+		# For now, give a random courtier the monopoly modifier
+		random_courtier = {
+			limit = {
+				is_adult = yes
+				is_landed = no
+			}
+
+			save_scope_as = monopoly_merchant
+
+			add_character_modifier = {
+				modifier = mt_trade_monopoly_holder
+				desc = mt_trade_monopoly_holder_desc
+			}
+
+			# Chosen merchant loves you
+			add_opinion = {
+				target = root
+				modifier = grateful_opinion
+				opinion = 50
+			}
+		}
+
+		# All other merchants hate you
+		# TODO: Implement when merchant system exists
+		# every_courtier = {
+		#     limit = {
+		#         mt_is_merchant_trigger = yes
+		#         NOT = { this = scope:monopoly_merchant }
+		#     }
+		#     add_opinion = {
+		#         target = root
+		#         modifier = angry_opinion
+		#         opinion = -30
+		#     }
+		# }
+
+		# Notification
+		custom_tooltip = grant_trade_monopoly_decision_effect_tooltip
+	}
+
+	ai_check_interval = 120
+
+	ai_potential = {
+		# AI rarely does this
+		is_at_war = no
+	}
+
+	ai_will_do = {
+		base = 0
+
+		modifier = {
+			add = 20
+			# Very high opinion of a specific merchant
+			any_courtier = {
+				opinion = {
+					target = root
+					value >= 80
+				}
+			}
+		}
+
+		modifier = {
+			add = -80
+			# This is controversial, so base chance is very low
+			always = yes
+		}
+	}
+}
+
+####################################
+# REVOKE TRADE MONOPOLY
+####################################
+
+revoke_trade_monopoly_decision = {
+	picture = "gfx/interface/illustrations/decisions/decision_monopoly.dds"
+
+	desc = revoke_trade_monopoly_decision_desc
+	selection_tooltip = revoke_trade_monopoly_decision_tooltip
+
+	is_shown = {
+		# Must have granted monopoly
+		has_character_modifier = mt_trade_monopoly_granted
+	}
+
+	is_valid = {
+		is_ruler = yes
+	}
+
+	effect = {
+		# Remove monopoly from ruler
+		remove_character_modifier = mt_trade_monopoly_granted
+
+		# Find and remove monopoly from holder
+		# TODO: Need to track who has the monopoly properly
+		every_courtier = {
+			limit = {
+				has_character_modifier = mt_trade_monopoly_holder
+			}
+
+			remove_character_modifier = mt_trade_monopoly_holder
+
+			# They're angry about losing monopoly
+			add_opinion = {
+				target = root
+				modifier = angry_opinion
+				opinion = -30
+			}
+		}
+
+		# Other merchants are pleased
+		add_character_modifier = {
+			modifier = mt_merchant_approval
+			years = 5
+			desc = mt_merchant_approval_desc
+		}
+
+		custom_tooltip = revoke_trade_monopoly_decision_effect_tooltip
+	}
+
+	ai_check_interval = 60
+
+	ai_will_do = {
+		base = 0
+
+		modifier = {
+			add = 40
+			# If the monopoly holder has low opinion
+			any_courtier = {
+				has_character_modifier = mt_trade_monopoly_holder
+				opinion = {
+					target = root
+					value < 20
+				}
+			}
+		}
+	}
+}
+
+####################################
+# DECISION 4: INVITE FOREIGN MERCHANTS
+####################################
+
+invite_foreign_merchants_decision = {
+	picture = "gfx/interface/illustrations/decisions/decision_invite_merchants.dds"
+
+	desc = invite_foreign_merchants_decision_desc
+	selection_tooltip = invite_foreign_merchants_decision_tooltip
+
+	major = yes
+
+	is_shown = {
+		# Must be a landed ruler
+		is_landed = yes
+
+		# Must have a coastal or trade city
+		# TODO: Proper check for coastal/trade cities
+		# For now just check they have a capital
+		exists = capital_province
+
+		# Must not already have foreign merchants
+		NOT = { has_character_modifier = mt_foreign_merchants_active }
+
+		# Must not have banned merchants
+		NOT = { has_character_modifier = mt_merchant_activity_banned }
+	}
+
+	is_valid = {
+		# Must have gold to invest
+		gold >= 50
+
+		# Must not be isolated
+		is_at_war = no
+	}
+
+	is_valid_showing_failures_only = {
+		gold >= 50
+	}
+
+	cost = {
+		gold = 50
+	}
+
+	effect = {
+		# Add foreign merchants modifier
+		add_character_modifier = {
+			modifier = mt_foreign_merchants_active
+			desc = mt_foreign_merchants_active_desc
+		}
+
+		# Random foreign merchants establish presence
+		# TODO: Actually spawn merchant characters when system exists
+		# For now just give the economic benefits via modifier
+
+		# Boost development in capital
+		capital_county = {
+			change_development_level = 1
+		}
+
+		# Notification
+		custom_tooltip = invite_foreign_merchants_decision_effect_tooltip
+	}
+
+	ai_check_interval = 120
+
+	ai_potential = {
+		# AI considers if they want economic growth
+		is_at_war = no
+		gold > 100
+	}
+
+	ai_will_do = {
+		base = 0
+
+		modifier = {
+			add = 50
+			# Wants economic growth
+			any_sub_realm_county = {
+				development_level < 15
+			}
+		}
+
+		modifier = {
+			add = 40
+			# Has gold to spare
+			short_term_gold > 200
+		}
+
+		modifier = {
+			add = 30
+			# Coastal realms more likely
+			capital_province = {
+				is_coastal = yes
+			}
+		}
+
+		modifier = {
+			add = -60
+			# Xenophobic less likely
+			has_trait = stubborn
+		}
+	}
+}
+
+####################################
+# DECISION 5: BAN MERCHANT ACTIVITY
+####################################
+
+ban_merchant_activity_decision = {
+	picture = "gfx/interface/illustrations/decisions/decision_realm.dds"
+
+	desc = ban_merchant_activity_decision_desc
+	selection_tooltip = ban_merchant_activity_decision_tooltip
+
+	major = yes
+
+	is_shown = {
+		# Must be a landed ruler
+		is_landed = yes
+
+		# Must not already have banned merchants
+		NOT = { has_character_modifier = mt_merchant_activity_banned }
+	}
+
+	is_valid = {
+		is_ruler = yes
+
+		# This is a major decision with consequences
+		custom_tooltip = {
+			text = ban_merchant_activity_decision_warning
+			always = yes
+		}
+	}
+
+	effect = {
+		# Remove any existing trade policies first
+		if = {
+			limit = { has_character_modifier = mt_trade_taxation_policy }
+			remove_character_modifier = mt_trade_taxation_policy
+		}
+
+		if = {
+			limit = { has_character_modifier = mt_merchant_protection_policy }
+			remove_character_modifier = mt_merchant_protection_policy
+		}
+
+		if = {
+			limit = { has_character_modifier = mt_trade_monopoly_granted }
+			remove_character_modifier = mt_trade_monopoly_granted
+		}
+
+		if = {
+			limit = { has_character_modifier = mt_foreign_merchants_active }
+			remove_character_modifier = mt_foreign_merchants_active
+		}
+
+		# Apply merchant ban modifier
+		add_character_modifier = {
+			modifier = mt_merchant_activity_banned
+			desc = mt_merchant_activity_banned_desc
+		}
+
+		# All merchants furious
+		add_character_modifier = {
+			modifier = mt_merchant_fury
+			years = 20
+			desc = mt_merchant_fury_desc
+		}
+
+		# TODO: Close all trade posts and routes when system exists
+		# every_sub_realm_county = {
+		#     remove_all_trade_routes_effect = yes
+		# }
+
+		# Notification
+		custom_tooltip = ban_merchant_activity_decision_effect_tooltip
+	}
+
+	ai_check_interval = 120
+
+	ai_potential = {
+		# AI almost never does this
+		is_at_war = no
+	}
+
+	ai_will_do = {
+		base = 0
+
+		modifier = {
+			add = 5
+			# Isolationist cultures might do this
+			# TODO: Check for isolationist culture trait when defined
+			culture = {
+				# has_cultural_parameter = isolationist
+			}
+		}
+
+		modifier = {
+			add = -95
+			# Base chance is extremely low
+			always = yes
+		}
+	}
+}
+
+####################################
+# REVOKE MERCHANT BAN
+####################################
+
+revoke_merchant_ban_decision = {
+	picture = "gfx/interface/illustrations/decisions/decision_realm.dds"
+
+	desc = revoke_merchant_ban_decision_desc
+	selection_tooltip = revoke_merchant_ban_decision_tooltip
+
+	is_shown = {
+		# Must have banned merchants
+		has_character_modifier = mt_merchant_activity_banned
+	}
+
+	is_valid = {
+		is_ruler = yes
+	}
+
+	cost = {
+		# Costs prestige to admit mistake
+		prestige = 50
+	}
+
+	effect = {
+		# Remove ban
+		remove_character_modifier = mt_merchant_activity_banned
+
+		# Merchants still angry but less so
+		remove_character_modifier = mt_merchant_fury
+
+		add_character_modifier = {
+			modifier = mt_merchant_resentment
+			years = 10
+			desc = mt_merchant_resentment_desc
+		}
+
+		# TODO: Allow trade routes to be re-established
+
+		custom_tooltip = revoke_merchant_ban_decision_effect_tooltip
+	}
+
+	ai_check_interval = 60
+
+	ai_will_do = {
+		base = 0
+
+		modifier = {
+			add = 60
+			# AI will revoke if economic situation is bad
+			any_sub_realm_county = {
+				county_opinion < -20
+			}
+		}
+
+		modifier = {
+			add = 40
+			# New ruler might revoke predecessor's decision
+			age < 30
+		}
+	}
+}
