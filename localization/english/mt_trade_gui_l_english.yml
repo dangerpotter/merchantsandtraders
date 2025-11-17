@@ -1,0 +1,398 @@
+l_english:
+ ############################################
+ # MERCHANTS AND TRADERS MOD - TRADE ROUTE GUI
+ # English localization for Trade Route Management Window
+ ############################################
+
+ #####################
+ # WINDOW TITLE & HEADERS
+ #####################
+
+ MT_TRADE_ROUTES_TITLE:0 "Trade Routes"
+ MT_ROUTE_NAME:0 "Route"
+ MT_GOODS:0 "Goods"
+ MT_HEALTH:0 "Health"
+ MT_PROFIT:0 "Monthly Profit"
+ MT_NODES:0 "Nodes"
+ MT_ROUTE_PATH:0 "Route Path"
+ MT_COST_BREAKDOWN:0 "Cost Breakdown"
+ MT_PROFIT_BREAKDOWN:0 "Profit Breakdown"
+
+ #####################
+ # SUMMARY STATS
+ #####################
+
+ MT_ACTIVE_ROUTES:0 "Active Routes"
+ MT_TOTAL_PROFIT:0 "Total Monthly Profit"
+ MT_CAPACITY:0 "Route Capacity"
+
+ #####################
+ # MAIN WINDOW BUTTONS
+ #####################
+
+ MT_ESTABLISH_ROUTE:0 "Establish New Route"
+ MT_CLOSE_ROUTE:0 "Close Route"
+ MT_ROUTE_DETAILS:0 "Route Details"
+
+ #####################
+ # ROUTE DETAILS PANEL
+ #####################
+
+ MT_DISTANCE_COST:0 "Distance Cost"
+ MT_GUARD_SALARIES:0 "Guard Salaries"
+ MT_TAXES_FEES:0 "Taxes & Fees"
+ MT_TOTAL_COST:0 "Total Cost"
+ MT_BASE_PRICE:0 "Base Price"
+ MT_SCARCITY_BONUS:0 "Scarcity Bonus"
+ MT_FINAL_PRICE:0 "Final Price"
+ MT_HIRE_GUARDS:0 "Hire Guards"
+ MT_REROUTE:0 "Reroute"
+
+ #####################
+ # NEW ROUTE CREATION
+ #####################
+
+ # Step Labels
+ MT_SELECT_ORIGIN:0 "Origin"
+ MT_SELECT_GOODS:0 "Goods"
+ MT_SELECT_DESTINATION:0 "Destination"
+
+ # Step Descriptions
+ MT_SELECT_ORIGIN_DESC:0 "Select a county where you have access to begin your trade route. Counties with valuable goods are highlighted."
+ MT_SELECT_GOODS_DESC:0 "Choose which goods to trade from your origin county. Different goods have different base values and demand."
+ MT_SELECT_DESTINATION_DESC:0 "Select a destination county where your goods will be sold. Profitable destinations are shown with projected profit."
+
+ # Navigation
+ MT_NEXT_STEP:0 "Next"
+ MT_BACK:0 "Back"
+
+ # Projected Results
+ MT_PROJECTED_PROFIT:0 "Projected Monthly Profit"
+ MT_DANGEROUS_ROUTE_WARNING:0 "Warning: This route passes through dangerous areas"
+
+ #####################
+ # ROUTE HEALTH INDICATORS
+ #####################
+
+ # Health text with color codes
+ MT_HEALTH_EXCELLENT:0 "#P Excellent#!"
+ MT_HEALTH_GOOD:0 "#P Good#!"
+ MT_HEALTH_FAIR:0 "#Y Fair#!"
+ MT_HEALTH_POOR:0 "#O Poor#!"
+ MT_HEALTH_CRITICAL:0 "#N Critical#!"
+
+ # Health percentages
+ MT_HEALTH_100:0 "100%"
+ MT_HEALTH_90:0 "90%"
+ MT_HEALTH_80:0 "80%"
+ MT_HEALTH_70:0 "70%"
+ MT_HEALTH_60:0 "60%"
+ MT_HEALTH_50:0 "50%"
+ MT_HEALTH_40:0 "40%"
+ MT_HEALTH_30:0 "30%"
+ MT_HEALTH_20:0 "20%"
+ MT_HEALTH_10:0 "10%"
+
+ #####################
+ # STATUS INDICATORS
+ #####################
+
+ MT_ROUTE_WAR_TOOLTIP:0 "This route passes through a war zone, reducing safety and profit"
+ MT_ROUTE_BANDITS_TOOLTIP:0 "Bandit activity threatens this route"
+ MT_ROUTE_DANGER_TOOLTIP:0 "This route is dangerous"
+ MT_NODE_WAR_TOOLTIP:0 "This county is at war"
+
+ #####################
+ # TOOLTIPS - MAIN WINDOW
+ #####################
+
+ MT_ESTABLISH_ROUTE_TOOLTIP:0 "Begin the process of establishing a new trade route.\n\n#weak Requires:#!\n• Available trade route capacity\n• Sufficient capital\n• Access to at least one county with trade goods"
+
+ MT_CLOSE_ROUTE_TOOLTIP:0 "Close the currently selected trade route.\n\n#weak This will:#!\n• End all trade activity on this route\n• Free up trade route capacity\n• Forfeit any invested capital"
+
+ MT_ROUTE_ENTRY_TOOLTIP:0 "Click to view detailed information about this trade route.\n\n#weak Route Information:#!\n[TradeRoute.GetTooltipInfo]"
+
+ #####################
+ # TOOLTIPS - ROUTE DETAILS
+ #####################
+
+ MT_HIRE_GUARDS_TOOLTIP:0 "Hire additional guards to protect this trade route.\n\n#weak Effects:#!\n• Increases route safety\n• Reduces bandit attacks\n• Increases monthly costs by [GetGuardCost|V]\n\n#weak Cost:#! [GetGuardHireCost|V] Gold"
+
+ MT_REROUTE_TOOLTIP:0 "Attempt to find a safer or more profitable path for this trade route.\n\n#weak Effects:#!\n• Recalculates optimal path\n• May reduce danger\n• May change route length\n\n#weak Cost:#! [GetRerouteCost|V] Gold"
+
+ #####################
+ # TOOLTIPS - NEW ROUTE
+ #####################
+
+ MT_ESTABLISH_ROUTE_CONFIRM_TOOLTIP:0 "Establish this trade route.\n\n#weak Route Summary:#!\n• Origin: [GetSelectedOrigin.GetName]\n• Goods: [GetSelectedGoods.GetName]\n• Destination: [GetSelectedDestination.GetName]\n• Distance: [GetRouteDistance] nodes\n• Projected Monthly Profit: [GetProjectedProfit|+V] Gold\n\n#weak Initial Cost:#! [GetEstablishmentCost|V] Gold"
+
+ MT_HAS_ACCESS_TOOLTIP:0 "You have access to trade in this county"
+
+ #####################
+ # ROUTE HEALTH DESCRIPTIONS
+ #####################
+
+ MT_ROUTE_HEALTH_EXCELLENT_DESC:0 "This trade route is operating at peak efficiency. Caravans arrive safely and on schedule, maximizing profits."
+
+ MT_ROUTE_HEALTH_GOOD_DESC:0 "This trade route is performing well with minimal disruptions. Goods flow smoothly and profits remain strong."
+
+ MT_ROUTE_HEALTH_FAIR_DESC:0 "This trade route faces some challenges but remains functional. Minor delays or incidents occur occasionally, slightly reducing profits."
+
+ MT_ROUTE_HEALTH_POOR_DESC:0 "This trade route is struggling with significant problems. Frequent disruptions, safety concerns, or other issues severely impact profitability."
+
+ MT_ROUTE_HEALTH_CRITICAL_DESC:0 "This trade route is on the verge of collapse. Extreme danger, constant disruptions, or catastrophic conditions threaten to shut down all trade."
+
+ #####################
+ # ROUTE STATUS MESSAGES
+ #####################
+
+ MT_ROUTE_PROFITABLE:0 "#P Profitable#!"
+ MT_ROUTE_BREAKING_EVEN:0 "#Y Breaking Even#!"
+ MT_ROUTE_LOSING_MONEY:0 "#N Losing Money#!"
+
+ MT_ROUTE_SAFE:0 "#P Safe#!"
+ MT_ROUTE_MODERATE_DANGER:0 "#Y Moderate Danger#!"
+ MT_ROUTE_HIGH_DANGER:0 "#O High Danger#!"
+ MT_ROUTE_EXTREME_DANGER:0 "#N Extreme Danger#!"
+
+ #####################
+ # ERROR MESSAGES & WARNINGS
+ #####################
+
+ MT_ERROR_NO_CAPACITY:0 "#N Error:#! You have reached your maximum trade route capacity. Close an existing route or increase your capacity."
+
+ MT_ERROR_INSUFFICIENT_FUNDS:0 "#N Error:#! You do not have sufficient gold to establish this trade route."
+
+ MT_ERROR_NO_ACCESS_ORIGIN:0 "#N Error:#! You do not have access to trade in the selected origin county."
+
+ MT_ERROR_NO_ACCESS_DESTINATION:0 "#N Error:#! You do not have access to trade in the selected destination county."
+
+ MT_ERROR_INVALID_ROUTE:0 "#N Error:#! This trade route cannot be established. Check that both counties are accessible and not blocked by war or embargo."
+
+ MT_WARNING_LOW_PROFIT:0 "#O Warning:#! This trade route's projected profit is very low. Consider selecting a different destination or goods."
+
+ MT_WARNING_VERY_DANGEROUS:0 "#O Warning:#! This route passes through extremely dangerous territory. Heavy losses are likely without significant investment in guards."
+
+ MT_WARNING_LONG_DISTANCE:0 "#O Warning:#! This is a very long trade route. Distance costs will significantly reduce profits."
+
+ #####################
+ # COUNTY SELECTION
+ #####################
+
+ MT_COUNTY_PRODUCES:0 "Produces: [County.GetTradeGoods]"
+ MT_COUNTY_DEMAND:0 "Demand: [County.GetDemand]"
+ MT_COUNTY_ACCESSIBILITY:0 "Accessibility: [County.GetAccessibility]"
+
+ #####################
+ # GOODS INFORMATION
+ #####################
+
+ MT_GOODS_TYPE_LUXURY:0 "Luxury Good"
+ MT_GOODS_TYPE_COMMON:0 "Common Good"
+ MT_GOODS_TYPE_REGIONAL:0 "Regional Specialty"
+
+ MT_GOODS_BASE_VALUE:0 "Base Value: [TradeGoods.GetBaseValue|V] Gold"
+ MT_GOODS_DEMAND_HIGH:0 "#P High Demand#!"
+ MT_GOODS_DEMAND_MODERATE:0 "#Y Moderate Demand#!"
+ MT_GOODS_DEMAND_LOW:0 "#O Low Demand#!"
+
+ #####################
+ # ROUTE NODE INFORMATION
+ #####################
+
+ MT_NODE_NUMBER:0 "Node [number]"
+ MT_NODE_SAFE:0 "Safe passage"
+ MT_NODE_DANGEROUS:0 "Dangerous area"
+ MT_NODE_AT_WAR:0 "At war"
+ MT_NODE_BLOCKED:0 "Blocked"
+
+ #####################
+ # PROFIT COLORS & FORMATTING
+ #####################
+
+ # These are used to color-code profit values
+ MT_PROFIT_POSITIVE:0 "#P +[value]#!"
+ MT_PROFIT_NEUTRAL:0 "#Y [value]#!"
+ MT_PROFIT_NEGATIVE:0 "#N [value]#!"
+
+ #####################
+ # ROUTE ACTIONS
+ #####################
+
+ MT_ACTION_HIRE_GUARDS:0 "Hire Guards"
+ MT_ACTION_FIRE_GUARDS:0 "Dismiss Guards"
+ MT_ACTION_UPGRADE_GUARDS:0 "Upgrade Guards"
+ MT_ACTION_REROUTE:0 "Reroute"
+ MT_ACTION_CLOSE_ROUTE:0 "Close Route"
+ MT_ACTION_SUSPEND_ROUTE:0 "Suspend Route"
+ MT_ACTION_RESUME_ROUTE:0 "Resume Route"
+
+ #####################
+ # GUARD LEVELS
+ #####################
+
+ MT_GUARDS_NONE:0 "No Guards"
+ MT_GUARDS_LIGHT:0 "Light Guard"
+ MT_GUARDS_MEDIUM:0 "Medium Guard"
+ MT_GUARDS_HEAVY:0 "Heavy Guard"
+ MT_GUARDS_ELITE:0 "Elite Guard"
+
+ MT_GUARDS_NONE_DESC:0 "This route has no dedicated guards. Merchants rely on their own protection or local authorities."
+ MT_GUARDS_LIGHT_DESC:0 "A small contingent of guards provides basic protection against minor threats."
+ MT_GUARDS_MEDIUM_DESC:0 "A well-equipped guard force provides reliable protection against most threats."
+ MT_GUARDS_HEAVY_DESC:0 "A strong military escort ensures safe passage even through dangerous territory."
+ MT_GUARDS_ELITE_DESC:0 "Elite professional guards provide maximum security, deterring even the most determined threats."
+
+ #####################
+ # DISTANCE CATEGORIES
+ #####################
+
+ MT_DISTANCE_SHORT:0 "Short Route"
+ MT_DISTANCE_MEDIUM:0 "Medium Route"
+ MT_DISTANCE_LONG:0 "Long Route"
+ MT_DISTANCE_VERY_LONG:0 "Very Long Route"
+ MT_DISTANCE_EXTREME:0 "Extremely Long Route"
+
+ MT_DISTANCE_SHORT_DESC:0 "A short trade route covering [distance] nodes. Low distance costs."
+ MT_DISTANCE_MEDIUM_DESC:0 "A medium-length trade route covering [distance] nodes. Moderate distance costs."
+ MT_DISTANCE_LONG_DESC:0 "A long trade route covering [distance] nodes. Significant distance costs."
+ MT_DISTANCE_VERY_LONG_DESC:0 "A very long trade route covering [distance] nodes. High distance costs."
+ MT_DISTANCE_EXTREME_DESC:0 "An extremely long trade route covering [distance] nodes. Very high distance costs."
+
+ #####################
+ # ROUTE ESTABLISHMENT
+ #####################
+
+ MT_ROUTE_ESTABLISHED:0 "#P Trade Route Established!#!"
+ MT_ROUTE_ESTABLISHED_DESC:0 "Your new trade route from [origin] to [destination] is now operational, trading [goods]."
+
+ MT_ROUTE_CLOSED:0 "#Y Trade Route Closed#!"
+ MT_ROUTE_CLOSED_DESC:0 "The trade route from [origin] to [destination] has been closed."
+
+ #####################
+ # FILTERS & SORTING
+ #####################
+
+ MT_FILTER_ALL_ROUTES:0 "All Routes"
+ MT_FILTER_PROFITABLE:0 "Profitable Only"
+ MT_FILTER_UNPROFITABLE:0 "Unprofitable Only"
+ MT_FILTER_DANGEROUS:0 "Dangerous Routes"
+ MT_FILTER_SAFE:0 "Safe Routes"
+
+ MT_SORT_BY_PROFIT:0 "Sort by Profit"
+ MT_SORT_BY_HEALTH:0 "Sort by Health"
+ MT_SORT_BY_DISTANCE:0 "Sort by Distance"
+ MT_SORT_BY_NAME:0 "Sort by Name"
+
+ #####################
+ # ROUTE NAMES
+ #####################
+
+ # Format: [Origin] → [Destination]
+ MT_ROUTE_NAME_FORMAT:0 "[origin] → [destination]"
+ MT_ROUTE_PATH_SHORT:0 "via [intermediate_counties]"
+
+ #####################
+ # CONTEXTUAL HELP
+ #####################
+
+ MT_HELP_NO_ROUTES:0 "You have no active trade routes.\n\nClick '#T Establish New Route#!' to create your first trade route and begin earning profits from trade."
+
+ MT_HELP_MAX_CAPACITY:0 "You have reached your maximum trade route capacity.\n\n#weak To increase capacity:#!\n• Improve your merchant tier\n• Build trade infrastructure\n• Establish trade posts"
+
+ MT_HELP_ROUTE_HEALTH:0 "#bold Route Health#! represents the overall condition and safety of a trade route:\n\n#P Green (80-100%):#! Excellent condition, maximum profits\n#Y Yellow (50-79%):#! Good condition, moderate profits\n#N Red (0-49%):#! Poor condition, reduced or negative profits\n\n#weak Factors affecting health:#!\n• Safety along the route\n• War or conflict\n• Bandit activity\n• Weather and terrain\n• Guard presence"
+
+ MT_HELP_PROFIT_CALCULATION:0 "#bold Profit Calculation:#!\n\nMonthly Profit = (Base Price + Scarcity Bonus) - (Distance Cost + Guard Salaries + Taxes)\n\n#weak Maximize profit by:#!\n• Trading luxury goods to distant markets\n• Choosing destinations with high demand (scarcity)\n• Minimizing guard costs on safe routes\n• Maintaining good relations for lower taxes"
+
+ #####################
+ # MERCHANT TIER REQUIREMENTS
+ #####################
+
+ MT_REQUIRES_WANDERING_MERCHANT:0 "Requires: Wandering Merchant or higher"
+ MT_REQUIRES_TRADE_POST_OWNER:0 "Requires: Trade Post Owner or higher"
+ MT_REQUIRES_TRADING_COMPANY_HEAD:0 "Requires: Trading Company Head or higher"
+ MT_REQUIRES_MERCHANT_PRINCE:0 "Requires: Merchant Prince"
+
+ #####################
+ # ROUTE CAPACITY
+ #####################
+
+ MT_ROUTE_CAPACITY_0:0 "0 routes available"
+ MT_ROUTE_CAPACITY_1:0 "1 route available"
+ MT_ROUTE_CAPACITY_X:0 "[number] routes available"
+ MT_ROUTE_CAPACITY_UNLIMITED:0 "Unlimited routes"
+
+ MT_ROUTE_CAPACITY_CURRENT:0 "[current]/[maximum]"
+
+ #####################
+ # MISC GUI TEXT
+ #####################
+
+ MT_NO_ROUTES_AVAILABLE:0 "No routes available"
+ MT_NO_COUNTIES_AVAILABLE:0 "No accessible counties"
+ MT_NO_GOODS_AVAILABLE:0 "No goods available"
+ MT_NO_DESTINATIONS_AVAILABLE:0 "No profitable destinations"
+
+ MT_LOADING:0 "Loading..."
+ MT_CALCULATING:0 "Calculating..."
+
+ MT_GOLD_PER_MONTH:0 "[value] Gold/month"
+ MT_GOLD_COST:0 "[value] Gold"
+
+ #####################
+ # BUTTON STATES
+ #####################
+
+ MT_BUTTON_ENABLED:0 "Click to proceed"
+ MT_BUTTON_DISABLED:0 "Requirements not met"
+ MT_BUTTON_LOCKED:0 "Locked"
+
+ #####################
+ # CONFIRMATION DIALOGS
+ #####################
+
+ MT_CONFIRM_CLOSE_ROUTE_TITLE:0 "Close Trade Route?"
+ MT_CONFIRM_CLOSE_ROUTE_DESC:0 "Are you sure you want to close the trade route from [origin] to [destination]?\n\nThis will end all trade activity and you will lose your investment in this route."
+ MT_CONFIRM_CLOSE_ROUTE_ACCEPT:0 "Close Route"
+ MT_CONFIRM_CLOSE_ROUTE_CANCEL:0 "Cancel"
+
+ MT_CONFIRM_HIRE_GUARDS_TITLE:0 "Hire Guards?"
+ MT_CONFIRM_HIRE_GUARDS_DESC:0 "Hiring [guard_level] guards for this route will cost [hire_cost] Gold upfront and [monthly_cost] Gold per month.\n\nThis will improve route safety and reduce losses to bandits."
+ MT_CONFIRM_HIRE_GUARDS_ACCEPT:0 "Hire Guards"
+ MT_CONFIRM_HIRE_GUARDS_CANCEL:0 "Cancel"
+
+ MT_CONFIRM_REROUTE_TITLE:0 "Reroute Trade Route?"
+ MT_CONFIRM_REROUTE_DESC:0 "Rerouting this trade route will cost [cost] Gold.\n\nThe system will attempt to find a safer or more profitable path, but results are not guaranteed."
+ MT_CONFIRM_REROUTE_ACCEPT:0 "Reroute"
+ MT_CONFIRM_REROUTE_CANCEL:0 "Cancel"
+
+ #####################
+ # TUTORIAL / FIRST TIME
+ #####################
+
+ MT_TUTORIAL_WELCOME_TITLE:0 "Welcome to Trade Route Management"
+ MT_TUTORIAL_WELCOME_DESC:0 "Here you can establish and manage trade routes to generate wealth.\n\n#bold Getting Started:#!\n\n1. Click '#T Establish New Route#!' to begin\n2. Select an origin county where you have access\n3. Choose which goods to trade\n4. Select a profitable destination\n5. Review the projected profit and confirm\n\n#weak Tips:#!\n• Luxury goods are more profitable but riskier\n• Longer routes have higher costs but can yield greater profits\n• Monitor route health regularly and hire guards if needed\n• Safe routes are more reliable than dangerous ones"
+
+ #####################
+ # ADVANCED TOOLTIPS
+ #####################
+
+ MT_TOOLTIP_ROUTE_CAPACITY:0 "#bold Trade Route Capacity#!\n\nYour current merchant tier allows you to maintain [maximum] active trade routes.\n\nCurrently active: [current]\nAvailable: [available]\n\n#weak Increase capacity by:#!\n• Advancing to a higher merchant tier\n• Building trade infrastructure\n• Establishing trade posts in key locations"
+
+ MT_TOOLTIP_HEALTH_CALCULATION:0 "#bold Route Health Calculation#!\n\nBase Health: 100%\n\n#weak Modifiers:#!\nSafety Factor: [safety_modifier]\nWar Impact: [war_modifier]\nBandit Activity: [bandit_modifier]\nGuard Protection: [guard_modifier]\nWeather/Terrain: [terrain_modifier]\n\n#bold Final Health: [final_health]%#!"
+
+ MT_TOOLTIP_PROFIT_DETAILED:0 "#bold Detailed Profit Breakdown#!\n\n#P Income:#!\nBase Goods Value: +[base_value] Gold\nScarcity Multiplier: +[scarcity_bonus] Gold\nMarket Bonus: +[market_bonus] Gold\n#bold Subtotal: +[total_income] Gold#!\n\n#N Expenses:#!\nDistance Cost: -[distance_cost] Gold\nGuard Salaries: -[guard_cost] Gold\nLocal Taxes: -[tax_cost] Gold\nMaintenance: -[maintenance_cost] Gold\n#bold Subtotal: -[total_expenses] Gold#!\n\n#bold NET MONTHLY PROFIT: [net_profit] Gold#!"
+
+ #####################
+ # ACCESSIBILITY
+ #####################
+
+ MT_ACCESSIBILITY_FULL:0 "#P Full Access#!"
+ MT_ACCESSIBILITY_PARTIAL:0 "#Y Partial Access#!"
+ MT_ACCESSIBILITY_LIMITED:0 "#O Limited Access#!"
+ MT_ACCESSIBILITY_NONE:0 "#N No Access#!"
+
+ MT_ACCESSIBILITY_FULL_DESC:0 "You have full trading rights in this county with no restrictions."
+ MT_ACCESSIBILITY_PARTIAL_DESC:0 "You can trade in this county, but with some limitations or higher costs."
+ MT_ACCESSIBILITY_LIMITED_DESC:0 "Trading in this county is difficult due to political or legal restrictions."
+ MT_ACCESSIBILITY_NONE_DESC:0 "You cannot trade in this county due to war, embargo, or lack of permissions."
