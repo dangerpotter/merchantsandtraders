@@ -1,0 +1,670 @@
+﻿# ==============================================================================
+# MERCHANTS AND TRADERS - TRADE ROUTE EFFECTS
+# ==============================================================================
+# This file contains scripted effects for managing trade routes between counties.
+#
+# ROUTE NODE SYSTEM:
+# Routes are stored as a chain of counties using character variables:
+#   - mt_route_[ID]_node_0 = origin county (e.g., capital)
+#   - mt_route_[ID]_node_1 = first waypoint
+#   - mt_route_[ID]_node_2 = second waypoint
+#   - mt_route_[ID]_node_3 = destination
+#   - mt_route_[ID]_node_count = total nodes in route (2-4)
+#
+# CARAVAN TRACKING:
+# Each active route tracks:
+#   - mt_route_[ID]_health = 0-100 (affected by war, bandits, terrain)
+#   - mt_route_[ID]_profit = gold per month
+#   - mt_route_[ID]_danger = 0-100 (base danger level)
+#   - mt_route_[ID]_guards = number of hired guards
+#   - mt_route_[ID]_goods_type = what's being traded (luxury, grain, etc.)
+#   - mt_route_[ID]_established_date = when route was created
+#
+# Maximum routes per character stored in mt_active_route_count (usually 1-5)
+# ==============================================================================
+
+# ==============================================================================
+# establish_trade_route_effect
+# Creates a new trade route from origin to destination with optional waypoints
+# ==============================================================================
+# SCOPE: Character
+# PARAMETERS:
+#   - route_id: Unique identifier (0-4, based on available slots)
+#   - origin_county: Starting county (title scope)
+#   - destination_county: End county (title scope)
+#   - waypoint_1: Optional intermediate county
+#   - waypoint_2: Optional intermediate county
+#   - goods_type: Type of goods (affects profit multiplier)
+# ==============================================================================
+establish_trade_route_effect = {
+	# Save parameters to temporary variables
+	save_temporary_scope_as = merchant_character
+
+	# Initialize route ID (find next available slot if not specified)
+	if = {
+		limit = { NOT = { exists = var:mt_active_route_count } }
+		set_variable = {
+			name = mt_active_route_count
+			value = 0
+		}
+	}
+
+	# Store route nodes in character variables
+	# Node 0: Origin
+	set_variable = {
+		name = mt_route_$route_id$_node_0
+		value = $origin_county$
+	}
+
+	# Count waypoints to determine total nodes
+	if = {
+		limit = { always = scope:waypoint_1 }
+		set_variable = {
+			name = mt_route_$route_id$_node_1
+			value = $waypoint_1$
+		}
+		if = {
+			limit = { always = scope:waypoint_2 }
+			set_variable = {
+				name = mt_route_$route_id$_node_2
+				value = $waypoint_2$
+			}
+			set_variable = {
+				name = mt_route_$route_id$_node_3
+				value = $destination_county$
+			}
+			set_variable = {
+				name = mt_route_$route_id$_node_count
+				value = 4
+			}
+		}
+		else = {
+			set_variable = {
+				name = mt_route_$route_id$_node_2
+				value = $destination_county$
+			}
+			set_variable = {
+				name = mt_route_$route_id$_node_count
+				value = 3
+			}
+		}
+	}
+	else = {
+		set_variable = {
+			name = mt_route_$route_id$_node_1
+			value = $destination_county$
+		}
+		set_variable = {
+			name = mt_route_$route_id$_node_count
+			value = 2
+		}
+	}
+
+	# Initialize route health to 100% (optimal)
+	set_variable = {
+		name = mt_route_$route_id$_health
+		value = 100
+	}
+
+	# Store goods type (affects profit calculation)
+	set_variable = {
+		name = mt_route_$route_id$_goods_type
+		value = flag:$goods_type$
+	}
+
+	# Initialize base danger (calculated from terrain and distance)
+	set_variable = {
+		name = mt_route_$route_id$_danger
+		value = 20 # Base danger, will be recalculated
+	}
+
+	# No guards initially
+	set_variable = {
+		name = mt_route_$route_id$_guards
+		value = 0
+	}
+
+	# Record establishment date (current game date as days)
+	set_variable = {
+		name = mt_route_$route_id$_established_date
+		value = current_date
+	}
+
+	# Initial profit calculation
+	calculate_route_profit_effect = {
+		route_id = $route_id$
+	}
+
+	# Increment active route counter
+	change_variable = {
+		name = mt_active_route_count
+		add = 1
+	}
+
+	# Log establishment
+	debug_log = "Trade route $route_id$ established"
+	debug_log_scopes = yes
+}
+
+# ==============================================================================
+# calculate_route_health_effect
+# Checks each node in the route for war, bandits, terrain hazards
+# Outputs a health percentage (0-100) stored in mt_route_[ID]_health
+# ==============================================================================
+# SCOPE: Character
+# PARAMETERS:
+#   - route_id: The route to calculate health for
+# ==============================================================================
+calculate_route_health_effect = {
+	save_temporary_scope_as = merchant_character
+
+	# Start with 100% base health
+	set_variable = {
+		name = mt_temp_health
+		value = 100
+	}
+
+	# Check each node in the route
+	# Node 0 (Origin)
+	if = {
+		limit = { exists = var:mt_route_$route_id$_node_0 }
+		var:mt_route_$route_id$_node_0 = {
+			# War in county reduces health by 40%
+			if = {
+				limit = {
+					any_county_province = {
+						has_province_modifier = occupied_province_modifier
+					}
+				}
+				scope:merchant_character = {
+					change_variable = {
+						name = mt_temp_health
+						subtract = 40
+					}
+				}
+			}
+			# Hostile raiders reduce health by 25%
+			if = {
+				limit = {
+					any_county_province = {
+						has_province_modifier = recently_raided
+					}
+				}
+				scope:merchant_character = {
+					change_variable = {
+						name = mt_temp_health
+						subtract = 25
+					}
+				}
+			}
+			# Mountain/desert terrain increases risk by 10%
+			if = {
+				limit = {
+					OR = {
+						terrain = mountains
+						terrain = desert
+					}
+				}
+				scope:merchant_character = {
+					change_variable = {
+						name = mt_temp_health
+						subtract = 10
+					}
+				}
+			}
+		}
+	}
+
+	# Node 1 (First waypoint or destination)
+	if = {
+		limit = { exists = var:mt_route_$route_id$_node_1 }
+		var:mt_route_$route_id$_node_1 = {
+			if = {
+				limit = {
+					any_county_province = {
+						has_province_modifier = occupied_province_modifier
+					}
+				}
+				scope:merchant_character = {
+					change_variable = {
+						name = mt_temp_health
+						subtract = 40
+					}
+				}
+			}
+			if = {
+				limit = {
+					any_county_province = {
+						has_province_modifier = recently_raided
+					}
+				}
+				scope:merchant_character = {
+					change_variable = {
+						name = mt_temp_health
+						subtract = 25
+					}
+				}
+			}
+			if = {
+				limit = {
+					OR = {
+						terrain = mountains
+						terrain = desert
+					}
+				}
+				scope:merchant_character = {
+					change_variable = {
+						name = mt_temp_health
+						subtract = 10
+					}
+				}
+			}
+		}
+	}
+
+	# Node 2 (Second waypoint or destination)
+	if = {
+		limit = { exists = var:mt_route_$route_id$_node_2 }
+		var:mt_route_$route_id$_node_2 = {
+			if = {
+				limit = {
+					any_county_province = {
+						has_province_modifier = occupied_province_modifier
+					}
+				}
+				scope:merchant_character = {
+					change_variable = {
+						name = mt_temp_health
+						subtract = 40
+					}
+				}
+			}
+			if = {
+				limit = {
+					any_county_province = {
+						has_province_modifier = recently_raided
+					}
+				}
+				scope:merchant_character = {
+					change_variable = {
+						name = mt_temp_health
+						subtract = 25
+					}
+				}
+			}
+			if = {
+				limit = {
+					OR = {
+						terrain = mountains
+						terrain = desert
+					}
+				}
+				scope:merchant_character = {
+					change_variable = {
+						name = mt_temp_health
+						subtract = 10
+					}
+				}
+			}
+		}
+	}
+
+	# Node 3 (Final destination for 4-node routes)
+	if = {
+		limit = { exists = var:mt_route_$route_id$_node_3 }
+		var:mt_route_$route_id$_node_3 = {
+			if = {
+				limit = {
+					any_county_province = {
+						has_province_modifier = occupied_province_modifier
+					}
+				}
+				scope:merchant_character = {
+					change_variable = {
+						name = mt_temp_health
+						subtract = 40
+					}
+				}
+			}
+			if = {
+				limit = {
+					any_county_province = {
+						has_province_modifier = recently_raided
+					}
+				}
+				scope:merchant_character = {
+					change_variable = {
+						name = mt_temp_health
+						subtract = 25
+					}
+				}
+			}
+			if = {
+				limit = {
+					OR = {
+						terrain = mountains
+						terrain = desert
+					}
+				}
+				scope:merchant_character = {
+					change_variable = {
+						name = mt_temp_health
+						subtract = 10
+					}
+				}
+			}
+		}
+	}
+
+	# Guards reduce danger impact (each guard adds 5% health recovery)
+	if = {
+		limit = { exists = var:mt_route_$route_id$_guards }
+		change_variable = {
+			name = mt_temp_health
+			add = var:mt_route_$route_id$_guards
+			multiply = 5
+		}
+	}
+
+	# Clamp health between 0 and 100
+	if = {
+		limit = {
+			var:mt_temp_health < 0
+		}
+		set_variable = {
+			name = mt_temp_health
+			value = 0
+		}
+	}
+	if = {
+		limit = {
+			var:mt_temp_health > 100
+		}
+		set_variable = {
+			name = mt_temp_health
+			value = 100
+		}
+	}
+
+	# Store final health value
+	set_variable = {
+		name = mt_route_$route_id$_health
+		value = var:mt_temp_health
+	}
+
+	# Cleanup temp variable
+	remove_variable = mt_temp_health
+}
+
+# ==============================================================================
+# calculate_route_profit_effect
+# Uses route health, goods pricing, distance to determine gold/month
+# ==============================================================================
+# SCOPE: Character
+# PARAMETERS:
+#   - route_id: The route to calculate profit for
+# ==============================================================================
+calculate_route_profit_effect = {
+	save_temporary_scope_as = merchant_character
+
+	# Base profit calculation (simplified, could be more complex)
+	# Base profit = 10 gold per node
+	set_variable = {
+		name = mt_temp_profit
+		value = var:mt_route_$route_id$_node_count
+		multiply = 10
+	}
+
+	# Goods type multiplier
+	if = {
+		limit = {
+			has_variable_list = mt_route_$route_id$_goods_type
+			is_target_in_variable_list = {
+				name = mt_route_$route_id$_goods_type
+				target = flag:luxury
+			}
+		}
+		# Luxury goods: 2x multiplier
+		change_variable = {
+			name = mt_temp_profit
+			multiply = 2
+		}
+	}
+	else_if = {
+		limit = {
+			has_variable_list = mt_route_$route_id$_goods_type
+			is_target_in_variable_list = {
+				name = mt_route_$route_id$_goods_type
+				target = flag:spices
+			}
+		}
+		# Spices: 1.5x multiplier
+		change_variable = {
+			name = mt_temp_profit
+			multiply = 1.5
+		}
+	}
+	else_if = {
+		limit = {
+			has_variable_list = mt_route_$route_id$_goods_type
+			is_target_in_variable_list = {
+				name = mt_route_$route_id$_goods_type
+				target = flag:grain
+			}
+		}
+		# Grain: 0.8x multiplier (low value, high volume)
+		change_variable = {
+			name = mt_temp_profit
+			multiply = 0.8
+		}
+	}
+
+	# Health multiplier (reduced health = reduced profit)
+	# Convert health (0-100) to multiplier (0.0-1.0)
+	if = {
+		limit = { exists = var:mt_route_$route_id$_health }
+		change_variable = {
+			name = mt_temp_profit
+			multiply = var:mt_route_$route_id$_health
+			divide = 100
+		}
+	}
+
+	# Guard costs (each guard costs 2 gold/month)
+	if = {
+		limit = { exists = var:mt_route_$route_id$_guards }
+		change_variable = {
+			name = mt_temp_profit
+			subtract = var:mt_route_$route_id$_guards
+			multiply = 2
+		}
+	}
+
+	# Ensure profit doesn't go negative
+	if = {
+		limit = {
+			var:mt_temp_profit < 0
+		}
+		set_variable = {
+			name = mt_temp_profit
+			value = 0
+		}
+	}
+
+	# Store final profit value
+	set_variable = {
+		name = mt_route_$route_id$_profit
+		value = var:mt_temp_profit
+	}
+
+	# Cleanup temp variable
+	remove_variable = mt_temp_profit
+}
+
+# ==============================================================================
+# update_active_routes_effect
+# Monthly pulse that updates all active routes
+# Recalculates health and profit for all routes owned by this character
+# ==============================================================================
+# SCOPE: Character
+# ==============================================================================
+update_active_routes_effect = {
+	save_temporary_scope_as = merchant_character
+
+	# Only update if character has active routes
+	if = {
+		limit = {
+			exists = var:mt_active_route_count
+			var:mt_active_route_count > 0
+		}
+
+		# Update route 0
+		if = {
+			limit = { exists = var:mt_route_0_node_0 }
+			calculate_route_health_effect = { route_id = 0 }
+			calculate_route_profit_effect = { route_id = 0 }
+
+			# Add profit to character's gold
+			if = {
+				limit = { exists = var:mt_route_0_profit }
+				add_gold = var:mt_route_0_profit
+			}
+		}
+
+		# Update route 1
+		if = {
+			limit = { exists = var:mt_route_1_node_0 }
+			calculate_route_health_effect = { route_id = 1 }
+			calculate_route_profit_effect = { route_id = 1 }
+
+			if = {
+				limit = { exists = var:mt_route_1_profit }
+				add_gold = var:mt_route_1_profit
+			}
+		}
+
+		# Update route 2
+		if = {
+			limit = { exists = var:mt_route_2_node_0 }
+			calculate_route_health_effect = { route_id = 2 }
+			calculate_route_profit_effect = { route_id = 2 }
+
+			if = {
+				limit = { exists = var:mt_route_2_profit }
+				add_gold = var:mt_route_2_profit
+			}
+		}
+
+		# Update route 3
+		if = {
+			limit = { exists = var:mt_route_3_node_0 }
+			calculate_route_health_effect = { route_id = 3 }
+			calculate_route_profit_effect = { route_id = 3 }
+
+			if = {
+				limit = { exists = var:mt_route_3_profit }
+				add_gold = var:mt_route_3_profit
+			}
+		}
+
+		# Update route 4
+		if = {
+			limit = { exists = var:mt_route_4_node_0 }
+			calculate_route_health_effect = { route_id = 4 }
+			calculate_route_profit_effect = { route_id = 4 }
+
+			if = {
+				limit = { exists = var:mt_route_4_profit }
+				add_gold = var:mt_route_4_profit
+			}
+		}
+	}
+}
+
+# ==============================================================================
+# close_trade_route_effect
+# Shuts down a trade route and cleans up all associated variables
+# ==============================================================================
+# SCOPE: Character
+# PARAMETERS:
+#   - route_id: The route to close (0-4)
+# ==============================================================================
+close_trade_route_effect = {
+	save_temporary_scope_as = merchant_character
+
+	# Remove all route variables
+	remove_variable = mt_route_$route_id$_node_0
+	remove_variable = mt_route_$route_id$_node_1
+	remove_variable = mt_route_$route_id$_node_2
+	remove_variable = mt_route_$route_id$_node_3
+	remove_variable = mt_route_$route_id$_node_count
+	remove_variable = mt_route_$route_id$_health
+	remove_variable = mt_route_$route_id$_profit
+	remove_variable = mt_route_$route_id$_danger
+	remove_variable = mt_route_$route_id$_guards
+	remove_variable = mt_route_$route_id$_goods_type
+	remove_variable = mt_route_$route_id$_established_date
+
+	# Decrement active route counter
+	if = {
+		limit = {
+			exists = var:mt_active_route_count
+			var:mt_active_route_count > 0
+		}
+		change_variable = {
+			name = mt_active_route_count
+			subtract = 1
+		}
+	}
+
+	# Log closure
+	debug_log = "Trade route $route_id$ closed"
+}
+
+# ==============================================================================
+# hire_caravan_guard_effect
+# Hires guards for a trade route (reduces danger, costs monthly gold)
+# ==============================================================================
+# SCOPE: Character
+# PARAMETERS:
+#   - route_id: The route to hire guards for
+#   - guard_count: Number of guards to hire (1-5)
+# ==============================================================================
+hire_caravan_guard_effect = {
+	save_temporary_scope_as = merchant_character
+
+	# Add guards to the route
+	if = {
+		limit = { NOT = { exists = var:mt_route_$route_id$_guards } }
+		set_variable = {
+			name = mt_route_$route_id$_guards
+			value = 0
+		}
+	}
+
+	change_variable = {
+		name = mt_route_$route_id$_guards
+		add = $guard_count$
+	}
+
+	# Cap guards at 10
+	if = {
+		limit = {
+			var:mt_route_$route_id$_guards > 10
+		}
+		set_variable = {
+			name = mt_route_$route_id$_guards
+			value = 10
+		}
+	}
+
+	# Immediate upfront cost (50 gold per guard)
+	add_gold = -50
+	multiply = $guard_count$
+
+	# Recalculate route health and profit
+	calculate_route_health_effect = { route_id = $route_id$ }
+	calculate_route_profit_effect = { route_id = $route_id$ }
+
+	debug_log = "Hired $guard_count$ guards for route $route_id$"
+}

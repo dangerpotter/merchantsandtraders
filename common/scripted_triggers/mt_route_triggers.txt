@@ -1,0 +1,352 @@
+﻿# ==============================================================================
+# MERCHANTS AND TRADERS - TRADE ROUTE TRIGGERS
+# ==============================================================================
+# This file contains scripted triggers for validating and checking trade routes.
+#
+# These triggers are used to:
+# - Validate whether a character can establish new routes
+# - Check if routes pass through specific counties (for war/event impacts)
+# - Determine profitability thresholds
+# - Assess danger levels
+# ==============================================================================
+
+# ==============================================================================
+# can_establish_route_trigger
+# Checks if character has permission, gold, and available route slots
+# ==============================================================================
+# SCOPE: Character
+# PARAMETERS:
+#   - origin_county: Starting county (title scope)
+#   - destination_county: End county (title scope)
+#   - establishment_cost: Gold required (default 100)
+# ==============================================================================
+can_establish_route_trigger = {
+	# Character must be alive
+	is_alive = yes
+
+	# Character must not be imprisoned
+	is_imprisoned = no
+
+	# Character must have at least 100 gold (or specified cost)
+	gold >= $establishment_cost$
+
+	# Character must control or have permission in origin county
+	OR = {
+		# Directly controls the origin
+		completely_controls = $origin_county$
+		# Is liege of origin holder
+		$origin_county$.holder = {
+			target_is_liege_or_above = root
+		}
+		# Has a special merchant license (custom modifier)
+		has_character_modifier = mt_merchant_license
+	}
+
+	# Character must not have reached route limit
+	OR = {
+		# No routes established yet
+		NOT = { exists = var:mt_active_route_count }
+		# Has routes but under the limit
+		AND = {
+			exists = var:mt_active_route_count
+			# Base limit is 3 routes
+			var:mt_active_route_count < 3
+		}
+		# Has perk/trait that increases limit
+		AND = {
+			exists = var:mt_active_route_count
+			var:mt_active_route_count < 5
+			OR = {
+				has_trait = organizer
+				has_character_modifier = mt_master_merchant
+			}
+		}
+	}
+
+	# Origin and destination must be different
+	NOT = { $origin_county$ = $destination_county$ }
+
+	# Origin and destination must exist and be valid
+	$origin_county$ = { is_title_created = yes }
+	$destination_county$ = { is_title_created = yes }
+
+	# Character must have minimum diplomacy (represents trade negotiations)
+	diplomacy >= 8
+}
+
+# ==============================================================================
+# route_passes_through_county_trigger
+# Checks if a specific route passes through a given county
+# Used for war/raid events that affect trade routes
+# ==============================================================================
+# SCOPE: Character (route owner)
+# PARAMETERS:
+#   - route_id: Route to check (0-4)
+#   - county: County to check (title scope)
+# ==============================================================================
+route_passes_through_county_trigger = {
+	# Route must exist
+	exists = var:mt_route_$route_id$_node_0
+
+	# Check if county matches any node in the route
+	OR = {
+		# Node 0 (origin)
+		var:mt_route_$route_id$_node_0 = $county$
+
+		# Node 1 (first waypoint or destination)
+		AND = {
+			exists = var:mt_route_$route_id$_node_1
+			var:mt_route_$route_id$_node_1 = $county$
+		}
+
+		# Node 2 (second waypoint or destination)
+		AND = {
+			exists = var:mt_route_$route_id$_node_2
+			var:mt_route_$route_id$_node_2 = $county$
+		}
+
+		# Node 3 (final destination for 4-node routes)
+		AND = {
+			exists = var:mt_route_$route_id$_node_3
+			var:mt_route_$route_id$_node_3 = $county$
+		}
+	}
+}
+
+# ==============================================================================
+# route_is_profitable_trigger
+# Checks if route meets minimum profit threshold
+# ==============================================================================
+# SCOPE: Character (route owner)
+# PARAMETERS:
+#   - route_id: Route to check (0-4)
+#   - minimum_profit: Minimum gold/month (default 5)
+# ==============================================================================
+route_is_profitable_trigger = {
+	# Route must exist
+	exists = var:mt_route_$route_id$_node_0
+
+	# Route must have profit calculated
+	exists = var:mt_route_$route_id$_profit
+
+	# Profit must meet or exceed threshold
+	var:mt_route_$route_id$_profit >= $minimum_profit$
+
+	# Route health must be above critical threshold (25%)
+	exists = var:mt_route_$route_id$_health
+	var:mt_route_$route_id$_health >= 25
+}
+
+# ==============================================================================
+# route_is_dangerous_trigger
+# Checks if route has high danger level (poor health)
+# ==============================================================================
+# SCOPE: Character (route owner)
+# PARAMETERS:
+#   - route_id: Route to check (0-4)
+#   - danger_threshold: Health level below which route is "dangerous" (default 40)
+# ==============================================================================
+route_is_dangerous_trigger = {
+	# Route must exist
+	exists = var:mt_route_$route_id$_node_0
+
+	# Route health must be calculated
+	exists = var:mt_route_$route_id$_health
+
+	# Health is below danger threshold
+	var:mt_route_$route_id$_health < $danger_threshold$
+}
+
+# ==============================================================================
+# has_active_trade_routes_trigger
+# Checks if character has any active trade routes
+# ==============================================================================
+# SCOPE: Character
+# ==============================================================================
+has_active_trade_routes_trigger = {
+	exists = var:mt_active_route_count
+	var:mt_active_route_count > 0
+}
+
+# ==============================================================================
+# can_hire_guards_trigger
+# Checks if character can afford to hire caravan guards
+# ==============================================================================
+# SCOPE: Character
+# PARAMETERS:
+#   - route_id: Route to hire guards for
+#   - guard_count: Number of guards (default 1)
+# ==============================================================================
+can_hire_guards_trigger = {
+	# Route must exist
+	exists = var:mt_route_$route_id$_node_0
+
+	# Character must have enough gold (50 per guard upfront)
+	gold >= $guard_count$
+	multiply = 50
+
+	# Route can't already be at max guards (10)
+	OR = {
+		NOT = { exists = var:mt_route_$route_id$_guards }
+		var:mt_route_$route_id$_guards < 10
+	}
+
+	# Character must be able to afford ongoing costs
+	# (Will need at least 10 gold/month base income)
+	monthly_character_income >= 10
+}
+
+# ==============================================================================
+# counties_are_connected_trigger
+# Checks if two counties are geographically connected (adjacent or within realm)
+# Used to validate route feasibility
+# ==============================================================================
+# SCOPE: Character
+# PARAMETERS:
+#   - county_a: First county
+#   - county_b: Second county
+# ==============================================================================
+counties_are_connected_trigger = {
+	$county_a$ = {
+		OR = {
+			# Counties are adjacent
+			any_neighboring_county = {
+				this = $county_b$
+			}
+			# Both in same kingdom
+			kingdom = {
+				$county_b$.kingdom = prev
+			}
+			# Both in same empire
+			empire = {
+				$county_b$.empire = prev
+			}
+		}
+	}
+}
+
+# ==============================================================================
+# route_needs_maintenance_trigger
+# Checks if route health is degraded and needs attention
+# ==============================================================================
+# SCOPE: Character (route owner)
+# PARAMETERS:
+#   - route_id: Route to check
+# ==============================================================================
+route_needs_maintenance_trigger = {
+	# Route must exist
+	exists = var:mt_route_$route_id$_node_0
+
+	# Route health must be calculated
+	exists = var:mt_route_$route_id$_health
+
+	# Health is between 25-60 (not critical but needs attention)
+	var:mt_route_$route_id$_health >= 25
+	var:mt_route_$route_id$_health < 60
+}
+
+# ==============================================================================
+# route_is_critical_trigger
+# Checks if route health is critically low (< 25%)
+# ==============================================================================
+# SCOPE: Character (route owner)
+# PARAMETERS:
+#   - route_id: Route to check
+# ==============================================================================
+route_is_critical_trigger = {
+	# Route must exist
+	exists = var:mt_route_$route_id$_node_0
+
+	# Route health must be calculated
+	exists = var:mt_route_$route_id$_health
+
+	# Health is critically low
+	var:mt_route_$route_id$_health < 25
+}
+
+# ==============================================================================
+# can_upgrade_route_trigger
+# Checks if character can add waypoints or improve existing route
+# ==============================================================================
+# SCOPE: Character
+# PARAMETERS:
+#   - route_id: Route to upgrade
+# ==============================================================================
+can_upgrade_route_trigger = {
+	# Route must exist
+	exists = var:mt_route_$route_id$_node_0
+
+	# Character must have gold for upgrade
+	gold >= 50
+
+	# Route must not already be at max nodes (4)
+	OR = {
+		NOT = { exists = var:mt_route_$route_id$_node_count }
+		var:mt_route_$route_id$_node_count < 4
+	}
+
+	# Character must have decent stewardship (planning complex routes)
+	stewardship >= 10
+}
+
+# ==============================================================================
+# county_is_trade_hub_trigger
+# Checks if a county is a major trade hub (high development, coastal, etc.)
+# Routes passing through trade hubs get profit bonuses
+# ==============================================================================
+# SCOPE: County (title)
+# ==============================================================================
+county_is_trade_hub_trigger = {
+	# County must be created
+	is_title_created = yes
+
+	OR = {
+		# High development (20+)
+		development_level >= 20
+
+		# Coastal county with port
+		AND = {
+			any_county_province = {
+				geographical_region = world_europe_west_coast
+			}
+			holder = {
+				has_building_or_higher = port_01
+			}
+		}
+
+		# Has special trade hub modifier
+		has_county_modifier = mt_trade_hub
+
+		# Capital of a merchant republic (if implemented)
+		holder = {
+			has_government = republic_government
+			is_independent_ruler = yes
+		}
+	}
+}
+
+# ==============================================================================
+# character_is_merchant_trigger
+# Checks if character has merchant traits, lifestyle, or modifiers
+# ==============================================================================
+# SCOPE: Character
+# ==============================================================================
+character_is_merchant_trigger = {
+	OR = {
+		# Has merchant trait (custom trait)
+		has_trait = mt_merchant
+
+		# Has merchant lifestyle focus
+		has_character_modifier = mt_merchant_focus
+
+		# Has merchant education trait
+		has_trait = education_stewardship_3
+		has_trait = education_stewardship_4
+
+		# Is a mayor or patrician
+		has_government = republic_government
+
+		# Has completed merchant perk tree (custom)
+		has_character_modifier = mt_master_merchant
+	}
+}

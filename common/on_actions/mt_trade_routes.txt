@@ -1,0 +1,632 @@
+﻿# ==============================================================================
+# MERCHANTS AND TRADERS - TRADE ROUTE ON_ACTIONS
+# ==============================================================================
+# This file contains on_action hooks that trigger trade route updates based on
+# game events (monthly pulse, wars, raids, etc.)
+#
+# ON_ACTIONS EXPLAINED:
+# - on_monthly_pulse: Fires every month for characters with active routes
+# - on_county_war_start: Fires when war begins in a county (damages routes)
+# - on_county_war_end: Fires when war ends (allows routes to recover)
+# - on_siege_start/end: Additional hooks for siege impacts
+# - on_raid_start/end: Raider events that disrupt trade
+# ==============================================================================
+
+# ==============================================================================
+# MONTHLY PULSE - Update all active trade routes
+# ==============================================================================
+# Fires at the beginning of each month for all characters
+# Updates route health and calculates profit for all active routes
+# ==============================================================================
+on_monthly_pulse = {
+	on_actions = {
+		mt_monthly_trade_route_update
+	}
+}
+
+mt_monthly_trade_route_update = {
+	trigger = {
+		# Only process characters with active trade routes
+		has_active_trade_routes_trigger = yes
+	}
+
+	effect = {
+		# Update all routes for this character
+		update_active_routes_effect = yes
+
+		# Random events for route complications (5% chance per month)
+		random = {
+			chance = 5
+
+			# Trigger random trade event (bandits, opportunity, etc.)
+			trigger_event = {
+				id = mt_trade_route_events.0001
+				days = { 1 7 }
+			}
+		}
+
+		# Check for routes that need urgent attention
+		if = {
+			limit = {
+				OR = {
+					route_is_critical_trigger = { route_id = 0 }
+					route_is_critical_trigger = { route_id = 1 }
+					route_is_critical_trigger = { route_id = 2 }
+					route_is_critical_trigger = { route_id = 3 }
+					route_is_critical_trigger = { route_id = 4 }
+				}
+			}
+			# Send warning notification to player
+			trigger_event = {
+				id = mt_trade_route_events.0010
+				days = 1
+			}
+		}
+	}
+}
+
+# ==============================================================================
+# WAR EVENTS - Damage routes when counties go to war
+# ==============================================================================
+# When a war starts involving a county, all routes passing through are damaged
+# ==============================================================================
+on_war_started = {
+	on_actions = {
+		mt_war_damages_trade_routes
+	}
+}
+
+mt_war_damages_trade_routes = {
+	effect = {
+		# War scope - check all involved counties
+		war = {
+			# Save war for later reference
+			save_temporary_scope_as = active_war
+
+			# Check all defenders' counties
+			defender = {
+				every_held_title = {
+					limit = { tier = tier_county }
+					save_temporary_scope_as = war_county
+
+					# Find all characters with routes through this county
+					# (This is a simplified approach - in practice, you'd need a
+					# more sophisticated way to track which merchants have routes
+					# through which counties)
+					every_player = {
+						limit = {
+							OR = {
+								route_passes_through_county_trigger = {
+									route_id = 0
+									county = scope:war_county
+								}
+								route_passes_through_county_trigger = {
+									route_id = 1
+									county = scope:war_county
+								}
+								route_passes_through_county_trigger = {
+									route_id = 2
+									county = scope:war_county
+								}
+								route_passes_through_county_trigger = {
+									route_id = 3
+									county = scope:war_county
+								}
+								route_passes_through_county_trigger = {
+									route_id = 4
+									county = scope:war_county
+								}
+							}
+						}
+
+						# Immediately recalculate route health (will show war impact)
+						if = {
+							limit = {
+								route_passes_through_county_trigger = {
+									route_id = 0
+									county = scope:war_county
+								}
+							}
+							calculate_route_health_effect = { route_id = 0 }
+							calculate_route_profit_effect = { route_id = 0 }
+						}
+						if = {
+							limit = {
+								route_passes_through_county_trigger = {
+									route_id = 1
+									county = scope:war_county
+								}
+							}
+							calculate_route_health_effect = { route_id = 1 }
+							calculate_route_profit_effect = { route_id = 1 }
+						}
+						if = {
+							limit = {
+								route_passes_through_county_trigger = {
+									route_id = 2
+									county = scope:war_county
+								}
+							}
+							calculate_route_health_effect = { route_id = 2 }
+							calculate_route_profit_effect = { route_id = 2 }
+						}
+						if = {
+							limit = {
+								route_passes_through_county_trigger = {
+									route_id = 3
+									county = scope:war_county
+								}
+							}
+							calculate_route_health_effect = { route_id = 3 }
+							calculate_route_profit_effect = { route_id = 3 }
+						}
+						if = {
+							limit = {
+								route_passes_through_county_trigger = {
+									route_id = 4
+									county = scope:war_county
+								}
+							}
+							calculate_route_health_effect = { route_id = 4 }
+							calculate_route_profit_effect = { route_id = 4 }
+						}
+
+						# Notify player of trade disruption
+						send_interface_toast = {
+							title = mt_trade_route_disrupted
+							left_icon = root
+
+							custom_tooltip = mt_trade_route_disrupted_desc
+						}
+					}
+				}
+			}
+
+			# Also check attacker's counties
+			attacker = {
+				every_held_title = {
+					limit = { tier = tier_county }
+					save_temporary_scope_as = war_county
+
+					every_player = {
+						limit = {
+							OR = {
+								route_passes_through_county_trigger = {
+									route_id = 0
+									county = scope:war_county
+								}
+								route_passes_through_county_trigger = {
+									route_id = 1
+									county = scope:war_county
+								}
+								route_passes_through_county_trigger = {
+									route_id = 2
+									county = scope:war_county
+								}
+								route_passes_through_county_trigger = {
+									route_id = 3
+									county = scope:war_county
+								}
+								route_passes_through_county_trigger = {
+									route_id = 4
+									county = scope:war_county
+								}
+							}
+						}
+
+						if = {
+							limit = {
+								route_passes_through_county_trigger = {
+									route_id = 0
+									county = scope:war_county
+								}
+							}
+							calculate_route_health_effect = { route_id = 0 }
+							calculate_route_profit_effect = { route_id = 0 }
+						}
+						if = {
+							limit = {
+								route_passes_through_county_trigger = {
+									route_id = 1
+									county = scope:war_county
+								}
+							}
+							calculate_route_health_effect = { route_id = 1 }
+							calculate_route_profit_effect = { route_id = 1 }
+						}
+						if = {
+							limit = {
+								route_passes_through_county_trigger = {
+									route_id = 2
+									county = scope:war_county
+								}
+							}
+							calculate_route_health_effect = { route_id = 2 }
+							calculate_route_profit_effect = { route_id = 2 }
+						}
+						if = {
+							limit = {
+								route_passes_through_county_trigger = {
+									route_id = 3
+									county = scope:war_county
+								}
+							}
+							calculate_route_health_effect = { route_id = 3 }
+							calculate_route_profit_effect = { route_id = 3 }
+						}
+						if = {
+							limit = {
+								route_passes_through_county_trigger = {
+									route_id = 4
+									county = scope:war_county
+								}
+							}
+							calculate_route_health_effect = { route_id = 4 }
+							calculate_route_profit_effect = { route_id = 4 }
+						}
+
+						send_interface_toast = {
+							title = mt_trade_route_disrupted
+							left_icon = root
+							custom_tooltip = mt_trade_route_disrupted_desc
+						}
+					}
+				}
+			}
+		}
+	}
+}
+
+# ==============================================================================
+# WAR END - Routes begin to recover after war ends
+# ==============================================================================
+on_war_ended = {
+	on_actions = {
+		mt_war_end_route_recovery
+	}
+}
+
+mt_war_end_route_recovery = {
+	effect = {
+		war = {
+			save_temporary_scope_as = ended_war
+
+			# Check defender's counties
+			defender = {
+				every_held_title = {
+					limit = { tier = tier_county }
+					save_temporary_scope_as = peace_county
+
+					# Find merchants with routes through this county
+					every_player = {
+						limit = {
+							OR = {
+								route_passes_through_county_trigger = {
+									route_id = 0
+									county = scope:peace_county
+								}
+								route_passes_through_county_trigger = {
+									route_id = 1
+									county = scope:peace_county
+								}
+								route_passes_through_county_trigger = {
+									route_id = 2
+									county = scope:peace_county
+								}
+								route_passes_through_county_trigger = {
+									route_id = 3
+									county = scope:peace_county
+								}
+								route_passes_through_county_trigger = {
+									route_id = 4
+									county = scope:peace_county
+								}
+							}
+						}
+
+						# Recalculate routes (war penalties removed)
+						if = {
+							limit = {
+								route_passes_through_county_trigger = {
+									route_id = 0
+									county = scope:peace_county
+								}
+							}
+							calculate_route_health_effect = { route_id = 0 }
+							calculate_route_profit_effect = { route_id = 0 }
+						}
+						if = {
+							limit = {
+								route_passes_through_county_trigger = {
+									route_id = 1
+									county = scope:peace_county
+								}
+							}
+							calculate_route_health_effect = { route_id = 1 }
+							calculate_route_profit_effect = { route_id = 1 }
+						}
+						if = {
+							limit = {
+								route_passes_through_county_trigger = {
+									route_id = 2
+									county = scope:peace_county
+								}
+							}
+							calculate_route_health_effect = { route_id = 2 }
+							calculate_route_profit_effect = { route_id = 2 }
+						}
+						if = {
+							limit = {
+								route_passes_through_county_trigger = {
+									route_id = 3
+									county = scope:peace_county
+								}
+							}
+							calculate_route_health_effect = { route_id = 3 }
+							calculate_route_profit_effect = { route_id = 3 }
+						}
+						if = {
+							limit = {
+								route_passes_through_county_trigger = {
+									route_id = 4
+									county = scope:peace_county
+								}
+							}
+							calculate_route_health_effect = { route_id = 4 }
+							calculate_route_profit_effect = { route_id = 4 }
+						}
+
+						# Notify player of recovery
+						send_interface_toast = {
+							title = mt_trade_route_recovering
+							left_icon = root
+							custom_tooltip = mt_trade_route_recovering_desc
+						}
+					}
+				}
+			}
+
+			# Check attacker's counties
+			attacker = {
+				every_held_title = {
+					limit = { tier = tier_county }
+					save_temporary_scope_as = peace_county
+
+					every_player = {
+						limit = {
+							OR = {
+								route_passes_through_county_trigger = {
+									route_id = 0
+									county = scope:peace_county
+								}
+								route_passes_through_county_trigger = {
+									route_id = 1
+									county = scope:peace_county
+								}
+								route_passes_through_county_trigger = {
+									route_id = 2
+									county = scope:peace_county
+								}
+								route_passes_through_county_trigger = {
+									route_id = 3
+									county = scope:peace_county
+								}
+								route_passes_through_county_trigger = {
+									route_id = 4
+									county = scope:peace_county
+								}
+							}
+						}
+
+						if = {
+							limit = {
+								route_passes_through_county_trigger = {
+									route_id = 0
+									county = scope:peace_county
+								}
+							}
+							calculate_route_health_effect = { route_id = 0 }
+							calculate_route_profit_effect = { route_id = 0 }
+						}
+						if = {
+							limit = {
+								route_passes_through_county_trigger = {
+									route_id = 1
+									county = scope:peace_county
+								}
+							}
+							calculate_route_health_effect = { route_id = 1 }
+							calculate_route_profit_effect = { route_id = 1 }
+						}
+						if = {
+							limit = {
+								route_passes_through_county_trigger = {
+									route_id = 2
+									county = scope:peace_county
+								}
+							}
+							calculate_route_health_effect = { route_id = 2 }
+							calculate_route_profit_effect = { route_id = 2 }
+						}
+						if = {
+							limit = {
+								route_passes_through_county_trigger = {
+									route_id = 3
+									county = scope:peace_county
+								}
+							}
+							calculate_route_health_effect = { route_id = 3 }
+							calculate_route_profit_effect = { route_id = 3 }
+						}
+						if = {
+							limit = {
+								route_passes_through_county_trigger = {
+									route_id = 4
+									county = scope:peace_county
+								}
+							}
+							calculate_route_health_effect = { route_id = 4 }
+							calculate_route_profit_effect = { route_id = 4 }
+						}
+
+						send_interface_toast = {
+							title = mt_trade_route_recovering
+							left_icon = root
+							custom_tooltip = mt_trade_route_recovering_desc
+						}
+					}
+				}
+			}
+		}
+	}
+}
+
+# ==============================================================================
+# RAID EVENTS - Raiders disrupt trade routes
+# ==============================================================================
+on_raid_action_start = {
+	on_actions = {
+		mt_raid_disrupts_trade
+	}
+}
+
+mt_raid_disrupts_trade = {
+	effect = {
+		# Raider scope
+		scope:raider = {
+			save_temporary_scope_as = active_raider
+		}
+
+		# County being raided
+		scope:county = {
+			save_temporary_scope_as = raided_county
+
+			# Find all merchants with routes through this county
+			every_player = {
+				limit = {
+					OR = {
+						route_passes_through_county_trigger = {
+							route_id = 0
+							county = scope:raided_county
+						}
+						route_passes_through_county_trigger = {
+							route_id = 1
+							county = scope:raided_county
+						}
+						route_passes_through_county_trigger = {
+							route_id = 2
+							county = scope:raided_county
+						}
+						route_passes_through_county_trigger = {
+							route_id = 3
+							county = scope:raided_county
+						}
+						route_passes_through_county_trigger = {
+							route_id = 4
+							county = scope:raided_county
+						}
+					}
+				}
+
+				# Recalculate affected routes
+				if = {
+					limit = {
+						route_passes_through_county_trigger = {
+							route_id = 0
+							county = scope:raided_county
+						}
+					}
+					calculate_route_health_effect = { route_id = 0 }
+					calculate_route_profit_effect = { route_id = 0 }
+				}
+				if = {
+					limit = {
+						route_passes_through_county_trigger = {
+							route_id = 1
+							county = scope:raided_county
+						}
+					}
+					calculate_route_health_effect = { route_id = 1 }
+					calculate_route_profit_effect = { route_id = 1 }
+				}
+				if = {
+					limit = {
+						route_passes_through_county_trigger = {
+							route_id = 2
+							county = scope:raided_county
+						}
+					}
+					calculate_route_health_effect = { route_id = 2 }
+					calculate_route_profit_effect = { route_id = 2 }
+				}
+				if = {
+					limit = {
+						route_passes_through_county_trigger = {
+							route_id = 3
+							county = scope:raided_county
+						}
+					}
+					calculate_route_health_effect = { route_id = 3 }
+					calculate_route_profit_effect = { route_id = 3 }
+				}
+				if = {
+					limit = {
+						route_passes_through_county_trigger = {
+							route_id = 4
+							county = scope:raided_county
+						}
+					}
+					calculate_route_health_effect = { route_id = 4 }
+					calculate_route_profit_effect = { route_id = 4 }
+				}
+
+				# Notify about raid impact
+				send_interface_toast = {
+					title = mt_trade_route_raided
+					left_icon = scope:active_raider
+					custom_tooltip = mt_trade_route_raided_desc
+				}
+			}
+		}
+	}
+}
+
+# ==============================================================================
+# CHARACTER DEATH - Close all routes owned by deceased character
+# ==============================================================================
+on_death = {
+	on_actions = {
+		mt_close_routes_on_death
+	}
+}
+
+mt_close_routes_on_death = {
+	trigger = {
+		# Only if character had active routes
+		has_active_trade_routes_trigger = yes
+	}
+
+	effect = {
+		# Close all routes (inheritance could be added later)
+		if = {
+			limit = { exists = var:mt_route_0_node_0 }
+			close_trade_route_effect = { route_id = 0 }
+		}
+		if = {
+			limit = { exists = var:mt_route_1_node_0 }
+			close_trade_route_effect = { route_id = 1 }
+		}
+		if = {
+			limit = { exists = var:mt_route_2_node_0 }
+			close_trade_route_effect = { route_id = 2 }
+		}
+		if = {
+			limit = { exists = var:mt_route_3_node_0 }
+			close_trade_route_effect = { route_id = 3 }
+		}
+		if = {
+			limit = { exists = var:mt_route_4_node_0 }
+			close_trade_route_effect = { route_id = 4 }
+		}
+	}
+}
