@@ -1,0 +1,127 @@
+l_english:
+
+ ###################################
+ # DECISION LOCALIZATION
+ ###################################
+
+ # Become Wandering Merchant Decision
+ become_wandering_merchant_decision:0 "Become a Wandering Merchant"
+ become_wandering_merchant_decision_desc:0 "I have decided to pursue the life of a merchant. With some starting capital and a keen eye for opportunity, I can begin trading goods between settlements. Though the path is uncertain, successful merchants can build vast fortunes and even rival the wealth of kings.\n\n#bold The Merchant Progression:#!\n• #bold Wandering Merchant:#! Carry goods manually, establish your first trade post\n• #bold Trade Post Owner:#! Multiple routes, hire merchant agents\n• #bold Trading Company Head:#! Extensive network, hire guards for protection\n• #bold Merchant Prince:#! Vast empire with unlimited expansion and massive income"
+ must_be_unlanded_or_courtier:0 "Unlanded characters and courtiers are ideal for merchant careers, but landed rulers can also pursue trade"
+
+ # Purchase Starting Goods Decision
+ purchase_starting_goods_decision:0 "Purchase Starting Goods"
+ purchase_starting_goods_decision_desc:0 "To begin trading, I must first purchase goods to sell. Different goods offer different profit margins, but also require different levels of investment.\n\n#bold Available Options:#!\n• #bold Common Goods#! (10 gold): Grain, wool, basic supplies - Low profit margins but safe\n• #bold Regional Goods#! (30 gold): Wine, furs, quality crafts - Medium profit potential\n• #bold Luxury Goods#! (100 gold): Silk, spices, gems - High profit but requires significant capital"
+
+ # Manual Trade Goods Decision
+ manual_trade_goods_decision:0 "Trade Goods Manually"
+ manual_trade_goods_decision_desc:0 "I am carrying valuable trade goods. I should seek out markets where these goods are in demand and sell them for profit.\n\nDifferent markets offer different prices based on:\n• #bold Distance:#! Farther markets pay more\n• #bold Wealth:#! Wealthy counties have higher demand\n• #bold Development:#! Well-developed areas offer better prices\n\nOnce I establish automated trade routes, I won't need to do this manually anymore."
+ manual_trade_cooldown_expired:0 "You must wait before trading again (represents travel time)"
+ must_have_market_access:0 "You must have access to markets (not in hostile territory or under siege)"
+
+ ###################################
+ # TOOLTIP LOCALIZATION
+ ###################################
+
+ mt_merchant_progression_tutorial:0 "You begin as a #bold Wandering Merchant#!, carrying goods between markets. As you accumulate wealth and reputation, you can advance through the merchant tiers:\n\n• Establish #bold Trade Posts#! for passive income\n• Hire #bold Merchant Agents#! to manage routes\n• Recruit #bold Guards#! for route protection\n• Build a vast #bold Trade Empire#! spanning the known world"
+ mt_ready_to_trade:0 "You're ready to start trading immediately and make your fortune"
+ mt_merchant_career_started:0 "Your merchant career has begun"
+ mt_merchant_career_declined:0 "You have declined to start as a merchant, but can change your mind later"
+ mt_learned_about_trade_rights:0 "You've learned about negotiating trade rights with local rulers"
+ mt_learned_about_guilds:0 "You've learned about merchant guilds and their benefits"
+ mt_merchant_friend_made:0 "You've made a useful merchant contact"
+
+ # Purchase Goods Tooltips
+ mt_purchased_common_goods:0 "You've purchased common trade goods (grain, wool, basic supplies)"
+ mt_common_goods_profit_range:0 "Expected profit: 5-15 gold (50-150% return)"
+ mt_purchased_regional_goods:0 "You've purchased regional trade goods (wine, furs, quality crafts)"
+ mt_regional_goods_profit_range:0 "Expected profit: 15-45 gold (50-150% return)"
+ mt_purchased_luxury_goods:0 "You've purchased luxury trade goods (silk, spices, gems)"
+ mt_luxury_goods_profit_range:0 "Expected profit: 50-200 gold (50-200% return)"
+ mt_can_now_trade_manually:0 "You can now use the 'Trade Goods Manually' decision to sell these goods"
+ mt_purchase_cancelled:0 "You've decided to wait before purchasing goods"
+
+ # Manual Trade Tooltips
+ mt_sold_at_local_market:0 "You sold your goods at the local market for a quick sale"
+ mt_sold_at_distant_market:0 "You traveled to a distant market and secured a better price"
+ mt_travel_time_spent:0 "The journey took time, but the profit was worth it"
+ mt_sold_to_wealthy_buyer:0 "You found a wealthy buyer willing to pay premium prices"
+ mt_excellent_deal:0 "This was an exceptional deal that will boost your reputation"
+ mt_no_wealthy_buyer_found:0 "Unfortunately, you couldn't find wealthy buyers"
+ mt_settled_for_local_price:0 "You had to settle for local market prices"
+ mt_trade_profit_gained:0 "Your trading acumen has earned you a good profit"
+ mt_kept_goods:0 "You've decided to hold onto your goods for now"
+
+ # Random Opportunity Tooltips
+ mt_opportunity_seized:0 "You seized this opportunity and made an excellent sale"
+ mt_exceptional_profit:0 "This exceptional profit will significantly boost your reputation"
+ mt_opportunity_declined:0 "You've chosen to wait for a potentially better opportunity"
+
+ # Disruption Tooltips
+ mt_manual_trade_disrupted:0 "Trade Disrupted by War"
+ mt_manual_trade_disrupted_desc:0 "The outbreak of war in this region has made trading dangerous and unprofitable for now."
+
+ ###################################
+ # EVENT LOCALIZATION
+ ###################################
+
+ # mt_start.0001 - Welcome to Merchant Life
+ mt_start.0001.t:0 "The Merchant's Path"
+ mt_start.0001.desc:0 "I have made my decision. No longer will I rely solely on the charity of others or the whims of fate. With my modest savings, I shall become a merchant.\n\nThe path ahead is clear: I must purchase goods where they are plentiful and cheap, then transport them to markets where they are scarce and valuable. Simple in concept, challenging in execution.\n\nOther merchants have told me of the opportunities that await those with wit and courage. From humble beginnings as a wandering trader, I could eventually establish trade posts, hire agents to manage my affairs, and perhaps even build a commercial empire rivaling the great merchant princes of old.\n\nThe first step is to purchase some goods and begin trading manually. Once I've accumulated enough capital and reputation, I can establish permanent trade routes and watch the gold flow in."
+ mt_start.0001.a:0 "Tell me more about this merchant progression system."
+ mt_start.0001.b:0 "Enough talk. I'm ready to make my fortune!"
+
+ # mt_start.0002 - Game Start Merchant Option
+ mt_start.0002.t:0 "A Merchant's Opportunity"
+ mt_start.0002.desc:0 "As I contemplate my future, an interesting possibility presents itself. Rather than pursuing traditional paths to power and glory, I could instead embark on a merchant's career.\n\nWith my current resources and administrative skills, I could begin trading immediately. Buy low, sell high, and gradually build a commercial network that could eventually rival the wealth of kingdoms.\n\nThe merchant's path offers independence and potentially vast riches, though it requires patience and shrewd judgment. Would I prefer to start my journey as a wandering merchant, or pursue other ambitions?"
+ mt_start.0002.a:0 "Yes, I shall become a merchant!"
+ mt_start.0002.b:0 "No, I have other plans for now."
+
+ # mt_start.0003 - Meet Another Merchant
+ mt_start.0003.t:0 "A Fellow Merchant"
+ mt_start.0003.desc:0 "While conducting my business in the local market, I've encountered [other_merchant.GetTitledFirstName], another merchant who seems to be more experienced in this trade.\n\n[other_merchant.GetSheHe|U] shares valuable insights about the merchant's life: the importance of securing trade rights from local rulers, the benefits of joining merchant guilds, and the dangers of traveling through hostile territories.\n\n'The key to success,' [other_merchant.GetSheHe] explains, 'is not just knowing where to buy and sell, but understanding the political landscape. A good relationship with the local lord can mean the difference between prosperity and poverty.'\n\nThis conversation has been enlightening. I should consider what to focus on as I develop my own merchant network."
+ mt_start.0003.a:0 "How do I negotiate trade rights with rulers?"
+ mt_start.0003.b:0 "Tell me about these merchant guilds."
+ mt_start.0003.c:0 "Perhaps we could trade together sometime?"
+
+ # mt_start.0010 - Purchase Starting Goods
+ mt_start.0010.t:0 "Purchasing Trade Goods"
+ mt_start.0010.desc:0 "I stand in the marketplace, weighing my options. Before me are various merchants selling goods that I could purchase and resell elsewhere for profit.\n\n#bold Common Goods#! like grain and wool are cheap and easy to transport, but profit margins are slim. Still, they're a safe starting point for a novice merchant.\n\n#bold Regional Goods#! such as fine wines and quality furs cost more to acquire but can fetch substantially higher prices in the right markets.\n\n#bold Luxury Goods#! - silk from distant lands, exotic spices, precious gems - require a significant investment but offer the potential for spectacular profits if I can find wealthy buyers.\n\nWhich should I choose to begin my trading career?"
+ mt_start.0010.a:0 "Common goods for 10 gold (safe, low profit)"
+ mt_start.0010.b:0 "Regional goods for 30 gold (medium risk, medium profit)"
+ mt_start.0010.c:0 "Luxury goods for 100 gold (risky, high profit)"
+ mt_start.0010.d:0 "Actually, I need to reconsider..."
+
+ # mt_start.0020 - Manual Trade Selection
+ mt_start.0020.t:0 "Seeking Markets"
+ mt_start.0020.desc:0 "I carry valuable trade goods and must now find buyers. Several options present themselves:\n\nThe #bold local market#! is convenient and safe. I can sell quickly, though the price won't be exceptional. The locals know these goods well and won't pay premium prices.\n\nA #bold distant market#! I've heard of could offer better prices. The journey would take time, but merchants there have told me that my goods are scarcer there and thus more valuable.\n\nI could also seek out #bold wealthy buyers#! - nobles, rich merchants, or even the local lord's household. They have the gold to pay premium prices, but finding them takes effort and luck.\n\nWhere should I try to sell my goods?"
+ mt_start.0020.a:0 "Sell at the local market (quick and safe)"
+ mt_start.0020.b:0 "Travel to a distant market (better price, takes time)"
+ mt_start.0020.c:0 "Seek wealthy buyers (highest price, but uncertain)"
+ mt_start.0020.d:0 "Keep the goods for now"
+
+ # mt_start.0030 - Random Trade Opportunity
+ mt_start.0030.t:0 "An Unexpected Buyer"
+ mt_start.0030.desc:0 "Fortune smiles upon me! As I pass through [current_county.GetName], a prosperous-looking merchant approaches me with an eager expression.\n\n'I've been searching for exactly the goods you carry!' [GetSheHe] exclaims. 'A client of mine needs them urgently and is willing to pay well above market price. Are you interested in selling?'\n\nThis is an exceptional opportunity - the offered price is far better than I could get at any normal market. Such chances don't come often in the merchant's life.\n\nShould I seize this opportunity, or hold out in case an even better deal appears?"
+ mt_start.0030.a:0 "Sell immediately at this excellent price!"
+ mt_start.0030.b:0 "Decline - I think I can get even more elsewhere"
+
+ ###################################
+ # TRAIT DESCRIPTIONS (if not already defined)
+ ###################################
+
+ wandering_merchant_desc:0 "This character travels between markets, buying goods cheap and selling them for profit. They are at the beginning of their merchant career but have potential to build a trade empire."
+ trade_post_owner_desc:0 "This character owns permanent trading posts and has established reliable trade routes. They are a respected merchant with a growing reputation."
+ trading_company_head_desc:0 "This character manages an extensive trade network with multiple employees and trade posts across the realm. They are a prominent figure in commercial circles."
+ merchant_prince_desc:0 "This character commands a vast commercial empire spanning multiple regions. Their wealth and influence rival that of great nobles, and rulers seek their favor."
+
+ ###################################
+ # NOTIFICATION TEXTS
+ ###################################
+
+ mt_trade_route_disrupted:0 "Trade Route Disrupted"
+ mt_trade_route_disrupted_desc:0 "War has broken out along one of your trade routes, disrupting commerce and reducing profits."
+ mt_trade_route_recovering:0 "Trade Route Recovering"
+ mt_trade_route_recovering_desc:0 "Peace has returned to the region, and your trade route is beginning to recover."
+ mt_trade_route_raided:0 "Trade Route Raided"
+ mt_trade_route_raided_desc:0 "Raiders have struck one of your trade routes, causing losses and disruption."
