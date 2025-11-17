@@ -1,0 +1,142 @@
+####################################
+# MERCHANTS AND TRADERS MOD
+# Opinion Modifiers
+####################################
+#
+# Opinion modifiers for merchant interactions
+#
+####################################
+
+# Grateful for permission/favors
+grateful_opinion = {
+	opinion = {
+		value = 20
+	}
+
+	monthly_decay = -1
+
+	stack_reduction = 10
+}
+
+# Merchant partnership opinion
+merchant_partner_opinion = {
+	opinion = {
+		value = 15
+	}
+
+	monthly_decay = -0.5
+
+	prison_release_modifier = yes
+}
+
+# Trade partners working together
+trade_partner_opinion = {
+	opinion = {
+		value = 25
+	}
+
+	monthly_decay = -0.5
+
+	prison_release_modifier = yes
+}
+
+# Employer-employee relationship
+employer_opinion = {
+	opinion = {
+		value = 15
+	}
+
+	monthly_decay = -1
+
+	prison_release_modifier = yes
+}
+
+# Assets were seized (from merchant's perspective)
+seized_my_assets_opinion = {
+	opinion = {
+		value = -100
+	}
+
+	monthly_decay = 1
+
+	prison_release_modifier = yes
+
+	crime = yes
+}
+
+# Witnessed assets being seized (vassal perspective)
+seized_assets_opinion = {
+	opinion = {
+		value = -50
+	}
+
+	monthly_decay = 1
+
+	prison_release_modifier = yes
+}
+
+# Tyrant behavior
+tyrant_opinion = {
+	opinion = {
+		value = -15
+	}
+
+	monthly_decay = 0.5
+
+	prison_release_modifier = yes
+}
+
+# Disappointed by refusal
+disappointed_opinion = {
+	opinion = {
+		value = -10
+	}
+
+	monthly_decay = -1
+}
+
+# Ruler offering protection
+protector_opinion = {
+	opinion = {
+		value = 30
+	}
+
+	monthly_decay = -0.25
+
+	prison_release_modifier = yes
+}
+
+# Plotting revenge after asset seizure
+plotting_revenge_opinion = {
+	opinion = {
+		value = -200
+	}
+
+	monthly_decay = 2
+
+	prison_release_modifier = yes
+
+	crime = yes
+}
+
+# Attempted murder discovered
+attempted_murder_opinion = {
+	opinion = {
+		value = -100
+	}
+
+	monthly_decay = 1
+
+	prison_release_modifier = yes
+
+	crime = yes
+}
+
+# Bad reputation from rumors
+bad_reputation_opinion = {
+	opinion = {
+		value = -10
+	}
+
+	monthly_decay = 0.5
+}

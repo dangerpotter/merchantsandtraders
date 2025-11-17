@@ -1,0 +1,183 @@
+l_english:
+ ####################################
+ # MERCHANT INTERACTIONS LOCALIZATION
+ ####################################
+
+ ####################################
+ # 1. REQUEST TRADE RIGHTS
+ ####################################
+
+ request_trade_rights_interaction:0 "Request Trade Rights"
+ request_trade_rights_interaction_desc:0 "Request permission from [recipient.GetTitledFirstName] to establish trade routes through [recipient.GetHerHis] lands. This will grant you official recognition and protection for your merchant activities."
+ REQUEST_TRADE_RIGHTS_NOTIFICATION:0 "[actor.GetTitledFirstName] requests trade rights in your realm"
+ request_trade_rights_interaction_notification:0 "Trade Rights Granted"
+ request_trade_rights_declined_notification:0 "Trade Rights Denied"
+
+ # Send options
+ AI_GENEROUS_PAYMENT:0 "Generous Payment Offered"
+ AI_WEALTHY_MERCHANT:0 "Wealthy Merchant"
+ AI_GREEDY:0 "Greedy"
+ AI_AT_WAR:0 "Currently at War"
+ AI_DEVELOPED_REALM:0 "Developed Realm"
+ AI_SUSPICIOUS:0 "Suspicious of Outsiders"
+
+ # Modifier descriptions
+ mt_granted_trade_rights:0 "Granted Trade Rights"
+ mt_granted_trade_rights_desc:0 "This character has official permission to establish trade routes and conduct business in a ruler's lands. Local authorities will not interfere with their merchant activities."
+
+ mt_granted_trade_rights_enhanced:0 "Enhanced Trade Rights"
+ mt_granted_trade_rights_enhanced_desc:0 "This character has exceptional trade privileges, including preferential treatment and official protection for their caravans."
+
+ ####################################
+ # 2. NEGOTIATE TRADE DEAL
+ ####################################
+
+ negotiate_trade_deal_interaction:0 "Negotiate Trade Deal"
+ negotiate_trade_deal_interaction_desc:0 "Propose a partnership with fellow merchant [recipient.GetTitledFirstName] to share trade routes, knowledge, and profits. United, you can achieve far more than alone."
+ NEGOTIATE_TRADE_DEAL_NOTIFICATION:0 "[actor.GetTitledFirstName] proposes a trade partnership"
+ negotiate_trade_deal_accepted_notification:0 "Trade Partnership Formed"
+
+ # AI modifiers
+ AI_EQUAL_STATUS:0 "Equal Status Merchants"
+ AI_NEEDS_INVESTMENT:0 "Needs Investment Capital"
+ AI_AMBITIOUS:0 "Ambitious"
+ AI_ALREADY_WEALTHY:0 "Already Wealthy"
+ AI_SAME_CULTURE:0 "Same Culture"
+
+ # Modifier descriptions
+ mt_trade_partnership:0 "Trade Partnership"
+ mt_trade_partnership_desc:0 "This character is in an equal partnership with another merchant, sharing routes and trade knowledge for mutual benefit."
+
+ mt_senior_trade_partner:0 "Senior Trade Partner"
+ mt_senior_trade_partner_desc:0 "This character is the senior partner in a trade venture, having invested significant capital for a larger share of the profits."
+
+ mt_junior_trade_partner:0 "Junior Trade Partner"
+ mt_junior_trade_partner_desc:0 "This character is the junior partner in a trade venture, learning from a more experienced merchant while receiving investment capital."
+
+ mt_partnership_income_boost:0 "Partnership Income"
+ mt_partnership_income_boost_desc:0 "Increased profits from sharing trade routes and resources with a partner merchant."
+
+ mt_senior_partnership_income_boost:0 "Senior Partner Income"
+ mt_senior_partnership_income_boost_desc:0 "Significant profits from holding the senior position in a trade partnership."
+
+ ####################################
+ # 3. HIRE CARAVAN GUARD
+ ####################################
+
+ hire_caravan_guard_interaction:0 "Hire Caravan Guard"
+ hire_caravan_guard_interaction_desc:0 "Hire [recipient.GetTitledFirstName] to protect your trade caravans from bandits and raiders. A skilled warrior can make the difference between profit and disaster on dangerous routes."
+ HIRE_CARAVAN_GUARD_NOTIFICATION:0 "[actor.GetTitledFirstName] offers you employment as a caravan guard"
+ hire_caravan_guard_accepted_notification:0 "Guard Contract Accepted"
+
+ # AI modifiers
+ AI_NEEDS_GOLD:0 "Needs Gold"
+ AI_LONGER_CONTRACT:0 "Longer Contract"
+ AI_LONG_CONTRACT:0 "Long-term Contract"
+ AI_PROUD:0 "Too Proud"
+ AI_HUMBLE:0 "Humble"
+ AI_HAS_RESPONSIBILITIES:0 "Has Other Responsibilities"
+
+ # Modifier descriptions
+ mt_hired_caravan_guards:0 "Hired Caravan Guards"
+ mt_hired_caravan_guards_desc:0 "This merchant has hired skilled guards to protect their trade caravans, significantly reducing the danger of bandit attacks and ensuring safer passage of goods."
+
+ mt_caravan_guard:0 "Caravan Guard"
+ mt_caravan_guard_desc:0 "This character is employed as a caravan guard, protecting merchant caravans from bandits and raiders in exchange for steady pay."
+
+ ####################################
+ # 4. SEIZE MERCHANT ASSETS
+ ####################################
+
+ seize_merchant_assets_interaction:0 "Seize Merchant Assets"
+ seize_merchant_assets_interaction_desc:0 "Confiscate the wealth and trade posts of [recipient.GetTitledFirstName]. This tyrannical act will fill your coffers but damage your reputation and relationships. The merchant community will not forget such treachery."
+ SEIZE_MERCHANT_ASSETS_NOTIFICATION:0 "[actor.GetTitledFirstName] has seized your assets!"
+ seize_merchant_assets_notification:0 "Assets Seized!"
+
+ ####################################
+ # 5. OFFER MERCHANT PROTECTION
+ ####################################
+
+ offer_merchant_protection_interaction:0 "Offer Merchant Protection"
+ offer_merchant_protection_interaction_desc:0 "Extend your protection to merchant [recipient.GetTitledFirstName], guaranteeing the safety of [recipient.GetHerHis] caravans in your realm. This honorable act will strengthen trade and earn the gratitude of the merchant community."
+ OFFER_MERCHANT_PROTECTION_NOTIFICATION:0 "[actor.GetTitledFirstName] offers you protection"
+ offer_merchant_protection_accepted_notification:0 "Protection Accepted"
+
+ # AI modifiers
+ AI_ROUTES_DANGEROUS:0 "Routes Are Dangerous"
+ AI_OPERATES_IN_REALM:0 "Operates in Our Realm"
+ AI_HONORABLE_RULER:0 "Honorable Ruler"
+ AI_UNTRUSTWORTHY:0 "Untrustworthy"
+ AI_STRONG_PROTECTOR:0 "Strong Military"
+ AI_INDEPENDENT_MAGNATE:0 "Independent Magnate"
+
+ # Modifier descriptions
+ mt_ruler_protection:0 "Ruler's Protection"
+ mt_ruler_protection_desc:0 "This merchant enjoys the official protection of a powerful ruler, ensuring safe passage through their realm and deterring bandits and rivals."
+
+ mt_merchant_protector:0 "Protector of Merchants"
+ mt_merchant_protector_desc:0 "This ruler has pledged to protect merchant activities in their realm, earning the gratitude of traders and boosting commerce."
+
+ mt_protected_trade_routes:0 "Protected Trade Routes"
+ mt_protected_trade_routes_desc:0 "This merchant's trade routes enjoy official protection, resulting in safer travel and higher profits."
+
+ ####################################
+ # OPINION MODIFIERS
+ ####################################
+
+ grateful_opinion:0 "Grateful"
+ merchant_partner_opinion:0 "Merchant Partner"
+ trade_partner_opinion:0 "Trade Partner"
+ employer_opinion:0 "Employer"
+ seized_my_assets_opinion:0 "Seized My Assets"
+ seized_assets_opinion:0 "Witnessed Asset Seizure"
+ tyrant_opinion:0 "Tyrannical Behavior"
+ disappointed_opinion:0 "Disappointed"
+ protector_opinion:0 "My Protector"
+
+ ####################################
+ # FLAVOR TEXT AND NOTIFICATIONS
+ ####################################
+
+ # Request Trade Rights flavor
+ REQUEST_TRADE_RIGHTS_FLAVOR:0 "My [recipient.GetLadyLord], I come seeking your blessing to conduct honest trade through your lands. With your permission, I shall bring prosperity to your realm through the exchange of goods."
+
+ REQUEST_TRADE_RIGHTS_ACCEPT:0 "Your request is granted, merchant. May your ventures bring wealth to us both."
+
+ REQUEST_TRADE_RIGHTS_DECLINE:0 "I cannot permit this at present. Perhaps another time."
+
+ # Negotiate Trade Deal flavor
+ NEGOTIATE_TRADE_DEAL_FLAVOR:0 "Fellow merchant, together we could dominate these trade routes. Let us pool our resources and share in greater profits than either of us could achieve alone."
+
+ NEGOTIATE_TRADE_DEAL_ACCEPT:0 "Your proposal has merit. Let us formalize this partnership."
+
+ NEGOTIATE_TRADE_DEAL_DECLINE:0 "I prefer to maintain my independence in business matters."
+
+ # Hire Caravan Guard flavor
+ HIRE_CARAVAN_GUARD_FLAVOR:0 "Your reputation as a skilled warrior precedes you. I seek protection for my caravans as they traverse dangerous routes. Your sword would be well compensated."
+
+ HIRE_CARAVAN_GUARD_ACCEPT:0 "I accept your offer. Your caravans will be safe under my watch."
+
+ HIRE_CARAVAN_GUARD_DECLINE:0 "I have other obligations that prevent me from accepting."
+
+ # Seize Merchant Assets flavor
+ SEIZE_MERCHANT_ASSETS_FLAVOR:0 "This merchant's wealth rightfully belongs in my treasury. Their assets are forfeit."
+
+ SEIZE_MERCHANT_ASSETS_VICTIM:0 "This is theft! Tyranny! The merchant guilds will hear of this outrage!"
+
+ # Offer Merchant Protection flavor
+ OFFER_MERCHANT_PROTECTION_FLAVOR:0 "Merchant, your trade brings prosperity to my realm. I offer you my protection - your caravans shall travel safely under my banner."
+
+ OFFER_MERCHANT_PROTECTION_ACCEPT:0 "Your protection is most welcome, [actor.GetLadyLord]. You have my deepest gratitude."
+
+ OFFER_MERCHANT_PROTECTION_DECLINE:0 "I appreciate the offer, but I must maintain my independence."
+
+ ####################################
+ # TOASTS AND MESSAGES
+ ####################################
+
+ trade_rights_granted_toast:0 "You have been granted trade rights by [recipient.GetTitledFirstName]"
+ trade_rights_denied_toast:0 "[recipient.GetTitledFirstName] has denied your request for trade rights"
+ trade_partnership_formed_toast:0 "You have formed a trade partnership with [recipient.GetTitledFirstName]"
+ caravan_guard_hired_toast:0 "[recipient.GetTitledFirstName] has agreed to guard your caravans"
+ assets_seized_toast:0 "Your assets have been seized by [actor.GetTitledFirstName]!"
+ protection_granted_toast:0 "[actor.GetTitledFirstName] has extended protection to your trade operations"

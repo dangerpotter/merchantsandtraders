@@ -1,0 +1,38 @@
+l_english:
+ ####################################
+ # MERCHANT EVENTS LOCALIZATION
+ ####################################
+
+ ####################################
+ # ASSET SEIZURE EVENTS (100-199)
+ ####################################
+
+ # Event 100: Merchant decides whether to flee
+ mt_merchant_events.100.t:0 "Ruined!"
+ mt_merchant_events.100.desc:0 "My wealth, my trade posts, everything I built - all stolen by [liege.GetTitledFirstName]! That tyrant has seized half my assets with no justification beyond naked greed. The sting of betrayal burns deep.\n\nI must decide my next move. Should I flee to another realm where my remaining wealth might be safe? Or stay and attempt to rebuild what was taken from me? Perhaps... revenge?"
+ mt_merchant_events.100.a:0 "I flee to friendlier lands."
+ mt_merchant_events.100.b:0 "I will stay and rebuild, though it galls me."
+ mt_merchant_events.100.c:0 "I will have my revenge for this betrayal!"
+
+ # Event 101: Merchant's revenge
+ mt_merchant_events.101.t:0 "Time for Revenge"
+ mt_merchant_events.101.desc:0 "I have waited, I have planned, and now the time has come. [revenge_target.GetTitledFirstName] thought [revenge_target.GetSheHe] could rob me and face no consequences. How wrong [revenge_target.GetSheHe] was.\n\nMy merchant contacts, my network of informants, my accumulated wealth - all these can be turned to vengeance. The question is: how shall I make [revenge_target.GetHerHim] pay?"
+ mt_merchant_events.101.a:0 "Disrupt [revenge_target.GetHerHis] trade networks."
+ mt_merchant_events.101.b:0 "Arrange an 'accident' for this tyrant."
+ mt_merchant_events.101.c:0 "Spread damaging rumors throughout the realm."
+ mt_merchant_events.101.d:0 "Perhaps revenge is not worth the cost..."
+
+ ####################################
+ # MODIFIER DESCRIPTIONS
+ ####################################
+
+ mt_trade_disruption:0 "Trade Disrupted"
+ mt_trade_disruption_desc:0 "Trade networks in this county have been deliberately sabotaged by vengeful merchants, causing economic chaos and instability."
+
+ ####################################
+ # ADDITIONAL OPINION MODIFIERS
+ ####################################
+
+ plotting_revenge_opinion:0 "Plotting Revenge"
+ attempted_murder_opinion:0 "Attempted Murder"
+ bad_reputation_opinion:0 "Bad Reputation"
