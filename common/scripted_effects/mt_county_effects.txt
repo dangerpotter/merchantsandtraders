@@ -1,0 +1,876 @@
+######################################################
+# MERCHANTS AND TRADERS - COUNTY ECONOMIC EFFECTS   #
+######################################################
+# These effects manage the economic integration between merchant activity
+# and county-level gameplay. Counties benefit from trade routes, and rulers
+# can influence merchant activity through taxation and protection policies.
+#
+# SCOPE REQUIREMENTS:
+# - Most effects expect County scope (title scope for county tier)
+# - Some effects work on Character scope (ruler making decisions)
+#
+# INTEGRATION NOTES:
+# - Called when trade routes are established/closed
+# - Called on periodic maintenance (monthly pulse)
+# - Called when rulers change policies or build infrastructure
+
+######################################################
+# APPLY TRADE ROUTE COUNTY BONUS
+######################################################
+# Called when a new trade route is established through a county.
+# Adds the appropriate active_trade_route modifier and updates income.
+#
+# SCOPE: County (title)
+# PARAMETERS: None
+#
+# LOGIC:
+# 1. Count existing active trade routes in county
+# 2. Check county's trade route capacity (from buildings)
+# 3. If capacity available, add next sequential route modifier
+# 4. Apply income based on route health and goods value
+# 5. Check if county should become trade hub
+
+apply_trade_route_county_bonus_effect = {
+	# Save current county for nested scopes
+	save_scope_as = trade_county
+
+	# Count how many trade route modifiers are already active
+	# This determines which numbered modifier to add next
+	if = {
+		limit = {
+			NOT = { has_county_modifier = active_trade_route_1 }
+		}
+		# First trade route through this county
+		add_county_modifier = {
+			modifier = active_trade_route_1
+			years = 100  # Effectively permanent until route closes
+		}
+
+		# Log for debugging
+		debug_log = "Trade route 1 established in county"
+		debug_log_scopes = yes
+	}
+	else_if = {
+		limit = {
+			has_county_modifier = active_trade_route_1
+			NOT = { has_county_modifier = active_trade_route_2 }
+		}
+		add_county_modifier = {
+			modifier = active_trade_route_2
+			years = 100
+		}
+		debug_log = "Trade route 2 established in county"
+		debug_log_scopes = yes
+	}
+	else_if = {
+		limit = {
+			has_county_modifier = active_trade_route_2
+			NOT = { has_county_modifier = active_trade_route_3 }
+		}
+		add_county_modifier = {
+			modifier = active_trade_route_3
+			years = 100
+		}
+		debug_log = "Trade route 3 established in county"
+		debug_log_scopes = yes
+
+		# Third route triggers trade hub check
+		check_trade_hub_status_effect = yes
+	}
+	else_if = {
+		limit = {
+			has_county_modifier = active_trade_route_3
+			NOT = { has_county_modifier = active_trade_route_4 }
+		}
+		add_county_modifier = {
+			modifier = active_trade_route_4
+			years = 100
+		}
+		debug_log = "Trade route 4 established in county"
+	}
+	else_if = {
+		limit = {
+			has_county_modifier = active_trade_route_4
+			NOT = { has_county_modifier = active_trade_route_5 }
+		}
+		add_county_modifier = {
+			modifier = active_trade_route_5
+			years = 100
+		}
+		debug_log = "Trade route 5 established in county"
+	}
+	else_if = {
+		limit = {
+			has_county_modifier = active_trade_route_5
+			NOT = { has_county_modifier = active_trade_route_6 }
+		}
+		add_county_modifier = {
+			modifier = active_trade_route_6
+			years = 100
+		}
+		debug_log = "Trade route 6 established in county"
+	}
+	else_if = {
+		limit = {
+			has_county_modifier = active_trade_route_6
+			NOT = { has_county_modifier = active_trade_route_7 }
+		}
+		add_county_modifier = {
+			modifier = active_trade_route_7
+			years = 100
+		}
+		debug_log = "Trade route 7 established in county"
+	}
+	else_if = {
+		limit = {
+			has_county_modifier = active_trade_route_7
+			NOT = { has_county_modifier = active_trade_route_8 }
+		}
+		add_county_modifier = {
+			modifier = active_trade_route_8
+			years = 100
+		}
+		debug_log = "Trade route 8 established in county"
+	}
+	else_if = {
+		limit = {
+			has_county_modifier = active_trade_route_8
+			NOT = { has_county_modifier = active_trade_route_9 }
+		}
+		add_county_modifier = {
+			modifier = active_trade_route_9
+			years = 100
+		}
+		debug_log = "Trade route 9 established in county"
+	}
+	else_if = {
+		limit = {
+			has_county_modifier = active_trade_route_9
+			NOT = { has_county_modifier = active_trade_route_10 }
+		}
+		add_county_modifier = {
+			modifier = active_trade_route_10
+			years = 100
+		}
+		debug_log = "Trade route 10 established in county"
+	}
+	else = {
+		# County is at maximum capacity (10 routes)
+		debug_log = "County at maximum trade route capacity!"
+	}
+
+	# Apply goods value bonuses if buildings support it
+	apply_trade_goods_value_bonus_effect = yes
+
+	# Send notification to county holder
+	if = {
+		limit = {
+			exists = holder
+		}
+		holder = {
+			send_interface_toast = {
+				title = trade_route_established_toast
+				left_icon = scope:trade_county
+
+				custom_tooltip = trade_route_established_county_tt
+			}
+		}
+	}
+}
+
+######################################################
+# REMOVE TRADE ROUTE COUNTY BONUS
+######################################################
+# Called when a trade route closes or is disrupted.
+# Removes the highest-numbered active route modifier.
+#
+# SCOPE: County (title)
+# PARAMETERS: None
+#
+# LOGIC:
+# 1. Find highest numbered active_trade_route modifier
+# 2. Remove it
+# 3. Update trade hub status if routes drop below 3
+# 4. Notify county holder
+
+remove_trade_route_county_bonus_effect = {
+	save_scope_as = trade_county
+
+	# Remove from highest to lowest to maintain sequential numbering
+	if = {
+		limit = {
+			has_county_modifier = active_trade_route_10
+		}
+		remove_county_modifier = active_trade_route_10
+		debug_log = "Trade route 10 removed from county"
+	}
+	else_if = {
+		limit = {
+			has_county_modifier = active_trade_route_9
+		}
+		remove_county_modifier = active_trade_route_9
+		debug_log = "Trade route 9 removed from county"
+	}
+	else_if = {
+		limit = {
+			has_county_modifier = active_trade_route_8
+		}
+		remove_county_modifier = active_trade_route_8
+		debug_log = "Trade route 8 removed from county"
+	}
+	else_if = {
+		limit = {
+			has_county_modifier = active_trade_route_7
+		}
+		remove_county_modifier = active_trade_route_7
+		debug_log = "Trade route 7 removed from county"
+	}
+	else_if = {
+		limit = {
+			has_county_modifier = active_trade_route_6
+		}
+		remove_county_modifier = active_trade_route_6
+		debug_log = "Trade route 6 removed from county"
+	}
+	else_if = {
+		limit = {
+			has_county_modifier = active_trade_route_5
+		}
+		remove_county_modifier = active_trade_route_5
+		debug_log = "Trade route 5 removed from county"
+	}
+	else_if = {
+		limit = {
+			has_county_modifier = active_trade_route_4
+		}
+		remove_county_modifier = active_trade_route_4
+		debug_log = "Trade route 4 removed from county"
+	}
+	else_if = {
+		limit = {
+			has_county_modifier = active_trade_route_3
+		}
+		remove_county_modifier = active_trade_route_3
+		debug_log = "Trade route 3 removed from county"
+
+		# Might lose trade hub status
+		check_trade_hub_status_effect = yes
+	}
+	else_if = {
+		limit = {
+			has_county_modifier = active_trade_route_2
+		}
+		remove_county_modifier = active_trade_route_2
+		debug_log = "Trade route 2 removed from county"
+
+		# Definitely lose trade hub status
+		check_trade_hub_status_effect = yes
+	}
+	else_if = {
+		limit = {
+			has_county_modifier = active_trade_route_1
+		}
+		remove_county_modifier = active_trade_route_1
+		debug_log = "Trade route 1 removed from county"
+
+		# Lost last trade route
+		check_trade_hub_status_effect = yes
+	}
+	else = {
+		# No active trade routes to remove
+		debug_log = "Attempted to remove trade route but none exist!"
+	}
+
+	# Clean up goods value bonuses
+	remove_trade_goods_value_bonus_effect = yes
+
+	# Send notification to county holder
+	if = {
+		limit = {
+			exists = holder
+		}
+		holder = {
+			send_interface_toast = {
+				title = trade_route_closed_toast
+				left_icon = scope:trade_county
+
+				custom_tooltip = trade_route_closed_county_tt
+			}
+		}
+	}
+}
+
+######################################################
+# CHECK TRADE HUB STATUS
+######################################################
+# Evaluates whether a county qualifies as a trade hub.
+# Trade hubs have 3+ active routes OR have a Grand Bazaar.
+#
+# SCOPE: County (title)
+# PARAMETERS: None
+#
+# LOGIC:
+# 1. Check if county has Grand Bazaar (automatic hub status)
+# 2. Count active trade routes
+# 3. If 3+, apply trade_hub_status modifier
+# 4. If <3 and no Grand Bazaar, remove hub status
+
+check_trade_hub_status_effect = {
+	save_scope_as = trade_county
+
+	# Grand Bazaar automatically grants trade hub status
+	if = {
+		limit = {
+			any_county_province = {
+				barony = {
+					has_building_or_higher = mt_grand_bazaar_04
+				}
+			}
+		}
+		# Ensure trade hub status is applied
+		if = {
+			limit = {
+				NOT = { has_county_modifier = trade_hub_status }
+			}
+			add_county_modifier = {
+				modifier = trade_hub_status
+				years = 100
+			}
+
+			# Grand Bazaar bonus
+			add_county_modifier = {
+				modifier = grand_bazaar_bonus
+				years = 100
+			}
+
+			# Notify ruler of new trade hub
+			if = {
+				limit = { exists = holder }
+				holder = {
+					send_interface_toast = {
+						title = trade_hub_established_toast
+						left_icon = scope:trade_county
+
+						custom_tooltip = trade_hub_grand_bazaar_tt
+					}
+				}
+			}
+
+			debug_log = "County became trade hub (Grand Bazaar)"
+		}
+	}
+	# Check route count for hub status
+	else_if = {
+		limit = {
+			has_county_modifier = active_trade_route_3
+		}
+		# County has 3+ active routes, qualifies as trade hub
+		if = {
+			limit = {
+				NOT = { has_county_modifier = trade_hub_status }
+			}
+			add_county_modifier = {
+				modifier = trade_hub_status
+				years = 100
+			}
+
+			# Notify ruler of new trade hub
+			if = {
+				limit = { exists = holder }
+				holder = {
+					send_interface_toast = {
+						title = trade_hub_established_toast
+						left_icon = scope:trade_county
+
+						custom_tooltip = trade_hub_routes_tt
+					}
+				}
+			}
+
+			debug_log = "County became trade hub (3+ routes)"
+		}
+
+		# Apply merchant district bonus if building exists
+		if = {
+			limit = {
+				any_county_province = {
+					barony = {
+						has_building_or_higher = mt_merchant_district_03
+					}
+				}
+				NOT = { has_county_modifier = merchant_district_bonus }
+			}
+			add_county_modifier = {
+				modifier = merchant_district_bonus
+				years = 100
+			}
+		}
+	}
+	else = {
+		# County has fewer than 3 routes and no Grand Bazaar
+		# Remove trade hub status if present
+		if = {
+			limit = {
+				has_county_modifier = trade_hub_status
+			}
+			remove_county_modifier = trade_hub_status
+
+			# Notify ruler of lost trade hub
+			if = {
+				limit = { exists = holder }
+				holder = {
+					send_interface_toast = {
+						title = trade_hub_lost_toast
+						left_icon = scope:trade_county
+
+						custom_tooltip = trade_hub_lost_tt
+					}
+				}
+			}
+
+			debug_log = "County lost trade hub status"
+		}
+
+		# Remove merchant district bonus
+		if = {
+			limit = {
+				has_county_modifier = merchant_district_bonus
+			}
+			remove_county_modifier = merchant_district_bonus
+		}
+
+		# Remove grand bazaar bonus
+		if = {
+			limit = {
+				has_county_modifier = grand_bazaar_bonus
+			}
+			remove_county_modifier = grand_bazaar_bonus
+		}
+	}
+}
+
+######################################################
+# APPLY TRADE GOODS VALUE BONUS
+######################################################
+# Checks county buildings and applies goods value modifiers.
+# Higher-tier trade buildings increase the value of goods passing through.
+#
+# SCOPE: County (title)
+# PARAMETERS: None
+
+apply_trade_goods_value_bonus_effect = {
+	# Check for Grand Bazaar (10% bonus)
+	if = {
+		limit = {
+			any_county_province = {
+				barony = {
+					has_building_or_higher = mt_grand_bazaar_04
+				}
+			}
+			NOT = { has_county_modifier = trade_goods_value_10 }
+		}
+		# Remove lower bonus if present
+		if = {
+			limit = { has_county_modifier = trade_goods_value_5 }
+			remove_county_modifier = trade_goods_value_5
+		}
+
+		add_county_modifier = {
+			modifier = trade_goods_value_10
+			years = 100
+		}
+		debug_log = "Applied 10% goods value bonus (Grand Bazaar)"
+	}
+	# Check for Trade Quarter or Merchant District (5% bonus)
+	else_if = {
+		limit = {
+			any_county_province = {
+				barony = {
+					OR = {
+						has_building_or_higher = mt_trade_quarter_02
+						has_building_or_higher = mt_merchant_district_03
+					}
+				}
+			}
+			NOT = { has_county_modifier = trade_goods_value_5 }
+		}
+		add_county_modifier = {
+			modifier = trade_goods_value_5
+			years = 100
+		}
+		debug_log = "Applied 5% goods value bonus (Trade Quarter/Merchant District)"
+	}
+}
+
+######################################################
+# REMOVE TRADE GOODS VALUE BONUS
+######################################################
+# Removes goods value modifiers when no longer applicable.
+#
+# SCOPE: County (title)
+# PARAMETERS: None
+
+remove_trade_goods_value_bonus_effect = {
+	# Only remove if no trade routes remain
+	if = {
+		limit = {
+			NOT = { has_county_modifier = active_trade_route_1 }
+		}
+		if = {
+			limit = { has_county_modifier = trade_goods_value_10 }
+			remove_county_modifier = trade_goods_value_10
+		}
+		if = {
+			limit = { has_county_modifier = trade_goods_value_5 }
+			remove_county_modifier = trade_goods_value_5
+		}
+	}
+}
+
+######################################################
+# RULER TRADE POLICY EFFECT
+######################################################
+# Handles ruler decisions about how to interact with merchants.
+# Rulers can tax heavily, tax moderately, or protect trade.
+#
+# SCOPE: Character (county holder)
+# PARAMETERS:
+#   - policy: heavy_tax / moderate_tax / protection
+#   - county: The county to apply policy to
+#
+# MECHANICS:
+# - Heavy taxation: +1 gold/month, -20% route health, merchants unhappy
+# - Moderate taxation: +0.5 gold/month, neutral
+# - Protection: -0.5 gold/month, +20% route health, merchants happy
+
+ruler_trade_policy_effect = {
+	save_scope_as = policy_ruler
+
+	# Validate that character holds the county
+	if = {
+		limit = {
+			NOT = { scope:county.holder = scope:policy_ruler }
+		}
+		debug_log = "ERROR: Ruler does not hold the county for trade policy!"
+		debug_log_scopes = yes
+	}
+	else = {
+		# Remove any existing trade policy modifiers
+		scope:county = {
+			if = {
+				limit = { has_county_modifier = trade_taxation_heavy }
+				remove_county_modifier = trade_taxation_heavy
+			}
+			if = {
+				limit = { has_county_modifier = trade_taxation_moderate }
+				remove_county_modifier = trade_taxation_moderate
+			}
+			if = {
+				limit = { has_county_modifier = trade_protection_active }
+				remove_county_modifier = trade_protection_active
+			}
+		}
+
+		# Apply new policy based on parameter
+		if = {
+			limit = {
+				scope:policy = flag:heavy_tax
+			}
+			scope:county = {
+				add_county_modifier = {
+					modifier = trade_taxation_heavy
+					years = 100
+				}
+			}
+
+			# Ruler gains tyranny opinion penalty from merchants
+			add_character_modifier = {
+				modifier = merchant_tyranny_opinion
+				years = 10
+			}
+
+			send_interface_toast = {
+				title = heavy_taxation_policy_toast
+				left_icon = scope:county
+
+				custom_tooltip = heavy_taxation_policy_tt
+			}
+
+			debug_log = "Heavy taxation policy applied"
+		}
+		else_if = {
+			limit = {
+				scope:policy = flag:moderate_tax
+			}
+			scope:county = {
+				add_county_modifier = {
+					modifier = trade_taxation_moderate
+					years = 100
+				}
+			}
+
+			send_interface_toast = {
+				title = moderate_taxation_policy_toast
+				left_icon = scope:county
+
+				custom_tooltip = moderate_taxation_policy_tt
+			}
+
+			debug_log = "Moderate taxation policy applied"
+		}
+		else_if = {
+			limit = {
+				scope:policy = flag:protection
+			}
+			scope:county = {
+				add_county_modifier = {
+					modifier = trade_protection_active
+					years = 100
+				}
+			}
+
+			# Ruler gains opinion bonus from merchants
+			add_character_modifier = {
+				modifier = merchant_protector_opinion
+				years = 10
+			}
+
+			send_interface_toast = {
+				title = trade_protection_policy_toast
+				left_icon = scope:county
+
+				custom_tooltip = trade_protection_policy_tt
+			}
+
+			debug_log = "Trade protection policy applied"
+		}
+		else = {
+			debug_log = "ERROR: Invalid trade policy parameter!"
+		}
+	}
+}
+
+######################################################
+# GET COUNTY TRADE ROUTE CAPACITY
+######################################################
+# Returns the maximum number of trade routes a county can support.
+# Based on buildings constructed in the county.
+#
+# SCOPE: County (title)
+# RETURNS: Numeric value (1, 2, 4, or 9)
+#
+# NOTE: In actual implementation, this would use script values
+# This is a simplified effect version for documentation
+
+get_county_trade_route_capacity_effect = {
+	# Check for Grand Bazaar (capacity 9)
+	if = {
+		limit = {
+			any_county_province = {
+				barony = {
+					has_building = mt_grand_bazaar_04
+				}
+			}
+		}
+		# Capacity = 9
+		set_variable = {
+			name = trade_route_capacity
+			value = 9
+		}
+	}
+	# Check for Merchant District (capacity 4)
+	else_if = {
+		limit = {
+			any_county_province = {
+				barony = {
+					has_building = mt_merchant_district_03
+				}
+			}
+		}
+		set_variable = {
+			name = trade_route_capacity
+			value = 4
+		}
+	}
+	# Check for Trade Quarter (capacity 2)
+	else_if = {
+		limit = {
+			any_county_province = {
+				barony = {
+					has_building = mt_trade_quarter_02
+				}
+			}
+		}
+		set_variable = {
+			name = trade_route_capacity
+			value = 2
+		}
+	}
+	# Check for Market (capacity 1)
+	else_if = {
+		limit = {
+			any_county_province = {
+				barony = {
+					has_building = mt_market_01
+				}
+			}
+		}
+		set_variable = {
+			name = trade_route_capacity
+			value = 1
+		}
+	}
+	# No trade buildings (capacity 0)
+	else = {
+		set_variable = {
+			name = trade_route_capacity
+			value = 0
+		}
+	}
+}
+
+######################################################
+# COUNT ACTIVE TRADE ROUTES IN COUNTY
+######################################################
+# Counts how many trade routes are currently active in a county.
+#
+# SCOPE: County (title)
+# RETURNS: Numeric value (0-10)
+
+count_active_trade_routes_effect = {
+	set_variable = {
+		name = active_route_count
+		value = 0
+	}
+
+	if = {
+		limit = { has_county_modifier = active_trade_route_1 }
+		change_variable = {
+			name = active_route_count
+			add = 1
+		}
+	}
+	if = {
+		limit = { has_county_modifier = active_trade_route_2 }
+		change_variable = {
+			name = active_route_count
+			add = 1
+		}
+	}
+	if = {
+		limit = { has_county_modifier = active_trade_route_3 }
+		change_variable = {
+			name = active_route_count
+			add = 1
+		}
+	}
+	if = {
+		limit = { has_county_modifier = active_trade_route_4 }
+		change_variable = {
+			name = active_route_count
+			add = 1
+		}
+	}
+	if = {
+		limit = { has_county_modifier = active_trade_route_5 }
+		change_variable = {
+			name = active_route_count
+			add = 1
+		}
+	}
+	if = {
+		limit = { has_county_modifier = active_trade_route_6 }
+		change_variable = {
+			name = active_route_count
+			add = 1
+		}
+	}
+	if = {
+		limit = { has_county_modifier = active_trade_route_7 }
+		change_variable = {
+			name = active_route_count
+			add = 1
+		}
+	}
+	if = {
+		limit = { has_county_modifier = active_trade_route_8 }
+		change_variable = {
+			name = active_route_count
+			add = 1
+		}
+	}
+	if = {
+		limit = { has_county_modifier = active_trade_route_9 }
+		change_variable = {
+			name = active_route_count
+			add = 1
+		}
+	}
+	if = {
+		limit = { has_county_modifier = active_trade_route_10 }
+		change_variable = {
+			name = active_route_count
+			add = 1
+		}
+	}
+}
+
+######################################################
+# INTEGRATION NOTES
+######################################################
+#
+# HOW COUNTY ECONOMIES INTERACT WITH MERCHANT ACTIVITY:
+#
+# 1. TRADE ROUTE ESTABLISHMENT
+#    When a merchant establishes a trade route, the route pathfinding
+#    system identifies all counties the route passes through.
+#    For each county:
+#    - Check if trade capacity is available (buildings)
+#    - If yes: apply_trade_route_county_bonus_effect
+#    - County gains income modifier
+#    - County development and control increase
+#
+# 2. INCOME CALCULATION
+#    Base income per route: 0.5 gold/month (from modifier)
+#    + Goods value bonus: 5-10% based on buildings
+#    + Ruler policy: -0.5 to +1 gold/month
+#    + Trade hub bonus: +2 gold/month if applicable
+#
+#    Example: County with 3 routes, Grand Bazaar, moderate taxation
+#    = (3 × 0.5) + 2.0 (hub) + 4.0 (bazaar) + 0.5 (tax) + 10% goods
+#    = ~8 gold/month from trade alone
+#
+# 3. ROUTE HEALTH IMPACT
+#    Ruler policies affect route health:
+#    - Heavy taxation: -20% health (route may close if too low)
+#    - Protection: +20% health (route more stable)
+#    - County control and development also affect health
+#
+#    Merchants prefer protected, high-development counties for routes.
+#
+# 4. PLAYER STRATEGY
+#    Players balance:
+#    - Building costs (50-600 gold) vs. long-term income
+#    - Taxation revenue vs. route health
+#    - Protecting routes in key counties vs. letting merchants self-manage
+#
+#    Optimal strategy: Build Grand Bazaar in capital, protect major
+#    trade hubs, tax lightly-used routes for extra income.
+#
+# 5. AI BEHAVIOR
+#    AI rulers will:
+#    - Build markets in developed counties
+#    - Upgrade to higher tiers if wealthy and county is capital
+#    - Generally use moderate taxation
+#    - Protect routes if under threat from raiders
+#    - Ignore trade in poor/peripheral counties
+#
+# 6. ECONOMIC SNOWBALL
+#    Successful trade counties experience positive feedback:
+#    - Routes bring income and development
+#    - Development attracts more routes
+#    - More routes enable trade hub status
+#    - Hubs attract even more routes
+#    - Eventually becomes Grand Bazaar center
+#
+#    Countered by: Limited capacity, ruler policies, warfare disruption
