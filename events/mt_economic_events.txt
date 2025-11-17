@@ -1,0 +1,3008 @@
+####################################
+# MERCHANTS AND TRADERS MOD
+# Economic & Market Events
+####################################
+#
+# Event namespace: mt_econ
+#
+# 0001-0004: Market Crashes
+# 0005-0008: Market Booms
+# 0009-0012: Economic Policy
+# 0013-0016: Discoveries
+# 0017-0020: Disasters
+# 0021-0025: Speculation
+#
+####################################
+
+namespace = mt_econ
+
+####################################
+# MARKET CRASHES (0001-0004)
+####################################
+
+# 0001: Silk market crashes - oversupply causes prices to drop 60%
+mt_econ.0001 = {
+	type = character_event
+	title = mt_econ.0001.t
+	desc = mt_econ.0001.desc
+	theme = stewardship
+
+	left_portrait = {
+		character = root
+		animation = shock
+	}
+
+	trigger = {
+		has_trait = wandering_merchant
+		gold >= 20
+	}
+
+	mean_time_to_happen = {
+		months = 36
+
+		modifier = {
+			factor = 0.7
+			any_held_title = {
+				tier = tier_county
+				county = {
+					has_county_modifier = mt_trade_good_silk
+				}
+			}
+		}
+	}
+
+	immediate = {
+		# Store whether character has silk goods
+		if = {
+			limit = {
+				any_held_title = {
+					tier = tier_county
+					county = {
+						has_county_modifier = mt_trade_good_silk
+					}
+				}
+			}
+			set_variable = {
+				name = mt_has_silk_goods
+				value = yes
+				days = 30
+			}
+		}
+	}
+
+	# Hold the goods - wait for recovery
+	option = {
+		name = mt_econ.0001.a
+
+		trigger = {
+			has_variable = mt_has_silk_goods
+		}
+
+		# Immediate loss from holding devalued goods
+		remove_short_term_gold = 15
+		add_stress = 20
+
+		# But may recover in future
+		trigger_event = {
+			id = mt_econ.0026
+			days = { 180 365 }
+		}
+
+		ai_chance = {
+			base = 40
+			modifier = {
+				add = 30
+				has_trait = patient
+			}
+			modifier = {
+				add = 20
+				gold >= 100
+			}
+		}
+	}
+
+	# Sell at loss - cut your losses
+	option = {
+		name = mt_econ.0001.b
+
+		trigger = {
+			has_variable = mt_has_silk_goods
+		}
+
+		# Sell at 40% of value
+		remove_short_term_gold = 25
+		add_stress = 30
+
+		# Stress relief from accepting reality
+		add_prestige = -20
+
+		ai_chance = {
+			base = 40
+			modifier = {
+				add = 30
+				gold < 50
+			}
+		}
+	}
+
+	# Switch to different goods
+	option = {
+		name = mt_econ.0001.c
+
+		# Investment in new goods
+		trigger = {
+			gold >= 30
+		}
+
+		remove_short_term_gold = 30
+
+		# Diversification pays off
+		random = {
+			chance = 60
+			add_gold = 45
+			custom_tooltip = mt_econ.0001.c.success
+		}
+
+		random = {
+			chance = 40
+			add_stress = 15
+			custom_tooltip = mt_econ.0001.c.failure
+		}
+
+		ai_chance = {
+			base = 50
+			modifier = {
+				add = 30
+				stewardship >= 12
+			}
+		}
+	}
+
+	# Don't trade in silk - just observe
+	option = {
+		name = mt_econ.0001.d
+
+		trigger = {
+			NOT = { has_variable = mt_has_silk_goods }
+		}
+
+		# Learn from others' mistakes
+		add_stewardship_lifestyle_xp = 50
+		add_stress = -5
+
+		custom_tooltip = mt_econ.0001.d.tt
+
+		ai_chance = {
+			base = 100
+		}
+	}
+}
+
+# 0002: Grain shortage - prices surge 200%
+mt_econ.0002 = {
+	type = character_event
+	title = mt_econ.0002.t
+	desc = mt_econ.0002.desc
+	theme = stewardship
+
+	left_portrait = {
+		character = root
+		animation = worry
+	}
+
+	trigger = {
+		has_trait = wandering_merchant
+	}
+
+	mean_time_to_happen = {
+		months = 30
+
+		modifier = {
+			factor = 0.5
+			any_character = {
+				is_at_war = yes
+			}
+		}
+
+		modifier = {
+			factor = 2.0
+			current_month >= 9
+			current_month <= 11
+		}
+	}
+
+	immediate = {
+		# Check if character has grain
+		if = {
+			limit = {
+				any_held_title = {
+					tier = tier_county
+					county = {
+						has_county_modifier = mt_trade_good_grain
+					}
+				}
+			}
+			set_variable = {
+				name = mt_has_grain_stockpile
+				value = yes
+				days = 30
+			}
+		}
+	}
+
+	# Sell grain stockpile at massive profit
+	option = {
+		name = mt_econ.0002.a
+
+		trigger = {
+			has_variable = mt_has_grain_stockpile
+		}
+
+		add_gold = 60
+		add_prestige = 40
+
+		# But people are starving
+		add_piety = -30
+		add_stress = 10
+
+		if = {
+			limit = { has_trait = greedy }
+			add_stress = -10
+		}
+
+		ai_chance = {
+			base = 50
+			modifier = {
+				add = 40
+				has_trait = greedy
+			}
+			modifier = {
+				add = -40
+				has_trait = charitable
+			}
+		}
+	}
+
+	# Sell at fair prices to help people
+	option = {
+		name = mt_econ.0002.b
+
+		trigger = {
+			has_variable = mt_has_grain_stockpile
+		}
+
+		add_gold = 25
+		add_piety = 50
+		add_prestige = 30
+
+		if = {
+			limit = { has_variable = mt_reputation }
+			change_variable = {
+				name = mt_reputation
+				add = 15
+			}
+		}
+
+		ai_chance = {
+			base = 30
+			modifier = {
+				add = 50
+				has_trait = charitable
+			}
+			modifier = {
+				add = 30
+				has_trait = compassionate
+			}
+		}
+	}
+
+	# Buy grain to stockpile for higher prices
+	option = {
+		name = mt_econ.0002.c
+
+		trigger = {
+			gold >= 40
+			NOT = { has_variable = mt_has_grain_stockpile }
+		}
+
+		remove_short_term_gold = 40
+
+		# Gamble on even higher prices
+		random_list = {
+			40 = {
+				# Prices go even higher
+				add_gold = 80
+				add_prestige = 25
+				custom_tooltip = mt_econ.0002.c.success
+			}
+			60 = {
+				# Market stabilizes
+				add_gold = 35
+				custom_tooltip = mt_econ.0002.c.neutral
+			}
+		}
+
+		ai_chance = {
+			base = 40
+			modifier = {
+				add = 30
+				has_trait = ambitious
+			}
+		}
+	}
+
+	# No grain - just suffer high food costs
+	option = {
+		name = mt_econ.0002.d
+
+		trigger = {
+			NOT = { has_variable = mt_has_grain_stockpile }
+		}
+
+		remove_short_term_gold = 10
+		add_stress = 15
+
+		custom_tooltip = mt_econ.0002.d.tt
+
+		ai_chance = {
+			base = 100
+		}
+	}
+}
+
+# 0003: War disrupts multiple markets - region-wide volatility
+mt_econ.0003 = {
+	type = character_event
+	title = mt_econ.0003.t
+	desc = mt_econ.0003.desc
+	theme = intrigue
+
+	left_portrait = {
+		character = root
+		animation = worry
+	}
+
+	trigger = {
+		has_trait = wandering_merchant
+		any_character = {
+			is_at_war = yes
+			any_held_title = {
+				tier >= tier_kingdom
+			}
+		}
+	}
+
+	mean_time_to_happen = {
+		months = 20
+
+		modifier = {
+			factor = 0.5
+			any_character = {
+				is_at_war = yes
+				war_contribution = 1000
+			}
+		}
+	}
+
+	# Invest in war supplies - weapons, armor, food
+	option = {
+		name = mt_econ.0003.a
+
+		trigger = {
+			gold >= 50
+		}
+
+		remove_short_term_gold = 50
+
+		random_list = {
+			70 = {
+				# War profiteering succeeds
+				add_gold = 100
+				add_prestige = 30
+				add_piety = -20
+				custom_tooltip = mt_econ.0003.a.success
+			}
+			30 = {
+				# Routes disrupted, lose shipment
+				add_stress = 30
+				custom_tooltip = mt_econ.0003.a.failure
+			}
+		}
+
+		ai_chance = {
+			base = 50
+			modifier = {
+				add = 30
+				has_trait = greedy
+			}
+			modifier = {
+				add = 20
+				gold >= 100
+			}
+		}
+	}
+
+	# Avoid war zones entirely
+	option = {
+		name = mt_econ.0003.b
+
+		# Safe but lose opportunities
+		add_stress = -10
+		remove_short_term_gold = 5
+
+		custom_tooltip = mt_econ.0003.b.tt
+
+		ai_chance = {
+			base = 40
+			modifier = {
+				add = 40
+				has_trait = craven
+			}
+		}
+	}
+
+	# Offer humanitarian aid - gain favor
+	option = {
+		name = mt_econ.0003.c
+
+		trigger = {
+			gold >= 30
+		}
+
+		remove_short_term_gold = 30
+		add_piety = 60
+		add_prestige = 40
+
+		# May gain powerful ally
+		random = {
+			chance = 40
+			custom_tooltip = mt_econ.0003.c.ally
+			add_prestige = 20
+		}
+
+		ai_chance = {
+			base = 20
+			modifier = {
+				add = 50
+				has_trait = charitable
+			}
+		}
+	}
+
+	# Diversify investments to manage risk
+	option = {
+		name = mt_econ.0003.d
+
+		trigger = {
+			stewardship >= 10
+		}
+
+		remove_short_term_gold = 20
+
+		# Stable returns despite chaos
+		add_gold = 25
+		add_stewardship_lifestyle_xp = 40
+
+		ai_chance = {
+			base = 30
+			modifier = {
+				add = 30
+				stewardship >= 14
+			}
+		}
+	}
+}
+
+# 0004: Counterfeit goods flood market - lose consumer confidence
+mt_econ.0004 = {
+	type = character_event
+	title = mt_econ.0004.t
+	desc = mt_econ.0004.desc
+	theme = intrigue
+
+	left_portrait = {
+		character = root
+		animation = anger
+	}
+
+	trigger = {
+		has_trait = wandering_merchant
+	}
+
+	mean_time_to_happen = {
+		months = 40
+	}
+
+	# Hunt down counterfeiters
+	option = {
+		name = mt_econ.0004.a
+
+		trigger = {
+			intrigue >= 10
+			gold >= 20
+		}
+
+		remove_short_term_gold = 20
+
+		random_list = {
+			60 = {
+				# Success - restore reputation
+				add_prestige = 40
+				add_gold = 15
+				custom_tooltip = mt_econ.0004.a.success
+
+				if = {
+					limit = { has_variable = mt_reputation }
+					change_variable = {
+						name = mt_reputation
+						add = 10
+					}
+				}
+			}
+			40 = {
+				# Fail to find them
+				add_stress = 20
+				custom_tooltip = mt_econ.0004.a.failure
+			}
+		}
+
+		ai_chance = {
+			base = 50
+			modifier = {
+				add = 30
+				intrigue >= 12
+			}
+		}
+	}
+
+	# Implement quality controls
+	option = {
+		name = mt_econ.0004.b
+
+		remove_short_term_gold = 15
+
+		# Slow but effective
+		add_prestige = 25
+		add_stewardship_lifestyle_xp = 35
+
+		if = {
+			limit = { has_variable = mt_reputation }
+			change_variable = {
+				name = mt_reputation
+				add = 8
+			}
+		}
+
+		ai_chance = {
+			base = 60
+			modifier = {
+				add = 20
+				has_trait = diligent
+			}
+		}
+	}
+
+	# Lower prices to compete
+	option = {
+		name = mt_econ.0004.c
+
+		remove_short_term_gold = 25
+		add_prestige = -10
+
+		# Race to the bottom
+		add_stress = 15
+
+		ai_chance = {
+			base = 20
+			modifier = {
+				add = 20
+				gold < 30
+			}
+		}
+	}
+
+	# Accept the loss and move on
+	option = {
+		name = mt_econ.0004.d
+
+		remove_short_term_gold = 10
+		add_prestige = -15
+		add_stress = 10
+
+		ai_chance = {
+			base = 10
+		}
+	}
+}
+
+####################################
+# MARKET BOOMS (0005-0008)
+####################################
+
+# 0005: New trade route to East discovered - luxury goods more accessible
+mt_econ.0005 = {
+	type = character_event
+	title = mt_econ.0005.t
+	desc = mt_econ.0005.desc
+	theme = stewardship
+
+	left_portrait = {
+		character = root
+		animation = happiness
+	}
+
+	trigger = {
+		has_trait = wandering_merchant
+	}
+
+	mean_time_to_happen = {
+		months = 60
+	}
+
+	# Invest heavily in new route
+	option = {
+		name = mt_econ.0005.a
+
+		trigger = {
+			gold >= 60
+		}
+
+		remove_short_term_gold = 60
+
+		# Early mover advantage
+		random_list = {
+			70 = {
+				# Strike it rich
+				add_gold = 120
+				add_prestige = 50
+				custom_tooltip = mt_econ.0005.a.success
+			}
+			30 = {
+				# Route more dangerous than expected
+				add_gold = 40
+				add_stress = 15
+				custom_tooltip = mt_econ.0005.a.partial
+			}
+		}
+
+		ai_chance = {
+			base = 50
+			modifier = {
+				add = 30
+				has_trait = brave
+			}
+			modifier = {
+				add = 20
+				gold >= 150
+			}
+		}
+	}
+
+	# Moderate investment - test the waters
+	option = {
+		name = mt_econ.0005.b
+
+		trigger = {
+			gold >= 30
+		}
+
+		remove_short_term_gold = 30
+
+		# Safe returns
+		add_gold = 50
+		add_prestige = 25
+		add_stewardship_lifestyle_xp = 40
+
+		ai_chance = {
+			base = 60
+		}
+	}
+
+	# Just spread the news - gain reputation
+	option = {
+		name = mt_econ.0005.c
+
+		add_prestige = 15
+
+		if = {
+			limit = { has_variable = mt_reputation }
+			change_variable = {
+				name = mt_reputation
+				add = 5
+			}
+		}
+
+		ai_chance = {
+			base = 20
+			modifier = {
+				add = 40
+				gold < 30
+			}
+		}
+	}
+}
+
+# 0006: Royal wedding creates demand spike - textiles and jewels boom
+mt_econ.0006 = {
+	type = character_event
+	title = mt_econ.0006.t
+	desc = mt_econ.0006.desc
+	theme = diplomacy
+
+	left_portrait = {
+		character = root
+		animation = personality_bold
+	}
+
+	trigger = {
+		has_trait = wandering_merchant
+		any_ruler = {
+			tier >= tier_kingdom
+		}
+	}
+
+	mean_time_to_happen = {
+		months = 30
+	}
+
+	immediate = {
+		# Check if has luxury goods
+		if = {
+			limit = {
+				any_held_title = {
+					tier = tier_county
+					county = {
+						OR = {
+							has_county_modifier = mt_trade_good_silk
+							has_county_modifier = mt_trade_good_pearls
+							has_county_modifier = mt_trade_good_purple_dye
+						}
+					}
+				}
+			}
+			set_variable = {
+				name = mt_has_luxury_goods
+				value = yes
+				days = 30
+			}
+		}
+	}
+
+	# Sell luxury goods at premium
+	option = {
+		name = mt_econ.0006.a
+
+		trigger = {
+			has_variable = mt_has_luxury_goods
+		}
+
+		add_gold = 50
+		add_prestige = 35
+
+		# Royal favor
+		random = {
+			chance = 30
+			add_prestige = 25
+			custom_tooltip = mt_econ.0006.a.favor
+		}
+
+		ai_chance = {
+			base = 100
+		}
+	}
+
+	# Source goods from elsewhere and resell
+	option = {
+		name = mt_econ.0006.b
+
+		trigger = {
+			gold >= 40
+			NOT = { has_variable = mt_has_luxury_goods }
+		}
+
+		remove_short_term_gold = 40
+
+		# Profit from markup
+		add_gold = 65
+		add_prestige = 20
+
+		ai_chance = {
+			base = 70
+			modifier = {
+				add = 30
+				stewardship >= 12
+			}
+		}
+	}
+
+	# Provide services instead of goods
+	option = {
+		name = mt_econ.0006.c
+
+		remove_short_term_gold = 15
+
+		add_gold = 30
+		add_prestige = 20
+		add_diplomacy_lifestyle_xp = 35
+
+		ai_chance = {
+			base = 40
+		}
+	}
+
+	# Just attend the festivities
+	option = {
+		name = mt_econ.0006.d
+
+		add_stress = -10
+		add_prestige = 10
+
+		ai_chance = {
+			base = 20
+		}
+	}
+}
+
+# 0007: Successful crusade - looted goods flood markets
+mt_econ.0007 = {
+	type = character_event
+	title = mt_econ.0007.t
+	desc = mt_econ.0007.desc
+	theme = stewardship
+
+	left_portrait = {
+		character = root
+		animation = thinking
+	}
+
+	trigger = {
+		has_trait = wandering_merchant
+		any_character = {
+			any_character_war = {
+				using_cb = crusade_cb
+			}
+		}
+	}
+
+	mean_time_to_happen = {
+		months = 50
+	}
+
+	# Buy looted goods cheap, sell elsewhere
+	option = {
+		name = mt_econ.0007.a
+
+		trigger = {
+			gold >= 35
+		}
+
+		remove_short_term_gold = 35
+
+		# Profit from arbitrage
+		add_gold = 60
+		add_prestige = 15
+		add_piety = -15
+
+		ai_chance = {
+			base = 60
+			modifier = {
+				add = 30
+				has_trait = greedy
+			}
+		}
+	}
+
+	# Focus on religious artifacts - gain piety
+	option = {
+		name = mt_econ.0007.b
+
+		trigger = {
+			gold >= 40
+		}
+
+		remove_short_term_gold = 40
+
+		add_gold = 30
+		add_piety = 50
+		add_prestige = 25
+
+		ai_chance = {
+			base = 30
+			modifier = {
+				add = 40
+				traits = { zealous }
+			}
+		}
+	}
+
+	# Avoid dealing in looted goods
+	option = {
+		name = mt_econ.0007.c
+
+		add_piety = 20
+		add_stress = -5
+
+		ai_chance = {
+			base = 30
+			modifier = {
+				add = 40
+				has_trait = just
+			}
+		}
+	}
+}
+
+# 0008: New agricultural technique - grain surplus, prices drop
+mt_econ.0008 = {
+	type = character_event
+	title = mt_econ.0008.t
+	desc = mt_econ.0008.desc
+	theme = stewardship
+
+	left_portrait = {
+		character = root
+		animation = personality_rational
+	}
+
+	trigger = {
+		has_trait = wandering_merchant
+	}
+
+	mean_time_to_happen = {
+		months = 45
+	}
+
+	# Invest in learning the new technique
+	option = {
+		name = mt_econ.0008.a
+
+		trigger = {
+			learning >= 8
+			gold >= 25
+		}
+
+		remove_short_term_gold = 25
+
+		add_gold = 15
+		add_stewardship_lifestyle_xp = 60
+		add_prestige = 20
+
+		# Long term benefits
+		if = {
+			limit = { has_variable = mt_reputation }
+			change_variable = {
+				name = mt_reputation
+				add = 8
+			}
+		}
+
+		ai_chance = {
+			base = 60
+			modifier = {
+				add = 30
+				learning >= 12
+			}
+		}
+	}
+
+	# Shift away from grain trade
+	option = {
+		name = mt_econ.0008.b
+
+		remove_short_term_gold = 20
+
+		# Diversify into other goods
+		add_gold = 25
+		add_stress = -5
+
+		ai_chance = {
+			base = 50
+		}
+	}
+
+	# Stock up on cheap grain
+	option = {
+		name = mt_econ.0008.c
+
+		trigger = {
+			gold >= 15
+		}
+
+		remove_short_term_gold = 15
+
+		# Feed the poor, gain piety
+		add_piety = 40
+		add_prestige = 25
+
+		ai_chance = {
+			base = 40
+			modifier = {
+				add = 40
+				has_trait = charitable
+			}
+		}
+	}
+}
+
+####################################
+# ECONOMIC POLICY (0009-0012)
+####################################
+
+# 0009: Ruler imposes heavy tariffs - all routes more expensive
+mt_econ.0009 = {
+	type = character_event
+	title = mt_econ.0009.t
+	desc = mt_econ.0009.desc
+	theme = stewardship
+
+	left_portrait = {
+		character = root
+		animation = anger
+	}
+
+	right_portrait = {
+		character = scope:tariff_ruler
+		animation = personality_greedy
+	}
+
+	trigger = {
+		has_trait = wandering_merchant
+		exists = liege
+		liege = {
+			tier >= tier_duchy
+		}
+	}
+
+	mean_time_to_happen = {
+		months = 35
+	}
+
+	immediate = {
+		liege = {
+			save_scope_as = tariff_ruler
+		}
+	}
+
+	# Pay the tariffs and continue
+	option = {
+		name = mt_econ.0009.a
+
+		remove_short_term_gold = 30
+		add_stress = 20
+
+		# Relationship damage
+		add_opinion = {
+			target = scope:tariff_ruler
+			modifier = angry_opinion
+			opinion = -10
+		}
+
+		ai_chance = {
+			base = 50
+		}
+	}
+
+	# Negotiate lower rates
+	option = {
+		name = mt_econ.0009.b
+
+		trigger = {
+			diplomacy >= 10
+			gold >= 40
+		}
+
+		remove_short_term_gold = 40
+
+		random_list = {
+			50 = {
+				# Negotiation succeeds
+				add_prestige = 20
+				custom_tooltip = mt_econ.0009.b.success
+
+				add_opinion = {
+					target = scope:tariff_ruler
+					modifier = friendliness_opinion
+					opinion = 10
+				}
+			}
+			50 = {
+				# Ruler refuses
+				add_stress = 15
+				custom_tooltip = mt_econ.0009.b.failure
+			}
+		}
+
+		ai_chance = {
+			base = 40
+			modifier = {
+				add = 30
+				diplomacy >= 14
+			}
+		}
+	}
+
+	# Find alternative routes
+	option = {
+		name = mt_econ.0009.c
+
+		remove_short_term_gold = 25
+
+		# Avoid the tariffs entirely
+		add_prestige = 15
+		add_stress = -5
+
+		custom_tooltip = mt_econ.0009.c.tt
+
+		ai_chance = {
+			base = 40
+			modifier = {
+				add = 20
+				has_trait = ambitious
+			}
+		}
+	}
+
+	# Reduce trade activity
+	option = {
+		name = mt_econ.0009.d
+
+		remove_short_term_gold = 10
+		add_stress = 15
+
+		ai_chance = {
+			base = 20
+		}
+	}
+}
+
+# 0010: Free trade agreement signed - routes cheaper
+mt_econ.0010 = {
+	type = character_event
+	title = mt_econ.0010.t
+	desc = mt_econ.0010.desc
+	theme = diplomacy
+
+	left_portrait = {
+		character = root
+		animation = happiness
+	}
+
+	trigger = {
+		has_trait = wandering_merchant
+	}
+
+	mean_time_to_happen = {
+		months = 50
+	}
+
+	# Expand operations aggressively
+	option = {
+		name = mt_econ.0010.a
+
+		trigger = {
+			gold >= 50
+		}
+
+		remove_short_term_gold = 50
+
+		# Major expansion
+		add_gold = 90
+		add_prestige = 40
+
+		if = {
+			limit = { has_variable = mt_reputation }
+			change_variable = {
+				name = mt_reputation
+				add = 10
+			}
+		}
+
+		ai_chance = {
+			base = 60
+			modifier = {
+				add = 30
+				has_trait = ambitious
+			}
+		}
+	}
+
+	# Moderate expansion
+	option = {
+		name = mt_econ.0010.b
+
+		trigger = {
+			gold >= 25
+		}
+
+		remove_short_term_gold = 25
+
+		add_gold = 50
+		add_prestige = 25
+		add_stress = -10
+
+		ai_chance = {
+			base = 50
+		}
+	}
+
+	# Just enjoy lower costs
+	option = {
+		name = mt_econ.0010.c
+
+		add_gold = 15
+		add_stress = -8
+		add_prestige = 10
+
+		ai_chance = {
+			base = 30
+		}
+	}
+}
+
+# 0011: Currency devaluation - adjust pricing across realm
+mt_econ.0011 = {
+	type = character_event
+	title = mt_econ.0011.t
+	desc = mt_econ.0011.desc
+	theme = stewardship
+
+	left_portrait = {
+		character = root
+		animation = worry
+	}
+
+	trigger = {
+		has_trait = wandering_merchant
+		exists = liege
+	}
+
+	mean_time_to_happen = {
+		months = 55
+	}
+
+	# Quick price adjustments - beat competitors
+	option = {
+		name = mt_econ.0011.a
+
+		trigger = {
+			stewardship >= 12
+		}
+
+		# Profit from being first
+		add_gold = 30
+		add_prestige = 25
+		add_stewardship_lifestyle_xp = 50
+
+		ai_chance = {
+			base = 60
+			modifier = {
+				add = 30
+				stewardship >= 15
+			}
+		}
+	}
+
+	# Convert holdings to goods
+	option = {
+		name = mt_econ.0011.b
+
+		trigger = {
+			gold >= 40
+		}
+
+		remove_short_term_gold = 40
+
+		# Hedge against inflation
+		add_gold = 45
+		add_stress = -5
+
+		ai_chance = {
+			base = 50
+		}
+	}
+
+	# Hold currency, hope for revaluation
+	option = {
+		name = mt_econ.0011.c
+
+		random_list = {
+			30 = {
+				# Currency rebounds
+				add_gold = 20
+				add_prestige = 15
+				custom_tooltip = mt_econ.0011.c.success
+			}
+			70 = {
+				# Further devaluation
+				remove_short_term_gold = 15
+				add_stress = 20
+				custom_tooltip = mt_econ.0011.c.failure
+			}
+		}
+
+		ai_chance = {
+			base = 20
+		}
+	}
+
+	# Accept the loss
+	option = {
+		name = mt_econ.0011.d
+
+		remove_short_term_gold = 20
+		add_stress = 15
+
+		ai_chance = {
+			base = 30
+		}
+	}
+}
+
+# 0012: Trade embargo declared - certain routes illegal
+mt_econ.0012 = {
+	type = character_event
+	title = mt_econ.0012.t
+	desc = mt_econ.0012.desc
+	theme = intrigue
+
+	left_portrait = {
+		character = root
+		animation = shock
+	}
+
+	trigger = {
+		has_trait = wandering_merchant
+		any_character = {
+			is_at_war = yes
+		}
+	}
+
+	mean_time_to_happen = {
+		months = 40
+
+		modifier = {
+			factor = 0.6
+			any_character = {
+				is_at_war = yes
+				war_contribution = 2000
+			}
+		}
+	}
+
+	# Smuggle goods anyway - risky but profitable
+	option = {
+		name = mt_econ.0012.a
+
+		trigger = {
+			intrigue >= 10
+			gold >= 30
+		}
+
+		remove_short_term_gold = 30
+
+		random_list = {
+			50 = {
+				# Successfully smuggle
+				add_gold = 80
+				add_prestige = -10
+				add_piety = -15
+				custom_tooltip = mt_econ.0012.a.success
+			}
+			30 = {
+				# Caught but escape
+				add_stress = 25
+				add_prestige = -20
+				custom_tooltip = mt_econ.0012.a.caught
+			}
+			20 = {
+				# Caught and imprisoned
+				add_trait = incapable
+				remove_short_term_gold = 50
+				add_stress = 40
+				custom_tooltip = mt_econ.0012.a.imprisoned
+			}
+		}
+
+		ai_chance = {
+			base = 30
+			modifier = {
+				add = 40
+				has_trait = greedy
+			}
+			modifier = {
+				add = 30
+				intrigue >= 14
+			}
+			modifier = {
+				add = -50
+				has_trait = just
+			}
+		}
+	}
+
+	# Respect the embargo
+	option = {
+		name = mt_econ.0012.b
+
+		remove_short_term_gold = 25
+		add_stress = 20
+
+		add_piety = 20
+		add_prestige = 10
+
+		ai_chance = {
+			base = 60
+			modifier = {
+				add = 40
+				has_trait = just
+			}
+		}
+	}
+
+	# Pivot to other markets
+	option = {
+		name = mt_econ.0012.c
+
+		trigger = {
+			gold >= 35
+		}
+
+		remove_short_term_gold = 35
+
+		add_gold = 40
+		add_prestige = 15
+		add_stewardship_lifestyle_xp = 40
+
+		ai_chance = {
+			base = 50
+		}
+	}
+}
+
+####################################
+# DISCOVERIES (0013-0016)
+####################################
+
+# 0013: New silver mine opens - metal goods more available
+mt_econ.0013 = {
+	type = character_event
+	title = mt_econ.0013.t
+	desc = mt_econ.0013.desc
+	theme = stewardship
+
+	left_portrait = {
+		character = root
+		animation = happiness
+	}
+
+	trigger = {
+		has_trait = wandering_merchant
+	}
+
+	mean_time_to_happen = {
+		months = 50
+	}
+
+	# Secure mining rights
+	option = {
+		name = mt_econ.0013.a
+
+		trigger = {
+			gold >= 80
+			diplomacy >= 10
+		}
+
+		remove_short_term_gold = 80
+
+		# Long-term income source
+		add_gold = 40
+		add_prestige = 50
+
+		# Ongoing income
+		trigger_event = {
+			id = mt_econ.0027
+			days = { 90 180 }
+		}
+
+		ai_chance = {
+			base = 50
+			modifier = {
+				add = 30
+				gold >= 150
+			}
+		}
+	}
+
+	# Invest in mining equipment
+	option = {
+		name = mt_econ.0013.b
+
+		trigger = {
+			gold >= 40
+		}
+
+		remove_short_term_gold = 40
+
+		add_gold = 65
+		add_prestige = 30
+
+		ai_chance = {
+			base = 60
+		}
+	}
+
+	# Trade in silver goods
+	option = {
+		name = mt_econ.0013.c
+
+		trigger = {
+			gold >= 25
+		}
+
+		remove_short_term_gold = 25
+
+		add_gold = 45
+		add_prestige = 20
+
+		ai_chance = {
+			base = 50
+		}
+	}
+
+	# Just observe
+	option = {
+		name = mt_econ.0013.d
+
+		add_prestige = 5
+
+		ai_chance = {
+			base = 20
+		}
+	}
+}
+
+# 0014: Exotic spice discovered - rush to control supply
+mt_econ.0014 = {
+	type = character_event
+	title = mt_econ.0014.t
+	desc = mt_econ.0014.desc
+	theme = stewardship
+
+	left_portrait = {
+		character = root
+		animation = personality_bold
+	}
+
+	trigger = {
+		has_trait = wandering_merchant
+	}
+
+	mean_time_to_happen = {
+		months = 60
+	}
+
+	# Fund expedition to source
+	option = {
+		name = mt_econ.0014.a
+
+		trigger = {
+			gold >= 100
+		}
+
+		remove_short_term_gold = 100
+
+		random_list = {
+			60 = {
+				# Find the source
+				add_gold = 200
+				add_prestige = 80
+				custom_tooltip = mt_econ.0014.a.success
+
+				if = {
+					limit = { has_variable = mt_reputation }
+					change_variable = {
+						name = mt_reputation
+						add = 20
+					}
+				}
+			}
+			40 = {
+				# Expedition fails
+				add_stress = 30
+				custom_tooltip = mt_econ.0014.a.failure
+			}
+		}
+
+		ai_chance = {
+			base = 40
+			modifier = {
+				add = 40
+				has_trait = brave
+			}
+			modifier = {
+				add = 20
+				gold >= 200
+			}
+		}
+	}
+
+	# Buy initial supply to resell
+	option = {
+		name = mt_econ.0014.b
+
+		trigger = {
+			gold >= 50
+		}
+
+		remove_short_term_gold = 50
+
+		# Early adopter advantage
+		add_gold = 90
+		add_prestige = 40
+
+		ai_chance = {
+			base = 60
+		}
+	}
+
+	# Wait for prices to stabilize
+	option = {
+		name = mt_econ.0014.c
+
+		add_stress = -5
+
+		# Miss the boom but avoid risk
+		random = {
+			chance = 40
+			add_gold = 15
+			custom_tooltip = mt_econ.0014.c.tt
+		}
+
+		ai_chance = {
+			base = 30
+		}
+	}
+}
+
+# 0015: Improved ship design - sea routes faster and safer
+mt_econ.0015 = {
+	type = character_event
+	title = mt_econ.0015.t
+	desc = mt_econ.0015.desc
+	theme = stewardship
+
+	left_portrait = {
+		character = root
+		animation = personality_rational
+	}
+
+	trigger = {
+		has_trait = wandering_merchant
+	}
+
+	mean_time_to_happen = {
+		months = 55
+	}
+
+	# Commission new ships
+	option = {
+		name = mt_econ.0015.a
+
+		trigger = {
+			gold >= 70
+		}
+
+		remove_short_term_gold = 70
+
+		add_gold = 50
+		add_prestige = 40
+
+		# Ongoing benefits
+		add_character_modifier = {
+			modifier = mt_secure_route
+			years = 10
+		}
+
+		ai_chance = {
+			base = 60
+			modifier = {
+				add = 30
+				gold >= 120
+			}
+		}
+	}
+
+	# Invest in maritime trade
+	option = {
+		name = mt_econ.0015.b
+
+		trigger = {
+			gold >= 40
+		}
+
+		remove_short_term_gold = 40
+
+		add_gold = 60
+		add_prestige = 25
+
+		ai_chance = {
+			base = 50
+		}
+	}
+
+	# Learn shipbuilding techniques
+	option = {
+		name = mt_econ.0015.c
+
+		trigger = {
+			learning >= 10
+		}
+
+		add_stewardship_lifestyle_xp = 70
+		add_learning_lifestyle_xp = 50
+		add_prestige = 30
+
+		ai_chance = {
+			base = 40
+			modifier = {
+				add = 30
+				learning >= 14
+			}
+		}
+	}
+}
+
+# 0016: Banking system introduced - can take loans
+mt_econ.0016 = {
+	type = character_event
+	title = mt_econ.0016.t
+	desc = mt_econ.0016.desc
+	theme = stewardship
+
+	left_portrait = {
+		character = root
+		animation = thinking
+	}
+
+	trigger = {
+		has_trait = wandering_merchant
+	}
+
+	mean_time_to_happen = {
+		months = 65
+	}
+
+	# Take large loan for expansion
+	option = {
+		name = mt_econ.0016.a
+
+		trigger = {
+			NOT = { has_variable = mt_banking_loan }
+		}
+
+		add_gold = 100
+		add_stress = 15
+
+		# Must repay later
+		set_variable = {
+			name = mt_banking_loan
+			value = yes
+		}
+
+		trigger_event = {
+			id = mt_econ.0028
+			days = { 365 540 }
+		}
+
+		ai_chance = {
+			base = 50
+			modifier = {
+				add = 30
+				has_trait = ambitious
+			}
+		}
+	}
+
+	# Modest loan - safer approach
+	option = {
+		name = mt_econ.0016.b
+
+		trigger = {
+			NOT = { has_variable = mt_banking_loan }
+		}
+
+		add_gold = 40
+		add_stress = 5
+
+		set_variable = {
+			name = mt_banking_loan_small
+			value = yes
+		}
+
+		trigger_event = {
+			id = mt_econ.0029
+			days = { 365 540 }
+		}
+
+		ai_chance = {
+			base = 60
+		}
+	}
+
+	# Avoid debt
+	option = {
+		name = mt_econ.0016.c
+
+		add_stress = -5
+		add_prestige = 10
+
+		ai_chance = {
+			base = 40
+			modifier = {
+				add = 40
+				has_trait = temperate
+			}
+		}
+	}
+}
+
+####################################
+# DISASTERS (0017-0020)
+####################################
+
+# 0017: Warehouse fire - lose stored goods
+mt_econ.0017 = {
+	type = character_event
+	title = mt_econ.0017.t
+	desc = mt_econ.0017.desc
+	theme = stewardship
+
+	left_portrait = {
+		character = root
+		animation = sadness
+	}
+
+	trigger = {
+		has_trait = wandering_merchant
+		gold >= 30
+	}
+
+	mean_time_to_happen = {
+		months = 45
+	}
+
+	# Rebuild immediately
+	option = {
+		name = mt_econ.0017.a
+
+		trigger = {
+			gold >= 60
+		}
+
+		remove_short_term_gold = 60
+		add_stress = 25
+
+		# Quick recovery
+		add_prestige = 20
+
+		if = {
+			limit = { has_trait = diligent }
+			add_stress = -10
+		}
+
+		ai_chance = {
+			base = 60
+			modifier = {
+				add = 30
+				gold >= 100
+			}
+		}
+	}
+
+	# Accept the loss
+	option = {
+		name = mt_econ.0017.b
+
+		remove_short_term_gold = 40
+		add_stress = 30
+		add_prestige = -15
+
+		ai_chance = {
+			base = 40
+		}
+	}
+
+	# Investigate arson
+	option = {
+		name = mt_econ.0017.c
+
+		trigger = {
+			intrigue >= 10
+		}
+
+		remove_short_term_gold = 30
+
+		random_list = {
+			40 = {
+				# Find culprit
+				add_prestige = 30
+				add_gold = 20
+				custom_tooltip = mt_econ.0017.c.success
+			}
+			60 = {
+				# No evidence
+				add_stress = 15
+				custom_tooltip = mt_econ.0017.c.failure
+			}
+		}
+
+		ai_chance = {
+			base = 50
+			modifier = {
+				add = 30
+				intrigue >= 14
+			}
+		}
+	}
+}
+
+# 0018: Debt collector comes calling
+mt_econ.0018 = {
+	type = character_event
+	title = mt_econ.0018.t
+	desc = mt_econ.0018.desc
+	theme = intrigue
+
+	left_portrait = {
+		character = root
+		animation = worry
+	}
+
+	trigger = {
+		has_trait = wandering_merchant
+		gold >= 20
+	}
+
+	mean_time_to_happen = {
+		months = 40
+	}
+
+	# Pay in full
+	option = {
+		name = mt_econ.0018.a
+
+		trigger = {
+			gold >= 50
+		}
+
+		remove_short_term_gold = 50
+		add_stress = 20
+
+		add_prestige = 15
+
+		ai_chance = {
+			base = 60
+			modifier = {
+				add = 30
+				gold >= 100
+			}
+		}
+	}
+
+	# Negotiate payment plan
+	option = {
+		name = mt_econ.0018.b
+
+		trigger = {
+			diplomacy >= 10
+		}
+
+		remove_short_term_gold = 25
+		add_stress = 15
+
+		# Pay rest later
+		trigger_event = {
+			id = mt_econ.0030
+			days = { 90 180 }
+		}
+
+		ai_chance = {
+			base = 50
+			modifier = {
+				add = 30
+				diplomacy >= 12
+			}
+		}
+	}
+
+	# Flee - avoid payment
+	option = {
+		name = mt_econ.0018.c
+
+		trigger = {
+			has_trait = craven
+		}
+
+		add_prestige = -40
+		add_stress = 30
+
+		# Damage reputation
+		if = {
+			limit = { has_variable = mt_reputation }
+			change_variable = {
+				name = mt_reputation
+				add = -20
+			}
+		}
+
+		ai_chance = {
+			base = 20
+			modifier = {
+				add = 30
+				gold < 30
+			}
+		}
+	}
+
+	# Refuse to pay
+	option = {
+		name = mt_econ.0018.d
+
+		add_prestige = -30
+		add_stress = 25
+
+		random = {
+			chance = 50
+			# Violence
+			add_health = -1.0
+			custom_tooltip = mt_econ.0018.d.violence
+		}
+
+		ai_chance = {
+			base = 10
+		}
+	}
+}
+
+# 0019: Pirates seize your ship
+mt_econ.0019 = {
+	type = character_event
+	title = mt_econ.0019.t
+	desc = mt_econ.0019.desc
+	theme = intrigue
+
+	left_portrait = {
+		character = root
+		animation = anger
+	}
+
+	trigger = {
+		has_trait = wandering_merchant
+		gold >= 40
+	}
+
+	mean_time_to_happen = {
+		months = 50
+	}
+
+	# Pay ransom
+	option = {
+		name = mt_econ.0019.a
+
+		remove_short_term_gold = 60
+		add_stress = 25
+
+		# Get ship back
+		add_prestige = -10
+
+		ai_chance = {
+			base = 60
+			modifier = {
+				add = 30
+				gold >= 100
+			}
+		}
+	}
+
+	# Hire mercenaries to attack pirates
+	option = {
+		name = mt_econ.0019.b
+
+		trigger = {
+			gold >= 50
+		}
+
+		remove_short_term_gold = 50
+
+		random_list = {
+			60 = {
+				# Recover ship and cargo
+				add_gold = 40
+				add_prestige = 50
+				custom_tooltip = mt_econ.0019.b.success
+			}
+			40 = {
+				# Fail to recover
+				add_stress = 30
+				custom_tooltip = mt_econ.0019.b.failure
+			}
+		}
+
+		ai_chance = {
+			base = 40
+			modifier = {
+				add = 30
+				has_trait = brave
+			}
+		}
+	}
+
+	# Accept the loss
+	option = {
+		name = mt_econ.0019.c
+
+		remove_short_term_gold = 40
+		add_stress = 30
+		add_prestige = -20
+
+		ai_chance = {
+			base = 30
+		}
+	}
+
+	# Hunt the pirates yourself
+	option = {
+		name = mt_econ.0019.d
+
+		trigger = {
+			prowess >= 12
+		}
+
+		random_list = {
+			50 = {
+				# Heroic recovery
+				add_gold = 50
+				add_prestige = 80
+				add_stress = -20
+				custom_tooltip = mt_econ.0019.d.success
+			}
+			50 = {
+				# Wounded in fight
+				add_health = -1.5
+				add_stress = 40
+				custom_tooltip = mt_econ.0019.d.failure
+			}
+		}
+
+		ai_chance = {
+			base = 20
+			modifier = {
+				add = 40
+				has_trait = brave
+			}
+		}
+	}
+}
+
+# 0020: Plague in production region - goods scarce
+mt_econ.0020 = {
+	type = character_event
+	title = mt_econ.0020.t
+	desc = mt_econ.0020.desc
+	theme = stewardship
+
+	left_portrait = {
+		character = root
+		animation = worry
+	}
+
+	trigger = {
+		has_trait = wandering_merchant
+	}
+
+	mean_time_to_happen = {
+		months = 55
+	}
+
+	# Stock up before scarcity hits
+	option = {
+		name = mt_econ.0020.a
+
+		trigger = {
+			gold >= 60
+		}
+
+		remove_short_term_gold = 60
+
+		# Profit from scarcity
+		add_gold = 120
+		add_prestige = 25
+		add_piety = -20
+
+		ai_chance = {
+			base = 50
+			modifier = {
+				add = 30
+				has_trait = greedy
+			}
+		}
+	}
+
+	# Provide aid to afflicted region
+	option = {
+		name = mt_econ.0020.b
+
+		trigger = {
+			gold >= 40
+		}
+
+		remove_short_term_gold = 40
+
+		add_piety = 80
+		add_prestige = 50
+
+		if = {
+			limit = { has_variable = mt_reputation }
+			change_variable = {
+				name = mt_reputation
+				add = 15
+			}
+		}
+
+		ai_chance = {
+			base = 30
+			modifier = {
+				add = 50
+				has_trait = charitable
+			}
+		}
+	}
+
+	# Avoid the region entirely
+	option = {
+		name = mt_econ.0020.c
+
+		add_stress = -10
+		add_health = 0.5
+
+		custom_tooltip = mt_econ.0020.c.tt
+
+		ai_chance = {
+			base = 40
+			modifier = {
+				add = 40
+				has_trait = craven
+			}
+		}
+	}
+
+	# Find alternative suppliers
+	option = {
+		name = mt_econ.0020.d
+
+		trigger = {
+			stewardship >= 12
+		}
+
+		remove_short_term_gold = 30
+
+		add_gold = 50
+		add_prestige = 20
+		add_stewardship_lifestyle_xp = 50
+
+		ai_chance = {
+			base = 50
+			modifier = {
+				add = 30
+				stewardship >= 15
+			}
+		}
+	}
+}
+
+####################################
+# SPECULATION (0021-0025)
+####################################
+
+# 0021: Rumor of war - speculate on weapon prices
+mt_econ.0021 = {
+	type = character_event
+	title = mt_econ.0021.t
+	desc = mt_econ.0021.desc
+	theme = stewardship
+
+	left_portrait = {
+		character = root
+		animation = thinking
+	}
+
+	trigger = {
+		has_trait = wandering_merchant
+	}
+
+	mean_time_to_happen = {
+		months = 25
+	}
+
+	# Buy weapons and armor
+	option = {
+		name = mt_econ.0021.a
+
+		trigger = {
+			gold >= 50
+		}
+
+		remove_short_term_gold = 50
+
+		random_list = {
+			60 = {
+				# War breaks out - profit
+				add_gold = 100
+				add_prestige = 30
+				custom_tooltip = mt_econ.0021.a.success
+			}
+			40 = {
+				# False alarm
+				add_gold = 25
+				add_stress = 15
+				custom_tooltip = mt_econ.0021.a.neutral
+			}
+		}
+
+		ai_chance = {
+			base = 60
+			modifier = {
+				add = 30
+				has_trait = ambitious
+			}
+		}
+	}
+
+	# Wait and see
+	option = {
+		name = mt_econ.0021.b
+
+		add_stress = -5
+
+		ai_chance = {
+			base = 40
+		}
+	}
+}
+
+# 0022: Harvest forecast - gamble on grain prices
+mt_econ.0022 = {
+	type = character_event
+	title = mt_econ.0022.t
+	desc = mt_econ.0022.desc
+	theme = stewardship
+
+	left_portrait = {
+		character = root
+		animation = personality_rational
+	}
+
+	trigger = {
+		has_trait = wandering_merchant
+		current_month >= 6
+		current_month <= 8
+	}
+
+	mean_time_to_happen = {
+		months = 3
+	}
+
+	# Bet on poor harvest - buy grain futures
+	option = {
+		name = mt_econ.0022.a
+
+		trigger = {
+			gold >= 40
+		}
+
+		remove_short_term_gold = 40
+
+		random_list = {
+			50 = {
+				# Poor harvest - prices soar
+				add_gold = 90
+				add_prestige = 35
+				add_piety = -15
+				custom_tooltip = mt_econ.0022.a.success
+			}
+			50 = {
+				# Good harvest - lose investment
+				add_stress = 20
+				custom_tooltip = mt_econ.0022.a.failure
+			}
+		}
+
+		ai_chance = {
+			base = 40
+		}
+	}
+
+	# Bet on good harvest - stock up cheap
+	option = {
+		name = mt_econ.0022.b
+
+		trigger = {
+			gold >= 30
+		}
+
+		remove_short_term_gold = 30
+
+		random_list = {
+			50 = {
+				# Good harvest - right call
+				add_gold = 55
+				add_prestige = 25
+				custom_tooltip = mt_econ.0022.b.success
+			}
+			50 = {
+				# Poor harvest - can't get cheap grain
+				add_stress = 15
+				custom_tooltip = mt_econ.0022.b.failure
+			}
+		}
+
+		ai_chance = {
+			base = 40
+		}
+	}
+
+	# Don't speculate
+	option = {
+		name = mt_econ.0022.c
+
+		add_stress = -5
+
+		ai_chance = {
+			base = 40
+			modifier = {
+				add = 30
+				has_trait = temperate
+			}
+		}
+	}
+}
+
+# 0023: Investment opportunity - fund expedition
+mt_econ.0023 = {
+	type = character_event
+	title = mt_econ.0023.t
+	desc = mt_econ.0023.desc
+	theme = stewardship
+
+	left_portrait = {
+		character = root
+		animation = thinking
+	}
+
+	trigger = {
+		has_trait = wandering_merchant
+	}
+
+	mean_time_to_happen = {
+		months = 40
+	}
+
+	# Major investment - 50% share
+	option = {
+		name = mt_econ.0023.a
+
+		trigger = {
+			gold >= 100
+		}
+
+		remove_short_term_gold = 100
+
+		random_list = {
+			50 = {
+				# Expedition succeeds - huge returns
+				add_gold = 250
+				add_prestige = 80
+				custom_tooltip = mt_econ.0023.a.success
+
+				if = {
+					limit = { has_variable = mt_reputation }
+					change_variable = {
+						name = mt_reputation
+						add = 20
+					}
+				}
+			}
+			30 = {
+				# Modest success
+				add_gold = 120
+				add_prestige = 30
+				custom_tooltip = mt_econ.0023.a.partial
+			}
+			20 = {
+				# Expedition fails
+				add_stress = 40
+				add_prestige = -20
+				custom_tooltip = mt_econ.0023.a.failure
+			}
+		}
+
+		ai_chance = {
+			base = 40
+			modifier = {
+				add = 30
+				has_trait = brave
+			}
+			modifier = {
+				add = 20
+				gold >= 200
+			}
+		}
+	}
+
+	# Minor investment - 20% share
+	option = {
+		name = mt_econ.0023.b
+
+		trigger = {
+			gold >= 40
+		}
+
+		remove_short_term_gold = 40
+
+		random_list = {
+			50 = {
+				# Success
+				add_gold = 100
+				add_prestige = 30
+				custom_tooltip = mt_econ.0023.b.success
+			}
+			30 = {
+				# Modest returns
+				add_gold = 50
+				custom_tooltip = mt_econ.0023.b.partial
+			}
+			20 = {
+				# Fail
+				add_stress = 20
+				custom_tooltip = mt_econ.0023.b.failure
+			}
+		}
+
+		ai_chance = {
+			base = 50
+		}
+	}
+
+	# Decline investment
+	option = {
+		name = mt_econ.0023.c
+
+		add_stress = -5
+
+		ai_chance = {
+			base = 30
+			modifier = {
+				add = 40
+				has_trait = temperate
+			}
+		}
+	}
+}
+
+# 0024: Insider information - act on tip
+mt_econ.0024 = {
+	type = character_event
+	title = mt_econ.0024.t
+	desc = mt_econ.0024.desc
+	theme = intrigue
+
+	left_portrait = {
+		character = root
+		animation = scheme
+	}
+
+	trigger = {
+		has_trait = wandering_merchant
+		intrigue >= 8
+	}
+
+	mean_time_to_happen = {
+		months = 35
+	}
+
+	# Act on the information
+	option = {
+		name = mt_econ.0024.a
+
+		trigger = {
+			gold >= 45
+		}
+
+		remove_short_term_gold = 45
+
+		random_list = {
+			70 = {
+				# Information was good
+				add_gold = 90
+				add_prestige = 25
+				add_piety = -10
+				custom_tooltip = mt_econ.0024.a.success
+			}
+			30 = {
+				# Bad tip or trap
+				add_stress = 25
+				add_prestige = -15
+				custom_tooltip = mt_econ.0024.a.failure
+			}
+		}
+
+		ai_chance = {
+			base = 60
+			modifier = {
+				add = 30
+				intrigue >= 12
+			}
+			modifier = {
+				add = -30
+				has_trait = just
+			}
+		}
+	}
+
+	# Verify information first
+	option = {
+		name = mt_econ.0024.b
+
+		trigger = {
+			learning >= 10
+		}
+
+		remove_short_term_gold = 25
+
+		# Safer but smaller profit
+		add_gold = 45
+		add_prestige = 15
+
+		ai_chance = {
+			base = 50
+			modifier = {
+				add = 30
+				learning >= 14
+			}
+		}
+	}
+
+	# Ignore the tip
+	option = {
+		name = mt_econ.0024.c
+
+		add_stress = -5
+		add_piety = 10
+
+		ai_chance = {
+			base = 30
+			modifier = {
+				add = 40
+				has_trait = just
+			}
+		}
+	}
+}
+
+# 0025: Market manipulation - corner the market
+mt_econ.0025 = {
+	type = character_event
+	title = mt_econ.0025.t
+	desc = mt_econ.0025.desc
+	theme = intrigue
+
+	left_portrait = {
+		character = root
+		animation = scheme
+	}
+
+	trigger = {
+		has_trait = wandering_merchant
+		gold >= 100
+		OR = {
+			has_trait = merchant_prince
+			has_trait = ambitious
+		}
+	}
+
+	mean_time_to_happen = {
+		months = 50
+	}
+
+	# Buy all available supply
+	option = {
+		name = mt_econ.0025.a
+
+		trigger = {
+			gold >= 120
+		}
+
+		remove_short_term_gold = 120
+
+		random_list = {
+			50 = {
+				# Successfully corner market
+				add_gold = 250
+				add_prestige = 50
+				add_piety = -40
+				custom_tooltip = mt_econ.0025.a.success
+
+				# But make enemies
+				if = {
+					limit = { has_variable = mt_reputation }
+					change_variable = {
+						name = mt_reputation
+						add = -15
+					}
+				}
+			}
+			50 = {
+				# Other merchants fight back
+				add_gold = 60
+				add_stress = 30
+				add_prestige = -25
+				custom_tooltip = mt_econ.0025.a.failure
+			}
+		}
+
+		ai_chance = {
+			base = 40
+			modifier = {
+				add = 40
+				has_trait = greedy
+			}
+			modifier = {
+				add = -50
+				has_trait = just
+			}
+		}
+	}
+
+	# Form cartel with other merchants
+	option = {
+		name = mt_econ.0025.b
+
+		trigger = {
+			gold >= 80
+			diplomacy >= 12
+		}
+
+		remove_short_term_gold = 80
+
+		# Share profits but more stable
+		add_gold = 140
+		add_prestige = 35
+		add_piety = -20
+
+		ai_chance = {
+			base = 50
+			modifier = {
+				add = 30
+				diplomacy >= 15
+			}
+		}
+	}
+
+	# Refuse to manipulate market
+	option = {
+		name = mt_econ.0025.c
+
+		add_piety = 30
+		add_prestige = 20
+
+		if = {
+			limit = { has_variable = mt_reputation }
+			change_variable = {
+				name = mt_reputation
+				add = 10
+			}
+		}
+
+		ai_chance = {
+			base = 30
+			modifier = {
+				add = 50
+				has_trait = just
+			}
+		}
+	}
+}
+
+####################################
+# FOLLOW-UP EVENTS (0026-0030)
+####################################
+
+# 0026: Silk market recovers
+mt_econ.0026 = {
+	type = character_event
+	title = mt_econ.0026.t
+	desc = mt_econ.0026.desc
+	theme = stewardship
+
+	left_portrait = {
+		character = root
+		animation = happiness
+	}
+
+	# Only triggered from 0001
+
+	option = {
+		name = mt_econ.0026.a
+
+		# Patient investment pays off
+		add_gold = 30
+		add_prestige = 25
+
+		custom_tooltip = mt_econ.0026.a.tt
+
+		ai_chance = {
+			base = 100
+		}
+	}
+}
+
+# 0027: Mining income
+mt_econ.0027 = {
+	type = character_event
+	title = mt_econ.0027.t
+	desc = mt_econ.0027.desc
+	theme = stewardship
+
+	left_portrait = {
+		character = root
+		animation = happiness
+	}
+
+	# Only triggered from 0013
+
+	option = {
+		name = mt_econ.0027.a
+
+		add_gold = 30
+		add_prestige = 10
+
+		# Continue income stream
+		trigger_event = {
+			id = mt_econ.0027
+			days = { 180 270 }
+		}
+
+		ai_chance = {
+			base = 100
+		}
+	}
+}
+
+# 0028: Large loan repayment due
+mt_econ.0028 = {
+	type = character_event
+	title = mt_econ.0028.t
+	desc = mt_econ.0028.desc
+	theme = stewardship
+
+	left_portrait = {
+		character = root
+		animation = worry
+	}
+
+	# Only triggered from 0016
+
+	# Pay in full
+	option = {
+		name = mt_econ.0028.a
+
+		trigger = {
+			gold >= 120
+		}
+
+		remove_short_term_gold = 120
+		add_stress = 20
+
+		remove_variable = mt_banking_loan
+
+		add_prestige = 20
+
+		ai_chance = {
+			base = 70
+			modifier = {
+				add = 30
+				gold >= 200
+			}
+		}
+	}
+
+	# Default on loan
+	option = {
+		name = mt_econ.0028.b
+
+		remove_short_term_gold = 50
+		add_prestige = -50
+		add_stress = 40
+
+		remove_variable = mt_banking_loan
+
+		# Reputation damage
+		if = {
+			limit = { has_variable = mt_reputation }
+			change_variable = {
+				name = mt_reputation
+				add = -25
+			}
+		}
+
+		ai_chance = {
+			base = 30
+			modifier = {
+				add = 40
+				gold < 80
+			}
+		}
+	}
+}
+
+# 0029: Small loan repayment due
+mt_econ.0029 = {
+	type = character_event
+	title = mt_econ.0029.t
+	desc = mt_econ.0029.desc
+	theme = stewardship
+
+	left_portrait = {
+		character = root
+		animation = personality_rational
+	}
+
+	# Only triggered from 0016
+
+	option = {
+		name = mt_econ.0029.a
+
+		trigger = {
+			gold >= 50
+		}
+
+		remove_short_term_gold = 50
+		add_stress = 10
+
+		remove_variable = mt_banking_loan_small
+
+		add_prestige = 10
+
+		ai_chance = {
+			base = 100
+		}
+	}
+}
+
+# 0030: Final debt payment
+mt_econ.0030 = {
+	type = character_event
+	title = mt_econ.0030.t
+	desc = mt_econ.0030.desc
+	theme = stewardship
+
+	left_portrait = {
+		character = root
+		animation = worry
+	}
+
+	# Only triggered from 0018
+
+	option = {
+		name = mt_econ.0030.a
+
+		remove_short_term_gold = 25
+		add_stress = 10
+
+		add_prestige = 10
+
+		ai_chance = {
+			base = 100
+		}
+	}
+}

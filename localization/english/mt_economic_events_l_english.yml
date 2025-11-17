@@ -1,0 +1,296 @@
+l_english:
+
+ ###################################
+ # ECONOMIC EVENTS LOCALIZATION
+ # Events: mt_econ.0001-0030
+ ###################################
+
+ ###################################
+ # MARKET CRASHES (0001-0004)
+ ###################################
+
+ # 0001: Silk market crashes
+ mt_econ.0001.t:0 "The Silk Market Collapses"
+ mt_econ.0001.desc:0 "Disaster has struck the silk trade! Multiple caravans from the East arrived simultaneously, flooding the market with silk beyond anything we've seen. Prices have crashed - what sold for 100 gold yesterday now fetches barely 40.\n\nMerchants are panicking. Some are dumping their stock at any price. Others are holding, hoping for recovery. My own warehouses hold valuable silk that's now worth a fraction of what I paid.\n\nWhat should I do?"
+ mt_econ.0001.a:0 "Hold the goods - the market will recover eventually"
+ mt_econ.0001.b:0 "Sell everything now, cut my losses"
+ mt_econ.0001.c:0 "Pivot to different goods while I still have capital"
+ mt_econ.0001.d:0 "I don't trade in silk - observe and learn"
+ mt_econ.0001.c.success:0 "Your diversification strategy pays off handsomely"
+ mt_econ.0001.c.failure:0 "The new goods prove no more profitable than silk"
+ mt_econ.0001.d.tt:0 "Watch how other merchants handle the crisis"
+
+ # 0002: Grain shortage
+ mt_econ.0002.t:0 "The Great Grain Shortage"
+ mt_econ.0002.desc:0 "Poor harvests across multiple regions have created a severe grain shortage. The price of wheat and barley has tripled, then doubled again. People are desperate for food, and those with grain stockpiles can name their price.\n\nI see hungry faces in the streets. Mothers begging for bread to feed their children. This is an opportunity for enormous profit... or a chance to help people in their time of need.\n\nWhat kind of merchant am I?"
+ mt_econ.0002.a:0 "Sell at market price - this is business"
+ mt_econ.0002.b:0 "Sell at fair prices to help feed people"
+ mt_econ.0002.c:0 "Buy more grain - prices may go even higher"
+ mt_econ.0002.d:0 "I have no grain to sell"
+ mt_econ.0002.c.success:0 "Prices soar even higher - your speculation pays off massively"
+ mt_econ.0002.c.neutral:0 "The market stabilizes - you make modest profits"
+ mt_econ.0002.d.tt:0 "Food costs are punishing for everyone"
+
+ # 0003: War disrupts markets
+ mt_econ.0003.t:0 "War Disrupts Trade"
+ mt_econ.0003.desc:0 "A major war has erupted between powerful realms, and trade routes are in chaos. Caravans are being seized, ships blockaded, and border crossings closed without warning.\n\nBut war also creates opportunities. Armies need supplies - weapons, armor, food, horses. Refugees need basic goods. Some merchants are getting rich on war contracts while others lose everything to banditry and confiscation.\n\nHow should I navigate these dangerous times?"
+ mt_econ.0003.a:0 "Invest heavily in war supplies"
+ mt_econ.0003.b:0 "Avoid war zones entirely - safety first"
+ mt_econ.0003.c:0 "Provide humanitarian aid to refugees"
+ mt_econ.0003.d:0 "Diversify to manage the volatility"
+ mt_econ.0003.a.success:0 "War profiteering proves enormously lucrative"
+ mt_econ.0003.a.failure:0 "Your shipment is seized by soldiers - a total loss"
+ mt_econ.0003.b.tt:0 "Better safe than sorry in times of war"
+ mt_econ.0003.c.ally:0 "A powerful lord remembers your kindness"
+
+ # 0004: Counterfeit goods
+ mt_econ.0004.t:0 "Counterfeit Crisis"
+ mt_econ.0004.desc:0 "Counterfeit goods are flooding the market! Fake silks, watered-down spices, iron passed off as steel. Customers are losing faith in merchants as they've been cheated repeatedly.\n\nMy own reputation is at risk even though I deal in genuine goods. People are suspicious of all merchants now. I need to act to restore trust in the marketplace.\n\nHow can I fight this plague of forgeries?"
+ mt_econ.0004.a:0 "Hunt down the counterfeiters"
+ mt_econ.0004.b:0 "Implement strict quality controls"
+ mt_econ.0004.c:0 "Lower prices to compete with the fakes"
+ mt_econ.0004.d:0 "Wait for the crisis to pass"
+ mt_econ.0004.a.success:0 "You expose the counterfeit ring - your reputation soars"
+ mt_econ.0004.a.failure:0 "The counterfeiters remain hidden"
+
+ ###################################
+ # MARKET BOOMS (0005-0008)
+ ###################################
+
+ # 0005: New trade route
+ mt_econ.0005.t:0 "New Route to the East!"
+ mt_econ.0005.desc:0 "Incredible news spreads through the merchant guilds! A new, safer trade route to the distant East has been discovered. Goods that were once rare and prohibitively expensive - fine silk, exotic spices, jade carvings - can now be obtained more easily.\n\nMerchants are rushing to exploit this opportunity. The first to establish trading relationships in these new markets will reap enormous profits. But the route is still dangerous, and many unknowns remain.\n\nShould I invest in this new venture?"
+ mt_econ.0005.a:0 "Invest heavily - early movers get the best profits"
+ mt_econ.0005.b:0 "Moderate investment - test the waters first"
+ mt_econ.0005.c:0 "Just spread the news and build contacts"
+ mt_econ.0005.a.success:0 "Your bold investment returns enormous profits!"
+ mt_econ.0005.a.partial:0 "The route is more dangerous than expected, but still profitable"
+
+ # 0006: Royal wedding boom
+ mt_econ.0006.t:0 "Royal Wedding Creates Demand"
+ mt_econ.0006.desc:0 "A grand royal wedding is being prepared! The kingdom is abuzz with excitement as nobles from across the realm gather for the celebration.\n\nThe demand for luxury goods has spiked dramatically. Fine textiles, jewels, perfumes, exotic wines - everyone wants to display their wealth and status at the festivities. Merchants who can supply these goods are commanding premium prices.\n\nThis is a golden opportunity!"
+ mt_econ.0006.a:0 "Sell my luxury goods at premium prices"
+ mt_econ.0006.b:0 "Source goods from elsewhere to resell"
+ mt_econ.0006.c:0 "Provide services - transportation, lodging, etc."
+ mt_econ.0006.d:0 "Just attend and enjoy the celebration"
+ mt_econ.0006.a.favor:0 "Your exceptional goods catch royal attention"
+
+ # 0007: Crusade looted goods
+ mt_econ.0007.t:0 "Spoils of the Crusade"
+ mt_econ.0007.desc:0 "The crusaders have returned victorious, and with them come wagons full of plundered goods from the holy lands. Exotic items that would normally take months to acquire through trade are now available at bargain prices.\n\nSilks, spices, religious artifacts, precious metals - all flooding the market. Some merchants see opportunity. Others see blood money. The Church itself is conflicted about these spoils of holy war.\n\nWhat is my position?"
+ mt_econ.0007.a:0 "Buy the goods cheap and sell elsewhere for profit"
+ mt_econ.0007.b:0 "Focus on religious artifacts for pious buyers"
+ mt_econ.0007.c:0 "Refuse to deal in plundered goods"
+
+ # 0008: Agricultural breakthrough
+ mt_econ.0008.t:0 "Revolutionary Farming Technique"
+ mt_econ.0008.desc:0 "A remarkable discovery! A new plowing technique has dramatically increased crop yields in several counties. Farmers who adopt this method are producing twice the grain with the same land and labor.\n\nAs the technique spreads, grain prices are falling rapidly. This is wonderful news for the common people who can now afford bread more easily. But it's disrupting the agricultural trade - those who traded in grain must adapt.\n\nHow should I respond to this agricultural revolution?"
+ mt_econ.0008.a:0 "Invest in learning and spreading the technique"
+ mt_econ.0008.b:0 "Shift away from grain trade to other goods"
+ mt_econ.0008.c:0 "Buy cheap grain to feed the poor"
+
+ ###################################
+ # ECONOMIC POLICY (0009-0012)
+ ###################################
+
+ # 0009: Heavy tariffs
+ mt_econ.0009.t:0 "Burdensome Tariffs Imposed"
+ mt_econ.0009.desc:0 "My [tariff_ruler.GetTitleAsNameNoTooltip|U] has imposed heavy new tariffs on all trade passing through [tariff_ruler.GetHerHis] realm. Every border crossing, every market, every transaction now carries additional taxes.\n\n'The realm needs revenue,' the tax collectors explain as they count out my coins. These tariffs will eat significantly into my profits on all routes through this territory.\n\nI need to find a way to work around this or my business will suffer greatly."
+ mt_econ.0009.a:0 "Pay the tariffs and continue as before"
+ mt_econ.0009.b:0 "Negotiate for lower rates with the ruler"
+ mt_econ.0009.c:0 "Find alternative routes that avoid these tariffs"
+ mt_econ.0009.d:0 "Reduce my trade activities in this region"
+ mt_econ.0009.b.success:0 "Your diplomacy succeeds - the ruler grants you reduced rates"
+ mt_econ.0009.b.failure:0 "The ruler refuses to budge on the tariffs"
+ mt_econ.0009.c.tt:0 "New routes may be longer but avoid the heavy taxes"
+
+ # 0010: Free trade agreement
+ mt_econ.0010.t:0 "Free Trade Agreement Signed!"
+ mt_econ.0010.desc:0 "Wonderful news! Multiple realms have signed a comprehensive free trade agreement, drastically reducing tariffs and restrictions on trade between their territories.\n\nRoutes that were expensive and bureaucratically complex are now open and efficient. Merchants are celebrating as profit margins improve across the board. This is an unprecedented opportunity for expansion.\n\nHow aggressively should I expand my operations?"
+ mt_econ.0010.a:0 "Expand operations as much as possible"
+ mt_econ.0010.b:0 "Moderate expansion - sustainable growth"
+ mt_econ.0010.c:0 "Simply enjoy the increased profits"
+
+ # 0011: Currency devaluation
+ mt_econ.0011.t:0 "Currency Crisis"
+ mt_econ.0011.desc:0 "The realm's currency has been devalued! The ruler has debased the coinage, mixing base metals with the precious ones. Gold that was worth 100 yesterday is now worth only 70.\n\nEveryone holding currency has lost a third of their wealth overnight. Panic is spreading through the markets as merchants scramble to adjust their prices. Those quick to react will minimize their losses or even profit from the chaos.\n\nI must act fast!"
+ mt_econ.0011.a:0 "Rapidly adjust all my prices"
+ mt_econ.0011.b:0 "Convert my holdings to goods immediately"
+ mt_econ.0011.c:0 "Hold currency, hope for revaluation"
+ mt_econ.0011.d:0 "Accept this loss and move forward"
+ mt_econ.0011.c.success:0 "The currency rebounds - your patience is rewarded"
+ mt_econ.0011.c.failure:0 "Further devaluation compounds your losses"
+
+ # 0012: Trade embargo
+ mt_econ.0012.t:0 "Trade Embargo Declared"
+ mt_econ.0012.desc:0 "War has led to a trade embargo! All commerce with certain realms has been declared illegal by royal decree. Merchants caught trading with the enemy face imprisonment or worse.\n\nSome of my most profitable routes now pass through forbidden territory. I could respect the embargo and take the financial hit, or I could attempt to smuggle goods through... but the risks are severe.\n\nWhat should I do?"
+ mt_econ.0012.a:0 "Smuggle the goods anyway - the profit is worth the risk"
+ mt_econ.0012.b:0 "Respect the embargo despite the cost"
+ mt_econ.0012.c:0 "Pivot to new markets not affected by the embargo"
+ mt_econ.0012.a.success:0 "Your smuggling operation succeeds brilliantly"
+ mt_econ.0012.a.caught:0 "Guards nearly catch you but you escape"
+ mt_econ.0012.a.imprisoned:0 "You're caught and face severe consequences"
+
+ ###################################
+ # DISCOVERIES (0013-0016)
+ ###################################
+
+ # 0013: New silver mine
+ mt_econ.0013.t:0 "Rich Silver Mine Discovered"
+ mt_econ.0013.desc:0 "A massive silver deposit has been discovered in the mountains! The news has every merchant in the region excited. Silver mining operations are being established, and soon there will be a flood of silver goods entering the market.\n\nThe opportunity is enormous. Those who secure mining rights or invest early in the operation stand to make fortunes. The question is how much to invest and in what capacity.\n\nThis could be my chance for real wealth!"
+ mt_econ.0013.a:0 "Attempt to secure partial mining rights"
+ mt_econ.0013.b:0 "Invest in mining equipment and operations"
+ mt_econ.0013.c:0 "Trade in the silver goods produced"
+ mt_econ.0013.d:0 "Just observe this development"
+
+ # 0014: Exotic spice discovered
+ mt_econ.0014.t:0 "A New Spice Discovered!"
+ mt_econ.0014.desc:0 "Extraordinary news from distant lands! A completely new spice has been discovered, with a flavor unlike anything the world has tasted. Early samples have arrived, and the taste is indeed remarkable - complex, aromatic, utterly unique.\n\nDemand is already building among the wealthy who've sampled it. But the source is far away and poorly mapped. Some merchants are funding expeditions to establish direct trade. Others are buying what little is available to resell at vast markup.\n\nThis could be the opportunity of a lifetime!"
+ mt_econ.0014.a:0 "Fund an expedition to find the source"
+ mt_econ.0014.b:0 "Buy the available supply and resell"
+ mt_econ.0014.c:0 "Wait for the market to stabilize"
+ mt_econ.0014.a.success:0 "Your expedition finds the source - you control the supply!"
+ mt_econ.0014.a.failure:0 "The expedition fails to find the source"
+ mt_econ.0014.c.tt:0 "You might miss the boom but avoid the risk"
+
+ # 0015: Improved ship design
+ mt_econ.0015.t:0 "Revolutionary Ship Design"
+ mt_econ.0015.desc:0 "Shipwrights have developed a remarkable new vessel design! These ships are faster, more stable, and can carry significantly more cargo than traditional designs. Most importantly, they're much safer in rough seas.\n\nSea routes that were once perilous are now much more viable. Merchants who commission these new ships will have a significant competitive advantage. The investment is substantial, but the long-term benefits could be enormous.\n\nShould I invest in this new maritime technology?"
+ mt_econ.0015.a:0 "Commission new ships immediately"
+ mt_econ.0015.b:0 "Invest in expanded maritime trade"
+ mt_econ.0015.c:0 "Learn the shipbuilding techniques"
+
+ # 0016: Banking system introduced
+ mt_econ.0016.t:0 "The Rise of Banking"
+ mt_econ.0016.desc:0 "A revolutionary financial innovation has arrived - formal banking! Italian merchants have established a system of loans, credit, and letters of exchange. For the first time, I can borrow substantial sums to expand my operations.\n\nThe bankers are offering loans at reasonable interest rates. With borrowed capital, I could expand my trade network far beyond what my current wealth allows. But debt is a double-edged sword - it must be repaid with interest.\n\nShould I take advantage of this new financial tool?"
+ mt_econ.0016.a:0 "Take a large loan for major expansion"
+ mt_econ.0016.b:0 "Take a modest loan to test the system"
+ mt_econ.0016.c:0 "Avoid debt - it's too risky"
+
+ ###################################
+ # DISASTERS (0017-0020)
+ ###################################
+
+ # 0017: Warehouse fire
+ mt_econ.0017.t:0 "Warehouse Ablaze!"
+ mt_econ.0017.desc:0 "Disaster! My warehouse has caught fire! I watch in horror as flames consume the building, turning months of stored goods into smoke and ash. Silk, spices, grain, wine - all of it burning.\n\nThe damage is catastrophic. My inventory, my capital, gone in a matter of hours. Now I must decide whether to rebuild immediately or investigate whether this was accident or arson.\n\nThis is a devastating blow to my business."
+ mt_econ.0017.a:0 "Rebuild immediately, don't let this break me"
+ mt_econ.0017.b:0 "Accept the loss and move forward"
+ mt_econ.0017.c:0 "Investigate - this might be arson"
+ mt_econ.0017.c.success:0 "You discover the arsonist - a rival merchant!"
+ mt_econ.0017.c.failure:0 "No evidence of arson can be found"
+
+ # 0018: Debt collector
+ mt_econ.0018.t:0 "Debts Come Due"
+ mt_econ.0018.desc:0 "A large, intimidating man has arrived at my door. He represents creditors I owe money to, and his message is clear: pay now, or face consequences.\n\nI knew this debt was coming due, but other expenses have consumed my capital. The debt collector is not interested in excuses. He wants payment, and he wants it now. His hand rests meaningfully on the cudgel at his belt.\n\nI need to resolve this situation before it gets ugly."
+ mt_econ.0018.a:0 "Pay the full amount immediately"
+ mt_econ.0018.b:0 "Negotiate a payment plan"
+ mt_econ.0018.c:0 "Flee and avoid payment entirely"
+ mt_econ.0018.d:0 "Refuse to pay - stand my ground"
+ mt_econ.0018.d.violence:0 "The debt collector resorts to violence"
+
+ # 0019: Pirates seize ship
+ mt_econ.0019.t:0 "Seized by Pirates!"
+ mt_econ.0019.desc:0 "Terrible news reaches me - my ship has been seized by pirates! They're holding the vessel, cargo, and crew hostage. They've sent a ransom demand: pay a substantial sum or lose everything.\n\nThe cargo alone is worth more than the ransom, not to mention the ship itself. But paying pirates only encourages more piracy. Some merchants hire mercenaries to attack pirate bases. Others write it off as a cost of doing business.\n\nHow should I respond to this outrage?"
+ mt_econ.0019.a:0 "Pay the ransom and recover my ship"
+ mt_econ.0019.b:0 "Hire mercenaries to attack the pirates"
+ mt_econ.0019.c:0 "Accept the loss - the ship is gone"
+ mt_econ.0019.d:0 "Hunt down the pirates myself"
+ mt_econ.0019.b.success:0 "The mercenaries succeed - your ship is recovered!"
+ mt_econ.0019.b.failure:0 "The pirates escape with your ship"
+ mt_econ.0019.d.success:0 "You heroically recover your ship in combat!"
+ mt_econ.0019.d.failure:0 "You're badly wounded in the fight"
+
+ # 0020: Plague in production region
+ mt_econ.0020.t:0 "Plague Strikes Production Region"
+ mt_econ.0020.desc:0 "Horrifying reports arrive - plague has broken out in a major production region! Thousands are dying, entire villages abandoned. The human tragedy is immense.\n\nBut this also means production has stopped. Goods that were plentiful will soon become scarce. Some merchants are already stockpiling, knowing prices will soar. Others are providing aid to the afflicted. And the wise are avoiding the region entirely.\n\nHow should I respond to this crisis?"
+ mt_econ.0020.a:0 "Stock up now before scarcity drives prices up"
+ mt_econ.0020.b:0 "Provide aid to the plague-stricken region"
+ mt_econ.0020.c:0 "Stay far away from the plague zone"
+ mt_econ.0020.d:0 "Find alternative suppliers"
+ mt_econ.0020.c.tt:0 "Better to lose profit than risk plague"
+
+ ###################################
+ # SPECULATION (0021-0025)
+ ###################################
+
+ # 0021: Rumor of war
+ mt_econ.0021.t:0 "Rumors of Impending War"
+ mt_econ.0021.desc:0 "Whispers are spreading through the merchant networks - war may be coming. Armies are mustering, alliances being forged, old grudges resurfacing. It's not certain yet, but all the signs point to conflict.\n\nIf war breaks out, demand for weapons, armor, horses, and military supplies will skyrocket. Those positioned to supply armies will make fortunes. But if the rumors prove false, I'll be stuck with expensive inventory.\n\nDo I trust these rumors enough to invest?"
+ mt_econ.0021.a:0 "Buy weapons and armor in anticipation"
+ mt_econ.0021.b:0 "Wait and see if war actually comes"
+ mt_econ.0021.a.success:0 "War breaks out - your speculation pays off massively!"
+ mt_econ.0021.a.neutral:0 "Minor skirmishes occur - you make modest profit"
+
+ # 0022: Harvest forecast
+ mt_econ.0022.t:0 "Harvest Speculation"
+ mt_econ.0022.desc:0 "It's planting season, and I'm studying weather patterns and farmer reports to predict the coming harvest. Will it be bountiful or poor? The answer will determine grain prices for the entire year.\n\nSome signs suggest a poor harvest - irregular rainfall, late frost. Others indicate conditions are favorable. Merchants are split on their predictions. Those who guess correctly will profit greatly. Those who guess wrong will lose.\n\nWhat's my prediction?"
+ mt_econ.0022.a:0 "Bet on poor harvest - buy grain futures"
+ mt_econ.0022.b:0 "Bet on good harvest - stock up when prices are low"
+ mt_econ.0022.c:0 "Don't gamble on weather and harvests"
+ mt_econ.0022.a.success:0 "Poor harvest as predicted - grain prices soar!"
+ mt_econ.0022.a.failure:0 "Abundant harvest - you lose your investment"
+ mt_econ.0022.b.success:0 "Excellent harvest - you bought at the right time!"
+ mt_econ.0022.b.failure:0 "Poor harvest - grain is scarce and expensive"
+
+ # 0023: Investment opportunity
+ mt_econ.0023.t:0 "Expedition Investment Opportunity"
+ mt_econ.0023.desc:0 "An ambitious explorer has approached me with an enticing proposal. He's planning an expedition to distant, unmapped lands rumored to be rich in valuable goods. He needs investors to fund ships, crew, and supplies.\n\n'The potential returns are enormous,' he explains, showing me maps and trader accounts. 'Spices, gems, exotic goods no one in our lands has ever seen. We could all become wealthy beyond imagination.'\n\nOr the expedition could fail completely and my investment would be lost. High risk, high reward."
+ mt_econ.0023.a:0 "Major investment - take 50% share of profits"
+ mt_econ.0023.b:0 "Minor investment - take 20% share"
+ mt_econ.0023.c:0 "Decline the investment"
+ mt_econ.0023.a.success:0 "The expedition succeeds beyond all expectations!"
+ mt_econ.0023.a.partial:0 "Modest success - you make some profit"
+ mt_econ.0023.a.failure:0 "The expedition fails - total loss"
+ mt_econ.0023.b.success:0 "The expedition returns with valuable cargo!"
+ mt_econ.0023.b.partial:0 "Some success - you recoup your investment plus a bit more"
+ mt_econ.0023.b.failure:0 "Ships lost at sea - your investment is gone"
+
+ # 0024: Insider information
+ mt_econ.0024.t:0 "A Whispered Tip"
+ mt_econ.0024.desc:0 "A well-connected merchant pulls me aside in the market and speaks in low, urgent tones.\n\n'I have information,' he whispers. 'Something big is about to happen that will move markets. I can't say how I know, but if you act on this within the next few days, you'll profit greatly.'\n\nHe names specific goods to buy or sell. Is this genuine insider information, or is it a trap? Some merchants have made fortunes on such tips. Others have been ruined."
+ mt_econ.0024.a:0 "Act on the information immediately"
+ mt_econ.0024.b:0 "Verify the information first, then act cautiously"
+ mt_econ.0024.c:0 "Ignore the tip - too suspicious"
+ mt_econ.0024.a.success:0 "The tip was genuine - you profit greatly!"
+ mt_econ.0024.a.failure:0 "You've been deceived - this was a trap"
+
+ # 0025: Market manipulation
+ mt_econ.0025.t:0 "Opportunity to Corner the Market"
+ mt_econ.0025.desc:0 "I've realized something remarkable: if I buy up all available supply of a certain commodity, I could control the entire market. I could name my price, and buyers would have no choice but to pay.\n\nIt would require most of my capital and some questionable tactics. Other merchants would be furious. But the potential profit is staggering. This is exactly how merchant princes are made... or how merchants make powerful enemies.\n\nDo I dare attempt market manipulation on this scale?"
+ mt_econ.0025.a:0 "Buy all available supply - corner the market!"
+ mt_econ.0025.b:0 "Form a cartel with other merchants instead"
+ mt_econ.0025.c:0 "Refuse to manipulate the market"
+ mt_econ.0025.a.success:0 "You successfully corner the market - enormous profits!"
+ mt_econ.0025.a.failure:0 "Other merchants band together to fight you"
+
+ ###################################
+ # FOLLOW-UP EVENTS (0026-0030)
+ ###################################
+
+ # 0026: Silk market recovery
+ mt_econ.0026.t:0 "Silk Market Recovers"
+ mt_econ.0026.desc:0 "Patience has paid off! The silk market has finally recovered from the crash. The oversupply has been absorbed, demand has returned, and prices are climbing back to normal levels.\n\nMy decision to hold onto my silk inventory rather than panic-sell has been vindicated. Those who sold at the bottom are regretting their hasty decisions. Those who held firm are now reaping the rewards."
+ mt_econ.0026.a:0 "My patience is rewarded"
+ mt_econ.0026.a.tt:0 "The silk can now be sold at good prices"
+
+ # 0027: Mining income
+ mt_econ.0027.t:0 "Silver Mine Dividend"
+ mt_econ.0027.desc:0 "The silver mine I invested in continues to produce! Another shipment of ore has been processed and sold, and my share of the profits has arrived.\n\nThis investment keeps generating returns. The mine shows no signs of running out, and demand for silver remains strong. This was clearly a wise investment."
+ mt_econ.0027.a:0 "Excellent returns on my investment"
+
+ # 0028: Large loan repayment
+ mt_econ.0028.t:0 "The Bankers Come Calling"
+ mt_econ.0028.desc:0 "The banking house has sent a representative to collect repayment on my large loan. The principal plus interest comes to a substantial sum - 120 gold pieces.\n\nI knew this day would come. The loan funded my expansion, and hopefully that expansion has generated enough profit to cover the repayment. But if I can't pay, my reputation with the bankers will be ruined."
+ mt_econ.0028.a:0 "Pay the loan in full"
+ mt_econ.0028.b:0 "Default on the loan"
+
+ # 0029: Small loan repayment
+ mt_econ.0029.t:0 "Loan Repayment Due"
+ mt_econ.0029.desc:0 "My modest loan from the banking house is now due. The repayment including interest totals 50 gold pieces - a manageable sum.\n\nThis loan helped me expand my operations, and I should be able to pay it back without too much difficulty. Building a good relationship with the bankers could be valuable for future opportunities."
+ mt_econ.0029.a:0 "Repay the loan"
+
+ # 0030: Final debt payment
+ mt_econ.0030.t:0 "Final Debt Payment"
+ mt_econ.0030.desc:0 "The debt collector has returned for the final payment we negotiated. Just 25 more gold and this debt will be settled completely.\n\nI'm glad to finally be free of this obligation. Debt is a heavy burden, and I'll be relieved to have it behind me."
+ mt_econ.0030.a:0 "Make the final payment"
