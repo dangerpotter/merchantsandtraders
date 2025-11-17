@@ -1,0 +1,379 @@
+######################################################
+# MERCHANTS AND TRADERS - TRADE INFRASTRUCTURE      #
+######################################################
+# Building chain for developing trade infrastructure in baronies.
+# Each tier increases trade capacity, income, and the county's attractiveness to merchants.
+#
+# PROGRESSION:
+# Market (Tier 1) -> Trade Quarter (Tier 2) -> Merchant District (Tier 3) -> Grand Bazaar (Tier 4)
+#
+# MECHANICS:
+# - Each building increases the number of trade routes that can pass through the county
+# - Higher tiers provide better income and bonuses to goods value
+# - Grand Bazaar automatically makes the county a trade hub
+# - Buildings can only be built in castle/city holdings (not tribal or temples)
+
+mt_trade_infrastructure = {
+	# Building is constructed in the holding
+	construction_time = 730
+
+	# Can be built in castle and city holdings
+	can_construct_potential = {
+		building_requirement_castle_city_church = { CHURCH = no }
+	}
+
+	can_construct = {
+		culture = {
+			has_innovation = innovation_currency_01  # Coinage innovation
+		}
+	}
+
+	# Destroyed if holding type changes
+	can_construct_showing_failures_only = {
+		building_requirement_castle_city_church = { CHURCH = no }
+	}
+
+	#######################################
+	# TIER 1 - MARKET
+	#######################################
+	# Basic marketplace where local and traveling merchants can trade.
+	# Enables the county to support 1 trade route.
+
+	mt_market_01 = {
+		construction_time = 365
+
+		gold_cost = 50
+		levy_size = 0.05
+
+		next_building = mt_trade_quarter_02
+
+		# ECONOMIC BENEFITS
+		# Provides basic income and enables trade route capacity
+		county_modifier = {
+			tax_mult = 0.05
+		}
+
+		province_modifier = {
+			monthly_income = 0.5
+		}
+
+		# TRADE ROUTE CAPACITY
+		# Marker for scripted effects: county can support 1 trade route
+		flag = has_trade_capacity_1
+
+		ai_value = {
+			base = 100
+			modifier = {
+				factor = 2
+				# AI prioritizes this in wealthy counties
+				county = {
+					development_level >= 10
+				}
+			}
+			modifier = {
+				factor = 1.5
+				# AI likes this in coastal counties
+				county.title_province = {
+					geographical_region = world_coastline
+				}
+			}
+		}
+	}
+
+	#######################################
+	# TIER 2 - TRADE QUARTER
+	#######################################
+	# Expanded trading district with warehouses and merchant accommodations.
+	# Increases trade route capacity and improves goods value.
+
+	mt_trade_quarter_02 = {
+		construction_time = 547
+
+		gold_cost = 150
+		levy_size = 0.1
+
+		next_building = mt_merchant_district_03
+
+		# ECONOMIC BENEFITS
+		# Better facilities mean more income and slight goods value increase
+		county_modifier = {
+			tax_mult = 0.1
+			development_growth_factor = 0.02
+		}
+
+		province_modifier = {
+			monthly_income = 1.0
+		}
+
+		# TRADE ROUTE CAPACITY
+		# County can now support 2 trade routes total
+		flag = has_trade_capacity_2
+
+		# GOODS VALUE BONUS
+		# Merchants can upgrade their goods here (+5% value)
+		flag = trade_goods_value_5_percent
+
+		ai_value = {
+			base = 75
+			modifier = {
+				factor = 2
+				# AI prioritizes if multiple trade routes pass through
+				county = {
+					any_county_province = {
+						# Check via script in actual implementation
+						count >= 1
+					}
+				}
+			}
+			modifier = {
+				factor = 1.5
+				county = {
+					development_level >= 15
+				}
+			}
+		}
+	}
+
+	#######################################
+	# TIER 3 - MERCHANT DISTRICT
+	#######################################
+	# Dedicated district for merchant guilds, banking, and high-value trade.
+	# Significantly increases trade capacity and county prosperity.
+
+	mt_merchant_district_03 = {
+		construction_time = 730
+
+		gold_cost = 300
+		levy_size = 0.15
+
+		next_building = mt_grand_bazaar_04
+
+		# ECONOMIC BENEFITS
+		# Major income boost and development growth
+		county_modifier = {
+			tax_mult = 0.15
+			development_growth_factor = 0.05
+		}
+
+		province_modifier = {
+			monthly_income = 2.0
+			fort_level = 1  # Districts need protection
+		}
+
+		# TRADE ROUTE CAPACITY
+		# County can support 4 trade routes total
+		flag = has_trade_capacity_4
+
+		# GOODS VALUE BONUS
+		# Improved facilities still provide 5% goods value
+		flag = trade_goods_value_5_percent
+
+		# APPLIES MERCHANT DISTRICT BONUS
+		# This is checked by scripted effects to apply the modifier
+		flag = has_merchant_district
+
+		ai_value = {
+			base = 50
+			modifier = {
+				factor = 3
+				# AI highly prioritizes in capital
+				county = {
+					holder = {
+						capital_county = prev
+					}
+				}
+			}
+			modifier = {
+				factor = 2
+				county = {
+					development_level >= 20
+				}
+			}
+		}
+	}
+
+	#######################################
+	# TIER 4 - GRAND BAZAAR
+	#######################################
+	# Legendary marketplace famous across the world.
+	# Maximum trade capacity and automatically makes county a trade hub.
+
+	mt_grand_bazaar_04 = {
+		construction_time = 1095
+
+		gold_cost = 600
+		levy_size = 0.2
+
+		# ECONOMIC BENEFITS
+		# Massive income and development boost
+		county_modifier = {
+			tax_mult = 0.25
+			development_growth_factor = 0.1
+			monthly_county_control_growth_add = 0.1
+		}
+
+		province_modifier = {
+			monthly_income = 4.0
+			fort_level = 2
+		}
+
+		# TRADE ROUTE CAPACITY
+		# County can support 9 trade routes total (maximum)
+		flag = has_trade_capacity_9
+
+		# GOODS VALUE BONUS
+		# Premium facilities provide 10% goods value increase
+		flag = trade_goods_value_10_percent
+
+		# GRAND BAZAAR STATUS
+		# Automatically makes county a trade hub regardless of route count
+		flag = has_grand_bazaar
+
+		# PRESTIGE AND FAME
+		character_modifier = {
+			monthly_prestige = 1.0
+		}
+
+		ai_value = {
+			base = 25
+			modifier = {
+				factor = 5
+				# AI only builds in capital or major trade centers
+				county = {
+					holder = {
+						capital_county = prev
+					}
+				}
+			}
+			modifier = {
+				factor = 3
+				county = {
+					development_level >= 25
+				}
+			}
+			modifier = {
+				factor = 2
+				# AI values this more if they're rich
+				scope:holder = {
+					gold >= 1000
+				}
+			}
+		}
+	}
+}
+
+######################################################
+# TRADE INFRASTRUCTURE - TRIBAL VERSION              #
+######################################################
+# Simplified version for tribal holdings.
+# Lower costs but also lower benefits until reformed.
+
+mt_trade_infrastructure_tribal = {
+	construction_time = 730
+
+	can_construct_potential = {
+		building_requirement_tribal = yes
+	}
+
+	can_construct = {
+		culture = {
+			has_innovation = innovation_currency_01
+		}
+	}
+
+	can_construct_showing_failures_only = {
+		building_requirement_tribal = yes
+	}
+
+	# TIER 1 - TRIBAL MARKET
+	mt_tribal_market_01 = {
+		construction_time = 365
+
+		gold_cost = 25
+		levy_size = 0.05
+
+		# ECONOMIC BENEFITS
+		# Less income than castle/city version
+		county_modifier = {
+			tax_mult = 0.025
+		}
+
+		province_modifier = {
+			monthly_income = 0.25
+		}
+
+		# TRADE ROUTE CAPACITY
+		flag = has_trade_capacity_1
+
+		ai_value = {
+			base = 50
+			modifier = {
+				factor = 1.5
+				county = {
+					development_level >= 5
+				}
+			}
+		}
+	}
+
+	# TIER 2 - TRIBAL TRADE POST
+	mt_tribal_trade_post_02 = {
+		construction_time = 547
+
+		gold_cost = 75
+		levy_size = 0.1
+
+		# ECONOMIC BENEFITS
+		county_modifier = {
+			tax_mult = 0.05
+		}
+
+		province_modifier = {
+			monthly_income = 0.5
+		}
+
+		# TRADE ROUTE CAPACITY
+		flag = has_trade_capacity_2
+
+		ai_value = {
+			base = 25
+			modifier = {
+				factor = 2
+				county = {
+					development_level >= 8
+				}
+			}
+		}
+	}
+}
+
+######################################################
+# NOTES ON INTEGRATION:
+######################################################
+#
+# COUNTY TRADE ROUTE TRACKING:
+# - When a trade route is established through a county, scripted effects
+#   check the building tier to determine if capacity is available
+# - If capacity exists, the county gains active_trade_route_X modifier
+# - Income is calculated: base (modifier) + goods value bonus (building flags)
+#
+# TRADE HUB MECHANICS:
+# - Counties with 3+ active routes OR grand_bazaar flag get trade_hub_status
+# - Trade hubs attract more merchants and are prioritized for new routes
+#
+# RULER INTERACTION:
+# - County rulers can enact trade policies (tax/protect/ignore)
+# - Policies affect route health and income
+# - Heavy taxation: +1 gold but -20% route health
+# - Protection: -0.5 gold but +20% route health, attracts more routes
+#
+# BUILDING REQUIREMENTS:
+# - Buildings require appropriate innovations (Coinage, etc.)
+# - Can only be built in castle/city holdings (modified versions for tribal)
+# - AI will prioritize building in capitals and high-development counties
+#
+# GOODS VALUE INTERACTION:
+# - Goods passing through counties with trade buildings gain value
+# - 5% bonus from Trade Quarter/Merchant District
+# - 10% bonus from Grand Bazaar
+# - This makes routes through developed counties more profitable

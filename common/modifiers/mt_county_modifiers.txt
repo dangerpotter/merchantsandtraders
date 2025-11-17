@@ -1,0 +1,286 @@
+######################################################
+# MERCHANTS AND TRADERS - COUNTY ECONOMIC MODIFIERS #
+######################################################
+# These modifiers represent the economic impact of merchant activity on counties.
+# Active trade routes bring wealth, development, and prosperity to counties they pass through.
+# Rulers can choose to tax or protect merchants, affecting route health and income.
+
+#######################################
+# ACTIVE TRADE ROUTE MODIFIERS
+#######################################
+# Each active trade route passing through a county provides economic benefits.
+# These modifiers stack, so a county with multiple routes gains cumulative bonuses.
+
+active_trade_route_1 = {
+	monthly_county_control_growth_add = 0.1
+	levy_size = 0.05
+
+	# Direct income from merchant fees and local commerce
+	county_modifier = {
+		tax_mult = 0.5
+	}
+}
+
+active_trade_route_2 = {
+	monthly_county_control_growth_add = 0.1
+	levy_size = 0.05
+
+	county_modifier = {
+		tax_mult = 0.5
+	}
+}
+
+active_trade_route_3 = {
+	monthly_county_control_growth_add = 0.1
+	levy_size = 0.05
+
+	county_modifier = {
+		tax_mult = 0.5
+	}
+}
+
+active_trade_route_4 = {
+	monthly_county_control_growth_add = 0.1
+	levy_size = 0.05
+
+	county_modifier = {
+		tax_mult = 0.5
+	}
+}
+
+active_trade_route_5 = {
+	monthly_county_control_growth_add = 0.1
+	levy_size = 0.05
+
+	county_modifier = {
+		tax_mult = 0.5
+	}
+}
+
+active_trade_route_6 = {
+	monthly_county_control_growth_add = 0.1
+	levy_size = 0.05
+
+	county_modifier = {
+		tax_mult = 0.5
+	}
+}
+
+active_trade_route_7 = {
+	monthly_county_control_growth_add = 0.1
+	levy_size = 0.05
+
+	county_modifier = {
+		tax_mult = 0.5
+	}
+}
+
+active_trade_route_8 = {
+	monthly_county_control_growth_add = 0.1
+	levy_size = 0.05
+
+	county_modifier = {
+		tax_mult = 0.5
+	}
+}
+
+active_trade_route_9 = {
+	monthly_county_control_growth_add = 0.1
+	levy_size = 0.05
+
+	county_modifier = {
+		tax_mult = 0.5
+	}
+}
+
+active_trade_route_10 = {
+	monthly_county_control_growth_add = 0.1
+	levy_size = 0.05
+
+	county_modifier = {
+		tax_mult = 0.5
+	}
+}
+
+#######################################
+# TRADE HUB STATUS
+#######################################
+# When a county has 3+ active trade routes, it becomes a trade hub.
+# Trade hubs are major economic centers with increased development and prosperity.
+
+trade_hub_status = {
+	monthly_county_control_growth_add = 0.2
+	development_growth_factor = 0.1
+	levy_size = 0.1
+
+	# Increased income from becoming a major trade center
+	county_modifier = {
+		tax_mult = 2.0
+	}
+
+	# Trade hubs attract more merchants and artisans
+	monthly_prestige = 0.5
+}
+
+#######################################
+# MERCHANT DISTRICT BONUS
+#######################################
+# Applied when the Merchant District building (or higher) is constructed.
+# Represents the infrastructure supporting merchant activity.
+
+merchant_district_bonus = {
+	monthly_county_control_growth_add = 0.15
+	development_growth_factor = 0.05
+
+	county_modifier = {
+		tax_mult = 1.0
+	}
+
+	# Better facilities attract more trade
+	monthly_prestige = 0.25
+}
+
+#######################################
+# GRAND BAZAAR BONUS
+#######################################
+# Applied when the Grand Bazaar building is constructed.
+# Represents a world-class trade center with exceptional facilities.
+
+grand_bazaar_bonus = {
+	monthly_county_control_growth_add = 0.25
+	development_growth_factor = 0.1
+	levy_size = 0.15
+
+	county_modifier = {
+		tax_mult = 2.0
+	}
+
+	# Grand bazaars are famous landmarks
+	monthly_prestige = 1.0
+	monthly_piety = 0.5
+}
+
+#######################################
+# RULER TRADE POLICIES
+#######################################
+# Rulers can choose how to interact with merchants passing through their lands.
+
+# HEAVY TAXATION
+# Ruler extracts maximum profit from merchants, but damages route health.
+# Merchants avoid heavily taxed regions when possible.
+trade_taxation_heavy = {
+	monthly_county_control_growth_add = -0.1
+
+	# Immediate profit but reduced long-term trade
+	county_modifier = {
+		tax_mult = 1.0
+	}
+
+	# Merchants resent heavy taxation
+	monthly_prestige = -0.25
+}
+
+# MODERATE TAXATION (BALANCED)
+# Standard taxation that doesn't significantly impact merchants.
+trade_taxation_moderate = {
+	county_modifier = {
+		tax_mult = 0.5
+	}
+}
+
+# TRADE PROTECTION
+# Ruler invests in protecting merchants from bandits and rivals.
+# Increases route health and makes the county attractive for trade.
+trade_protection_active = {
+	monthly_county_control_growth_add = 0.2
+	development_growth_factor = 0.05
+
+	# Protection costs money but attracts more trade
+	county_modifier = {
+		tax_mult = -0.5
+	}
+
+	# Merchants appreciate protection
+	monthly_prestige = 0.5
+}
+
+#######################################
+# TRADE GOODS VALUE MODIFIERS
+#######################################
+# Buildings can increase the value of goods passing through.
+
+trade_goods_value_5 = {
+	# 5% increase in goods value (from Trade Quarter)
+	county_modifier = {
+		tax_mult = 0.25
+	}
+}
+
+trade_goods_value_10 = {
+	# 10% increase in goods value (from Grand Bazaar)
+	county_modifier = {
+		tax_mult = 0.5
+	}
+}
+
+#######################################
+# NEGATIVE MODIFIERS
+#######################################
+# Events and circumstances that harm county trade.
+
+trade_route_damaged = {
+	# Route exists but is unhealthy/damaged
+	monthly_county_control_growth_add = -0.1
+	development_growth_factor = -0.05
+
+	county_modifier = {
+		tax_mult = -0.25
+	}
+}
+
+trade_route_raided = {
+	# Recent raiding has disrupted trade
+	monthly_county_control_growth_add = -0.2
+	development_growth_factor = -0.1
+	levy_size = -0.1
+
+	county_modifier = {
+		tax_mult = -0.5
+	}
+
+	monthly_prestige = -0.5
+}
+
+trade_route_blockaded = {
+	# War or politics has blocked trade
+	monthly_county_control_growth_add = -0.3
+	development_growth_factor = -0.15
+
+	county_modifier = {
+		tax_mult = -1.0
+	}
+
+	monthly_prestige = -1.0
+}
+
+#######################################
+# TRADE INFRASTRUCTURE CAPACITY
+#######################################
+# These modifiers track how many trade routes a county can support.
+# Applied by buildings to increase route capacity.
+
+trade_route_capacity_1 = {
+	# Basic capacity (from Market)
+	# No direct modifier, just tracked via script
+}
+
+trade_route_capacity_2 = {
+	# Increased capacity (from Trade Quarter)
+	monthly_county_control_growth_add = 0.05
+}
+
+trade_route_capacity_5 = {
+	# Maximum capacity (from Grand Bazaar)
+	monthly_county_control_growth_add = 0.1
+	development_growth_factor = 0.05
+}
