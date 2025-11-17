@@ -1,0 +1,1306 @@
+######################################################
+# MERCHANTS AND TRADERS MOD - TRADE ROUTE MANAGEMENT GUI
+# Custom GUI window for managing trade routes
+######################################################
+
+types mt_trade_route_types
+{
+	######################################################
+	# MAIN TRADE ROUTE WINDOW
+	######################################################
+
+	type mt_trade_route_window = window {
+		name = "mt_trade_route_window"
+		size = { 1000 750 }
+		position = { 460 100 }
+		movable = yes
+		layer = windows_layer
+
+		using = Window_Background
+		using = Window_Decoration_Spike
+
+		# Window title
+		vbox = {
+			layoutpolicy_horizontal = expanding
+			layoutpolicy_vertical = expanding
+
+			# Header
+			widget = {
+				size = { 0 60 }
+				layoutpolicy_horizontal = expanding
+
+				hbox = {
+					margin = { 20 10 }
+					spacing = 10
+
+					icon = {
+						name = "trade_icon"
+						size = { 40 40 }
+						texture = "gfx/interface/icons/icon_gold.dds"
+					}
+
+					text_single = {
+						name = "title"
+						text = "MT_TRADE_ROUTES_TITLE"
+						default_format = "#high"
+						using = Font_Size_Big
+						align = nobaseline
+					}
+
+					expand = {}
+
+					button_close = {
+						name = "close_button"
+						onclick = "[mt_trade_route_window.Close]"
+						size = { 30 30 }
+					}
+				}
+			}
+
+			divider_light = {
+				layoutpolicy_horizontal = expanding
+			}
+
+			# Main content area
+			hbox = {
+				layoutpolicy_horizontal = expanding
+				layoutpolicy_vertical = expanding
+				margin = { 10 5 }
+				spacing = 10
+
+				# Left panel - Route list
+				vbox = {
+					name = "route_list_panel"
+					layoutpolicy_vertical = expanding
+					minimumsize = { 600 0 }
+					spacing = 5
+
+					# Summary stats
+					widget = {
+						size = { 0 80 }
+						layoutpolicy_horizontal = expanding
+
+						background = {
+							using = Background_Area
+						}
+
+						hbox = {
+							margin = { 15 10 }
+							spacing = 30
+
+							vbox = {
+								spacing = 3
+
+								text_single = {
+									text = "MT_ACTIVE_ROUTES"
+									default_format = "#weak"
+									using = Font_Size_Small
+								}
+
+								text_single = {
+									name = "active_routes_count"
+									text = "[mt_trade_route_window.GetActiveRouteCount]"
+									default_format = "#high"
+									using = Font_Size_Medium
+									align = nobaseline
+								}
+							}
+
+							vbox = {
+								spacing = 3
+
+								text_single = {
+									text = "MT_TOTAL_PROFIT"
+									default_format = "#weak"
+									using = Font_Size_Small
+								}
+
+								text_single = {
+									name = "total_profit"
+									text = "[mt_trade_route_window.GetTotalProfit]"
+									default_format = "#high"
+									using = Font_Size_Medium
+									align = nobaseline
+								}
+							}
+
+							vbox = {
+								spacing = 3
+
+								text_single = {
+									text = "MT_CAPACITY"
+									default_format = "#weak"
+									using = Font_Size_Small
+								}
+
+								text_single = {
+									name = "route_capacity"
+									text = "[mt_trade_route_window.GetRouteCapacity]"
+									default_format = "#high"
+									using = Font_Size_Medium
+									align = nobaseline
+								}
+							}
+
+							expand = {}
+						}
+					}
+
+					# Route list header
+					hbox = {
+						layoutpolicy_horizontal = expanding
+						margin = { 5 5 }
+						spacing = 10
+
+						text_single = {
+							text = "MT_ROUTE_NAME"
+							default_format = "#weak"
+							using = Font_Size_Small
+							minimumsize = { 180 0 }
+						}
+
+						text_single = {
+							text = "MT_GOODS"
+							default_format = "#weak"
+							using = Font_Size_Small
+							minimumsize = { 120 0 }
+						}
+
+						text_single = {
+							text = "MT_HEALTH"
+							default_format = "#weak"
+							using = Font_Size_Small
+							minimumsize = { 80 0 }
+						}
+
+						text_single = {
+							text = "MT_PROFIT"
+							default_format = "#weak"
+							using = Font_Size_Small
+							minimumsize = { 80 0 }
+						}
+
+						text_single = {
+							text = "MT_NODES"
+							default_format = "#weak"
+							using = Font_Size_Small
+							minimumsize = { 60 0 }
+						}
+
+						expand = {}
+					}
+
+					divider_light = {
+						layoutpolicy_horizontal = expanding
+					}
+
+					# Scrollable route list
+					scrollbox = {
+						name = "route_list_scrollbox"
+						layoutpolicy_horizontal = expanding
+						layoutpolicy_vertical = expanding
+
+						blockoverride "scrollbox_content" {
+							vbox = {
+								name = "route_list"
+								datamodel = "[mt_trade_route_window.GetTradeRoutes]"
+								spacing = 2
+								layoutpolicy_horizontal = expanding
+
+								item = {
+									mt_trade_route_entry = {}
+								}
+							}
+						}
+					}
+
+					# Bottom buttons
+					hbox = {
+						layoutpolicy_horizontal = expanding
+						margin = { 0 10 }
+						spacing = 10
+
+						button_primary = {
+							name = "establish_route_button"
+							text = "MT_ESTABLISH_ROUTE"
+							onclick = "[mt_trade_route_window.OpenNewRoutePanel]"
+							enabled = "[mt_trade_route_window.CanEstablishRoute]"
+							tooltip = "MT_ESTABLISH_ROUTE_TOOLTIP"
+							size = { 200 35 }
+						}
+
+						button_standard = {
+							name = "close_selected_button"
+							text = "MT_CLOSE_ROUTE"
+							onclick = "[mt_trade_route_window.CloseSelectedRoute]"
+							enabled = "[mt_trade_route_window.HasSelectedRoute]"
+							tooltip = "MT_CLOSE_ROUTE_TOOLTIP"
+							size = { 150 35 }
+						}
+
+						expand = {}
+					}
+				}
+
+				# Right panel - Route details or new route creation
+				vbox = {
+					name = "details_panel"
+					layoutpolicy_vertical = expanding
+					minimumsize = { 380 0 }
+					spacing = 5
+					visible = "[mt_trade_route_window.ShouldShowDetailsPanel]"
+
+					# Details panel header
+					widget = {
+						size = { 0 40 }
+						layoutpolicy_horizontal = expanding
+
+						background = {
+							using = Background_Area_Dark
+						}
+
+						text_single = {
+							name = "details_title"
+							text = "[mt_trade_route_window.GetDetailsPanelTitle]"
+							default_format = "#high"
+							using = Font_Size_Medium
+							margin = { 15 0 }
+							parentanchor = vcenter
+						}
+					}
+
+					# Details content (switched between route details and new route)
+					scrollbox = {
+						name = "details_scrollbox"
+						layoutpolicy_horizontal = expanding
+						layoutpolicy_vertical = expanding
+
+						blockoverride "scrollbox_content" {
+							vbox = {
+								name = "details_content"
+								layoutpolicy_horizontal = expanding
+								spacing = 10
+								margin = { 10 10 }
+
+								# Route details container
+								container = {
+									name = "route_details_container"
+									visible = "[mt_trade_route_window.IsShowingRouteDetails]"
+
+									mt_route_details_panel = {}
+								}
+
+								# New route creation container
+								container = {
+									name = "new_route_container"
+									visible = "[mt_trade_route_window.IsShowingNewRoute]"
+
+									mt_new_route_panel = {}
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+
+	######################################################
+	# TRADE ROUTE ENTRY (for list)
+	######################################################
+
+	type mt_trade_route_entry = button_standard {
+		name = "route_entry"
+		layoutpolicy_horizontal = expanding
+		size = { 0 60 }
+		down = "[mt_trade_route_window.IsRouteSelected(TradeRoute.Self)]"
+		onclick = "[mt_trade_route_window.SelectRoute(TradeRoute.Self)]"
+		tooltip = "MT_ROUTE_ENTRY_TOOLTIP"
+
+		hbox = {
+			margin = { 10 5 }
+			spacing = 10
+			layoutpolicy_horizontal = expanding
+
+			# Route name (Origin → Destination)
+			vbox = {
+				minimumsize = { 180 0 }
+				spacing = 2
+
+				text_single = {
+					name = "route_name"
+					text = "[TradeRoute.GetRouteName]"
+					default_format = "#clickable"
+					using = Font_Size_Small
+					align = nobaseline
+				}
+
+				text_single = {
+					name = "route_path"
+					text = "[TradeRoute.GetRoutePathShort]"
+					default_format = "#weak"
+					using = Font_Size_Small
+					fontsize_min = 10
+				}
+			}
+
+			# Goods icon and name
+			hbox = {
+				minimumsize = { 120 0 }
+				spacing = 5
+
+				icon = {
+					name = "goods_icon"
+					size = { 30 30 }
+					texture = "[TradeRoute.GetGoodsIcon]"
+				}
+
+				text_single = {
+					name = "goods_name"
+					text = "[TradeRoute.GetGoodsName]"
+					default_format = "#clickable"
+					using = Font_Size_Small
+					align = nobaseline
+				}
+			}
+
+			# Health indicator (color-coded)
+			vbox = {
+				minimumsize = { 80 0 }
+				spacing = 2
+
+				progressbar_standard = {
+					name = "health_bar"
+					size = { 70 8 }
+					min = 0
+					max = 100
+					value = "[TradeRoute.GetHealth]"
+				}
+
+				text_single = {
+					name = "health_text"
+					text = "[TradeRoute.GetHealthText]"
+					default_format = "[TradeRoute.GetHealthColor]"
+					using = Font_Size_Small
+				}
+			}
+
+			# Monthly profit
+			hbox = {
+				minimumsize = { 80 0 }
+				spacing = 3
+
+				icon = {
+					size = { 20 20 }
+					texture = "gfx/interface/icons/icon_gold.dds"
+				}
+
+				text_single = {
+					name = "profit"
+					text = "[TradeRoute.GetMonthlyProfit]"
+					default_format = "[TradeRoute.GetProfitColor]"
+					using = Font_Size_Small
+					align = nobaseline
+				}
+			}
+
+			# Number of nodes
+			text_single = {
+				name = "node_count"
+				text = "[TradeRoute.GetNodeCount]"
+				default_format = "#weak"
+				using = Font_Size_Small
+				minimumsize = { 60 0 }
+			}
+
+			# Status indicators
+			hbox = {
+				spacing = 3
+
+				icon = {
+					name = "war_indicator"
+					size = { 24 24 }
+					texture = "gfx/interface/icons/icon_crossed_swords.dds"
+					visible = "[TradeRoute.IsAtWar]"
+					tooltip = "MT_ROUTE_WAR_TOOLTIP"
+				}
+
+				icon = {
+					name = "bandit_indicator"
+					size = { 24 24 }
+					texture = "gfx/interface/icons/icon_skull.dds"
+					visible = "[TradeRoute.HasBandits]"
+					tooltip = "MT_ROUTE_BANDITS_TOOLTIP"
+				}
+
+				icon = {
+					name = "danger_indicator"
+					size = { 24 24 }
+					texture = "gfx/interface/icons/icon_warning.dds"
+					visible = "[TradeRoute.IsDangerous]"
+					tooltip = "MT_ROUTE_DANGER_TOOLTIP"
+				}
+			}
+
+			expand = {}
+		}
+	}
+
+	######################################################
+	# ROUTE DETAILS PANEL
+	######################################################
+
+	type mt_route_details_panel = vbox {
+		name = "route_details"
+		layoutpolicy_horizontal = expanding
+		spacing = 10
+
+		# Route overview
+		widget = {
+			layoutpolicy_horizontal = expanding
+			size = { 0 100 }
+
+			background = {
+				using = Background_Area
+			}
+
+			vbox = {
+				margin = { 15 10 }
+				spacing = 8
+				layoutpolicy_horizontal = expanding
+
+				text_multi = {
+					name = "route_description"
+					text = "[mt_trade_route_window.GetSelectedRouteDescription]"
+					default_format = "#weak"
+					using = Font_Size_Small
+					autoresize = yes
+					max_width = 340
+				}
+
+				hbox = {
+					spacing = 20
+
+					hbox = {
+						spacing = 5
+
+						icon = {
+							size = { 24 24 }
+							texture = "gfx/interface/icons/icon_gold.dds"
+						}
+
+						text_single = {
+							text = "[mt_trade_route_window.GetSelectedRouteProfit]"
+							default_format = "#high"
+							using = Font_Size_Small
+						}
+					}
+
+					hbox = {
+						spacing = 5
+
+						icon = {
+							size = { 24 24 }
+							texture = "gfx/interface/icons/icon_county.dds"
+						}
+
+						text_single = {
+							text = "[mt_trade_route_window.GetSelectedRouteDistance]"
+							default_format = "#weak"
+							using = Font_Size_Small
+						}
+					}
+				}
+			}
+		}
+
+		# Full path with all nodes
+		vbox = {
+			layoutpolicy_horizontal = expanding
+			spacing = 5
+
+			text_single = {
+				text = "MT_ROUTE_PATH"
+				default_format = "#weak"
+				using = Font_Size_Small
+			}
+
+			widget = {
+				layoutpolicy_horizontal = expanding
+				size = { 0 150 }
+
+				background = {
+					using = Background_Area
+				}
+
+				scrollbox = {
+					layoutpolicy_horizontal = expanding
+					layoutpolicy_vertical = expanding
+
+					blockoverride "scrollbox_content" {
+						vbox = {
+							name = "node_list"
+							datamodel = "[mt_trade_route_window.GetSelectedRouteNodes]"
+							spacing = 3
+							layoutpolicy_horizontal = expanding
+							margin = { 10 10 }
+
+							item = {
+								mt_route_node_entry = {}
+							}
+						}
+					}
+				}
+			}
+		}
+
+		# Cost breakdown
+		vbox = {
+			layoutpolicy_horizontal = expanding
+			spacing = 5
+
+			text_single = {
+				text = "MT_COST_BREAKDOWN"
+				default_format = "#weak"
+				using = Font_Size_Small
+			}
+
+			widget = {
+				layoutpolicy_horizontal = expanding
+				size = { 0 120 }
+
+				background = {
+					using = Background_Area
+				}
+
+				vbox = {
+					margin = { 15 10 }
+					spacing = 5
+					layoutpolicy_horizontal = expanding
+
+					hbox = {
+						layoutpolicy_horizontal = expanding
+
+						text_single = {
+							text = "MT_DISTANCE_COST"
+							default_format = "#weak"
+							using = Font_Size_Small
+						}
+
+						expand = {}
+
+						text_single = {
+							text = "[mt_trade_route_window.GetDistanceCost]"
+							default_format = "#high"
+							using = Font_Size_Small
+						}
+					}
+
+					hbox = {
+						layoutpolicy_horizontal = expanding
+
+						text_single = {
+							text = "MT_GUARD_SALARIES"
+							default_format = "#weak"
+							using = Font_Size_Small
+						}
+
+						expand = {}
+
+						text_single = {
+							text = "[mt_trade_route_window.GetGuardCost]"
+							default_format = "#high"
+							using = Font_Size_Small
+						}
+					}
+
+					hbox = {
+						layoutpolicy_horizontal = expanding
+
+						text_single = {
+							text = "MT_TAXES_FEES"
+							default_format = "#weak"
+							using = Font_Size_Small
+						}
+
+						expand = {}
+
+						text_single = {
+							text = "[mt_trade_route_window.GetTaxCost]"
+							default_format = "#high"
+							using = Font_Size_Small
+						}
+					}
+
+					divider_light = {
+						layoutpolicy_horizontal = expanding
+					}
+
+					hbox = {
+						layoutpolicy_horizontal = expanding
+
+						text_single = {
+							text = "MT_TOTAL_COST"
+							default_format = "#high"
+							using = Font_Size_Small
+						}
+
+						expand = {}
+
+						text_single = {
+							text = "[mt_trade_route_window.GetTotalCost]"
+							default_format = "#high"
+							using = Font_Size_Small
+						}
+					}
+				}
+			}
+		}
+
+		# Profit breakdown
+		vbox = {
+			layoutpolicy_horizontal = expanding
+			spacing = 5
+
+			text_single = {
+				text = "MT_PROFIT_BREAKDOWN"
+				default_format = "#weak"
+				using = Font_Size_Small
+			}
+
+			widget = {
+				layoutpolicy_horizontal = expanding
+				size = { 0 100 }
+
+				background = {
+					using = Background_Area
+				}
+
+				vbox = {
+					margin = { 15 10 }
+					spacing = 5
+					layoutpolicy_horizontal = expanding
+
+					hbox = {
+						layoutpolicy_horizontal = expanding
+
+						text_single = {
+							text = "MT_BASE_PRICE"
+							default_format = "#weak"
+							using = Font_Size_Small
+						}
+
+						expand = {}
+
+						text_single = {
+							text = "[mt_trade_route_window.GetBasePrice]"
+							default_format = "#high"
+							using = Font_Size_Small
+						}
+					}
+
+					hbox = {
+						layoutpolicy_horizontal = expanding
+
+						text_single = {
+							text = "MT_SCARCITY_BONUS"
+							default_format = "#weak"
+							using = Font_Size_Small
+						}
+
+						expand = {}
+
+						text_single = {
+							text = "[mt_trade_route_window.GetScarcityBonus]"
+							default_format = "#high"
+							using = Font_Size_Small
+						}
+					}
+
+					divider_light = {
+						layoutpolicy_horizontal = expanding
+					}
+
+					hbox = {
+						layoutpolicy_horizontal = expanding
+
+						text_single = {
+							text = "MT_FINAL_PRICE"
+							default_format = "#high"
+							using = Font_Size_Small
+						}
+
+						expand = {}
+
+						text_single = {
+							text = "[mt_trade_route_window.GetFinalPrice]"
+							default_format = "#high"
+							using = Font_Size_Small
+						}
+					}
+				}
+			}
+		}
+
+		# Action buttons
+		hbox = {
+			layoutpolicy_horizontal = expanding
+			spacing = 10
+			margin_top = 10
+
+			button_standard = {
+				name = "hire_guards_button"
+				text = "MT_HIRE_GUARDS"
+				onclick = "[mt_trade_route_window.HireGuards]"
+				enabled = "[mt_trade_route_window.CanHireGuards]"
+				tooltip = "MT_HIRE_GUARDS_TOOLTIP"
+				size = { 0 30 }
+				layoutpolicy_horizontal = expanding
+			}
+
+			button_standard = {
+				name = "reroute_button"
+				text = "MT_REROUTE"
+				onclick = "[mt_trade_route_window.Reroute]"
+				enabled = "[mt_trade_route_window.CanReroute]"
+				tooltip = "MT_REROUTE_TOOLTIP"
+				size = { 0 30 }
+				layoutpolicy_horizontal = expanding
+			}
+		}
+	}
+
+	######################################################
+	# ROUTE NODE ENTRY
+	######################################################
+
+	type mt_route_node_entry = hbox {
+		layoutpolicy_horizontal = expanding
+		spacing = 10
+
+		# Node number
+		text_single = {
+			name = "node_number"
+			text = "[RouteNode.GetNodeNumber]"
+			default_format = "#weak"
+			using = Font_Size_Small
+			minimumsize = { 30 0 }
+		}
+
+		# County name
+		text_single = {
+			name = "county_name"
+			text = "[RouteNode.GetCountyName]"
+			default_format = "#clickable"
+			using = Font_Size_Small
+			minimumsize = { 150 0 }
+		}
+
+		# Health at this node
+		progressbar_standard = {
+			name = "node_health"
+			size = { 80 8 }
+			min = 0
+			max = 100
+			value = "[RouteNode.GetHealth]"
+		}
+
+		# Danger indicators
+		hbox = {
+			spacing = 3
+
+			icon = {
+				name = "danger_icon"
+				size = { 20 20 }
+				texture = "gfx/interface/icons/icon_warning.dds"
+				visible = "[RouteNode.IsDangerous]"
+				tooltip = "[RouteNode.GetDangerTooltip]"
+			}
+
+			icon = {
+				name = "war_icon"
+				size = { 20 20 }
+				texture = "gfx/interface/icons/icon_crossed_swords.dds"
+				visible = "[RouteNode.IsAtWar]"
+				tooltip = "MT_NODE_WAR_TOOLTIP"
+			}
+		}
+
+		expand = {}
+	}
+
+	######################################################
+	# NEW ROUTE CREATION PANEL
+	######################################################
+
+	type mt_new_route_panel = vbox {
+		name = "new_route_panel"
+		layoutpolicy_horizontal = expanding
+		spacing = 15
+
+		# Step indicator
+		hbox = {
+			layoutpolicy_horizontal = expanding
+			spacing = 5
+
+			mt_route_step_indicator = {
+				name = "step1"
+				blockoverride "step_number" { text = "1" }
+				blockoverride "step_label" { text = "MT_SELECT_ORIGIN" }
+				blockoverride "step_active" { visible = "[mt_trade_route_window.IsStep(1)]" }
+				blockoverride "step_complete" { visible = "[mt_trade_route_window.IsStepComplete(1)]" }
+			}
+
+			icon = {
+				size = { 24 8 }
+				texture = "gfx/interface/progressbars/progress_black.dds"
+			}
+
+			mt_route_step_indicator = {
+				name = "step2"
+				blockoverride "step_number" { text = "2" }
+				blockoverride "step_label" { text = "MT_SELECT_GOODS" }
+				blockoverride "step_active" { visible = "[mt_trade_route_window.IsStep(2)]" }
+				blockoverride "step_complete" { visible = "[mt_trade_route_window.IsStepComplete(2)]" }
+			}
+
+			icon = {
+				size = { 24 8 }
+				texture = "gfx/interface/progressbars/progress_black.dds"
+			}
+
+			mt_route_step_indicator = {
+				name = "step3"
+				blockoverride "step_number" { text = "3" }
+				blockoverride "step_label" { text = "MT_SELECT_DESTINATION" }
+				blockoverride "step_active" { visible = "[mt_trade_route_window.IsStep(3)]" }
+				blockoverride "step_complete" { visible = "[mt_trade_route_window.IsStepComplete(3)]" }
+			}
+		}
+
+		divider_light = {
+			layoutpolicy_horizontal = expanding
+		}
+
+		# Step 1: Origin selection
+		vbox = {
+			name = "step1_content"
+			layoutpolicy_horizontal = expanding
+			spacing = 10
+			visible = "[mt_trade_route_window.IsStep(1)]"
+
+			text_single = {
+				text = "MT_SELECT_ORIGIN_DESC"
+				default_format = "#weak"
+				using = Font_Size_Small
+			}
+
+			widget = {
+				layoutpolicy_horizontal = expanding
+				size = { 0 250 }
+
+				background = {
+					using = Background_Area
+				}
+
+				scrollbox = {
+					layoutpolicy_horizontal = expanding
+					layoutpolicy_vertical = expanding
+
+					blockoverride "scrollbox_content" {
+						vbox = {
+							name = "origin_list"
+							datamodel = "[mt_trade_route_window.GetAvailableOrigins]"
+							spacing = 2
+							layoutpolicy_horizontal = expanding
+							margin = { 10 10 }
+
+							item = {
+								mt_county_selection_entry = {
+									blockoverride "on_click" {
+										onclick = "[mt_trade_route_window.SelectOrigin(County.Self)]"
+									}
+								}
+							}
+						}
+					}
+				}
+			}
+
+			button_primary = {
+				name = "next_step1"
+				text = "MT_NEXT_STEP"
+				onclick = "[mt_trade_route_window.NextStep]"
+				enabled = "[mt_trade_route_window.CanProceedFromStep1]"
+				size = { 0 35 }
+				layoutpolicy_horizontal = expanding
+			}
+		}
+
+		# Step 2: Goods selection
+		vbox = {
+			name = "step2_content"
+			layoutpolicy_horizontal = expanding
+			spacing = 10
+			visible = "[mt_trade_route_window.IsStep(2)]"
+
+			text_single = {
+				text = "MT_SELECT_GOODS_DESC"
+				default_format = "#weak"
+				using = Font_Size_Small
+			}
+
+			widget = {
+				layoutpolicy_horizontal = expanding
+				size = { 0 250 }
+
+				background = {
+					using = Background_Area
+				}
+
+				scrollbox = {
+					layoutpolicy_horizontal = expanding
+					layoutpolicy_vertical = expanding
+
+					blockoverride "scrollbox_content" {
+						vbox = {
+							name = "goods_list"
+							datamodel = "[mt_trade_route_window.GetAvailableGoods]"
+							spacing = 2
+							layoutpolicy_horizontal = expanding
+							margin = { 10 10 }
+
+							item = {
+								mt_goods_selection_entry = {}
+							}
+						}
+					}
+				}
+			}
+
+			hbox = {
+				layoutpolicy_horizontal = expanding
+				spacing = 10
+
+				button_standard = {
+					name = "back_step2"
+					text = "MT_BACK"
+					onclick = "[mt_trade_route_window.PreviousStep]"
+					size = { 0 35 }
+					layoutpolicy_horizontal = expanding
+				}
+
+				button_primary = {
+					name = "next_step2"
+					text = "MT_NEXT_STEP"
+					onclick = "[mt_trade_route_window.NextStep]"
+					enabled = "[mt_trade_route_window.CanProceedFromStep2]"
+					size = { 0 35 }
+					layoutpolicy_horizontal = expanding
+				}
+			}
+		}
+
+		# Step 3: Destination selection
+		vbox = {
+			name = "step3_content"
+			layoutpolicy_horizontal = expanding
+			spacing = 10
+			visible = "[mt_trade_route_window.IsStep(3)]"
+
+			text_single = {
+				text = "MT_SELECT_DESTINATION_DESC"
+				default_format = "#weak"
+				using = Font_Size_Small
+			}
+
+			widget = {
+				layoutpolicy_horizontal = expanding
+				size = { 0 200 }
+
+				background = {
+					using = Background_Area
+				}
+
+				scrollbox = {
+					layoutpolicy_horizontal = expanding
+					layoutpolicy_vertical = expanding
+
+					blockoverride "scrollbox_content" {
+						vbox = {
+							name = "destination_list"
+							datamodel = "[mt_trade_route_window.GetAvailableDestinations]"
+							spacing = 2
+							layoutpolicy_horizontal = expanding
+							margin = { 10 10 }
+
+							item = {
+								mt_county_selection_entry = {
+									blockoverride "on_click" {
+										onclick = "[mt_trade_route_window.SelectDestination(County.Self)]"
+									}
+									blockoverride "show_profit" {
+										visible = yes
+									}
+								}
+							}
+						}
+					}
+				}
+			}
+
+			# Projected profit display
+			widget = {
+				layoutpolicy_horizontal = expanding
+				size = { 0 80 }
+				visible = "[mt_trade_route_window.HasSelectedDestination]"
+
+				background = {
+					using = Background_Area_Dark
+				}
+
+				vbox = {
+					margin = { 15 10 }
+					spacing = 5
+
+					text_single = {
+						text = "MT_PROJECTED_PROFIT"
+						default_format = "#weak"
+						using = Font_Size_Small
+					}
+
+					hbox = {
+						spacing = 5
+
+						icon = {
+							size = { 32 32 }
+							texture = "gfx/interface/icons/icon_gold.dds"
+						}
+
+						text_single = {
+							text = "[mt_trade_route_window.GetProjectedProfit]"
+							default_format = "#high"
+							using = Font_Size_Big
+							align = nobaseline
+						}
+					}
+
+					# Warning if dangerous
+					hbox = {
+						spacing = 5
+						visible = "[mt_trade_route_window.IsProjectedRouteDangerous]"
+
+						icon = {
+							size = { 20 20 }
+							texture = "gfx/interface/icons/icon_warning.dds"
+						}
+
+						text_single = {
+							text = "MT_DANGEROUS_ROUTE_WARNING"
+							default_format = "#warning"
+							using = Font_Size_Small
+						}
+					}
+				}
+			}
+
+			hbox = {
+				layoutpolicy_horizontal = expanding
+				spacing = 10
+
+				button_standard = {
+					name = "back_step3"
+					text = "MT_BACK"
+					onclick = "[mt_trade_route_window.PreviousStep]"
+					size = { 0 35 }
+					layoutpolicy_horizontal = expanding
+				}
+
+				button_primary = {
+					name = "establish_route"
+					text = "MT_ESTABLISH_ROUTE"
+					onclick = "[mt_trade_route_window.EstablishRoute]"
+					enabled = "[mt_trade_route_window.CanEstablishNewRoute]"
+					tooltip = "MT_ESTABLISH_ROUTE_CONFIRM_TOOLTIP"
+					size = { 0 35 }
+					layoutpolicy_horizontal = expanding
+				}
+			}
+		}
+	}
+
+	######################################################
+	# STEP INDICATOR
+	######################################################
+
+	type mt_route_step_indicator = widget {
+		size = { 80 40 }
+
+		background = {
+			using = Background_Area
+
+			modify_texture = {
+				name = "active"
+				texture = "gfx/interface/component_masks/mask_fade_horizontal.dds"
+				blend_mode = alphamultiply
+				visible = "[mt_route_step_indicator.IsActive]"
+
+				block "step_active" {}
+			}
+		}
+
+		vbox = {
+			margin = { 5 5 }
+			spacing = 2
+
+			text_single = {
+				block "step_number" {}
+				default_format = "#high"
+				using = Font_Size_Small
+			}
+
+			text_single = {
+				block "step_label" {}
+				default_format = "#weak"
+				using = Font_Size_Small
+				fontsize_min = 10
+			}
+		}
+
+		icon = {
+			name = "complete_check"
+			size = { 20 20 }
+			texture = "gfx/interface/icons/symbols/icon_check.dds"
+			parentanchor = top|right
+			position = { -5 5 }
+
+			block "step_complete" {
+				visible = no
+			}
+		}
+	}
+
+	######################################################
+	# COUNTY SELECTION ENTRY
+	######################################################
+
+	type mt_county_selection_entry = button_standard {
+		name = "county_entry"
+		layoutpolicy_horizontal = expanding
+		size = { 0 40 }
+
+		block "on_click" {
+			onclick = "[County.Select]"
+		}
+
+		hbox = {
+			margin = { 10 5 }
+			spacing = 10
+			layoutpolicy_horizontal = expanding
+
+			# County name
+			text_single = {
+				name = "county_name"
+				text = "[County.GetName]"
+				default_format = "#clickable"
+				using = Font_Size_Small
+				minimumsize = { 150 0 }
+			}
+
+			# Access indicator
+			icon = {
+				name = "access_icon"
+				size = { 20 20 }
+				texture = "gfx/interface/icons/symbols/icon_check.dds"
+				visible = "[County.HasAccess]"
+				tooltip = "MT_HAS_ACCESS_TOOLTIP"
+			}
+
+			expand = {}
+
+			# Projected profit (for destinations)
+			hbox = {
+				spacing = 3
+
+				block "show_profit" {
+					visible = no
+				}
+
+				icon = {
+					size = { 20 20 }
+					texture = "gfx/interface/icons/icon_gold.dds"
+				}
+
+				text_single = {
+					text = "[County.GetProjectedProfit]"
+					default_format = "#high"
+					using = Font_Size_Small
+				}
+			}
+		}
+	}
+
+	######################################################
+	# GOODS SELECTION ENTRY
+	######################################################
+
+	type mt_goods_selection_entry = button_standard {
+		name = "goods_entry"
+		layoutpolicy_horizontal = expanding
+		size = { 0 50 }
+		onclick = "[mt_trade_route_window.SelectGoods(TradeGoods.Self)]"
+		down = "[mt_trade_route_window.IsGoodsSelected(TradeGoods.Self)]"
+
+		hbox = {
+			margin = { 10 5 }
+			spacing = 10
+			layoutpolicy_horizontal = expanding
+
+			# Goods icon
+			icon = {
+				name = "goods_icon"
+				size = { 40 40 }
+				texture = "[TradeGoods.GetIcon]"
+			}
+
+			# Goods info
+			vbox = {
+				spacing = 2
+
+				text_single = {
+					name = "goods_name"
+					text = "[TradeGoods.GetName]"
+					default_format = "#clickable"
+					using = Font_Size_Small
+					align = nobaseline
+				}
+
+				text_single = {
+					name = "goods_type"
+					text = "[TradeGoods.GetType]"
+					default_format = "#weak"
+					using = Font_Size_Small
+					fontsize_min = 10
+				}
+			}
+
+			expand = {}
+
+			# Base value
+			hbox = {
+				spacing = 3
+
+				icon = {
+					size = { 20 20 }
+					texture = "gfx/interface/icons/icon_gold.dds"
+				}
+
+				text_single = {
+					text = "[TradeGoods.GetBaseValue]"
+					default_format = "#high"
+					using = Font_Size_Small
+				}
+			}
+		}
+	}
+}
