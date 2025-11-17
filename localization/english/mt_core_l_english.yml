@@ -1,0 +1,691 @@
+l_english:
+ ############################################
+ # MERCHANTS AND TRADERS MOD - CORE LOCALIZATION
+ # English localization for all core systems
+ ############################################
+
+ #####################
+ # MERCHANT TRAITS
+ #####################
+
+ # Wandering Merchant (Tier 1)
+ wandering_merchant:0 "Wandering Merchant"
+ wandering_merchant_desc:0 "This character has taken to the merchant's life, traveling between settlements to buy and sell goods. Though their operations are modest, they have learned the fundamentals of trade and commerce."
+ wandering_merchant_effects:0 "This character gains increased income from trade activities and can establish basic trade routes."
+
+ # Trade Post Owner (Tier 2)
+ trade_post_owner:0 "Trade Post Owner"
+ trade_post_owner_desc:0 "This merchant has established permanent trading posts in key locations, allowing them to conduct business on a larger scale. They maintain warehouses, employ factors, and have built relationships with local authorities."
+ trade_post_owner_effects:0 "This character operates established trade posts and can manage multiple trade routes simultaneously."
+
+ # Trading Company Head (Tier 3)
+ trading_company_head:0 "Trading Company Head"
+ trading_company_head_desc:0 "At the helm of a significant trading enterprise, this merchant commands considerable resources. Their company operates across multiple regions, employing numerous agents and controlling valuable trade routes."
+ trading_company_head_effects:0 "This character leads a major trading company with extensive operations and significant economic influence."
+
+ # Merchant Prince (Tier 4)
+ merchant_prince:0 "Merchant Prince"
+ merchant_prince_desc:0 "Few merchants reach such heights of wealth and influence. This legendary trader commands a commercial empire that rivals the treasuries of kingdoms. Their word can make or break markets, and rulers seek their counsel on matters of trade and finance."
+ merchant_prince_effects:0 "This character wields immense economic power and influence, comparable to great nobles of the realm."
+
+ #####################
+ # TRADE GOODS
+ #####################
+
+ ## LUXURY GOODS (9 items)
+
+ # Silk
+ mt_trade_good_silk:0 "Fine Silk"
+ mt_trade_good_silk_desc:0 "Luxurious fabric woven from threads produced by silkworms, primarily imported from the distant East. Prized by nobility for its smooth texture and lustrous appearance, silk garments are symbols of wealth and refinement. A single bolt of fine silk can cost more than a common farmer earns in a year."
+
+ # Spices
+ mt_trade_good_spices:0 "Exotic Spices"
+ mt_trade_good_spices_desc:0 "Rare seasonings from distant tropical lands—pepper, cinnamon, cloves, and nutmeg. These precious commodities preserve food, enhance flavor, and demonstrate the wealth of those who can afford them. Worth their weight in silver, spices have launched expeditions and founded fortunes."
+
+ # Jade
+ mt_trade_good_jade:0 "Precious Jade"
+ mt_trade_good_jade_desc:0 "Carved gemstone treasured in the Far East for its beauty and spiritual significance. Master artisans craft jade into jewelry, ornaments, and religious artifacts. The finest jade pieces, translucent and richly colored, command extraordinary prices among collectors and rulers."
+
+ # Amber
+ mt_trade_good_amber:0 "Baltic Amber"
+ mt_trade_good_amber_desc:0 "Fossilized tree resin from the shores of the northern seas, prized for its golden warmth and the ancient insects sometimes preserved within. Fashioned into beads, amulets, and decorative pieces, amber has been treasured since ancient times and is believed by some to hold protective properties."
+
+ # Pearls
+ mt_trade_good_pearls:0 "Lustrous Pearls"
+ mt_trade_good_pearls_desc:0 "Gleaming gems harvested from oysters in dangerous waters. Divers risk their lives to retrieve these treasures from the depths. Perfect pearls adorn crowns, embellish religious vestments, and grace the necks of noble ladies. The rarest specimens can bankroll entire military campaigns."
+
+ # Ivory
+ mt_trade_good_ivory:0 "Elephant Ivory"
+ mt_trade_good_ivory_desc:0 "White gold from distant lands, carved from the tusks of mighty elephants. Skilled artisans transform ivory into intricate artwork, chess pieces, holy relics, and decorative inlays. The difficulty of obtaining and transporting ivory makes it a luxury reserved for the wealthy and powerful."
+
+ # Purple Dye
+ mt_trade_good_purple_dye:0 "Tyrian Purple"
+ mt_trade_good_purple_dye_desc:0 "The royal color, extracted laboriously from thousands of sea snails. This deep, rich purple dye has been the exclusive mark of emperors and kings since ancient times. So expensive to produce that purple-dyed cloth literally costs more than gold, ounce for ounce."
+
+ # Incense
+ mt_trade_good_incense:0 "Sacred Incense"
+ mt_trade_good_incense_desc:0 "Fragrant resins—frankincense, myrrh, and others—harvested from trees in Arabia and the Horn of Africa. Burned in churches, mosques, and temples, incense carries prayers to the heavens. Religious authorities purchase vast quantities, making the incense trade both holy and highly profitable."
+
+ # Saffron
+ mt_trade_good_saffron:0 "Golden Saffron"
+ mt_trade_good_saffron_desc:0 "The world's most precious spice, harvested from crocus flowers with painstaking care. It takes thousands of flowers to produce a single pound of saffron threads. Used to flavor and color the finest dishes, saffron also serves as medicine and dye, its golden hue symbolizing wealth itself."
+
+ ## COMMON GOODS (9 items)
+
+ # Grain
+ mt_trade_good_grain:0 "Grain"
+ mt_trade_good_grain_desc:0 "The staff of life—wheat, barley, rye, and oats—essential for feeding the populace. While individual shipments are worth little, the grain trade moves vast quantities and generates steady profits. Wise merchants know that controlling grain supplies grants power over cities and armies alike."
+
+ # Wine
+ mt_trade_good_wine:0 "Wine"
+ mt_trade_good_wine_desc:0 "Fermented grape juice, ranging from rough table wine to exquisite vintages. Essential for religious ceremonies and noble feasts alike, wine flows freely in every realm. Regional varieties develop loyal followings, and the finest wines from celebrated vineyards command premium prices."
+
+ # Iron
+ mt_trade_good_iron:0 "Iron"
+ mt_trade_good_iron_desc:0 "The metal of civilization—tools, weapons, armor, nails, horseshoes, and countless other necessities are forged from iron. Mining regions rich in iron ore prosper, and skilled smiths turn this base metal into items both humble and magnificent. War and peace alike depend on steady supplies of iron."
+
+ # Wool
+ mt_trade_good_wool:0 "Wool"
+ mt_trade_good_wool_desc:0 "Shorn from sheep and woven into cloth, wool keeps people warm and clothed throughout the realm. The wool trade sustains entire regions—shepherds raise the flocks, fullers process the fleece, weavers create the fabric, and merchants transport it to distant markets. Quality wool from prized breeds fetches the best prices."
+
+ # Furs
+ mt_trade_good_furs:0 "Furs"
+ mt_trade_good_furs_desc:0 "Pelts from fox, beaver, marten, and ermine, trapped in the northern forests. Fur garments provide essential warmth in winter and display one's status—the finest furs grace the shoulders of nobles and royalty. Trappers brave harsh wilderness to supply the endless demand."
+
+ # Salt
+ mt_trade_good_salt:0 "Salt"
+ mt_trade_good_salt_desc:0 "White gold, essential for preserving meat and fish through the winter. Before ice houses, salt meant survival. Mined from ancient deposits or evaporated from seawater, salt generates steady profits for those who control its sources. Entire trade routes exist solely to transport this vital commodity."
+
+ # Timber
+ mt_trade_good_timber:0 "Timber"
+ mt_trade_good_timber_desc:0 "Wood from mighty forests—oak for ships and buildings, pine for construction, rare woods for fine furniture. Cities constantly consume timber for construction, heating, and industry. Regions with extensive forests ship vast quantities downriver to treeless lands, where wood commands high prices."
+
+ # Horses
+ mt_trade_good_horses:0 "Horses"
+ mt_trade_good_horses_desc:0 "Magnificent beasts bred for war, travel, and labor. From humble plow horses to destriers worth a knight's ransom, the horse trade supplies the mobility of medieval society. Master breeders cultivate bloodlines prized for strength, speed, and temperament, while merchants transport these valuable animals across continents."
+
+ # Cattle
+ mt_trade_good_cattle:0 "Cattle"
+ mt_trade_good_cattle_desc:0 "Livestock providing meat, milk, leather, and labor. Cattle represent wealth itself in many regions—a herd is a fortune on the hoof. Merchants drive cattle along ancient routes to markets and slaughterhouses, and the sale of beef, leather goods, and dairy products sustains countless livelihoods."
+
+ ## REGIONAL SPECIALTIES (7 items)
+
+ # Tea
+ mt_trade_good_tea:0 "Tea"
+ mt_trade_good_tea_desc:0 "Dried leaves from the tea plant, primarily cultivated in the Far East. Brewed into a beverage both stimulating and refined, tea is central to the culture of distant lands. As knowledge of tea spreads westward, sophisticated merchants establish lucrative trade in this exotic commodity."
+
+ # Porcelain
+ mt_trade_good_porcelain:0 "Fine Porcelain"
+ mt_trade_good_porcelain_desc:0 "Delicate ceramic ware from distant Eastern workshops, created through secret techniques unknown in the West. White as snow, translucent as glass, and decorated with exquisite artistry, porcelain vessels are prized by collectors. The fragility that makes transport so challenging also enhances their value."
+
+ # Dates
+ mt_trade_good_dates:0 "Dates"
+ mt_trade_good_dates_desc:0 "Sweet fruit from palm trees cultivated in desert oases. Highly nutritious and naturally preserved by the arid climate, dates sustain desert travelers and provide natural sweetness to those who can afford them. Caravans carry these concentrated sources of energy throughout the medieval world."
+
+ # Olive Oil
+ mt_trade_good_olive_oil:0 "Olive Oil"
+ mt_trade_good_olive_oil_desc:0 "Pressed from olives grown in Mediterranean groves, this golden liquid serves countless purposes—cooking, lighting, medicine, and religious anointing. The finest olive oils, first-pressed and carefully stored, are prized for their flavor and purity. Amphorae of quality oil travel far from their sunlit origins."
+
+ # Honey
+ mt_trade_good_honey:0 "Honey"
+ mt_trade_good_honey_desc:0 "Nature's sweetness, gathered by brave beekeepers from hives of industrious bees. Before sugar, honey was the primary sweetener, used in cooking, brewing mead, and medicine. Quality honey from specific flowers—heather, acacia, wildflower—develops devoted customers willing to pay premium prices."
+
+ # Linen
+ mt_trade_good_linen:0 "Linen"
+ mt_trade_good_linen_desc:0 "Fabric woven from flax fibers, prized for its coolness and smoothness. Linen serves for clothing in warm weather, bedding, and especially undergarments for the wealthy. The finest linen, bleached white and woven thin, demonstrates quality craftsmanship and commands respect in markets throughout the known world."
+
+ # Glass
+ mt_trade_good_glass:0 "Venetian Glass"
+ mt_trade_good_glass_desc:0 "Transparent and colored glass crafted by master artisans, especially the renowned glassmakers of Venice. Window panes, drinking vessels, beads, and decorative objects showcase the glassmaker's art. The secrets of creating the finest glass are jealously guarded, making authentic pieces highly valuable."
+
+ #####################
+ # PRODUCTION LEVELS
+ #####################
+
+ mt_production_poor:0 "Poor Production"
+ mt_production_poor_desc:0 "This region produces limited quantities of trade goods. Local production barely meets demand, leaving little surplus for export."
+
+ mt_production_modest:0 "Modest Production"
+ mt_production_modest_desc:0 "This region maintains steady production of trade goods. Regular surpluses allow for profitable export to neighboring territories."
+
+ mt_production_rich:0 "Rich Production"
+ mt_production_rich_desc:0 "This region produces abundant trade goods. Substantial surpluses flow into trade networks, enriching local merchants and lords alike."
+
+ mt_production_abundant:0 "Abundant Production"
+ mt_production_abundant_desc:0 "This region overflows with trade goods. Exceptional production creates enormous wealth through extensive export trade."
+
+ #####################
+ # COUNTY MODIFIERS
+ #####################
+
+ ## ACTIVE TRADE ROUTES
+
+ active_trade_route_1:0 "Active Trade Route"
+ active_trade_route_1_desc:0 "A trade route passes through this county, bringing commerce and prosperity."
+
+ active_trade_route_2:0 "Two Active Trade Routes"
+ active_trade_route_2_desc:0 "Multiple trade routes intersect in this county, increasing commercial activity."
+
+ active_trade_route_3:0 "Three Active Trade Routes"
+ active_trade_route_3_desc:0 "This county serves as a significant commercial junction for regional trade."
+
+ active_trade_route_4:0 "Four Active Trade Routes"
+ active_trade_route_4_desc:0 "Numerous trade routes make this county a bustling center of commerce."
+
+ active_trade_route_5:0 "Five Active Trade Routes"
+ active_trade_route_5_desc:0 "This county has become a major trade hub, with caravans arriving daily."
+
+ active_trade_route_6:0 "Six Active Trade Routes"
+ active_trade_route_6_desc:0 "Extensive trade networks bring great wealth to this prosperous county."
+
+ active_trade_route_7:0 "Seven Active Trade Routes"
+ active_trade_route_7_desc:0 "This county stands as one of the great commercial centers of the realm."
+
+ active_trade_route_8:0 "Eight Active Trade Routes"
+ active_trade_route_8_desc:0 "Few places can match the commercial importance of this trade nexus."
+
+ active_trade_route_9:0 "Nine Active Trade Routes"
+ active_trade_route_9_desc:0 "This legendary trade center draws merchants from across the known world."
+
+ active_trade_route_10:0 "Ten Active Trade Routes"
+ active_trade_route_10_desc:0 "This county has achieved unparalleled status as the supreme trade hub of the age."
+
+ ## TRADE INFRASTRUCTURE
+
+ trade_hub_status:0 "Trade Hub"
+ trade_hub_status_desc:0 "This county's strategic location and developed infrastructure make it a natural center for trade."
+
+ merchant_district_bonus:0 "Merchant District"
+ merchant_district_bonus_desc:0 "Dedicated commercial quarters house warehouses, counting houses, and merchant establishments."
+
+ grand_bazaar_bonus:0 "Grand Bazaar"
+ grand_bazaar_bonus_desc:0 "A magnificent marketplace draws traders from far and wide, generating tremendous commerce."
+
+ ## TRADE POLICIES
+
+ trade_taxation_heavy:0 "Heavy Trade Taxation"
+ trade_taxation_heavy_desc:0 "Burdensome taxes extract maximum revenue but discourage merchant activity."
+
+ trade_taxation_moderate:0 "Moderate Trade Taxation"
+ trade_taxation_moderate_desc:0 "Balanced taxation generates revenue without unduly burdening commerce."
+
+ trade_protection_active:0 "Trade Protection"
+ trade_protection_active_desc:0 "Active patrols and escorts protect merchants from bandits and raiders."
+
+ ## GOODS VALUE MODIFIERS
+
+ trade_goods_value_5:0 "Valuable Trade Goods"
+ trade_goods_value_5_desc:0 "The trade goods produced here command premium prices in distant markets."
+
+ trade_goods_value_10:0 "Extremely Valuable Trade Goods"
+ trade_goods_value_10_desc:0 "This county's trade goods are among the most sought-after and valuable in the known world."
+
+ ## NEGATIVE MODIFIERS
+
+ trade_route_damaged:0 "Damaged Trade Route"
+ trade_route_damaged_desc:0 "Poor road conditions and deteriorated infrastructure impede commerce."
+
+ trade_route_raided:0 "Raided Trade Route"
+ trade_route_raided_desc:0 "Recent raids have made merchants reluctant to travel through this area."
+
+ trade_route_blockaded:0 "Trade Route Blockaded"
+ trade_route_blockaded_desc:0 "Military action or political disputes have cut off normal trade routes."
+
+ ## CAPACITY MODIFIERS
+
+ trade_route_capacity_1:0 "Increased Trade Capacity"
+ trade_route_capacity_1_desc:0 "Improved infrastructure allows this county to support additional trade routes."
+
+ trade_route_capacity_2:0 "Further Increased Trade Capacity"
+ trade_route_capacity_2_desc:0 "Extensive commercial development enables even more trade routes."
+
+ trade_route_capacity_5:0 "Maximum Trade Capacity"
+ trade_route_capacity_5_desc:0 "Exceptional infrastructure supports the maximum possible number of trade routes."
+
+ #####################
+ # ECONOMIC MODIFIERS
+ #####################
+
+ ## TRADE BALANCE
+
+ mt_minor_trade_surplus:0 "Minor Trade Surplus"
+ mt_minor_trade_surplus_desc:0 "Trade activities generate modest additional income for this character."
+
+ mt_moderate_trade_surplus:0 "Moderate Trade Surplus"
+ mt_moderate_trade_surplus_desc:0 "Profitable trade operations provide significant supplementary income."
+
+ mt_major_trade_surplus:0 "Major Trade Surplus"
+ mt_major_trade_surplus_desc:0 "Highly successful trade ventures generate substantial wealth."
+
+ mt_minor_trade_deficit:0 "Minor Trade Deficit"
+ mt_minor_trade_deficit_desc:0 "Trade expenses slightly exceed revenues, creating minor losses."
+
+ mt_moderate_trade_deficit:0 "Moderate Trade Deficit"
+ mt_moderate_trade_deficit_desc:0 "Unprofitable trade operations drain financial resources."
+
+ mt_major_trade_deficit:0 "Major Trade Deficit"
+ mt_major_trade_deficit_desc:0 "Severe trade losses threaten financial stability."
+
+ ## MERCHANT WEALTH TIERS
+
+ mt_poor_trader:0 "Poor Trader"
+ mt_poor_trader_desc:0 "This merchant struggles to maintain even basic operations, barely scraping by in the competitive world of commerce."
+
+ mt_established_merchant:0 "Established Merchant"
+ mt_established_merchant_desc:0 "A respectable merchant with stable operations and moderate success in trade."
+
+ mt_master_trader:0 "Master Trader"
+ mt_master_trader_desc:0 "A highly skilled merchant with extensive experience and profitable operations."
+
+ mt_wealthy_magnate:0 "Wealthy Magnate"
+ mt_wealthy_magnate_desc:0 "A merchant of considerable wealth and influence, commanding significant commercial resources."
+
+ mt_merchant_prince:0 "Merchant Prince"
+ mt_merchant_prince_desc:0 "A legendary trader whose wealth rivals that of great nobles, wielding enormous economic power."
+
+ ## MARKET CONDITIONS
+
+ mt_market_boom_modifier:0 "Market Boom"
+ mt_market_boom_modifier_desc:0 "Exceptional demand and favorable conditions create a seller's market. Merchants reap extraordinary profits."
+
+ mt_market_crash_modifier:0 "Market Crash"
+ mt_market_crash_modifier_desc:0 "Sudden market collapse has devastated prices. Desperate merchants sell at heavy losses."
+
+ mt_moderate_oversupply_modifier:0 "Market Oversupply"
+ mt_moderate_oversupply_modifier_desc:0 "Excess supply depresses prices, reducing profit margins for merchants."
+
+ mt_severe_oversupply_modifier:0 "Severe Oversupply"
+ mt_severe_oversupply_modifier_desc:0 "Massive oversupply has collapsed prices. Merchants cannot move goods at any profit."
+
+ ## TRADE ROUTE QUALITY
+
+ mt_profitable_route:0 "Profitable Trade Route"
+ mt_profitable_route_desc:0 "This trade route generates consistent profits through efficient operations and favorable conditions."
+
+ mt_unprofitable_route:0 "Unprofitable Trade Route"
+ mt_unprofitable_route_desc:0 "Poor conditions or excessive costs make this route barely worth maintaining."
+
+ mt_dangerous_route:0 "Dangerous Trade Route"
+ mt_dangerous_route_desc:0 "Bandits, harsh terrain, or political instability threaten caravans on this route."
+
+ mt_secure_route:0 "Secure Trade Route"
+ mt_secure_route_desc:0 "Excellent protection and safe conditions make this route highly reliable."
+
+ ## SEASONAL BONUSES
+
+ mt_winter_trade_bonus:0 "Winter Trade Opportunity"
+ mt_winter_trade_bonus_desc:0 "Winter conditions favor certain types of trade—furs, preserved foods, and heating fuel command premium prices."
+
+ mt_summer_trade_bonus:0 "Summer Trade Opportunity"
+ mt_summer_trade_bonus_desc:0 "Summer travel conditions enable long-distance trade in perishable goods and luxury items."
+
+ mt_harvest_trade_bonus:0 "Harvest Season Trade"
+ mt_harvest_trade_bonus_desc:0 "Abundant harvests create opportunities for grain merchants and food traders."
+
+ ## SPECIAL ECONOMIC STATUS
+
+ mt_trade_embargo:0 "Trade Embargo"
+ mt_trade_embargo_desc:0 "Political sanctions prohibit normal commercial relations, severely restricting trade opportunities."
+
+ mt_trade_treaty:0 "Trade Treaty"
+ mt_trade_treaty_desc:0 "Formal agreements facilitate commerce, reducing tariffs and providing legal protections for merchants."
+
+ mt_increased_banditry_modifier:0 "Increased Banditry"
+ mt_increased_banditry_modifier_desc:0 "Rampant banditry threatens caravans and disrupts trade throughout the region."
+
+ mt_commercial_district:0 "Commercial District"
+ mt_commercial_district_desc:0 "Dedicated commercial quarters concentrate merchant activity and facilitate trade."
+
+ mt_merchant_guild:0 "Merchant Guild"
+ mt_merchant_guild_desc:0 "An organized guild of merchants regulates trade, sets standards, and protects member interests."
+
+ ## REGIONAL SPECIALIZATION
+
+ mt_silk_road_hub:0 "Silk Road Hub"
+ mt_silk_road_hub_desc:0 "This strategic location on the legendary Silk Road connects East and West, channeling exotic goods and generating fabulous wealth."
+
+ mt_port_city:0 "Port City"
+ mt_port_city_desc:0 "Access to sea routes enables maritime trade, connecting this city to distant ports and foreign markets."
+
+ mt_mining_center:0 "Mining Center"
+ mt_mining_center_desc:0 "Rich mineral deposits—iron, silver, copper, or precious metals—make mining the foundation of local prosperity."
+
+ mt_agricultural_heartland:0 "Agricultural Heartland"
+ mt_agricultural_heartland_desc:0 "Fertile lands produce abundant crops, supporting large populations and generating surplus for export."
+
+ #####################
+ # CHARACTER INTERACTION MODIFIERS
+ #####################
+
+ mt_granted_trade_rights:0 "Granted Trade Rights"
+ mt_granted_trade_rights_desc:0 "A ruler has granted permission to conduct trade within their realm, opening new opportunities."
+
+ mt_granted_trade_rights_enhanced:0 "Enhanced Trade Rights"
+ mt_granted_trade_rights_enhanced_desc:0 "Special privileges provide advantageous trading conditions beyond normal rights."
+
+ mt_trade_partnership:0 "Trade Partnership"
+ mt_trade_partnership_desc:0 "A formal partnership combines resources and expertise for mutual benefit."
+
+ mt_senior_trade_partner:0 "Senior Trade Partner"
+ mt_senior_trade_partner_desc:0 "As the senior partner in this arrangement, you receive the greater share of profits."
+
+ mt_junior_trade_partner:0 "Junior Trade Partner"
+ mt_junior_trade_partner_desc:0 "As the junior partner, you receive a smaller share but benefit from your partner's connections and experience."
+
+ mt_partnership_income_boost:0 "Partnership Profits"
+ mt_partnership_income_boost_desc:0 "Trade partnership generates additional income through combined operations."
+
+ mt_senior_partnership_income_boost:0 "Senior Partner Profits"
+ mt_senior_partnership_income_boost_desc:0 "As senior partner, you receive substantial profits from joint ventures."
+
+ mt_hired_caravan_guards:0 "Hired Caravan Guards"
+ mt_hired_caravan_guards_desc:0 "Professional guards protect caravans from bandits and raiders."
+
+ mt_caravan_guard:0 "Serving as Caravan Guard"
+ mt_caravan_guard_desc:0 "This character provides armed protection for merchant caravans."
+
+ mt_ruler_protection:0 "Under Ruler Protection"
+ mt_ruler_protection_desc:0 "A powerful ruler extends their protection, ensuring safe passage and favorable treatment."
+
+ mt_merchant_protector:0 "Merchant Protector"
+ mt_merchant_protector_desc:0 "This character provides protection to merchants in exchange for fees or political advantage."
+
+ mt_protected_trade_routes:0 "Protected Trade Routes"
+ mt_protected_trade_routes_desc:0 "Military escorts and safe conduct agreements protect trade routes from harm."
+
+ mt_trade_disruption:0 "Trade Disruption"
+ mt_trade_disruption_desc:0 "Political conflicts, warfare, or hostile actions have disrupted normal trade patterns."
+
+ #####################
+ # ROUTE MANAGEMENT
+ #####################
+
+ mt_trade_routes_collapsed:0 "Trade Routes Collapsed"
+ mt_trade_routes_collapsed_desc:0 "Multiple trade routes have failed simultaneously, causing severe economic disruption."
+
+ #####################
+ # RULER TRADE POLICIES
+ #####################
+
+ mt_trade_taxation_policy:0 "Trade Taxation Policy"
+ mt_trade_taxation_policy_desc:0 "The ruler imposes taxes on commercial activities, generating revenue from trade."
+
+ mt_merchant_protection_policy:0 "Merchant Protection Policy"
+ mt_merchant_protection_policy_desc:0 "The ruler actively protects merchants and trade routes, encouraging commerce."
+
+ mt_trade_monopoly_granted:0 "Trade Monopoly Granted"
+ mt_trade_monopoly_granted_desc:0 "The ruler has granted exclusive trading rights for certain goods or regions."
+
+ mt_trade_monopoly_holder:0 "Trade Monopoly Holder"
+ mt_trade_monopoly_holder_desc:0 "This character holds exclusive rights to trade in specific goods, eliminating competition."
+
+ mt_foreign_merchants_active:0 "Foreign Merchants Active"
+ mt_foreign_merchants_active_desc:0 "The realm welcomes foreign traders, increasing commercial diversity and competition."
+
+ mt_merchant_activity_banned:0 "Merchant Activity Banned"
+ mt_merchant_activity_banned_desc:0 "The ruler has prohibited merchant operations, severely restricting trade."
+
+ mt_merchant_approval:0 "Merchant Approval"
+ mt_merchant_approval_desc:0 "Favorable policies have earned this ruler the support of the merchant community."
+
+ mt_merchant_resentment:0 "Merchant Resentment"
+ mt_merchant_resentment_desc:0 "Unfair treatment or excessive taxation has turned merchants against this ruler."
+
+ mt_merchant_fury:0 "Merchant Fury"
+ mt_merchant_fury_desc:0 "Severe oppression has provoked outrage among merchants, who actively work against this ruler."
+
+ #####################
+ # CAREER MODIFIERS
+ #####################
+
+ ## TRADE FOCUS
+
+ mt_luxury_trade_focus:0 "Luxury Trade Focus"
+ mt_luxury_trade_focus_desc:0 "Concentrating on high-value luxury goods—silk, spices, gems—promises greater profits but requires more capital and carries higher risks."
+
+ mt_staple_trade_focus:0 "Staple Trade Focus"
+ mt_staple_trade_focus_desc:0 "Trading essential commodities—grain, salt, iron—provides steady, reliable income with lower profit margins but greater stability."
+
+ mt_networking_focus:0 "Networking Focus"
+ mt_networking_focus_desc:0 "Prioritizing relationships and connections over immediate profits. A strong network opens doors and creates opportunities."
+
+ ## REPUTATION
+
+ mt_merchant_debt:0 "Merchant Debt"
+ mt_merchant_debt_desc:0 "Outstanding debts damage credibility and limit access to capital. Creditors grow impatient."
+
+ mt_damaged_reputation:0 "Damaged Reputation"
+ mt_damaged_reputation_desc:0 "Failed deals or unethical behavior have tarnished this merchant's reputation. Others hesitate to do business with them."
+
+ mt_legendary_merchant:0 "Legendary Merchant"
+ mt_legendary_merchant_desc:0 "This merchant's reputation for success, integrity, and acumen is known throughout the commercial world. Everyone wants to trade with them."
+
+ ## MANAGEMENT STYLE
+
+ mt_delegated_management:0 "Delegated Management"
+ mt_delegated_management_desc:0 "Trusting capable subordinates to handle daily operations frees time for strategic planning."
+
+ mt_hands_on_management:0 "Hands-On Management"
+ mt_hands_on_management_desc:0 "Direct personal involvement in all aspects of the business ensures quality control but limits expansion."
+
+ mt_mentorship_approach:0 "Mentorship Approach"
+ mt_mentorship_approach_desc:0 "Training the next generation of merchants builds loyalty and ensures the business's future."
+
+ ## BUSINESS CHALLENGES
+
+ mt_reduced_operations:0 "Reduced Operations"
+ mt_reduced_operations_desc:0 "Business setbacks have forced this merchant to scale back operations and reduce expenses."
+
+ mt_sabotaged_operations:0 "Sabotaged Operations"
+ mt_sabotaged_operations_desc:0 "Rivals have deliberately damaged this merchant's business through sabotage and interference."
+
+ mt_protected_operations:0 "Protected Operations"
+ mt_protected_operations_desc:0 "Strong security measures and powerful allies shield this merchant's business from threats."
+
+ ## WORK-LIFE BALANCE
+
+ mt_family_focused:0 "Family Focused"
+ mt_family_focused_desc:0 "Prioritizing family over business brings personal satisfaction but may limit commercial success."
+
+ mt_work_life_balance:0 "Work-Life Balance"
+ mt_work_life_balance_desc:0 "Balancing business demands with personal life maintains health and happiness."
+
+ ## SPECIAL STATUS
+
+ mt_merchant_alliance:0 "Merchant Alliance"
+ mt_merchant_alliance_desc:0 "Membership in a powerful merchant alliance provides mutual support and shared resources."
+
+ mt_royal_trade_advisor:0 "Royal Trade Advisor"
+ mt_royal_trade_advisor_desc:0 "Serving as advisor to a ruler on trade matters brings prestige and influence."
+
+ mt_guild_member:0 "Guild Member"
+ mt_guild_member_desc:0 "Guild membership provides protection, regulates competition, and ensures quality standards."
+
+ mt_retired_merchant:0 "Retired Merchant"
+ mt_retired_merchant_desc:0 "Having stepped back from active trade, this character enjoys the fruits of a successful career."
+
+ #####################
+ # DECISION MODIFIERS
+ #####################
+
+ mt_trade_post_established:0 "Trade Post Established"
+ mt_trade_post_established_desc:0 "A new trade post extends this merchant's commercial reach into a new region."
+
+ mt_company_expansion_momentum:0 "Company Expansion Momentum"
+ mt_company_expansion_momentum_desc:0 "Successful expansion energizes the entire organization, facilitating further growth."
+
+ mt_merchant_republic_status:0 "Merchant Republic Status"
+ mt_merchant_republic_status_desc:0 "Recognition as a merchant republic grants special rights and privileges, though it may complicate relationships with traditional nobility."
+
+ mt_merchant_republic_capital:0 "Merchant Republic Capital"
+ mt_merchant_republic_capital_desc:0 "This city serves as the capital of a merchant republic, concentrating commercial power and influence."
+
+ mt_merchant_prince_economy:0 "Merchant Prince Economy"
+ mt_merchant_prince_economy_desc:0 "A merchant prince's vast wealth and extensive operations dominate the regional economy."
+
+ mt_merchant_fleet_charter_power:0 "Merchant Fleet"
+ mt_merchant_fleet_charter_power_desc:0 "A chartered fleet of ships extends commercial reach across seas and coastlines."
+
+ mt_trade_monopoly_power:0 "Trade Monopoly"
+ mt_trade_monopoly_power_desc:0 "Monopoly control over specific goods eliminates competition and maximizes profits."
+
+ mt_currency_minting_power:0 "Currency Minting Rights"
+ mt_currency_minting_power_desc:0 "The right to mint currency is a mark of sovereign authority, even for a merchant."
+
+ mt_employed_merchant_agents:0 "Employed Merchant Agents"
+ mt_employed_merchant_agents_desc:0 "Hired agents conduct business in distant locations, extending commercial reach."
+
+ mt_merchant_agent_employment:0 "Serving as Merchant Agent"
+ mt_merchant_agent_employment_desc:0 "Employed by a larger merchant, this character conducts trade on their behalf."
+
+ mt_first_trade_post_established:0 "First Trade Post"
+ mt_first_trade_post_established_desc:0 "Establishing the first trade post marks the transition from wandering merchant to established trader—a proud milestone."
+
+ mt_first_agent_hired:0 "First Agent Hired"
+ mt_first_agent_hired_desc:0 "Hiring the first agent represents growth beyond individual capacity—the business is becoming an enterprise."
+
+ mt_extensive_trade_network:0 "Extensive Trade Network"
+ mt_extensive_trade_network_desc:0 "A vast network of contacts, routes, and posts spans multiple regions and generates substantial wealth."
+
+ mt_strategic_trade_control:0 "Strategic Trade Control"
+ mt_strategic_trade_control_desc:0 "Control of key trade routes and markets provides enormous economic leverage."
+
+ mt_legendary_merchant_reputation:0 "Legendary Reputation"
+ mt_legendary_merchant_reputation_desc:0 "Stories of this merchant's success and integrity are told throughout the commercial world."
+
+ mt_reliable_merchant:0 "Reliable Merchant"
+ mt_reliable_merchant_desc:0 "Consistent honesty and delivered promises have built a reputation for reliability."
+
+ mt_innovative_merchant:0 "Innovative Merchant"
+ mt_innovative_merchant_desc:0 "Creative approaches to commerce—new products, routes, or methods—set this merchant apart."
+
+ #####################
+ # BUILDINGS
+ #####################
+
+ ## BUILDING CHAINS
+
+ mt_trade_infrastructure:0 "Trade Infrastructure"
+ mt_trade_infrastructure_desc:0 "Commercial buildings that facilitate trade and generate income through market activity."
+
+ mt_trade_infrastructure_tribal:0 "Tribal Trade Infrastructure"
+ mt_trade_infrastructure_tribal_desc:0 "Basic trading facilities suitable for tribal societies, enabling commerce without permanent urban structures."
+
+ ## FEUDAL/CLAN BUILDINGS
+
+ mt_market_01:0 "Market"
+ mt_market_01_desc:0 "A designated marketplace where merchants gather to sell their wares. Stalls and temporary structures provide basic commercial facilities, attracting local traders and occasional traveling merchants."
+
+ mt_trade_quarter_02:0 "Trade Quarter"
+ mt_trade_quarter_02_desc:0 "A dedicated district for commerce, with permanent shops, warehouses, and merchant houses. Artisans, traders, and money changers conduct business in an organized commercial environment."
+
+ mt_merchant_district_03:0 "Merchant District"
+ mt_merchant_district_03_desc:0 "An extensive commercial zone dominated by wealthy merchant establishments, large warehouses, counting houses, and guild halls. Major trading companies maintain permanent headquarters here."
+
+ mt_grand_bazaar_04:0 "Grand Bazaar"
+ mt_grand_bazaar_04_desc:0 "A magnificent commercial complex rivaling the greatest markets of the known world. Covered galleries, elaborate fountains, and grand merchant palaces make this bazaar a wonder of commerce, drawing traders from distant continents."
+
+ ## TRIBAL BUILDINGS
+
+ mt_tribal_market_01:0 "Tribal Market"
+ mt_tribal_market_01_desc:0 "A gathering place for tribal traders, where goods are exchanged and deals are made. Simple but effective, this market serves the needs of a mobile society."
+
+ mt_tribal_trade_post_02:0 "Tribal Trade Post"
+ mt_tribal_trade_post_02_desc:0 "A semi-permanent trading post where tribal merchants store goods and conduct business with outsiders. This facility bridges the gap between nomadic and settled commerce."
+
+ #####################
+ # OPINION MODIFIERS
+ #####################
+
+ grateful_opinion:0 "Grateful"
+ grateful_opinion_desc:0 "This character appreciates a favor or assistance provided by you."
+
+ merchant_partner_opinion:0 "Merchant Partner"
+ merchant_partner_opinion_desc:0 "Our trade partnership has created mutual goodwill and shared interests."
+
+ trade_partner_opinion:0 "Trade Partner"
+ trade_partner_opinion_desc:0 "Regular commercial dealings have fostered a positive relationship."
+
+ employer_opinion:0 "Employer"
+ employer_opinion_desc:0 "They employ me and pay my wages—I am loyal to them."
+
+ seized_my_assets_opinion:0 "Seized My Assets"
+ seized_my_assets_opinion_desc:0 "This tyrant stole my property! I will never forgive such injustice."
+
+ tyrant_opinion:0 "Tyrant"
+ tyrant_opinion_desc:0 "This ruler's oppressive actions have earned my contempt."
+
+ protector_opinion:0 "Protector"
+ protector_opinion_desc:0 "They protect me and my business—I am grateful for their guardianship."
+
+ plotting_revenge_opinion:0 "Plotting Revenge"
+ plotting_revenge_opinion_desc:0 "I will have my revenge for the wrongs done to me."
+
+ loyal_merchant_opinion:0 "Loyal Merchant"
+ loyal_merchant_opinion_desc:0 "This merchant has proven their loyalty through years of faithful service."
+
+ trusted_merchant_opinion:0 "Trusted Merchant"
+ trusted_merchant_opinion_desc:0 "I trust this merchant's integrity and judgment."
+
+ mentor_opinion:0 "Mentor"
+ mentor_opinion_desc:0 "They taught me the ways of trade—I owe them my success."
+
+ guild_brother_opinion:0 "Guild Brother"
+ guild_brother_opinion_desc:0 "Fellow members of the same guild share bonds of mutual support."
+
+ rival_opinion:0 "Rival Merchant"
+ rival_opinion_desc:0 "We compete for the same trade—natural rivals in the commercial world."
+
+ nemesis_opinion:0 "Nemesis"
+ nemesis_opinion_desc:0 "This person has become my sworn enemy. One of us must prevail."
+
+ #####################
+ # DYNASTY MODIFIER
+ #####################
+
+ mt_merchant_dynasty_legacy:0 "Merchant Dynasty Legacy"
+ mt_merchant_dynasty_legacy_desc:0 "This dynasty has built its fortune through commerce across multiple generations. The family name is synonymous with successful trade."
+
+ #####################
+ # TOOLTIPS AND MISC
+ #####################
+
+ # Generic tooltips for script triggers/effects that appear in debug or player-facing contexts
+ mt_is_merchant_tooltip:0 "Is a merchant"
+ mt_is_not_merchant_tooltip:0 "Is not a merchant"
+ mt_can_establish_trade_route_tooltip:0 "Can establish trade routes"
+ mt_has_trade_capacity_tooltip:0 "Has available trade route capacity"
+ mt_valid_trade_goods_tooltip:0 "County produces valuable trade goods"
+ mt_sufficient_wealth_tooltip:0 "Has sufficient wealth for trade operations"
+ mt_merchant_tier_tooltip:0 "Merchant tier determines available operations"
+
+ # Building tooltips
+ mt_market_effects_tooltip:0 "Markets increase county development and provide modest tax income from trade."
+ mt_trade_quarter_effects_tooltip:0 "Trade quarters significantly boost commerce and attract merchants to the region."
+ mt_merchant_district_effects_tooltip:0 "Merchant districts create major commercial centers, greatly increasing wealth and trade capacity."
+ mt_grand_bazaar_effects_tooltip:0 "Grand bazaars are legendary marketplaces, generating enormous wealth and prestige."
+
+ # Trade route tooltips
+ mt_trade_route_income_tooltip:0 "This trade route generates [income] gold per month"
+ mt_trade_route_distance_tooltip:0 "Trade route distance affects profitability"
+ mt_trade_route_safety_tooltip:0 "Route safety impacts success rate and costs"
+ mt_goods_price_calculation_tooltip:0 "Final price: Base value × Market demand × Route quality × Distance modifier"
+
+ # Career event tooltips
+ mt_merchant_event_tooltip:0 "As a merchant, you may encounter special opportunities and challenges"
+ mt_career_advancement_tooltip:0 "Success in trade can lead to advancement to higher merchant tiers"
+ mt_wealth_requirement_tooltip:0 "Wealth threshold: [gold] gold required"
+ mt_reputation_requirement_tooltip:0 "Reputation must be established through successful trades"
+
+ # Decision requirement tooltips
+ mt_decision_merchant_only:0 "Only merchants can take this decision"
+ mt_decision_tier_requirement:0 "Requires merchant tier: [tier]"
+ mt_decision_wealth_requirement:0 "Requires wealth: [gold] gold"
+ mt_decision_cooldown_active:0 "Decision is on cooldown"
+
+ # AI reasoning strings (these appear in logs and can help with debugging)
+ mt_ai_reason_profitable:0 "This trade opportunity appears profitable"
+ mt_ai_reason_too_risky:0 "This trade venture carries too much risk"
+ mt_ai_reason_insufficient_capital:0 "Insufficient capital for this investment"
+ mt_ai_reason_good_partner:0 "This character would make a good trade partner"
+ mt_ai_reason_unreliable_partner:0 "This character seems unreliable for trade partnerships"

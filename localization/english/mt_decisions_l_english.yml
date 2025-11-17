@@ -165,3 +165,129 @@ l_english:
  emergency_close_all_routes_decision_confirm:0 "Close Everything (Emergency)"
  emergency_close_all_routes_decision_toast:0 "Trade Operations Collapsed"
  emergency_close_all_routes_decision_effect_tooltip:0 "All routes close immediately. You lose 25 prestige and cannot establish new routes for 3 months"
+
+ ####################################
+ # CORE MERCHANT DECISIONS
+ ####################################
+
+ #####################
+ # ESTABLISH TRADE POST DECISION
+ #####################
+
+ mt_establish_trade_post_decision_title:0 "Establish Trade Post"
+ mt_establish_trade_post_decision_desc:0 "A permanent trade post in this county will serve as a base for your commercial operations. Warehouses, factor's offices, and local contacts will allow you to conduct business more efficiently in this region."
+ mt_establish_trade_post_decision_tooltip:0 "Create a permanent trading presence in a strategic county."
+
+ # Requirement tooltips
+ mt_establish_trade_post_not_owner_tt:0 "You cannot establish a trade post in your own capital county."
+ mt_establish_trade_post_valid_location_tt:0 "The local ruler must have at least neutral opinion of you, or you must be allied."
+ mt_establish_trade_post_no_existing_tt:0 "You do not already have a trade post in this county."
+ mt_establish_trade_post_capacity_tt:0 "You have capacity for additional trade posts."
+
+ # Success tooltip
+ mt_establish_trade_post_success_tt:0 "A new trade post has been established! This location will serve as a hub for your commercial activities."
+
+ #####################
+ # SCOUT TRADE OPPORTUNITY DECISION
+ #####################
+
+ mt_scout_trade_opportunity_decision_title:0 "Scout Trade Opportunities"
+ mt_scout_trade_opportunity_decision_desc:0 "Send scouts to survey the surrounding regions, identifying profitable trade routes, sources of valuable goods, and markets with strong demand. Knowledge is the foundation of successful commerce."
+ mt_scout_trade_opportunity_decision_tooltip:0 "Discover profitable trade routes and valuable goods in nearby regions."
+
+ # Requirement tooltips
+ mt_scout_opportunity_cooldown_tt:0 "Your scouts need time to gather reliable information."
+
+ # Success tooltips
+ mt_scout_opportunity_reveal_tt:0 "Your scouts will reveal promising trade opportunities in nearby regions."
+ mt_scout_silk_opportunity_tt:0 "Your scouts report sources of [mt_trade_good_silk|E] in the region—a lucrative luxury good!"
+ mt_scout_spices_opportunity_tt:0 "Merchants speak of [mt_trade_good_spices|E] available in distant markets—highly profitable if you can secure a route!"
+ mt_scout_jade_opportunity_tt:0 "Rumors tell of [mt_trade_good_jade|E] from far eastern lands—a treasure for those who can arrange its transport!"
+ mt_scout_wine_opportunity_tt:0 "Local vineyards produce [mt_trade_good_wine|E] that could fetch good prices in regions without viticulture."
+ mt_scout_salt_opportunity_tt:0 "Salt mines in the area produce [mt_trade_good_salt|E]—essential goods that always find buyers."
+ mt_scout_wool_opportunity_tt:0 "Shepherds produce quality [mt_trade_good_wool|E] that weavers in distant cities would pay well for."
+ mt_scout_destination_capital_tt:0 "The capital city offers a wealthy market with strong demand for luxury goods and staples alike."
+ mt_scout_destination_trade_hub_tt:0 "A major trade hub provides excellent opportunities—many merchants, high prices, and connections to distant markets."
+ mt_scout_destination_wealthy_tt:0 "A prosperous county with high development would pay premium prices for quality goods."
+ mt_scout_destination_coastal_tt:0 "Coastal cities offer access to maritime trade routes and exotic goods from across the seas."
+
+ #####################
+ # HIRE MERCHANT AGENT DECISION
+ #####################
+
+ mt_hire_merchant_agent_decision_title:0 "Hire Merchant Agent"
+ mt_hire_merchant_agent_decision_desc:0 "Your business has grown beyond what one person can manage directly. Hiring a skilled agent to handle trade routes on your behalf will free you to pursue larger opportunities while maintaining existing operations."
+ mt_hire_merchant_agent_decision_tooltip:0 "Employ a trusted agent to manage trade routes and expand your operations."
+
+ # Requirement tooltips
+ mt_hire_agent_need_trade_post_tt:0 "You must have at least one established trade post to employ an agent."
+ mt_hire_agent_capacity_tt:0 "You have capacity to hire additional agents."
+ mt_hire_agent_afford_salary_tt:0 "Your monthly income is sufficient to pay an agent's salary."
+
+ # Success tooltip
+ mt_hire_agent_success_tt:0 "A capable agent has joined your service and will help manage your growing commercial enterprise."
+
+ #####################
+ # EXPAND TRADING COMPANY DECISION
+ #####################
+
+ mt_expand_trading_company_decision_title:0 "Expand Trading Company"
+ mt_expand_trading_company_decision_desc:0 "Your trading company has achieved considerable success. A major expansion—new warehouses, additional agents, more trade routes—will transform your enterprise into one of the great commercial powers of the age."
+ mt_expand_trading_company_decision_tooltip:0 "Significantly expand your trading company's capabilities and reach."
+
+ # Requirement tooltips
+ mt_expand_company_need_routes_tt:0 "You must operate at least 5 active trade routes to justify expansion."
+ mt_expand_company_need_wealth_tt:0 "Expansion requires significant capital: at least 1,000 gold."
+ mt_expand_company_need_reputation_tt:0 "Your reputation must be well-established (at least 50 reputation) to attract the resources needed for expansion."
+ mt_expand_company_cooldown_tt:0 "Major expansions require years to consolidate—you must wait before expanding again."
+
+ # Success tooltip
+ mt_expand_company_success_tt:0 "Your trading company has expanded significantly! New capabilities will drive even greater profits."
+
+ #####################
+ # PETITION MERCHANT REPUBLIC STATUS DECISION
+ #####################
+
+ mt_petition_merchant_republic_status_decision_title:0 "Petition for Merchant Republic Status"
+ mt_petition_merchant_republic_status_decision_desc:0 "You have achieved what few merchants ever dream of—vast wealth, extensive trade networks, and legendary reputation. Now you seek the ultimate recognition: formal status as a merchant republic, with all the rights and privileges that entails. This is the crowning achievement of a merchant's life."
+ mt_petition_merchant_republic_status_decision_tooltip:0 "Achieve the pinnacle of mercantile success—recognition as a merchant republic."
+
+ # Requirement tooltips
+ mt_petition_republic_need_holding_tt:0 "You must control at least one county to establish a merchant republic."
+ mt_petition_republic_need_routes_tt:0 "Your trade network must span at least 10 active trade routes."
+ mt_petition_republic_need_reputation_tt:0 "Your reputation must be legendary—known throughout the commercial world."
+ mt_petition_republic_need_prestige_tt:0 "You must have accumulated at least 1,000 prestige to command respect from other rulers."
+ mt_petition_republic_need_approval_tt:0 "If you have a liege, they must approve (opinion at least +50). Independent rulers may proceed freely."
+ mt_petition_republic_need_infrastructure_tt:0 "You must control at least 5 trade posts across multiple regions."
+ mt_petition_republic_need_guilds_tt:0 "You must have established merchant guilds to regulate trade and maintain standards."
+
+ # Success tooltip
+ mt_petition_republic_success_tt:0 "You have achieved merchant republic status! Your commercial empire is now recognized as a power in its own right, with special privileges and unprecedented influence."
+
+ #####################
+ # AI REASON DESCRIPTIONS (for AI acceptance tooltips)
+ #####################
+
+ AI_GENEROUS_PAYMENT:0 "Generous payment offered"
+ AI_WEALTHY_MERCHANT:0 "Wealthy merchant demonstrates success"
+ AI_GREEDY:0 "Greedy character attracted by profit"
+ AI_AT_WAR:0 "Distracted by war"
+ AI_DEVELOPED_REALM:0 "Realm benefits from trade"
+ AI_SUSPICIOUS:0 "Suspicious of outsiders"
+ AI_EQUAL_STATUS:0 "Equal status between partners"
+ AI_NEEDS_INVESTMENT:0 "Needs investment capital"
+ AI_AMBITIOUS:0 "Ambitious character seeks opportunities"
+ AI_ALREADY_WEALTHY:0 "Already wealthy, less interested"
+ AI_SAME_CULTURE:0 "Shared culture builds trust"
+ AI_NEEDS_GOLD:0 "Needs gold"
+ AI_LONGER_CONTRACT:0 "Longer contract provides stability"
+ AI_LONG_CONTRACT:0 "Long contract is attractive"
+ AI_PROUD:0 "Too proud for such work"
+ AI_HUMBLE:0 "Humble and willing"
+ AI_HAS_RESPONSIBILITIES:0 "Has other responsibilities"
+ AI_ROUTES_DANGEROUS:0 "Trade routes are dangerous"
+ AI_OPERATES_IN_REALM:0 "Operates in our realm"
+ AI_HONORABLE_RULER:0 "Honorable ruler can be trusted"
+ AI_UNTRUSTWORTHY:0 "Untrustworthy ruler"
+ AI_STRONG_PROTECTOR:0 "Strong military provides real protection"
+ AI_INDEPENDENT_MAGNATE:0 "Independent and powerful enough to stand alone"
