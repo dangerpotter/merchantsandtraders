@@ -1,0 +1,724 @@
+####################################
+# MERCHANTS AND TRADERS MOD
+# Merchant Progression Effects
+####################################
+#
+# This file contains all effects related to merchant character progression
+# Including tier-ups, reputation tracking, ability grants, and failure handling
+#
+####################################
+
+# ============================================
+# CHECK MERCHANT TIER UP EFFECT
+# ============================================
+# Evaluates if a character meets requirements to rank up to the next merchant tier
+# Uses gold, active routes, reputation, and time-in-tier as criteria
+#
+# Usage: scope:character = { check_merchant_tier_up_effect = yes }
+#
+check_merchant_tier_up_effect = {
+	# Save current tier for comparison
+	if = {
+		limit = { has_trait = wandering_merchant }
+
+		# Requirements for Tier 1 -> Tier 2 (Trade Post Owner)
+		# - At least 200 gold
+		# - At least 1 active trade route
+		# - At least 10 merchant reputation
+		# - Has been wandering merchant for at least 1 year
+		if = {
+			limit = {
+				gold >= 200
+				has_variable = mt_active_routes
+				var:mt_active_routes >= 1
+				has_variable = mt_reputation
+				var:mt_reputation >= 10
+				has_trait_xp = {
+					trait = wandering_merchant
+					value >= 365  # 1 year of experience
+				}
+			}
+			# Character qualifies for promotion
+			set_variable = {
+				name = mt_can_tier_up
+				value = yes
+				days = 7
+			}
+			# Trigger notification event
+			trigger_event = {
+				id = mt_progression.1001
+				days = 1
+			}
+		}
+	}
+	else_if = {
+		limit = { has_trait = trade_post_owner }
+
+		# Requirements for Tier 2 -> Tier 3 (Trading Company Head)
+		# - At least 1000 gold
+		# - At least 5 active trade routes
+		# - At least 50 merchant reputation
+		# - Owns at least 2 trade posts
+		# - Has hired at least 1 merchant agent
+		if = {
+			limit = {
+				gold >= 1000
+				has_variable = mt_active_routes
+				var:mt_active_routes >= 5
+				has_variable = mt_reputation
+				var:mt_reputation >= 50
+				has_variable = mt_owned_trade_posts
+				var:mt_owned_trade_posts >= 2
+				has_variable = mt_hired_agents
+				var:mt_hired_agents >= 1
+			}
+			set_variable = {
+				name = mt_can_tier_up
+				value = yes
+				days = 7
+			}
+			trigger_event = {
+				id = mt_progression.1002
+				days = 1
+			}
+		}
+	}
+	else_if = {
+		limit = { has_trait = trading_company_head }
+
+		# Requirements for Tier 3 -> Tier 4 (Merchant Prince)
+		# - At least 5000 gold
+		# - At least 15 active trade routes
+		# - At least 150 merchant reputation
+		# - Owns at least 5 trade posts
+		# - Has hired guards for protection
+		# - Has completed at least 3 legendary trades
+		if = {
+			limit = {
+				gold >= 5000
+				has_variable = mt_active_routes
+				var:mt_active_routes >= 15
+				has_variable = mt_reputation
+				var:mt_reputation >= 150
+				has_variable = mt_owned_trade_posts
+				var:mt_owned_trade_posts >= 5
+				has_variable = mt_hired_guards
+				var:mt_hired_guards >= 1
+				has_variable = mt_legendary_trades
+				var:mt_legendary_trades >= 3
+			}
+			set_variable = {
+				name = mt_can_tier_up
+				value = yes
+				days = 7
+			}
+			trigger_event = {
+				id = mt_progression.1003
+				days = 1
+			}
+		}
+	}
+}
+
+# ============================================
+# MERCHANT TIER UP EFFECT
+# ============================================
+# Promotes character to the next merchant tier
+# Removes old trait, adds new trait, grants new abilities
+#
+# Usage: scope:character = { merchant_tier_up_effect = yes }
+#
+merchant_tier_up_effect = {
+	# Tier 1 -> Tier 2 Promotion
+	if = {
+		limit = { has_trait = wandering_merchant }
+
+		# Remove old tier
+		remove_trait = wandering_merchant
+
+		# Add new tier
+		add_trait = trade_post_owner
+
+		# Grant tier-specific abilities
+		grant_merchant_abilities_effect = yes
+
+		# Increase max trade routes
+		set_variable = {
+			name = mt_max_trade_routes
+			value = 3
+		}
+
+		# Add prestige for achievement
+		add_prestige = 100
+
+		# Small gold bonus as investment capital
+		add_gold = 50
+
+		# Update reputation
+		change_variable = {
+			name = mt_reputation
+			add = 15
+		}
+
+		# Log event
+		debug_log = "Character promoted to Trade Post Owner"
+	}
+	# Tier 2 -> Tier 3 Promotion
+	else_if = {
+		limit = { has_trait = trade_post_owner }
+
+		remove_trait = trade_post_owner
+		add_trait = trading_company_head
+		grant_merchant_abilities_effect = yes
+
+		# Increase max trade routes
+		set_variable = {
+			name = mt_max_trade_routes
+			value = 10
+		}
+
+		# Larger rewards for higher tier
+		add_prestige = 250
+		add_gold = 150
+
+		change_variable = {
+			name = mt_reputation
+			add = 40
+		}
+
+		# Unlock ability to hire guards
+		set_variable = {
+			name = mt_can_hire_guards
+			value = yes
+		}
+
+		debug_log = "Character promoted to Trading Company Head"
+	}
+	# Tier 3 -> Tier 4 Promotion
+	else_if = {
+		limit = { has_trait = trading_company_head }
+
+		remove_trait = trading_company_head
+		add_trait = merchant_prince
+		grant_merchant_abilities_effect = yes
+
+		# Unlimited trade routes
+		set_variable = {
+			name = mt_max_trade_routes
+			value = 999
+		}
+
+		# Massive rewards for achieving pinnacle
+		add_prestige = 500
+		add_gold = 500
+		add_fame = major_fame_gain
+
+		change_variable = {
+			name = mt_reputation
+			add = 100
+		}
+
+		# Unlock all merchant abilities
+		set_variable = {
+			name = mt_merchant_prince_status
+			value = yes
+		}
+
+		debug_log = "Character promoted to Merchant Prince"
+	}
+
+	# Common effects for all promotions
+	# Notify player of promotion
+	trigger_event = {
+		id = mt_progression.2001
+		days = 1
+	}
+
+	# Remove tier-up flag
+	remove_variable = mt_can_tier_up
+}
+
+# ============================================
+# GRANT MERCHANT ABILITIES EFFECT
+# ============================================
+# Unlocks tier-specific abilities based on current merchant rank
+# Called automatically when character ranks up
+#
+# Usage: scope:character = { grant_merchant_abilities_effect = yes }
+#
+grant_merchant_abilities_effect = {
+	# Tier 1 Abilities: Basic Trading
+	if = {
+		limit = { has_trait = wandering_merchant }
+
+		# Can carry basic trade goods
+		set_variable = {
+			name = mt_can_carry_goods
+			value = yes
+		}
+
+		# Can establish first trade post
+		set_variable = {
+			name = mt_can_establish_trade_post
+			value = yes
+		}
+
+		# Maximum 1 trade post
+		set_variable = {
+			name = mt_max_trade_posts
+			value = 1
+		}
+
+		# Initialize reputation at 0
+		if = {
+			limit = { NOT = { has_variable = mt_reputation } }
+			set_variable = {
+				name = mt_reputation
+				value = 0
+			}
+		}
+	}
+	# Tier 2 Abilities: Expansion
+	else_if = {
+		limit = { has_trait = trade_post_owner }
+
+		# Retain previous abilities
+		set_variable = {
+			name = mt_can_carry_goods
+			value = yes
+		}
+		set_variable = {
+			name = mt_can_establish_trade_post
+			value = yes
+		}
+
+		# Increased trade post capacity
+		set_variable = {
+			name = mt_max_trade_posts
+			value = 3
+		}
+
+		# NEW: Can hire merchant agents
+		set_variable = {
+			name = mt_can_hire_agents
+			value = yes
+		}
+
+		# NEW: Can negotiate better deals
+		set_variable = {
+			name = mt_improved_negotiations
+			value = yes
+		}
+
+		# Maximum 3 agents
+		set_variable = {
+			name = mt_max_agents
+			value = 3
+		}
+	}
+	# Tier 3 Abilities: Network Management
+	else_if = {
+		limit = { has_trait = trading_company_head }
+
+		# Retain all previous abilities
+		set_variable = {
+			name = mt_can_carry_goods
+			value = yes
+		}
+		set_variable = {
+			name = mt_can_establish_trade_post
+			value = yes
+		}
+		set_variable = {
+			name = mt_can_hire_agents
+			value = yes
+		}
+		set_variable = {
+			name = mt_improved_negotiations
+			value = yes
+		}
+
+		# Expanded capacity
+		set_variable = {
+			name = mt_max_trade_posts
+			value = 10
+		}
+		set_variable = {
+			name = mt_max_agents
+			value = 10
+		}
+
+		# NEW: Can hire guards for route protection
+		set_variable = {
+			name = mt_can_hire_guards
+			value = yes
+		}
+
+		# Maximum 5 guard units
+		set_variable = {
+			name = mt_max_guards
+			value = 5
+		}
+
+		# NEW: Can form trade alliances with other merchants
+		set_variable = {
+			name = mt_can_form_alliances
+			value = yes
+		}
+
+		# NEW: Reduced risk of piracy/banditry
+		set_variable = {
+			name = mt_route_protection
+			value = 2  # 20% risk reduction
+		}
+	}
+	# Tier 4 Abilities: Merchant Empire
+	else_if = {
+		limit = { has_trait = merchant_prince }
+
+		# Retain all previous abilities
+		set_variable = {
+			name = mt_can_carry_goods
+			value = yes
+		}
+		set_variable = {
+			name = mt_can_establish_trade_post
+			value = yes
+		}
+		set_variable = {
+			name = mt_can_hire_agents
+			value = yes
+		}
+		set_variable = {
+			name = mt_improved_negotiations
+			value = yes
+		}
+		set_variable = {
+			name = mt_can_hire_guards
+			value = yes
+		}
+		set_variable = {
+			name = mt_can_form_alliances
+			value = yes
+		}
+
+		# Unlimited capacity
+		set_variable = {
+			name = mt_max_trade_posts
+			value = 999
+		}
+		set_variable = {
+			name = mt_max_agents
+			value = 999
+		}
+		set_variable = {
+			name = mt_max_guards
+			value = 999
+		}
+
+		# NEW: Can influence ruler policies with wealth
+		set_variable = {
+			name = mt_can_influence_rulers
+			value = yes
+		}
+
+		# NEW: Can monopolize specific trade goods
+		set_variable = {
+			name = mt_can_monopolize
+			value = yes
+		}
+
+		# NEW: Significant route protection
+		set_variable = {
+			name = mt_route_protection
+			value = 5  # 50% risk reduction
+		}
+
+		# NEW: Can establish merchant guilds
+		set_variable = {
+			name = mt_can_establish_guilds
+			value = yes
+		}
+
+		# NEW: Access to legendary trade missions
+		set_variable = {
+			name = mt_legendary_missions
+			value = yes
+		}
+	}
+}
+
+# ============================================
+# CALCULATE MERCHANT REPUTATION EFFECT
+# ============================================
+# Fame-like system for merchant success
+# Reputation increases with successful trades, decreases with failures
+# Affects tier-up eligibility and event outcomes
+#
+# Usage: scope:character = { calculate_merchant_reputation_effect = yes }
+#
+calculate_merchant_reputation_effect = {
+	# Initialize reputation if not present
+	if = {
+		limit = { NOT = { has_variable = mt_reputation } }
+		set_variable = {
+			name = mt_reputation
+			value = 0
+		}
+	}
+
+	# Calculate reputation modifiers based on current status
+
+	# Positive factors:
+	# +1 per active trade route
+	if = {
+		limit = { has_variable = mt_active_routes }
+		change_variable = {
+			name = mt_reputation
+			add = var:mt_active_routes
+		}
+	}
+
+	# +5 per owned trade post
+	if = {
+		limit = { has_variable = mt_owned_trade_posts }
+		change_variable = {
+			name = mt_reputation
+			add = {
+				value = var:mt_owned_trade_posts
+				multiply = 5
+			}
+		}
+	}
+
+	# +10 per completed legendary trade
+	if = {
+		limit = { has_variable = mt_legendary_trades }
+		change_variable = {
+			name = mt_reputation
+			add = {
+				value = var:mt_legendary_trades
+				multiply = 10
+			}
+		}
+	}
+
+	# Bonus for high wealth (shows success)
+	if = {
+		limit = { gold >= 1000 }
+		change_variable = {
+			name = mt_reputation
+			add = 5
+		}
+	}
+	if = {
+		limit = { gold >= 5000 }
+		change_variable = {
+			name = mt_reputation
+			add = 15
+		}
+	}
+
+	# Negative factors:
+	# -10 per failed route
+	if = {
+		limit = { has_variable = mt_failed_routes }
+		change_variable = {
+			name = mt_reputation
+			subtract = {
+				value = var:mt_failed_routes
+				multiply = 10
+			}
+		}
+	}
+
+	# -20 if low on gold (reputation suffers)
+	if = {
+		limit = { gold < 50 }
+		change_variable = {
+			name = mt_reputation
+			subtract = 20
+		}
+	}
+
+	# Reputation cannot go below 0
+	if = {
+		limit = { var:mt_reputation < 0 }
+		set_variable = {
+			name = mt_reputation
+			value = 0
+		}
+	}
+
+	# Set reputation tier flags for easy checking
+	if = {
+		limit = { var:mt_reputation >= 200 }
+		set_variable = {
+			name = mt_reputation_tier
+			value = 5  # Legendary
+		}
+	}
+	else_if = {
+		limit = { var:mt_reputation >= 100 }
+		set_variable = {
+			name = mt_reputation_tier
+			value = 4  # Renowned
+		}
+	}
+	else_if = {
+		limit = { var:mt_reputation >= 50 }
+		set_variable = {
+			name = mt_reputation_tier
+			value = 3  # Established
+		}
+	}
+	else_if = {
+		limit = { var:mt_reputation >= 20 }
+		set_variable = {
+			name = mt_reputation_tier
+			value = 2  # Known
+		}
+	}
+	else = {
+		set_variable = {
+			name = mt_reputation_tier
+			value = 1  # Unknown
+		}
+	}
+}
+
+# ============================================
+# MERCHANT BANKRUPTCY EFFECT
+# ============================================
+# Handles failure/demotion when merchant runs out of gold or suffers catastrophic losses
+# Can result in tier demotion or complete loss of merchant status
+#
+# Usage: scope:character = { merchant_bankruptcy_effect = yes }
+#
+merchant_bankruptcy_effect = {
+	# Set bankruptcy flag
+	set_variable = {
+		name = mt_bankrupt
+		value = yes
+		days = 365  # Lasts 1 year
+	}
+
+	# Massive reputation hit
+	if = {
+		limit = { has_variable = mt_reputation }
+		change_variable = {
+			name = mt_reputation
+			subtract = 50
+		}
+	}
+
+	# Lose all hired agents and guards
+	if = {
+		limit = { has_variable = mt_hired_agents }
+		set_variable = {
+			name = mt_hired_agents
+			value = 0
+		}
+	}
+	if = {
+		limit = { has_variable = mt_hired_guards }
+		set_variable = {
+			name = mt_hired_guards
+			value = 0
+		}
+	}
+
+	# Lose half of trade routes
+	if = {
+		limit = { has_variable = mt_active_routes }
+		change_variable = {
+			name = mt_active_routes
+			divide = 2
+		}
+	}
+
+	# Tier demotion based on current tier
+	if = {
+		limit = { has_trait = merchant_prince }
+
+		# Demote to Trading Company Head
+		remove_trait = merchant_prince
+		add_trait = trading_company_head
+
+		# Adjust capabilities
+		grant_merchant_abilities_effect = yes
+
+		# Lose significant prestige
+		add_prestige = -500
+
+		# Trigger bankruptcy event
+		trigger_event = {
+			id = mt_progression.3001
+			days = 1
+		}
+	}
+	else_if = {
+		limit = { has_trait = trading_company_head }
+
+		# Demote to Trade Post Owner
+		remove_trait = trading_company_head
+		add_trait = trade_post_owner
+
+		grant_merchant_abilities_effect = yes
+		add_prestige = -250
+
+		trigger_event = {
+			id = mt_progression.3002
+			days = 1
+		}
+	}
+	else_if = {
+		limit = { has_trait = trade_post_owner }
+
+		# Demote to Wandering Merchant
+		remove_trait = trade_post_owner
+		add_trait = wandering_merchant
+
+		grant_merchant_abilities_effect = yes
+		add_prestige = -100
+
+		# Lose all trade posts
+		if = {
+			limit = { has_variable = mt_owned_trade_posts }
+			set_variable = {
+				name = mt_owned_trade_posts
+				value = 0
+			}
+		}
+
+		trigger_event = {
+			id = mt_progression.3003
+			days = 1
+		}
+	}
+	else_if = {
+		limit = { has_trait = wandering_merchant }
+
+		# Complete failure - lose merchant status entirely
+		remove_trait = wandering_merchant
+
+		# Remove all merchant variables
+		remove_variable = mt_reputation
+		remove_variable = mt_active_routes
+		remove_variable = mt_can_carry_goods
+		remove_variable = mt_can_establish_trade_post
+		remove_variable = mt_max_trade_posts
+
+		add_prestige = -50
+
+		# Add temporary trait for failed merchant
+		add_trait = trait_failed_merchant  # Would need to define this separately
+
+		trigger_event = {
+			id = mt_progression.3004
+			days = 1
+		}
+	}
+
+	debug_log = "Merchant bankruptcy triggered"
+}

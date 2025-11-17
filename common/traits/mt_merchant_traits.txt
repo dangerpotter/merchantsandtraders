@@ -1,0 +1,227 @@
+####################################
+# MERCHANTS AND TRADERS MOD
+# Merchant Tier Traits
+####################################
+#
+# PROGRESSION PATH:
+# wandering_merchant -> trade_post_owner -> trading_company_head -> merchant_prince
+#
+# Each tier unlocks new mechanics:
+# - Tier 1: Basic trade goods carrying, single trade post
+# - Tier 2: Multiple routes, can hire merchant agents
+# - Tier 3: Extended network, can hire guards for protection
+# - Tier 4: Merchant empire, massive income bonuses, unlimited expansion
+#
+####################################
+
+# TIER 1: Wandering Merchant
+# Entry-level merchant who travels with goods
+# Requirements: Start merchant career or meet basic conditions
+wandering_merchant = {
+	index = 1
+	category = lifestyle
+
+	# Tier tracking
+	trait_tier = 1
+
+	# Basic diplomatic skills for trading
+	diplomacy = 2
+
+	# Small boost to tax income from early trading
+	monthly_character_income_mult = 0.05
+
+	# Opinion modifiers
+	same_opinion = 5
+	opposite_opinion = -5
+
+	# Visual
+	icon = "trait_wandering_merchant.dds"
+
+	desc = {
+		first_valid = {
+			triggered_desc = {
+				trigger = { always = yes }
+				desc = wandering_merchant_desc
+			}
+		}
+	}
+
+	# Cannot stack with other merchant tiers
+	incompatible = {
+		trade_post_owner
+		trading_company_head
+		merchant_prince
+	}
+
+	# Improves chance of successful trades
+	ai_boldness = 5
+	ai_greed = 10
+}
+
+# TIER 2: Trade Post Owner
+# Established merchant with a permanent trading location
+# Requirements: Owns at least one trade post, sufficient gold and reputation
+trade_post_owner = {
+	index = 2
+	category = lifestyle
+
+	# Tier tracking
+	trait_tier = 2
+
+	# Enhanced diplomatic and administrative skills
+	diplomacy = 3
+	stewardship = 1
+
+	# Better income from established routes
+	monthly_character_income_mult = 0.10
+
+	# Slight prestige gain from status
+	monthly_prestige = 0.25
+
+	# Opinion modifiers
+	same_opinion = 10
+	dynasty_opinion = 5
+
+	# Visual
+	icon = "trait_trade_post_owner.dds"
+
+	desc = {
+		first_valid = {
+			triggered_desc = {
+				trigger = { always = yes }
+				desc = trade_post_owner_desc
+			}
+		}
+	}
+
+	# Cannot stack with other merchant tiers
+	incompatible = {
+		wandering_merchant
+		trading_company_head
+		merchant_prince
+	}
+
+	# AI behavior adjustments
+	ai_boldness = 10
+	ai_greed = 15
+	ai_rationality = 5
+}
+
+# TIER 3: Trading Company Head
+# Manages extensive trade network with employees
+# Requirements: Multiple trade posts, high reputation, substantial wealth
+trading_company_head = {
+	index = 3
+	category = lifestyle
+
+	# Tier tracking
+	trait_tier = 3
+
+	# Strong diplomatic and administrative expertise
+	diplomacy = 4
+	stewardship = 2
+
+	# Significant income from trade empire
+	monthly_character_income_mult = 0.15
+
+	# Notable prestige from prominence
+	monthly_prestige = 0.50
+
+	# Minor fame level boost
+	fame = minor_fame
+
+	# Opinion modifiers - respected in merchant circles
+	same_opinion = 15
+	dynasty_opinion = 10
+
+	# Boost to diplomatic range for far-reaching trade
+	diplomatic_range_mult = 0.1
+
+	# Visual
+	icon = "trait_trading_company_head.dds"
+
+	desc = {
+		first_valid = {
+			triggered_desc = {
+				trigger = { always = yes }
+				desc = trading_company_head_desc
+			}
+		}
+	}
+
+	# Cannot stack with other merchant tiers
+	incompatible = {
+		wandering_merchant
+		trade_post_owner
+		merchant_prince
+	}
+
+	# AI behavior - more calculated and ambitious
+	ai_boldness = 15
+	ai_greed = 20
+	ai_rationality = 10
+	ai_ambition = 10
+}
+
+# TIER 4: Merchant Prince
+# Elite merchant with vast wealth and influence rivaling nobility
+# Requirements: Extensive trade network, legendary reputation, immense wealth
+merchant_prince = {
+	index = 4
+	category = lifestyle
+
+	# Tier tracking
+	trait_tier = 4
+
+	# Peak diplomatic and administrative mastery
+	diplomacy = 5
+	stewardship = 3
+
+	# Massive income bonus from trade empire
+	monthly_character_income_mult = 0.25
+
+	# Substantial prestige from legendary status
+	monthly_prestige = 1.0
+
+	# Major fame level - known across the world
+	fame = major_fame
+
+	# Opinion modifiers - highly respected
+	same_opinion = 20
+	dynasty_opinion = 15
+
+	# Even rulers take notice
+	ruler_designer_cost = 50
+
+	# Extended diplomatic reach for global trade
+	diplomatic_range_mult = 0.25
+
+	# Small boost to vassal opinion (wealth brings loyalty)
+	vassal_opinion = 5
+
+	# Visual
+	icon = "trait_merchant_prince.dds"
+
+	desc = {
+		first_valid = {
+			triggered_desc = {
+				trigger = { always = yes }
+				desc = merchant_prince_desc
+			}
+		}
+	}
+
+	# Cannot stack with other merchant tiers
+	incompatible = {
+		wandering_merchant
+		trade_post_owner
+		trading_company_head
+	}
+
+	# AI behavior - bold, ambitious, and strategic
+	ai_boldness = 20
+	ai_greed = 25
+	ai_rationality = 15
+	ai_ambition = 20
+	ai_honor = 5
+}
