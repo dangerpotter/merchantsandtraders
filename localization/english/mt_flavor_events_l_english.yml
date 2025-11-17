@@ -1,0 +1,245 @@
+l_english:
+
+ ###################################
+ # FLAVOR EVENTS LOCALIZATION
+ # Events: mt_flavor.0001-0031
+ ###################################
+
+ ###################################
+ # TRAVEL & ENCOUNTERS (0001-0005)
+ ###################################
+
+ # 0001: Meet interesting traveler
+ mt_flavor.0001.t:0 "A Chance Encounter"
+ mt_flavor.0001.desc:0 "The road stretches long before me, and I've fallen into step with another traveler heading the same direction. [ROOT.Char.GetFirstName] seems well-traveled, with tales of distant lands and exotic markets.\n\nWe share stories of our journeys - the places we've been, the people we've met, the strange customs of foreign lands. It's a pleasant distraction from the monotony of travel."
+ mt_flavor.0001.a:0 "Share my own tales of the merchant life"
+ mt_flavor.0001.b:0 "Listen politely and enjoy the company"
+
+ # 0002: Comfortable inn
+ mt_flavor.0002.t:0 "A Fine Establishment"
+ mt_flavor.0002.desc:0 "After days on the road, I've arrived at a well-appointed inn. The common room is clean, the fire warm, and the smell of roasting meat makes my stomach growl.\n\nThe innkeeper offers me a choice: the standard room in the common quarters, or for a few extra coins, a private chamber with a proper bed and hot water for washing."
+ mt_flavor.0002.a:0 "A comfortable bed is worth the extra cost"
+ mt_flavor.0002.b:0 "The standard room will suffice"
+
+ # 0003: Robbed at tavern
+ mt_flavor.0003.t:0 "Thieves in the Night"
+ mt_flavor.0003.desc:0 "I wake to find my coin purse lighter than it should be. That seedy tavern I stayed at last night - I should have known better. Some quick-fingered thief must have gotten into my belongings while I slept.\n\nI catch a glimpse of suspicious characters slipping out the back door. Do I pursue them, or cut my losses?"
+ mt_flavor.0003.a:0 "Accept the loss - not worth the trouble"
+ mt_flavor.0003.b:0 "Chase them down! I won't be robbed so easily"
+ mt_flavor.0003.c:0 "Let it go. Such is the risk of travel"
+
+ # 0004: Beautiful scenery
+ mt_flavor.0004.t:0 "Beauty in the Journey"
+ mt_flavor.0004.desc:0 "I crest a hill and the sight before me takes my breath away. Rolling hills stretch to the horizon, painted in the golden light of sunset. A river winds through the valley like a ribbon of silver.\n\nFor a moment, I forget about profits and markets and remember why I love this life. The freedom to see the world in all its glory."
+ mt_flavor.0004.a:0 "Stop and appreciate this moment"
+ mt_flavor.0004.b:0 "No time for dawdling - press on to market"
+
+ # 0005: Lost in city
+ mt_flavor.0005.t:0 "Unfamiliar Streets"
+ mt_flavor.0005.desc:0 "These winding city streets all look the same. I've taken three wrong turns already, and I'm no closer to finding the merchant quarter than when I started.\n\nA friendly-looking local notices my confusion. I could ask for directions, or I could figure this out myself - after all, getting to know a city is part of being a merchant."
+ mt_flavor.0005.a:0 "Ask the local for help"
+ mt_flavor.0005.b:0 "I can find my own way"
+ mt_flavor.0005.a.tt:0 "You might make a useful local contact"
+ mt_flavor.0005.b.tt:0 "You might discover a shortcut"
+
+ ###################################
+ # PEOPLE (0006-0010)
+ ###################################
+
+ # 0006: Old friend visits
+ mt_flavor.0006.t:0 "An Old Friend"
+ mt_flavor.0006.desc:0 "What a pleasant surprise! An old friend from my early merchant days has tracked me down. We spend the evening reminiscing about our first fumbling attempts at trade, the deals that went wrong, the fortunes we nearly made.\n\n'Remember that time with the spoiled fish?' [ROOT.Char.GetSheHe] laughs. 'I thought we were ruined!'\n\nIt's good to be reminded of how far I've come."
+ mt_flavor.0006.a:0 "A wonderful evening well spent"
+ mt_flavor.0006.a.tt:0 "Your friend might share a profitable tip"
+
+ # 0007: Young apprentice
+ mt_flavor.0007.t:0 "Eager to Learn"
+ mt_flavor.0007.desc:0 "A young [ROOT.Char.GetWomanMan] approaches me in the market, eyes bright with ambition. [ROOT.Char.GetSheHe|U] wants to learn the merchant's trade and asks if I would consider taking [ROOT.Char.GetHerHim] as an apprentice.\n\n'I'm a quick learner,' [ROOT.Char.GetSheHe] insists. 'I can carry goods, keep ledgers, negotiate with customers - whatever you need!'\n\nThe enthusiasm is endearing, but training an apprentice takes time and patience."
+ mt_flavor.0007.a:0 "Very well. I could use an extra pair of hands"
+ mt_flavor.0007.b:0 "I work alone. Perhaps in the future"
+ mt_flavor.0007.a.tt:0 "Teaching others reinforces your own knowledge"
+
+ # 0008: Rival merchant
+ mt_flavor.0008.t:0 "A Familiar Face"
+ mt_flavor.0008.desc:0 "I settle into the tavern and notice another merchant across the room - one I've competed with before in various markets. We've undercut each other's prices, vied for the same customers, raced to reach markets first.\n\nOur eyes meet. [ROOT.Char.GetSheHe|U] raises a cup in acknowledgment. We could be civil, even friendly. Or perhaps there's an advantage to be gained..."
+ mt_flavor.0008.a:0 "Join them. We might both profit from cooperation"
+ mt_flavor.0008.b:0 "A polite nod, nothing more"
+ mt_flavor.0008.c:0 "Find a way to outmaneuver them here"
+ mt_flavor.0008.a.tt:0 "You might learn about new market opportunities"
+ mt_flavor.0008.c.success:0 "Your scheme works - you undercut their deal and claim their customers"
+ mt_flavor.0008.c.failure:0 "Your scheme backfires - word spreads of your underhanded tactics"
+
+ # 0009: Artisan craft
+ mt_flavor.0009.t:0 "The Craftsman's Art"
+ mt_flavor.0009.desc:0 "A local artisan invites me into their workshop to see their craft. I watch, fascinated, as they work - the precision, the skill developed over years of practice.\n\n'Quality like this can't be rushed,' they explain, showing me how to spot fine workmanship versus cheap imitations. 'Feel the weight, see how the joints fit perfectly...'\n\nThis knowledge could help me judge the goods I trade."
+ mt_flavor.0009.a:0 "Study their technique carefully"
+ mt_flavor.0009.b:0 "Interesting, but I should move on"
+
+ # 0010: Beggar
+ mt_flavor.0010.t:0 "The Beggar's Request"
+ mt_flavor.0010.desc:0 "A beggar approaches as I walk through the market. Their clothes are threadbare, their face gaunt with hunger.\n\n'Please, [ROOT.Char.GetLadyLord], just a few coins for bread...'\n\nI've seen many beggars in my travels. Some are truly desperate. Others are thieves and tricksters. But perhaps that doesn't matter - charity is its own reward."
+ mt_flavor.0010.a:0 "Give them a generous amount"
+ mt_flavor.0010.b:0 "A small coin or two"
+ mt_flavor.0010.c:0 "I earned my coin - they should too"
+
+ ###################################
+ # GOODS & PRODUCTS (0011-0015)
+ ###################################
+
+ # 0011: Exotic spice
+ mt_flavor.0011.t:0 "An Exotic Flavor"
+ mt_flavor.0011.desc:0 "A merchant from distant lands offers me a taste of a spice I've never encountered before. The aroma alone is intoxicating - complex, with notes I can't quite identify.\n\nI try a pinch. The flavor explodes on my tongue - warm, sweet, with a hint of something earthy. This could be incredibly valuable in the right market.\n\n'From the eastern kingdoms,' the merchant explains. 'Very rare here.'"
+ mt_flavor.0011.a:0 "Purchase some to learn this trade"
+ mt_flavor.0011.b:0 "Simply enjoy this new experience"
+
+ # 0012: Silk quality
+ mt_flavor.0012.t:0 "The Art of Silk"
+ mt_flavor.0012.desc:0 "An experienced silk merchant takes me aside and shows me the difference between genuine high-quality silk and the inferior copies that flood some markets.\n\n'See how the light catches it? Feel the weight and smoothness? And here - this is dyed with real indigo, not the cheap substitutes.'\n\nI practice identifying the telltale signs. This knowledge could save me from costly mistakes."
+ mt_flavor.0012.a:0 "Learn to spot counterfeits and quality goods"
+
+ # 0013: Local specialty
+ mt_flavor.0013.t:0 "Local Delicacy"
+ mt_flavor.0013.desc:0 "The locals here are eating something I've never seen before - some kind of dish with an unusual appearance and pungent aroma.\n\n'You must try it!' the innkeeper insists. 'A specialty of our region!'\n\nIt looks... interesting. Foreign foods can be an adventure, though not always a pleasant one."
+ mt_flavor.0013.a:0 "When in strange lands, eat as the locals do"
+ mt_flavor.0013.b:0 "I'll stick to familiar fare, thank you"
+ mt_flavor.0013.a.success:0 "Delicious! You've discovered a wonderful new food"
+ mt_flavor.0013.a.neutral:0 "It's... acquired taste"
+ mt_flavor.0013.a.failure:0 "That did not agree with you at all"
+
+ # 0014: Custom item
+ mt_flavor.0014.t:0 "A Master Craftsman"
+ mt_flavor.0014.desc:0 "A renowned craftsman offers to create a custom piece for me - perhaps a fine cloak clasp, an ornate merchant's seal, or a decorated traveling chest.\n\n'For a merchant of your reputation,' they say with a slight bow, 'I would be honored to demonstrate my finest work.'\n\nIt would be expensive, but owning such quality workmanship has its own value."
+ mt_flavor.0014.a:0 "Commission the piece"
+ mt_flavor.0014.b:0 "Too rich for my blood"
+ mt_flavor.0014.a.tt:0 "Such fine craftsmanship might enhance your reputation"
+
+ # 0015: Wine tasting
+ mt_flavor.0015.t:0 "The Vintner's Craft"
+ mt_flavor.0015.desc:0 "A vineyard owner invites me to taste their wines and learn about viticulture. We walk through the vineyard as they explain how the soil, weather, and grape variety all affect the final product.\n\n'This vintage is particularly fine,' they say, pouring a deep red wine. 'Notice the complexity, the finish...'\n\nI'm learning to distinguish quality wines - knowledge that could be profitable in the wine trade."
+ mt_flavor.0015.a:0 "Study the wine trade seriously"
+ mt_flavor.0015.b:0 "Simply enjoy the excellent wine"
+
+ ###################################
+ # RUMORS & NEWS (0016-0020)
+ ###################################
+
+ # 0016: Profitable rumor
+ mt_flavor.0016.t:0 "A Promising Rumor"
+ mt_flavor.0016.desc:0 "In the market, I overhear merchants discussing a new opportunity - a town to the north that's recently grown wealthy from silver mines and is desperate for luxury goods.\n\n'Paying triple the normal rate,' one merchant whispers. 'But the road is difficult...'\n\nIs this genuine intelligence or just tavern gossip? There's only one way to find out."
+ mt_flavor.0016.a:0 "Investigate this opportunity immediately"
+ mt_flavor.0016.b:0 "Make note of it for future reference"
+ mt_flavor.0016.a.success:0 "The rumor was true - you've made an excellent profit!"
+ mt_flavor.0016.a.failure:0 "It was just rumor and speculation, nothing more"
+
+ # 0017: Distant war
+ mt_flavor.0017.t:0 "News of War"
+ mt_flavor.0017.desc:0 "Word has reached the market of war breaking out in distant lands. Merchants gather to discuss what this means for trade routes and prices.\n\n'War disrupts some routes but creates demand for others,' an experienced trader notes. 'Food, weapons, cloth for uniforms - all valuable in wartime.'\n\nEvery crisis is an opportunity, if one knows how to seize it."
+ mt_flavor.0017.a:0 "War creates opportunity for the shrewd"
+ mt_flavor.0017.b:0 "Best to avoid war-torn regions entirely"
+ mt_flavor.0017.a.tt:0 "You position yourself to profit from wartime demand"
+
+ # 0018: Guild gossip
+ mt_flavor.0018.t:0 "Merchant Gossip"
+ mt_flavor.0018.desc:0 "At a gathering of merchants, the conversation turns to gossip about various traders in the region.\n\n'Did you hear about Roderick? Lost his entire shipment to storms...'\n\n'And that ambitious young merchant from the south? Made a fortune on spices last month...'\n\nI listen carefully. These tidbits of information can be valuable - knowing who's succeeding and who's failing, which routes are profitable, which markets are saturated."
+ mt_flavor.0018.a:0 "Listen and learn from others' fortunes"
+ mt_flavor.0018.a.tt:0 "You might learn of opportunities others have overlooked"
+
+ # 0019: Legendary merchant
+ mt_flavor.0019.t:0 "Tales of the Merchant Princes"
+ mt_flavor.0019.desc:0 "An old merchant regales the gathering with tales of the legendary merchant princes of old - traders who built vast commercial empires, who had agents in every major city, whose wealth rivaled kings.\n\n'Started with nothing but wit and ambition,' the storyteller says. 'Built fortunes through clever trading, careful planning, and bold ventures.'\n\nIf they could do it, why not me? Perhaps one day, my own story will inspire others."
+ mt_flavor.0019.a:0 "I will build my own legend"
+
+ # 0020: Dangerous route
+ mt_flavor.0020.t:0 "A Warning"
+ mt_flavor.0020.desc:0 "A fellow merchant pulls me aside with a worried look.\n\n'The road you're planning to take - there have been bandits. Three merchants robbed just last week. You might want to take the longer route through the valley.'\n\nThe longer route would add days to my journey, but safety has its value. Then again, warnings like this are often exaggerated."
+ mt_flavor.0020.a:0 "Better safe than sorry - take the longer route"
+ mt_flavor.0020.b:0 "I'll risk the direct route - fortune favors the bold"
+ mt_flavor.0020.a.tt:0 "The safer route takes longer but ensures you arrive intact"
+ mt_flavor.0020.b.success:0 "The road was clear - your boldness saved time and you arrive safely"
+ mt_flavor.0020.b.failure:0 "Bandits ambush you on the road! You lose goods and coin"
+
+ ###################################
+ # PERSONAL (0021-0025)
+ ###################################
+
+ # 0021: Homesick
+ mt_flavor.0021.t:0 "Far From Home"
+ mt_flavor.0021.desc:0 "As I sit in yet another unfamiliar inn, in yet another distant town, I find myself thinking of home. My family, my friends, the familiar streets and faces.\n\nThe merchant's life offers freedom and opportunity, but it comes with a price - long periods away from the people and places I love.\n\nPerhaps I should send a letter..."
+ mt_flavor.0021.a:0 "Write a letter home"
+ mt_flavor.0021.b:0 "This is the life I chose - focus on work"
+ mt_flavor.0021.a.success:0 "Your family is glad to hear from you"
+ mt_flavor.0021.a.neutral:0 "Your letter will reach them eventually"
+
+ # 0022: Successful year
+ mt_flavor.0022.t:0 "A Year of Profit"
+ mt_flavor.0022.desc:0 "As I review my accounts, I can't help but smile. This has been an exceptionally profitable year. My careful trading, shrewd negotiations, and wise investments have paid off handsomely.\n\nThis calls for celebration! Perhaps a feast to thank those who've helped me, and to show the community that I'm a merchant of means."
+ mt_flavor.0022.a:0 "Throw a lavish celebration"
+ mt_flavor.0022.b:0 "A modest feast will suffice"
+
+ # 0023: Philosophical reflection
+ mt_flavor.0023.t:0 "The Merchant's Path"
+ mt_flavor.0023.desc:0 "Late at night, with my ledgers before me, I find myself reflecting on the life I've chosen.\n\nThe merchant's path isn't always respected by nobles and warriors, but there's honor in honest trade. I connect distant lands, bring goods where they're needed, create prosperity.\n\nAnd if I profit in the process - well, that's simply fair compensation for the risks I take and the services I provide."
+ mt_flavor.0023.a:0 "I'm proud of what I've built"
+ mt_flavor.0023.b:0 "Sometimes I wonder if there's more to life"
+
+ # 0024: Detailed ledger
+ mt_flavor.0024.t:0 "The Art of Accounting"
+ mt_flavor.0024.desc:0 "I spend the evening meticulously organizing my ledger - recording every transaction, every expense, every profit and loss. Some might find this tedious, but I find it satisfying.\n\nGood records are the foundation of good business. They tell me which ventures are profitable, where my gold is going, what my true financial position is.\n\nNumbers don't lie, and a well-kept ledger is worth its weight in gold."
+ mt_flavor.0024.a:0 "Organize everything meticulously"
+ mt_flavor.0024.b:0 "A rough accounting is good enough"
+
+ # 0025: Grand dreams
+ mt_flavor.0025.t:0 "Dreams of Greatness"
+ mt_flavor.0025.desc:0 "I dream of something grander - not just carrying goods myself, but owning a vast network of trade posts and routes. A grand bazaar bearing my name, with merchants coming from distant lands to trade.\n\nEmploying hundreds, trading in everything from common grain to the rarest silks and spices. Building a commercial empire that will last for generations.\n\nIt's ambitious, perhaps, but every great merchant started with a dream."
+ mt_flavor.0025.a:0 "One day, I will build this empire"
+
+ ###################################
+ # SEASONAL (0026-0030)
+ ###################################
+
+ # 0026: Winter approaches
+ mt_flavor.0026.t:0 "Winter's Approach"
+ mt_flavor.0026.desc:0 "The air grows cold and the days grow short. Winter is coming, and with it, the slow season for trade.\n\nSnow will block mountain passes. Storms will delay ships. Fewer travelers will brave the roads. It's a time to consolidate, to review accounts, to plan for next year's ventures.\n\nEvery merchant knows - winter is for preparation, spring is for action."
+ mt_flavor.0026.a:0 "Prepare for the lean winter months"
+ mt_flavor.0026.a.tt:0 "Trade will be slower during winter, but spring always comes"
+
+ # 0027: Spring renewal
+ mt_flavor.0027.t:0 "Spring's Promise"
+ mt_flavor.0027.desc:0 "The ice melts, the roads clear, and merchants emerge from their winter quarters like bears from hibernation. Spring has arrived, and with it, renewed opportunity.\n\nTravel is easier now. Markets are bustling again. Merchants who spent winter stockpiling goods are ready to trade. There's optimism in the air - this could be a profitable season."
+ mt_flavor.0027.a:0 "Time to travel and trade again!"
+ mt_flavor.0027.a.tt:0 "Spring often brings unexpected opportunities"
+
+ # 0028: Summer festivals
+ mt_flavor.0028.t:0 "Festival Season"
+ mt_flavor.0028.desc:0 "Summer means festivals, and festivals mean opportunity. People gather from the surrounding countryside, pockets full of coin from their harvest sales, eager to spend on goods they couldn't get in their small villages.\n\nI set up my stall among the other merchants, displaying my wares. The atmosphere is festive, business is brisk, and the profits are flowing."
+ mt_flavor.0028.a:0 "Excellent sales at the festival!"
+
+ # 0029: Autumn harvest
+ mt_flavor.0029.t:0 "Harvest Time"
+ mt_flavor.0029.desc:0 "The fields are golden with grain, and farmers are bringing in their harvest. This is when grain is cheapest - abundant and fresh from the fields.\n\nA savvy merchant knows that what's cheap in autumn becomes valuable in late winter and early spring, when stores run low. If I invest in grain now and store it properly, I could sell it for a substantial profit in a few months."
+ mt_flavor.0029.a:0 "Buy grain at harvest prices"
+ mt_flavor.0029.b:0 "Just observe the market this year"
+ mt_flavor.0029.a.tt:0 "You'll profit when you sell it during the lean winter months"
+
+ # 0030: Year-end accounting
+ mt_flavor.0030.t:0 "Year's End Reckoning"
+ mt_flavor.0030.desc:0 "As the year draws to a close, I sit down with my ledgers for the annual accounting. Time to tally up all my ventures - the profits and losses, the successes and failures.\n\nEvery transaction recorded, every deal reviewed. This yearly reckoning tells me if I'm moving forward or falling behind."
+ mt_flavor.0030.a:0 "A profitable year - well done!"
+ mt_flavor.0030.b:0 "Modest profits, but there's always next year"
+ mt_flavor.0030.b.tt:0 "Not every year can be exceptional, but steady progress builds empires"
+
+ ###################################
+ # FOLLOW-UP EVENTS
+ ###################################
+
+ # 0031: Grain profit
+ mt_flavor.0031.t:0 "The Harvest Investment Pays Off"
+ mt_flavor.0031.desc:0 "Just as I predicted, the grain I purchased at harvest time has become quite valuable. Winter stores are running low, and buyers are willing to pay premium prices.\n\nI sell my stores for a handsome profit. This is the essence of good trading - understanding seasons, anticipating demand, and having the patience to wait for the right moment."
+ mt_flavor.0031.a:0 "A wise investment indeed!"
+
+ ###################################
+ # CUSTOM TOOLTIPS
+ ###################################
+
+ # These tooltips are referenced in the events above
+ # Additional tooltips for flavor events are embedded in the event text

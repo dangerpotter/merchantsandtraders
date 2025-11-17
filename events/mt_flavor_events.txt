@@ -1,0 +1,1857 @@
+####################################
+# MERCHANTS AND TRADERS MOD
+# Flavor Events
+####################################
+#
+# Event namespace: mt_flavor
+#
+# 0001-0005: Travel & Encounters
+# 0006-0010: People
+# 0011-0015: Goods & Products
+# 0016-0020: Rumors & News
+# 0021-0025: Personal
+# 0026-0030: Seasonal
+#
+####################################
+
+namespace = mt_flavor
+
+####################################
+# TRAVEL & ENCOUNTERS (0001-0005)
+####################################
+
+# 0001: Meet interesting traveler on the road
+mt_flavor.0001 = {
+	type = character_event
+	title = mt_flavor.0001.t
+	desc = mt_flavor.0001.desc
+	theme = travel
+
+	left_portrait = {
+		character = root
+		animation = personality_rational
+	}
+
+	trigger = {
+		has_trait = wandering_merchant
+		is_traveling = yes
+	}
+
+	mean_time_to_happen = {
+		months = 8
+	}
+
+	# Share stories - gain inspiration
+	option = {
+		name = mt_flavor.0001.a
+
+		add_stress = -5
+
+		random = {
+			chance = 30
+			add_prestige = 10
+		}
+
+		ai_chance = {
+			base = 70
+			modifier = {
+				add = 20
+				has_trait = gregarious
+			}
+		}
+	}
+
+	# Just listen politely
+	option = {
+		name = mt_flavor.0001.b
+
+		add_stress = -2
+
+		ai_chance = {
+			base = 30
+		}
+	}
+}
+
+# 0002: Stay at comfortable inn
+mt_flavor.0002 = {
+	type = character_event
+	title = mt_flavor.0002.t
+	desc = mt_flavor.0002.desc
+	theme = travel
+
+	left_portrait = {
+		character = root
+		animation = happiness
+	}
+
+	trigger = {
+		has_trait = wandering_merchant
+		is_traveling = yes
+	}
+
+	mean_time_to_happen = {
+		months = 10
+	}
+
+	# Pay extra for the comfort
+	option = {
+		name = mt_flavor.0002.a
+
+		trigger = {
+			gold >= 5
+		}
+
+		remove_short_term_gold = 5
+		add_stress = -10
+
+		random = {
+			chance = 20
+			add_health = 0.25
+		}
+
+		ai_chance = {
+			base = 60
+			modifier = {
+				add = 30
+				gold >= 50
+			}
+		}
+	}
+
+	# Standard room is fine
+	option = {
+		name = mt_flavor.0002.b
+
+		add_stress = -3
+
+		ai_chance = {
+			base = 40
+		}
+	}
+}
+
+# 0003: Robbed at seedy tavern
+mt_flavor.0003 = {
+	type = character_event
+	title = mt_flavor.0003.t
+	desc = mt_flavor.0003.desc
+	theme = intrigue
+
+	left_portrait = {
+		character = root
+		animation = anger
+	}
+
+	trigger = {
+		has_trait = wandering_merchant
+		gold >= 10
+	}
+
+	mean_time_to_happen = {
+		months = 24
+	}
+
+	# Pay up to avoid trouble
+	option = {
+		name = mt_flavor.0003.a
+
+		remove_short_term_gold = 8
+		add_stress = 10
+
+		ai_chance = {
+			base = 60
+			modifier = {
+				add = 30
+				has_trait = craven
+			}
+		}
+	}
+
+	# Try to chase them down
+	option = {
+		name = mt_flavor.0003.b
+
+		trigger = {
+			prowess >= 8
+		}
+
+		random_list = {
+			50 = {
+				# Success - get money back plus extra
+				add_gold = 15
+				add_prestige = 15
+				add_stress = -5
+			}
+			50 = {
+				# Failure - lose more money and get hurt
+				remove_short_term_gold = 12
+				add_stress = 20
+				add_health = -0.25
+			}
+		}
+
+		ai_chance = {
+			base = 40
+			modifier = {
+				add = 30
+				has_trait = brave
+			}
+		}
+	}
+
+	# Accept the loss
+	option = {
+		name = mt_flavor.0003.c
+
+		remove_short_term_gold = 8
+		add_stress = 5
+
+		if = {
+			limit = { has_trait = calm }
+			add_stress = -3
+		}
+
+		ai_chance = {
+			base = 30
+			modifier = {
+				add = 40
+				has_trait = calm
+			}
+		}
+	}
+}
+
+# 0004: Beautiful scenery during journey
+mt_flavor.0004 = {
+	type = character_event
+	title = mt_flavor.0004.t
+	desc = mt_flavor.0004.desc
+	theme = travel
+
+	left_portrait = {
+		character = root
+		animation = personality_content
+	}
+
+	trigger = {
+		has_trait = wandering_merchant
+		is_traveling = yes
+	}
+
+	mean_time_to_happen = {
+		months = 9
+	}
+
+	# Stop and appreciate
+	option = {
+		name = mt_flavor.0004.a
+
+		add_stress = -8
+
+		random = {
+			chance = 15
+			add_trait = poet
+		}
+
+		ai_chance = {
+			base = 70
+			modifier = {
+				add = 30
+				stress >= 50
+			}
+		}
+	}
+
+	# No time for sightseeing
+	option = {
+		name = mt_flavor.0004.b
+
+		trigger = {
+			has_trait = ambitious
+		}
+
+		add_stress = 2
+		add_gold = 3
+
+		ai_chance = {
+			base = 30
+		}
+	}
+}
+
+# 0005: Lost in unfamiliar city
+mt_flavor.0005 = {
+	type = character_event
+	title = mt_flavor.0005.t
+	desc = mt_flavor.0005.desc
+	theme = travel
+
+	left_portrait = {
+		character = root
+		animation = worry
+	}
+
+	trigger = {
+		has_trait = wandering_merchant
+		is_traveling = yes
+	}
+
+	mean_time_to_happen = {
+		months = 12
+	}
+
+	# Ask for directions
+	option = {
+		name = mt_flavor.0005.a
+
+		add_stress = -5
+
+		random = {
+			chance = 40
+			# Make a new friend
+			add_prestige = 10
+			custom_tooltip = mt_flavor.0005.a.tt
+		}
+
+		ai_chance = {
+			base = 70
+		}
+	}
+
+	# Figure it out yourself
+	option = {
+		name = mt_flavor.0005.b
+
+		add_stress = 10
+
+		random = {
+			chance = 25
+			# Find a shortcut
+			add_gold = 5
+			custom_tooltip = mt_flavor.0005.b.tt
+		}
+
+		ai_chance = {
+			base = 30
+			modifier = {
+				add = 20
+				learning >= 12
+			}
+		}
+	}
+}
+
+####################################
+# PEOPLE (0006-0010)
+####################################
+
+# 0006: Old friend from merchant days visits
+mt_flavor.0006 = {
+	type = character_event
+	title = mt_flavor.0006.t
+	desc = mt_flavor.0006.desc
+	theme = diplomacy
+
+	left_portrait = {
+		character = root
+		animation = happiness
+	}
+
+	trigger = {
+		has_trait = wandering_merchant
+	}
+
+	mean_time_to_happen = {
+		months = 18
+	}
+
+	# Spend the evening catching up
+	option = {
+		name = mt_flavor.0006.a
+
+		add_stress = -15
+		add_prestige = 15
+
+		random = {
+			chance = 30
+			add_gold = 10
+			custom_tooltip = mt_flavor.0006.a.tt
+		}
+
+		ai_chance = {
+			base = 100
+		}
+	}
+}
+
+# 0007: Young person wants to learn trade
+mt_flavor.0007 = {
+	type = character_event
+	title = mt_flavor.0007.t
+	desc = mt_flavor.0007.desc
+	theme = stewardship
+
+	left_portrait = {
+		character = root
+		animation = personality_rational
+	}
+
+	trigger = {
+		has_trait = wandering_merchant
+		age >= 30
+	}
+
+	mean_time_to_happen = {
+		months = 20
+	}
+
+	# Take them as apprentice
+	option = {
+		name = mt_flavor.0007.a
+
+		add_prestige = 25
+		add_stress = 5
+
+		if = {
+			limit = { has_variable = mt_reputation }
+			change_variable = {
+				name = mt_reputation
+				add = 5
+			}
+		}
+
+		random = {
+			chance = 20
+			add_stewardship_skill = 1
+			custom_tooltip = mt_flavor.0007.a.tt
+		}
+
+		ai_chance = {
+			base = 60
+			modifier = {
+				add = 30
+				has_trait = patient
+			}
+		}
+	}
+
+	# Too busy
+	option = {
+		name = mt_flavor.0007.b
+
+		add_stress = -3
+		add_prestige = -5
+
+		ai_chance = {
+			base = 40
+		}
+	}
+}
+
+# 0008: Rival merchant at same tavern
+mt_flavor.0008 = {
+	type = character_event
+	title = mt_flavor.0008.t
+	desc = mt_flavor.0008.desc
+	theme = stewardship
+
+	left_portrait = {
+		character = root
+		animation = thinking
+	}
+
+	trigger = {
+		has_trait = wandering_merchant
+	}
+
+	mean_time_to_happen = {
+		months = 15
+	}
+
+	# Be friendly - might learn something
+	option = {
+		name = mt_flavor.0008.a
+
+		add_prestige = 10
+
+		random = {
+			chance = 50
+			add_gold = 8
+			custom_tooltip = mt_flavor.0008.a.tt
+		}
+
+		ai_chance = {
+			base = 60
+			modifier = {
+				add = 30
+				has_trait = gregarious
+			}
+		}
+	}
+
+	# Keep to yourself
+	option = {
+		name = mt_flavor.0008.b
+
+		add_stress = -2
+
+		ai_chance = {
+			base = 30
+		}
+	}
+
+	# Try to undercut them
+	option = {
+		name = mt_flavor.0008.c
+
+		trigger = {
+			OR = {
+				has_trait = ambitious
+				has_trait = greedy
+			}
+		}
+
+		random_list = {
+			60 = {
+				# Success
+				add_gold = 15
+				add_prestige = -5
+				custom_tooltip = mt_flavor.0008.c.success
+			}
+			40 = {
+				# Backfires
+				add_gold = -10
+				add_prestige = -10
+				add_stress = 15
+				custom_tooltip = mt_flavor.0008.c.failure
+			}
+		}
+
+		ai_chance = {
+			base = 20
+			modifier = {
+				add = 30
+				has_trait = greedy
+			}
+		}
+	}
+}
+
+# 0009: Local artisan shows you their craft
+mt_flavor.0009 = {
+	type = character_event
+	title = mt_flavor.0009.t
+	desc = mt_flavor.0009.desc
+	theme = stewardship
+
+	left_portrait = {
+		character = root
+		animation = personality_rational
+	}
+
+	trigger = {
+		has_trait = wandering_merchant
+	}
+
+	mean_time_to_happen = {
+		months = 14
+	}
+
+	# Study their technique
+	option = {
+		name = mt_flavor.0009.a
+
+		add_stewardship_lifestyle_xp = 30
+		add_stress = -5
+
+		random = {
+			chance = 25
+			add_stewardship_skill = 1
+		}
+
+		ai_chance = {
+			base = 80
+			modifier = {
+				add = 20
+				learning >= 10
+			}
+		}
+	}
+
+	# Polite but not interested
+	option = {
+		name = mt_flavor.0009.b
+
+		add_prestige = 5
+
+		ai_chance = {
+			base = 20
+		}
+	}
+}
+
+# 0010: Beggar asks for coins
+mt_flavor.0010 = {
+	type = character_event
+	title = mt_flavor.0010.t
+	desc = mt_flavor.0010.desc
+	theme = diplomacy
+
+	left_portrait = {
+		character = root
+		animation = thinking
+	}
+
+	trigger = {
+		has_trait = wandering_merchant
+		gold >= 5
+	}
+
+	mean_time_to_happen = {
+		months = 6
+	}
+
+	# Give generously
+	option = {
+		name = mt_flavor.0010.a
+
+		trigger = {
+			gold >= 5
+		}
+
+		remove_short_term_gold = 5
+		add_piety = 25
+		add_stress = -5
+
+		random = {
+			chance = 10
+			add_trait = charitable
+		}
+
+		ai_chance = {
+			base = 40
+			modifier = {
+				add = 50
+				has_trait = charitable
+			}
+		}
+	}
+
+	# Give a small amount
+	option = {
+		name = mt_flavor.0010.b
+
+		remove_short_term_gold = 1
+		add_piety = 10
+
+		ai_chance = {
+			base = 40
+		}
+	}
+
+	# Ignore them
+	option = {
+		name = mt_flavor.0010.c
+
+		trigger = {
+			OR = {
+				has_trait = greedy
+				has_trait = callous
+			}
+		}
+
+		add_piety = -10
+		add_gold = 0
+
+		ai_chance = {
+			base = 20
+			modifier = {
+				add = 50
+				has_trait = greedy
+			}
+		}
+	}
+}
+
+####################################
+# GOODS & PRODUCTS (0011-0015)
+####################################
+
+# 0011: Taste exotic spice for first time
+mt_flavor.0011 = {
+	type = character_event
+	title = mt_flavor.0011.t
+	desc = mt_flavor.0011.desc
+	theme = stewardship
+
+	left_portrait = {
+		character = root
+		animation = happiness
+	}
+
+	trigger = {
+		has_trait = wandering_merchant
+	}
+
+	mean_time_to_happen = {
+		months = 16
+	}
+
+	# Purchase some to trade
+	option = {
+		name = mt_flavor.0011.a
+
+		trigger = {
+			gold >= 10
+		}
+
+		remove_short_term_gold = 10
+		add_stress = -8
+
+		if = {
+			limit = { has_variable = mt_reputation }
+			change_variable = {
+				name = mt_reputation
+				add = 3
+			}
+		}
+
+		ai_chance = {
+			base = 70
+		}
+	}
+
+	# Just enjoy the experience
+	option = {
+		name = mt_flavor.0011.b
+
+		add_stress = -5
+		add_prestige = 5
+
+		ai_chance = {
+			base = 30
+		}
+	}
+}
+
+# 0012: Inspect silk quality
+mt_flavor.0012 = {
+	type = character_event
+	title = mt_flavor.0012.t
+	desc = mt_flavor.0012.desc
+	theme = stewardship
+
+	left_portrait = {
+		character = root
+		animation = personality_rational
+	}
+
+	trigger = {
+		has_trait = wandering_merchant
+		learning >= 8
+	}
+
+	mean_time_to_happen = {
+		months = 18
+	}
+
+	# Learn to spot fakes
+	option = {
+		name = mt_flavor.0012.a
+
+		add_stewardship_lifestyle_xp = 40
+
+		if = {
+			limit = { has_variable = mt_reputation }
+			change_variable = {
+				name = mt_reputation
+				add = 5
+			}
+		}
+
+		random = {
+			chance = 30
+			add_learning_skill = 1
+		}
+
+		ai_chance = {
+			base = 100
+		}
+	}
+}
+
+# 0013: Local specialty food
+mt_flavor.0013 = {
+	type = character_event
+	title = mt_flavor.0013.t
+	desc = mt_flavor.0013.desc
+	theme = travel
+
+	left_portrait = {
+		character = root
+		animation = thinking
+	}
+
+	trigger = {
+		has_trait = wandering_merchant
+		is_traveling = yes
+	}
+
+	mean_time_to_happen = {
+		months = 10
+	}
+
+	# Try it - adventure!
+	option = {
+		name = mt_flavor.0013.a
+
+		add_stress = -6
+
+		random_list = {
+			70 = {
+				# Delicious
+				add_prestige = 10
+				custom_tooltip = mt_flavor.0013.a.success
+			}
+			20 = {
+				# Not to your taste
+				add_stress = 3
+				custom_tooltip = mt_flavor.0013.a.neutral
+			}
+			10 = {
+				# Food poisoning
+				add_health = -0.5
+				add_stress = 10
+				custom_tooltip = mt_flavor.0013.a.failure
+			}
+		}
+
+		ai_chance = {
+			base = 60
+			modifier = {
+				add = 30
+				has_trait = brave
+			}
+		}
+	}
+
+	# Stick to familiar food
+	option = {
+		name = mt_flavor.0013.b
+
+		add_stress = 2
+
+		ai_chance = {
+			base = 40
+		}
+	}
+}
+
+# 0014: Craftsman offers custom item
+mt_flavor.0014 = {
+	type = character_event
+	title = mt_flavor.0014.t
+	desc = mt_flavor.0014.desc
+	theme = stewardship
+
+	left_portrait = {
+		character = root
+		animation = personality_rational
+	}
+
+	trigger = {
+		has_trait = wandering_merchant
+		gold >= 20
+	}
+
+	mean_time_to_happen = {
+		months = 20
+	}
+
+	# Commission the piece
+	option = {
+		name = mt_flavor.0014.a
+
+		trigger = {
+			gold >= 20
+		}
+
+		remove_short_term_gold = 20
+		add_prestige = 30
+		add_stress = -10
+
+		random = {
+			chance = 20
+			add_diplomacy_skill = 1
+			custom_tooltip = mt_flavor.0014.a.tt
+		}
+
+		ai_chance = {
+			base = 60
+			modifier = {
+				add = 30
+				gold >= 100
+			}
+		}
+	}
+
+	# Too expensive
+	option = {
+		name = mt_flavor.0014.b
+
+		add_stress = 5
+
+		ai_chance = {
+			base = 40
+		}
+	}
+}
+
+# 0015: Wine tasting at vineyard
+mt_flavor.0015 = {
+	type = character_event
+	title = mt_flavor.0015.t
+	desc = mt_flavor.0015.desc
+	theme = stewardship
+
+	left_portrait = {
+		character = root
+		animation = happiness
+	}
+
+	trigger = {
+		has_trait = wandering_merchant
+	}
+
+	mean_time_to_happen = {
+		months = 15
+	}
+
+	# Learn about wine trade
+	option = {
+		name = mt_flavor.0015.a
+
+		add_stewardship_lifestyle_xp = 35
+		add_stress = -7
+
+		if = {
+			limit = { has_variable = mt_reputation }
+			change_variable = {
+				name = mt_reputation
+				add = 4
+			}
+		}
+
+		ai_chance = {
+			base = 70
+		}
+	}
+
+	# Just enjoy the wine
+	option = {
+		name = mt_flavor.0015.b
+
+		add_stress = -10
+		add_prestige = 10
+
+		random = {
+			chance = 15
+			add_trait = drunkard
+		}
+
+		ai_chance = {
+			base = 30
+			modifier = {
+				add = 40
+				has_trait = gluttonous
+			}
+		}
+	}
+}
+
+####################################
+# RUMORS & NEWS (0016-0020)
+####################################
+
+# 0016: Hear rumor about profitable new market
+mt_flavor.0016 = {
+	type = character_event
+	title = mt_flavor.0016.t
+	desc = mt_flavor.0016.desc
+	theme = stewardship
+
+	left_portrait = {
+		character = root
+		animation = thinking
+	}
+
+	trigger = {
+		has_trait = wandering_merchant
+	}
+
+	mean_time_to_happen = {
+		months = 12
+	}
+
+	# Investigate immediately
+	option = {
+		name = mt_flavor.0016.a
+
+		random_list = {
+			60 = {
+				# Rumor was true
+				add_gold = 25
+				add_prestige = 20
+				custom_tooltip = mt_flavor.0016.a.success
+			}
+			40 = {
+				# False lead
+				add_stress = 10
+				custom_tooltip = mt_flavor.0016.a.failure
+			}
+		}
+
+		ai_chance = {
+			base = 70
+			modifier = {
+				add = 30
+				has_trait = ambitious
+			}
+		}
+	}
+
+	# Note it for later
+	option = {
+		name = mt_flavor.0016.b
+
+		if = {
+			limit = { has_variable = mt_reputation }
+			change_variable = {
+				name = mt_reputation
+				add = 2
+			}
+		}
+
+		ai_chance = {
+			base = 30
+		}
+	}
+}
+
+# 0017: News of distant war
+mt_flavor.0017 = {
+	type = character_event
+	title = mt_flavor.0017.t
+	desc = mt_flavor.0017.desc
+	theme = stewardship
+
+	left_portrait = {
+		character = root
+		animation = thinking
+	}
+
+	trigger = {
+		has_trait = wandering_merchant
+		any_character = {
+			is_at_war = yes
+		}
+	}
+
+	mean_time_to_happen = {
+		months = 10
+	}
+
+	# War means opportunity
+	option = {
+		name = mt_flavor.0017.a
+
+		trigger = {
+			has_trait = ambitious
+		}
+
+		add_gold = 10
+		add_prestige = 10
+
+		custom_tooltip = mt_flavor.0017.a.tt
+
+		ai_chance = {
+			base = 60
+		}
+	}
+
+	# War means danger - be cautious
+	option = {
+		name = mt_flavor.0017.b
+
+		add_stress = -5
+
+		ai_chance = {
+			base = 40
+			modifier = {
+				add = 30
+				has_trait = craven
+			}
+		}
+	}
+}
+
+# 0018: Merchant guild gossip
+mt_flavor.0018 = {
+	type = character_event
+	title = mt_flavor.0018.t
+	desc = mt_flavor.0018.desc
+	theme = diplomacy
+
+	left_portrait = {
+		character = root
+		animation = personality_rational
+	}
+
+	trigger = {
+		has_trait = wandering_merchant
+	}
+
+	mean_time_to_happen = {
+		months = 11
+	}
+
+	# Listen and learn
+	option = {
+		name = mt_flavor.0018.a
+
+		if = {
+			limit = { has_variable = mt_reputation }
+			change_variable = {
+				name = mt_reputation
+				add = 3
+			}
+		}
+
+		add_intrigue_lifestyle_xp = 25
+
+		random = {
+			chance = 30
+			add_gold = 12
+			custom_tooltip = mt_flavor.0018.a.tt
+		}
+
+		ai_chance = {
+			base = 100
+		}
+	}
+}
+
+# 0019: Stories of legendary merchant
+mt_flavor.0019 = {
+	type = character_event
+	title = mt_flavor.0019.t
+	desc = mt_flavor.0019.desc
+	theme = stewardship
+
+	left_portrait = {
+		character = root
+		animation = personality_honorable
+	}
+
+	trigger = {
+		has_trait = wandering_merchant
+	}
+
+	mean_time_to_happen = {
+		months = 16
+	}
+
+	# Be inspired
+	option = {
+		name = mt_flavor.0019.a
+
+		add_stress = -10
+		add_prestige = 15
+
+		random = {
+			chance = 20
+			add_trait = ambitious
+		}
+
+		if = {
+			limit = { has_variable = mt_reputation }
+			change_variable = {
+				name = mt_reputation
+				add = 5
+			}
+		}
+
+		ai_chance = {
+			base = 100
+		}
+	}
+}
+
+# 0020: Warning about dangerous route
+mt_flavor.0020 = {
+	type = character_event
+	title = mt_flavor.0020.t
+	desc = mt_flavor.0020.desc
+	theme = intrigue
+
+	left_portrait = {
+		character = root
+		animation = worry
+	}
+
+	trigger = {
+		has_trait = wandering_merchant
+		is_traveling = yes
+	}
+
+	mean_time_to_happen = {
+		months = 14
+	}
+
+	# Heed the warning - take safer route
+	option = {
+		name = mt_flavor.0020.a
+
+		add_stress = -5
+
+		custom_tooltip = mt_flavor.0020.a.tt
+
+		ai_chance = {
+			base = 70
+			modifier = {
+				add = 30
+				has_trait = craven
+			}
+		}
+	}
+
+	# Risk it - faster route
+	option = {
+		name = mt_flavor.0020.b
+
+		trigger = {
+			has_trait = brave
+		}
+
+		random_list = {
+			70 = {
+				# Safe passage
+				add_gold = 10
+				add_prestige = 15
+				custom_tooltip = mt_flavor.0020.b.success
+			}
+			30 = {
+				# Bandits!
+				remove_short_term_gold = 20
+				add_stress = 20
+				add_health = -0.5
+				custom_tooltip = mt_flavor.0020.b.failure
+			}
+		}
+
+		ai_chance = {
+			base = 30
+			modifier = {
+				add = 30
+				has_trait = brave
+			}
+		}
+	}
+}
+
+####################################
+# PERSONAL (0021-0025)
+####################################
+
+# 0021: Missing home during long journey
+mt_flavor.0021 = {
+	type = character_event
+	title = mt_flavor.0021.t
+	desc = mt_flavor.0021.desc
+	theme = travel
+
+	left_portrait = {
+		character = root
+		animation = sadness
+	}
+
+	trigger = {
+		has_trait = wandering_merchant
+		is_traveling = yes
+		any_close_family_member = {
+			is_alive = yes
+		}
+	}
+
+	mean_time_to_happen = {
+		months = 15
+	}
+
+	# Write a letter home
+	option = {
+		name = mt_flavor.0021.a
+
+		add_stress = -8
+
+		random_list_tooltip = {
+			75 = {
+				custom_tooltip = mt_flavor.0021.a.success
+			}
+			25 = {
+				custom_tooltip = mt_flavor.0021.a.neutral
+			}
+		}
+
+		random_list = {
+			75 = {
+				# Receives reply
+				random_close_family_member = {
+					add_opinion = {
+						target = root
+						modifier = friendliness_opinion
+						opinion = 10
+					}
+				}
+			}
+			25 = {
+				# No reply yet
+			}
+		}
+
+		ai_chance = {
+			base = 70
+		}
+	}
+
+	# Focus on work
+	option = {
+		name = mt_flavor.0021.b
+
+		add_stress = 10
+		add_gold = 5
+
+		ai_chance = {
+			base = 30
+		}
+	}
+}
+
+# 0022: Celebrate successful year
+mt_flavor.0022 = {
+	type = character_event
+	title = mt_flavor.0022.t
+	desc = mt_flavor.0022.desc
+	theme = stewardship
+
+	left_portrait = {
+		character = root
+		animation = happiness
+	}
+
+	trigger = {
+		has_trait = wandering_merchant
+		gold >= 100
+	}
+
+	mean_time_to_happen = {
+		months = 24
+	}
+
+	# Throw a lavish feast
+	option = {
+		name = mt_flavor.0022.a
+
+		trigger = {
+			gold >= 30
+		}
+
+		remove_short_term_gold = 30
+		add_prestige = 50
+		add_stress = -20
+
+		if = {
+			limit = { has_variable = mt_reputation }
+			change_variable = {
+				name = mt_reputation
+				add = 10
+			}
+		}
+
+		ai_chance = {
+			base = 60
+			modifier = {
+				add = 30
+				has_trait = gregarious
+			}
+		}
+	}
+
+	# Modest celebration
+	option = {
+		name = mt_flavor.0022.b
+
+		remove_short_term_gold = 10
+		add_prestige = 20
+		add_stress = -10
+
+		ai_chance = {
+			base = 40
+		}
+	}
+}
+
+# 0023: Reflect on merchant life
+mt_flavor.0023 = {
+	type = character_event
+	title = mt_flavor.0023.t
+	desc = mt_flavor.0023.desc
+	theme = stewardship
+
+	left_portrait = {
+		character = root
+		animation = thinking
+	}
+
+	trigger = {
+		has_trait = wandering_merchant
+		age >= 30
+	}
+
+	mean_time_to_happen = {
+		months = 20
+	}
+
+	# This is the right path
+	option = {
+		name = mt_flavor.0023.a
+
+		add_stress = -15
+		add_prestige = 20
+
+		random = {
+			chance = 15
+			add_trait = content
+		}
+
+		ai_chance = {
+			base = 70
+		}
+	}
+
+	# Sometimes I wonder...
+	option = {
+		name = mt_flavor.0023.b
+
+		add_stress = 5
+
+		random = {
+			chance = 10
+			add_piety = 25
+		}
+
+		ai_chance = {
+			base = 30
+		}
+	}
+}
+
+# 0024: Keep detailed ledger
+mt_flavor.0024 = {
+	type = character_event
+	title = mt_flavor.0024.t
+	desc = mt_flavor.0024.desc
+	theme = stewardship
+
+	left_portrait = {
+		character = root
+		animation = personality_rational
+	}
+
+	trigger = {
+		has_trait = wandering_merchant
+		learning >= 8
+	}
+
+	mean_time_to_happen = {
+		months = 13
+	}
+
+	# Meticulously organize
+	option = {
+		name = mt_flavor.0024.a
+
+		add_stewardship_lifestyle_xp = 45
+		add_stress = -5
+
+		if = {
+			limit = { has_variable = mt_reputation }
+			change_variable = {
+				name = mt_reputation
+				add = 3
+			}
+		}
+
+		random = {
+			chance = 25
+			add_trait = diligent
+		}
+
+		ai_chance = {
+			base = 80
+			modifier = {
+				add = 20
+				has_trait = diligent
+			}
+		}
+	}
+
+	# Good enough
+	option = {
+		name = mt_flavor.0024.b
+
+		add_stress = -2
+
+		ai_chance = {
+			base = 20
+		}
+	}
+}
+
+# 0025: Dream of opening grand bazaar
+mt_flavor.0025 = {
+	type = character_event
+	title = mt_flavor.0025.t
+	desc = mt_flavor.0025.desc
+	theme = stewardship
+
+	left_portrait = {
+		character = root
+		animation = personality_bold
+	}
+
+	trigger = {
+		has_trait = wandering_merchant
+		gold >= 50
+	}
+
+	mean_time_to_happen = {
+		months = 18
+	}
+
+	# Start planning
+	option = {
+		name = mt_flavor.0025.a
+
+		add_stress = -10
+		add_prestige = 25
+
+		if = {
+			limit = { has_variable = mt_reputation }
+			change_variable = {
+				name = mt_reputation
+				add = 5
+			}
+		}
+
+		random = {
+			chance = 20
+			add_trait = ambitious
+		}
+
+		ai_chance = {
+			base = 100
+		}
+	}
+}
+
+####################################
+# SEASONAL (0026-0030)
+####################################
+
+# 0026: Winter slows trade
+mt_flavor.0026 = {
+	type = character_event
+	title = mt_flavor.0026.t
+	desc = mt_flavor.0026.desc
+	theme = stewardship
+
+	left_portrait = {
+		character = root
+		animation = thinking
+	}
+
+	trigger = {
+		has_trait = wandering_merchant
+		current_month = 11
+	}
+
+	mean_time_to_happen = {
+		months = 1
+	}
+
+	# Prepare for lean times
+	option = {
+		name = mt_flavor.0026.a
+
+		add_stress = -5
+
+		custom_tooltip = mt_flavor.0026.a.tt
+
+		ai_chance = {
+			base = 100
+		}
+	}
+}
+
+# 0027: Spring brings new opportunities
+mt_flavor.0027 = {
+	type = character_event
+	title = mt_flavor.0027.t
+	desc = mt_flavor.0027.desc
+	theme = stewardship
+
+	left_portrait = {
+		character = root
+		animation = happiness
+	}
+
+	trigger = {
+		has_trait = wandering_merchant
+		current_month = 3
+	}
+
+	mean_time_to_happen = {
+		months = 1
+	}
+
+	# Time to travel again
+	option = {
+		name = mt_flavor.0027.a
+
+		add_stress = -10
+		add_prestige = 10
+
+		random = {
+			chance = 30
+			add_gold = 15
+			custom_tooltip = mt_flavor.0027.a.tt
+		}
+
+		ai_chance = {
+			base = 100
+		}
+	}
+}
+
+# 0028: Summer festivals boost sales
+mt_flavor.0028 = {
+	type = character_event
+	title = mt_flavor.0028.t
+	desc = mt_flavor.0028.desc
+	theme = stewardship
+
+	left_portrait = {
+		character = root
+		animation = happiness
+	}
+
+	trigger = {
+		has_trait = wandering_merchant
+		current_month = 6
+	}
+
+	mean_time_to_happen = {
+		months = 1
+	}
+
+	# Set up stall at festival
+	option = {
+		name = mt_flavor.0028.a
+
+		add_gold = 20
+		add_prestige = 15
+		add_stress = -8
+
+		if = {
+			limit = { has_variable = mt_reputation }
+			change_variable = {
+				name = mt_reputation
+				add = 5
+			}
+		}
+
+		ai_chance = {
+			base = 100
+		}
+	}
+}
+
+# 0029: Autumn harvest affects grain prices
+mt_flavor.0029 = {
+	type = character_event
+	title = mt_flavor.0029.t
+	desc = mt_flavor.0029.desc
+	theme = stewardship
+
+	left_portrait = {
+		character = root
+		animation = personality_rational
+	}
+
+	trigger = {
+		has_trait = wandering_merchant
+		current_month = 9
+	}
+
+	mean_time_to_happen = {
+		months = 1
+	}
+
+	# Stock up on grain
+	option = {
+		name = mt_flavor.0029.a
+
+		trigger = {
+			gold >= 15
+		}
+
+		remove_short_term_gold = 15
+
+		custom_tooltip = mt_flavor.0029.a.tt
+
+		# Profit later
+		trigger_event = {
+			id = mt_flavor.0031
+			days = { 60 120 }
+		}
+
+		ai_chance = {
+			base = 70
+		}
+	}
+
+	# Just observe market
+	option = {
+		name = mt_flavor.0029.b
+
+		add_stewardship_lifestyle_xp = 20
+
+		ai_chance = {
+			base = 30
+		}
+	}
+}
+
+# 0030: Year-end accounting
+mt_flavor.0030 = {
+	type = character_event
+	title = mt_flavor.0030.t
+	desc = mt_flavor.0030.desc
+	theme = stewardship
+
+	left_portrait = {
+		character = root
+		animation = thinking
+	}
+
+	trigger = {
+		has_trait = wandering_merchant
+		current_month = 12
+	}
+
+	mean_time_to_happen = {
+		months = 1
+	}
+
+	immediate = {
+		# Determine if it was a profitable year
+		if = {
+			limit = { gold >= 100 }
+			set_variable = {
+				name = mt_profitable_year
+				value = yes
+				days = 30
+			}
+		}
+	}
+
+	# Profitable year
+	option = {
+		name = mt_flavor.0030.a
+
+		trigger = {
+			has_variable = mt_profitable_year
+		}
+
+		add_stress = -15
+		add_prestige = 30
+
+		if = {
+			limit = { has_variable = mt_reputation }
+			change_variable = {
+				name = mt_reputation
+				add = 8
+			}
+		}
+
+		ai_chance = {
+			base = 100
+		}
+	}
+
+	# Modest year
+	option = {
+		name = mt_flavor.0030.b
+
+		trigger = {
+			NOT = { has_variable = mt_profitable_year }
+		}
+
+		add_stress = 5
+
+		custom_tooltip = mt_flavor.0030.b.tt
+
+		ai_chance = {
+			base = 100
+		}
+	}
+}
+
+####################################
+# FOLLOW-UP EVENTS
+####################################
+
+# 0031: Grain profit from harvest investment
+mt_flavor.0031 = {
+	type = character_event
+	title = mt_flavor.0031.t
+	desc = mt_flavor.0031.desc
+	theme = stewardship
+
+	left_portrait = {
+		character = root
+		animation = happiness
+	}
+
+	# This event is only triggered, not random
+
+	option = {
+		name = mt_flavor.0031.a
+
+		add_gold = 30
+		add_prestige = 20
+
+		if = {
+			limit = { has_variable = mt_reputation }
+			change_variable = {
+				name = mt_reputation
+				add = 5
+			}
+		}
+
+		ai_chance = {
+			base = 100
+		}
+	}
+}

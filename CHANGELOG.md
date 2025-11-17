@@ -7,6 +7,20 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+- Comprehensive flavor event system (`mt_flavor_events.txt`):
+  - 30+ atmospheric flavor events that bring merchant life to life
+  - Travel & Encounters (5 events): Random encounters on the road, beautiful scenery, getting lost
+  - People (5 events): Old friends, apprentices, rival merchants, artisans, beggars
+  - Goods & Products (5 events): Exotic spices, silk quality, local foods, custom items, wine tasting
+  - Rumors & News (5 events): Market opportunities, war news, guild gossip, legendary merchants
+  - Personal (5 events): Homesickness, celebrations, reflections, ledger keeping, grand dreams
+  - Seasonal (5 events): Winter slowdowns, spring renewal, summer festivals, autumn harvest, year-end accounting
+  - Events fire every 6-24 months based on triggers
+  - Minor stat changes (stress, gold, prestige, opinion)
+  - Character trait interactions and consequences
+  - Full localization with atmospheric descriptions
+
 ### Planned
 - Trade goods system implementation
 - Merchant traits and character interactions
