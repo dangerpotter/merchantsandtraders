@@ -1,0 +1,3852 @@
+####################################
+# MERCHANTS AND TRADERS MOD
+# Merchant Career Progression Events
+####################################
+#
+# Event namespace: mt_career
+#
+# 0001-0004: Starting Out
+# 0005-0008: Building Reputation
+# 0009-0012: Tier Up Moments
+# 0013-0016: Challenges
+# 0017-0020: Opportunities
+# 0021-0023: Legacy
+#
+####################################
+
+namespace = mt_career
+
+####################################
+# STARTING OUT (0001-0004)
+####################################
+
+# 0001: First successful trade - gain confidence
+mt_career.0001 = {
+	type = character_event
+	title = mt_career.0001.t
+	desc = mt_career.0001.desc
+	theme = stewardship
+
+	left_portrait = {
+		character = root
+		animation = happiness
+	}
+
+	trigger = {
+		has_trait = wandering_merchant
+		NOT = { has_character_flag = had_first_trade_success }
+		gold >= 50
+	}
+
+	weight_multiplier = {
+		base = 1
+
+		# More likely early in career
+		modifier = {
+			add = 2
+			trait_duration = {
+				trait = wandering_merchant
+				months <= 12
+			}
+		}
+	}
+
+	immediate = {
+		add_character_flag = had_first_trade_success
+	}
+
+	# Celebrate your success
+	option = {
+		name = mt_career.0001.a
+
+		add_prestige = 50
+		add_gold = 25
+		add_stress = -10
+
+		# Chance to gain gregarious trait
+		random = {
+			chance = 15
+			add_trait = gregarious
+		}
+
+		ai_chance = {
+			base = 60
+
+			modifier = {
+				add = 30
+				has_trait = gregarious
+			}
+		}
+	}
+
+	# Stay humble and focused
+	option = {
+		name = mt_career.0001.b
+
+		add_gold = 50
+		add_learning = 1
+
+		# Chance to gain diligent trait
+		random = {
+			chance = 20
+			add_trait = diligent
+		}
+
+		ai_chance = {
+			base = 40
+
+			modifier = {
+				add = 30
+				has_trait = humble
+			}
+		}
+	}
+}
+
+# 0002: Fellow merchant offers advice - choose trade specialization hint
+mt_career.0002 = {
+	type = character_event
+	title = mt_career.0002.t
+	desc = mt_career.0002.desc
+	theme = diplomacy
+
+	left_portrait = {
+		character = root
+		animation = personality_rational
+	}
+
+	right_portrait = {
+		character = scope:mentor_merchant
+		animation = personality_content
+	}
+
+	trigger = {
+		has_trait = wandering_merchant
+		NOT = { has_character_flag = received_merchant_advice }
+		any_courtier = {
+			OR = {
+				has_trait = trade_post_owner
+				has_trait = trading_company_head
+				has_trait = merchant_prince
+			}
+		}
+	}
+
+	weight_multiplier = {
+		base = 1
+	}
+
+	immediate = {
+		add_character_flag = received_merchant_advice
+
+		random_courtier = {
+			limit = {
+				OR = {
+					has_trait = trade_post_owner
+					has_trait = trading_company_head
+					has_trait = merchant_prince
+				}
+			}
+			save_scope_as = mentor_merchant
+		}
+	}
+
+	# Focus on luxury goods - high risk, high reward
+	option = {
+		name = mt_career.0002.a
+
+		add_character_modifier = {
+			modifier = mt_luxury_trade_focus
+			years = 10
+		}
+
+		add_opinion = {
+			target = scope:mentor_merchant
+			modifier = grateful_opinion
+			opinion = 20
+		}
+
+		ai_chance = {
+			base = 30
+
+			modifier = {
+				add = 30
+				has_trait = ambitious
+			}
+
+			modifier = {
+				add = 20
+				has_trait = greedy
+			}
+		}
+	}
+
+	# Focus on staple goods - steady and reliable
+	option = {
+		name = mt_career.0002.b
+
+		add_character_modifier = {
+			modifier = mt_staple_trade_focus
+			years = 10
+		}
+
+		add_opinion = {
+			target = scope:mentor_merchant
+			modifier = grateful_opinion
+			opinion = 20
+		}
+
+		ai_chance = {
+			base = 40
+
+			modifier = {
+				add = 30
+				has_trait = patient
+			}
+
+			modifier = {
+				add = 20
+				stewardship >= 12
+			}
+		}
+	}
+
+	# Focus on building connections
+	option = {
+		name = mt_career.0002.c
+
+		add_character_modifier = {
+			modifier = mt_networking_focus
+			years = 10
+		}
+
+		add_opinion = {
+			target = scope:mentor_merchant
+			modifier = grateful_opinion
+			opinion = 20
+		}
+
+		ai_chance = {
+			base = 30
+
+			modifier = {
+				add = 40
+				diplomacy >= 12
+			}
+
+			modifier = {
+				add = 20
+				has_trait = gregarious
+			}
+		}
+	}
+}
+
+# 0003: Lost all your money
+mt_career.0003 = {
+	type = character_event
+	title = mt_career.0003.t
+	desc = mt_career.0003.desc
+	theme = stewardship
+
+	left_portrait = {
+		character = root
+		animation = sadness
+	}
+
+	trigger = {
+		has_trait = wandering_merchant
+		gold <= 10
+		NOT = { has_character_flag = experienced_bankruptcy }
+	}
+
+	weight_multiplier = {
+		base = 1
+
+		# Less likely if you have financial focus
+		modifier = {
+			factor = 0.3
+			stewardship >= 12
+		}
+	}
+
+	immediate = {
+		add_character_flag = experienced_bankruptcy
+	}
+
+	# Take a loan from fellow merchants
+	option = {
+		name = mt_career.0003.a
+
+		trigger = {
+			any_courtier = {
+				OR = {
+					has_trait = trade_post_owner
+					has_trait = trading_company_head
+					has_trait = merchant_prince
+				}
+			}
+		}
+
+		add_gold = 100
+
+		add_character_modifier = {
+			modifier = mt_merchant_debt
+			years = 5
+		}
+
+		add_stress = 20
+
+		ai_chance = {
+			base = 50
+
+			modifier = {
+				add = 30
+				has_trait = ambitious
+			}
+		}
+	}
+
+	# Start over from scratch
+	option = {
+		name = mt_career.0003.b
+
+		add_gold = 25
+		add_stress = 30
+
+		# Chance to gain resilient or stubborn trait
+		random = {
+			chance = 25
+			random_list = {
+				50 = { add_trait = stubborn }
+				50 = { add_trait = ambitious }
+			}
+		}
+
+		ai_chance = {
+			base = 40
+
+			modifier = {
+				add = 30
+				has_trait = diligent
+			}
+		}
+	}
+
+	# Give up merchant life (only if desperate)
+	option = {
+		name = mt_career.0003.c
+
+		trigger = {
+			OR = {
+				has_trait = craven
+				has_trait = lazy
+				age >= 50
+			}
+		}
+
+		remove_trait = wandering_merchant
+		add_prestige = -100
+		add_stress = -20
+
+		# Severe opinion penalty from other merchants
+		every_courtier = {
+			limit = {
+				OR = {
+					has_trait = wandering_merchant
+					has_trait = trade_post_owner
+					has_trait = trading_company_head
+					has_trait = merchant_prince
+				}
+			}
+			add_opinion = {
+				target = root
+				modifier = disappointed_opinion
+				opinion = -30
+			}
+		}
+
+		ai_chance = {
+			base = 10
+
+			modifier = {
+				add = 30
+				has_trait = craven
+			}
+
+			modifier = {
+				add = 20
+				age >= 55
+			}
+		}
+	}
+}
+
+# 0004: Lucky find - discover valuable goods
+mt_career.0004 = {
+	type = character_event
+	title = mt_career.0004.t
+	desc = mt_career.0004.desc
+	theme = stewardship
+
+	left_portrait = {
+		character = root
+		animation = ecstasy
+	}
+
+	trigger = {
+		has_trait = wandering_merchant
+		NOT = { has_character_flag = had_lucky_find }
+	}
+
+	weight_multiplier = {
+		base = 1
+
+		# Slightly more likely if you have high learning
+		modifier = {
+			add = 1
+			learning >= 10
+		}
+	}
+
+	immediate = {
+		add_character_flag = had_lucky_find
+	}
+
+	# Sell immediately for quick profit
+	option = {
+		name = mt_career.0004.a
+
+		add_gold = 150
+		add_prestige = 25
+
+		ai_chance = {
+			base = 40
+
+			modifier = {
+				add = 40
+				has_trait = greedy
+			}
+
+			modifier = {
+				add = 20
+				gold <= 50
+			}
+		}
+	}
+
+	# Hold and wait for better price
+	option = {
+		name = mt_career.0004.b
+
+		trigger = {
+			stewardship >= 10
+		}
+
+		# Delayed reward
+		trigger_event = {
+			id = mt_career.0025
+			days = { 90 180 }
+		}
+
+		ai_chance = {
+			base = 40
+
+			modifier = {
+				add = 30
+				has_trait = patient
+			}
+
+			modifier = {
+				add = 20
+				stewardship >= 14
+			}
+		}
+	}
+
+	# Donate to the church for piety
+	option = {
+		name = mt_career.0004.c
+
+		trigger = {
+			OR = {
+				has_trait = compassionate
+				has_trait = zealous
+			}
+		}
+
+		add_piety = 100
+		add_prestige = 50
+
+		# Gain opinion with religious characters
+		every_courtier = {
+			limit = {
+				has_trait = zealous
+			}
+			add_opinion = {
+				target = root
+				modifier = pious_opinion
+				opinion = 15
+			}
+		}
+
+		ai_chance = {
+			base = 20
+
+			modifier = {
+				add = 50
+				has_trait = zealous
+			}
+
+			modifier = {
+				add = 30
+				has_trait = compassionate
+			}
+		}
+	}
+}
+
+# 0025: Follow-up event for holding valuable goods
+mt_career.0025 = {
+	type = character_event
+	title = mt_career.0025.t
+	desc = mt_career.0025.desc
+	theme = stewardship
+
+	left_portrait = {
+		character = root
+		animation = happiness
+	}
+
+	# High stewardship pays off
+	option = {
+		name = mt_career.0025.a
+
+		trigger = {
+			stewardship >= 12
+		}
+
+		add_gold = 250
+		add_prestige = 50
+
+		ai_chance = {
+			base = 100
+		}
+	}
+
+	# Medium result
+	option = {
+		name = mt_career.0025.b
+
+		trigger = {
+			stewardship < 12
+		}
+
+		add_gold = 175
+		add_prestige = 30
+
+		ai_chance = {
+			base = 100
+		}
+	}
+}
+
+####################################
+# BUILDING REPUTATION (0005-0008)
+####################################
+
+# 0005: Successful delivery impresses noble
+mt_career.0005 = {
+	type = character_event
+	title = mt_career.0005.t
+	desc = mt_career.0005.desc
+	theme = diplomacy
+
+	left_portrait = {
+		character = root
+		animation = personality_honorable
+	}
+
+	right_portrait = {
+		character = scope:impressed_noble
+		animation = happiness
+	}
+
+	trigger = {
+		OR = {
+			has_trait = wandering_merchant
+			has_trait = trade_post_owner
+		}
+		any_liege_or_above = {
+			is_ruler = yes
+		}
+	}
+
+	weight_multiplier = {
+		base = 1
+
+		modifier = {
+			add = 2
+			diplomacy >= 12
+		}
+	}
+
+	immediate = {
+		random_liege_or_above = {
+			limit = {
+				is_ruler = yes
+			}
+			save_scope_as = impressed_noble
+		}
+	}
+
+	# Accept their patronage
+	option = {
+		name = mt_career.0005.a
+
+		add_opinion = {
+			target = scope:impressed_noble
+			modifier = loyal_merchant_opinion
+			opinion = 30
+		}
+
+		scope:impressed_noble = {
+			add_opinion = {
+				target = root
+				modifier = trusted_merchant_opinion
+				opinion = 40
+			}
+		}
+
+		add_prestige = 75
+		add_gold = 100
+
+		ai_chance = {
+			base = 70
+
+			modifier = {
+				add = 20
+				has_trait = ambitious
+			}
+		}
+	}
+
+	# Remain independent
+	option = {
+		name = mt_career.0005.b
+
+		add_prestige = 50
+
+		add_opinion = {
+			target = scope:impressed_noble
+			modifier = respectful_opinion
+			opinion = 15
+		}
+
+		add_character_modifier = {
+			modifier = mt_independent_reputation
+			years = 5
+		}
+
+		ai_chance = {
+			base = 30
+
+			modifier = {
+				add = 30
+				has_trait = proud
+			}
+
+			modifier = {
+				add = 20
+				OR = {
+					has_trait = trading_company_head
+					has_trait = merchant_prince
+				}
+			}
+		}
+	}
+}
+
+# 0006: Accused of fraud - defend reputation or pay damages
+mt_career.0006 = {
+	type = character_event
+	title = mt_career.0006.t
+	desc = mt_career.0006.desc
+	theme = intrigue
+
+	left_portrait = {
+		character = root
+		animation = worry
+	}
+
+	right_portrait = {
+		character = scope:accuser
+		animation = anger
+	}
+
+	trigger = {
+		OR = {
+			has_trait = wandering_merchant
+			has_trait = trade_post_owner
+			has_trait = trading_company_head
+		}
+		any_courtier = {
+			NOT = { this = root }
+			is_adult = yes
+		}
+	}
+
+	weight_multiplier = {
+		base = 1
+
+		# More likely if you have rivals
+		modifier = {
+			add = 2
+			any_relation = {
+				type = rival
+				is_adult = yes
+			}
+		}
+	}
+
+	immediate = {
+		if = {
+			limit = {
+				any_relation = {
+					type = rival
+					is_adult = yes
+				}
+			}
+			random_relation = {
+				type = rival
+				limit = { is_adult = yes }
+				save_scope_as = accuser
+			}
+		}
+		else = {
+			random_courtier = {
+				limit = {
+					NOT = { this = root }
+					is_adult = yes
+				}
+				save_scope_as = accuser
+			}
+		}
+	}
+
+	# Defend your reputation publicly
+	option = {
+		name = mt_career.0006.a
+
+		trigger = {
+			diplomacy >= 12
+		}
+
+		duel = {
+			skill = diplomacy
+			target = scope:accuser
+
+			50 = { # Success
+				compare_modifier = {
+					value = scope:duel_value
+					multiplier = 3
+				}
+				desc = mt_career.0006.a.success
+
+				send_interface_toast = {
+					title = mt_career.0006.a.success
+					left_icon = root
+
+					add_prestige = 100
+
+					scope:accuser = {
+						add_opinion = {
+							target = root
+							modifier = humiliated_opinion
+							opinion = -50
+						}
+					}
+
+					# Gain respect from peers
+					every_courtier = {
+						limit = {
+							OR = {
+								has_trait = wandering_merchant
+								has_trait = trade_post_owner
+								has_trait = trading_company_head
+								has_trait = merchant_prince
+							}
+						}
+						add_opinion = {
+							target = root
+							modifier = respect_opinion
+							opinion = 10
+						}
+					}
+				}
+			}
+
+			50 = { # Failure
+				compare_modifier = {
+					value = scope:duel_value
+					multiplier = -3
+				}
+				desc = mt_career.0006.a.failure
+
+				send_interface_toast = {
+					title = mt_career.0006.a.failure
+					left_icon = root
+
+					add_prestige = -150
+					add_stress = 40
+
+					add_character_modifier = {
+						modifier = mt_damaged_reputation
+						years = 5
+					}
+				}
+			}
+		}
+
+		ai_chance = {
+			base = 50
+
+			modifier = {
+				add = 40
+				diplomacy >= 14
+			}
+
+			modifier = {
+				add = 20
+				has_trait = brave
+			}
+		}
+	}
+
+	# Pay damages to avoid scandal
+	option = {
+		name = mt_career.0006.b
+
+		trigger = {
+			gold >= 150
+		}
+
+		remove_short_term_gold = 150
+		add_prestige = -50
+
+		scope:accuser = {
+			add_opinion = {
+				target = root
+				modifier = grateful_opinion
+				opinion = 20
+			}
+		}
+
+		ai_chance = {
+			base = 40
+
+			modifier = {
+				add = 30
+				gold >= 500
+			}
+
+			modifier = {
+				add = 20
+				has_trait = craven
+			}
+		}
+	}
+
+	# Counter-accuse them
+	option = {
+		name = mt_career.0006.c
+
+		trigger = {
+			intrigue >= 10
+		}
+
+		duel = {
+			skill = intrigue
+			target = scope:accuser
+
+			50 = { # Success
+				compare_modifier = {
+					value = scope:duel_value
+					multiplier = 3
+				}
+				desc = mt_career.0006.c.success
+
+				send_interface_toast = {
+					title = mt_career.0006.c.success
+					left_icon = root
+
+					scope:accuser = {
+						add_prestige = -100
+						add_stress = 30
+
+						add_opinion = {
+							target = root
+							modifier = rival_opinion
+							opinion = -75
+						}
+					}
+
+					add_prestige = 75
+				}
+			}
+
+			50 = { # Failure
+				compare_modifier = {
+					value = scope:duel_value
+					multiplier = -3
+				}
+				desc = mt_career.0006.c.failure
+
+				send_interface_toast = {
+					title = mt_career.0006.c.failure
+					left_icon = root
+
+					add_prestige = -200
+					remove_short_term_gold = 100
+					add_stress = 50
+
+					add_character_modifier = {
+						modifier = mt_damaged_reputation
+						years = 10
+					}
+				}
+			}
+		}
+
+		ai_chance = {
+			base = 30
+
+			modifier = {
+				add = 40
+				intrigue >= 14
+			}
+
+			modifier = {
+				add = 30
+				has_trait = vengeful
+			}
+		}
+	}
+}
+
+# 0007: Other merchants respect you - invited to merchant guild
+mt_career.0007 = {
+	type = character_event
+	title = mt_career.0007.t
+	desc = mt_career.0007.desc
+	theme = diplomacy
+
+	left_portrait = {
+		character = root
+		animation = personality_honorable
+	}
+
+	trigger = {
+		OR = {
+			has_trait = trade_post_owner
+			has_trait = trading_company_head
+		}
+		prestige >= 500
+		NOT = { has_character_modifier = mt_guild_member }
+		NOT = { has_character_flag = invited_to_guild }
+	}
+
+	weight_multiplier = {
+		base = 1
+
+		modifier = {
+			add = 2
+			prestige >= 1000
+		}
+	}
+
+	immediate = {
+		add_character_flag = invited_to_guild
+	}
+
+	# Join the guild
+	option = {
+		name = mt_career.0007.a
+
+		add_character_modifier = {
+			modifier = mt_guild_member
+			years = 20
+		}
+
+		add_prestige = 100
+
+		# Improve relations with other merchants
+		every_courtier = {
+			limit = {
+				OR = {
+					has_trait = trade_post_owner
+					has_trait = trading_company_head
+					has_trait = merchant_prince
+				}
+			}
+			add_opinion = {
+				target = root
+				modifier = guild_brother_opinion
+				opinion = 25
+			}
+		}
+
+		ai_chance = {
+			base = 80
+
+			modifier = {
+				add = 20
+				has_trait = gregarious
+			}
+		}
+	}
+
+	# Decline - remain independent
+	option = {
+		name = mt_career.0007.b
+
+		add_prestige = 50
+
+		add_character_modifier = {
+			modifier = mt_independent_reputation
+			years = 10
+		}
+
+		# Mixed reactions from other merchants
+		every_courtier = {
+			limit = {
+				OR = {
+					has_trait = trade_post_owner
+					has_trait = trading_company_head
+					has_trait = merchant_prince
+				}
+			}
+			add_opinion = {
+				target = root
+				modifier = annoyed_opinion
+				opinion = -10
+			}
+		}
+
+		ai_chance = {
+			base = 20
+
+			modifier = {
+				add = 40
+				has_trait = arrogant
+			}
+
+			modifier = {
+				add = 30
+				has_trait = stubborn
+			}
+		}
+	}
+}
+
+# 0008: Rival merchant spreads rumors
+mt_career.0008 = {
+	type = character_event
+	title = mt_career.0008.t
+	desc = mt_career.0008.desc
+	theme = intrigue
+
+	left_portrait = {
+		character = root
+		animation = rage
+	}
+
+	right_portrait = {
+		character = scope:rival_merchant
+		animation = schadenfreude
+	}
+
+	trigger = {
+		OR = {
+			has_trait = wandering_merchant
+			has_trait = trade_post_owner
+			has_trait = trading_company_head
+		}
+		any_courtier = {
+			OR = {
+				has_trait = wandering_merchant
+				has_trait = trade_post_owner
+				has_trait = trading_company_head
+			}
+			NOT = { this = root }
+		}
+	}
+
+	weight_multiplier = {
+		base = 1
+
+		# More likely if you're successful
+		modifier = {
+			add = 2
+			prestige >= 500
+		}
+	}
+
+	immediate = {
+		random_courtier = {
+			limit = {
+				OR = {
+					has_trait = wandering_merchant
+					has_trait = trade_post_owner
+					has_trait = trading_company_head
+				}
+				NOT = { this = root }
+			}
+			save_scope_as = rival_merchant
+		}
+	}
+
+	# Lose reputation but avoid conflict
+	option = {
+		name = mt_career.0008.a
+
+		add_prestige = -75
+		add_stress = 30
+
+		add_character_modifier = {
+			modifier = mt_damaged_reputation
+			years = 3
+		}
+
+		ai_chance = {
+			base = 30
+
+			modifier = {
+				add = 30
+				has_trait = craven
+			}
+
+			modifier = {
+				add = 20
+				has_trait = forgiving
+			}
+		}
+	}
+
+	# Confront them directly
+	option = {
+		name = mt_career.0008.b
+
+		duel = {
+			skill = diplomacy
+			target = scope:rival_merchant
+
+			50 = { # Success
+				compare_modifier = {
+					value = scope:duel_value
+					multiplier = 3
+				}
+				desc = mt_career.0008.b.success
+
+				send_interface_toast = {
+					title = mt_career.0008.b.success
+					left_icon = root
+
+					scope:rival_merchant = {
+						add_prestige = -100
+
+						add_opinion = {
+							target = root
+							modifier = defeated_opinion
+							opinion = -50
+						}
+					}
+
+					add_prestige = 100
+					add_stress = -20
+				}
+			}
+
+			50 = { # Failure
+				compare_modifier = {
+					value = scope:duel_value
+					multiplier = -3
+				}
+				desc = mt_career.0008.b.failure
+
+				send_interface_toast = {
+					title = mt_career.0008.b.failure
+					left_icon = root
+
+					add_prestige = -150
+					add_stress = 50
+
+					scope:rival_merchant = {
+						add_opinion = {
+							target = root
+							modifier = triumph_opinion
+							opinion = -25
+						}
+					}
+
+					add_character_modifier = {
+						modifier = mt_damaged_reputation
+						years = 5
+					}
+				}
+			}
+		}
+
+		ai_chance = {
+			base = 50
+
+			modifier = {
+				add = 30
+				diplomacy >= 12
+			}
+
+			modifier = {
+				add = 20
+				has_trait = brave
+			}
+		}
+	}
+
+	# Use your own network to counter-rumor
+	option = {
+		name = mt_career.0008.c
+
+		trigger = {
+			intrigue >= 10
+			OR = {
+				has_character_modifier = mt_guild_member
+				has_character_modifier = mt_networking_focus
+			}
+		}
+
+		scope:rival_merchant = {
+			add_prestige = -150
+			add_stress = 40
+
+			add_character_modifier = {
+				modifier = mt_damaged_reputation
+				years = 5
+			}
+
+			add_opinion = {
+				target = root
+				modifier = rival_opinion
+				opinion = -100
+			}
+		}
+
+		add_prestige = 50
+
+		# Potentially become rivals
+		if = {
+			limit = {
+				NOT = {
+					has_relation_rival = scope:rival_merchant
+				}
+			}
+			set_relation_rival = scope:rival_merchant
+		}
+
+		ai_chance = {
+			base = 40
+
+			modifier = {
+				add = 40
+				intrigue >= 14
+			}
+
+			modifier = {
+				add = 30
+				has_trait = vengeful
+			}
+		}
+	}
+}
+
+####################################
+# TIER UP MOMENTS (0009-0012)
+####################################
+
+# 0009: Ready to establish trade post - celebration event
+mt_career.0009 = {
+	type = character_event
+	title = mt_career.0009.t
+	desc = mt_career.0009.desc
+	theme = stewardship
+
+	left_portrait = {
+		character = root
+		animation = happiness
+	}
+
+	right_portrait = {
+		character = scope:mentor
+		animation = personality_content
+	}
+
+	trigger = {
+		has_trait = wandering_merchant
+		gold >= 300
+		prestige >= 300
+		NOT = { has_character_flag = ready_for_trade_post }
+	}
+
+	weight_multiplier = {
+		base = 1
+
+		modifier = {
+			add = 3
+			gold >= 500
+		}
+	}
+
+	immediate = {
+		add_character_flag = ready_for_trade_post
+
+		if = {
+			limit = {
+				any_courtier = {
+					OR = {
+						has_trait = trade_post_owner
+						has_trait = trading_company_head
+						has_trait = merchant_prince
+					}
+				}
+			}
+			random_courtier = {
+				limit = {
+					OR = {
+						has_trait = trade_post_owner
+						has_trait = trading_company_head
+						has_trait = merchant_prince
+					}
+				}
+				save_scope_as = mentor
+			}
+		}
+	}
+
+	# Grand celebration
+	option = {
+		name = mt_career.0009.a
+
+		remove_short_term_gold = 150
+		add_prestige = 150
+
+		# Improve relations with court
+		every_courtier = {
+			add_opinion = {
+				target = root
+				modifier = celebrated_together_opinion
+				opinion = 15
+			}
+		}
+
+		# Hint about tier up
+		custom_tooltip = mt_career.0009.a.tt
+
+		ai_chance = {
+			base = 40
+
+			modifier = {
+				add = 40
+				has_trait = gregarious
+			}
+
+			modifier = {
+				add = 20
+				prestige >= 500
+			}
+		}
+	}
+
+	# Modest ceremony with close friends
+	option = {
+		name = mt_career.0009.b
+
+		remove_short_term_gold = 50
+		add_prestige = 75
+
+		# Improve relations with merchants
+		every_courtier = {
+			limit = {
+				OR = {
+					has_trait = wandering_merchant
+					has_trait = trade_post_owner
+					has_trait = trading_company_head
+					has_trait = merchant_prince
+				}
+			}
+			add_opinion = {
+				target = root
+				modifier = celebrated_together_opinion
+				opinion = 20
+			}
+		}
+
+		custom_tooltip = mt_career.0009.a.tt
+
+		ai_chance = {
+			base = 50
+
+			modifier = {
+				add = 30
+				has_trait = humble
+			}
+		}
+	}
+
+	# Skip celebration, focus on business
+	option = {
+		name = mt_career.0009.c
+
+		add_gold = 100
+		add_prestige = 25
+
+		# Chance to gain diligent
+		random = {
+			chance = 25
+			add_trait = diligent
+		}
+
+		custom_tooltip = mt_career.0009.a.tt
+
+		ai_chance = {
+			base = 30
+
+			modifier = {
+				add = 40
+				has_trait = diligent
+			}
+
+			modifier = {
+				add = 30
+				has_trait = greedy
+			}
+		}
+	}
+}
+
+# 0010: First employee hired - manage delegation
+mt_career.0010 = {
+	type = character_event
+	title = mt_career.0010.t
+	desc = mt_career.0010.desc
+	theme = stewardship
+
+	left_portrait = {
+		character = root
+		animation = personality_rational
+	}
+
+	trigger = {
+		OR = {
+			has_trait = trade_post_owner
+			has_trait = trading_company_head
+		}
+		NOT = { has_character_flag = hired_first_employee }
+		gold >= 200
+	}
+
+	weight_multiplier = {
+		base = 1
+
+		modifier = {
+			add = 2
+			trait_duration = {
+				trait = trade_post_owner
+				months <= 24
+			}
+		}
+	}
+
+	immediate = {
+		add_character_flag = hired_first_employee
+	}
+
+	# Trust them fully - delegate everything
+	option = {
+		name = mt_career.0010.a
+
+		remove_short_term_gold = 100
+
+		add_character_modifier = {
+			modifier = mt_delegated_management
+			years = 10
+		}
+
+		# Risk/reward
+		random_list = {
+			70 = { # Success
+				add_gold = 200
+				add_prestige = 50
+			}
+			30 = { # Employee steals
+				add_gold = -150
+				add_stress = 30
+				custom_tooltip = mt_career.0010.a.failure
+			}
+		}
+
+		ai_chance = {
+			base = 30
+
+			modifier = {
+				add = 30
+				has_trait = trusting
+			}
+
+			modifier = {
+				add = 20
+				stewardship < 10
+			}
+		}
+	}
+
+	# Micromanage them
+	option = {
+		name = mt_career.0010.b
+
+		remove_short_term_gold = 100
+		add_stress = 20
+
+		add_character_modifier = {
+			modifier = mt_hands_on_management
+			years = 10
+		}
+
+		# Steady results
+		add_gold = 150
+		add_stewardship = 1
+
+		ai_chance = {
+			base = 50
+
+			modifier = {
+				add = 40
+				has_trait = diligent
+			}
+
+			modifier = {
+				add = 20
+				stewardship >= 12
+			}
+		}
+	}
+
+	# Train them to be independent
+	option = {
+		name = mt_career.0010.c
+
+		remove_short_term_gold = 150
+
+		add_character_modifier = {
+			modifier = mt_mentorship_approach
+			years = 10
+		}
+
+		add_learning = 1
+
+		# Long-term benefits
+		trigger_event = {
+			id = mt_career.0026
+			days = { 365 730 }
+		}
+
+		ai_chance = {
+			base = 40
+
+			modifier = {
+				add = 30
+				learning >= 12
+			}
+
+			modifier = {
+				add = 20
+				has_trait = patient
+			}
+		}
+	}
+}
+
+# 0026: Follow-up for mentorship approach
+mt_career.0026 = {
+	type = character_event
+	title = mt_career.0026.t
+	desc = mt_career.0026.desc
+	theme = stewardship
+
+	left_portrait = {
+		character = root
+		animation = happiness
+	}
+
+	option = {
+		name = mt_career.0026.a
+
+		add_gold = 300
+		add_prestige = 100
+
+		# Chance to gain another beneficial trait
+		random = {
+			chance = 30
+			add_trait = patient
+		}
+
+		ai_chance = {
+			base = 100
+		}
+	}
+}
+
+# 0011: Opening trading company - ceremony
+mt_career.0011 = {
+	type = character_event
+	title = mt_career.0011.t
+	desc = mt_career.0011.desc
+	theme = stewardship
+
+	left_portrait = {
+		character = root
+		animation = personality_bold
+	}
+
+	trigger = {
+		has_trait = trade_post_owner
+		gold >= 500
+		prestige >= 1000
+		NOT = { has_character_flag = opened_trading_company }
+	}
+
+	weight_multiplier = {
+		base = 1
+
+		modifier = {
+			add = 3
+			gold >= 1000
+		}
+
+		modifier = {
+			add = 2
+			prestige >= 1500
+		}
+	}
+
+	immediate = {
+		add_character_flag = opened_trading_company
+	}
+
+	# Grand opening with nobility
+	option = {
+		name = mt_career.0011.a
+
+		remove_short_term_gold = 300
+		add_prestige = 250
+
+		# Improve relations with liege
+		if = {
+			limit = {
+				exists = liege
+			}
+			add_opinion = {
+				target = liege
+				modifier = respectful_opinion
+				opinion = 20
+			}
+			liege = {
+				add_opinion = {
+					target = root
+					modifier = impressed_opinion
+					opinion = 25
+				}
+			}
+		}
+
+		# All courtiers impressed
+		every_courtier = {
+			add_opinion = {
+				target = root
+				modifier = impressed_opinion
+				opinion = 15
+			}
+		}
+
+		custom_tooltip = mt_career.0011.a.tt
+
+		ai_chance = {
+			base = 50
+
+			modifier = {
+				add = 30
+				diplomacy >= 14
+			}
+
+			modifier = {
+				add = 20
+				has_trait = ambitious
+			}
+		}
+	}
+
+	# Professional ceremony with merchants
+	option = {
+		name = mt_career.0011.b
+
+		remove_short_term_gold = 150
+		add_prestige = 150
+
+		# Strong bonds with merchant community
+		every_courtier = {
+			limit = {
+				OR = {
+					has_trait = wandering_merchant
+					has_trait = trade_post_owner
+					has_trait = trading_company_head
+					has_trait = merchant_prince
+				}
+			}
+			add_opinion = {
+				target = root
+				modifier = guild_brother_opinion
+				opinion = 30
+			}
+		}
+
+		custom_tooltip = mt_career.0011.a.tt
+
+		ai_chance = {
+			base = 40
+
+			modifier = {
+				add = 40
+				has_character_modifier = mt_guild_member
+			}
+		}
+	}
+
+	# Quiet opening, let results speak
+	option = {
+		name = mt_career.0011.c
+
+		add_prestige = 50
+		add_gold = 200
+
+		add_character_modifier = {
+			modifier = mt_quiet_confidence
+			years = 10
+		}
+
+		custom_tooltip = mt_career.0011.a.tt
+
+		ai_chance = {
+			base = 30
+
+			modifier = {
+				add = 40
+				has_trait = humble
+			}
+
+			modifier = {
+				add = 20
+				has_trait = shy
+			}
+		}
+	}
+}
+
+# 0012: Recognized as merchant prince - other rulers seek your counsel
+mt_career.0012 = {
+	type = character_event
+	title = mt_career.0012.t
+	desc = mt_career.0012.desc
+	theme = diplomacy
+
+	left_portrait = {
+		character = root
+		animation = personality_honorable
+	}
+
+	right_portrait = {
+		character = scope:ruler
+		animation = personality_rational
+	}
+
+	trigger = {
+		has_trait = trading_company_head
+		gold >= 1500
+		prestige >= 2000
+		NOT = { has_character_flag = recognized_merchant_prince }
+		any_independent_ruler = {
+			NOT = { this = root }
+		}
+	}
+
+	weight_multiplier = {
+		base = 1
+
+		modifier = {
+			add = 3
+			prestige >= 3000
+		}
+
+		modifier = {
+			add = 2
+			diplomacy >= 16
+		}
+	}
+
+	immediate = {
+		add_character_flag = recognized_merchant_prince
+
+		random_independent_ruler = {
+			limit = {
+				NOT = { this = root }
+			}
+			save_scope_as = ruler
+		}
+	}
+
+	# Accept their recognition with pride
+	option = {
+		name = mt_career.0012.a
+
+		add_prestige = 300
+
+		scope:ruler = {
+			add_opinion = {
+				target = root
+				modifier = trusted_advisor_opinion
+				opinion = 40
+			}
+		}
+
+		# Hint about merchant prince tier
+		custom_tooltip = mt_career.0012.a.tt
+
+		# Gain fame
+		add_character_modifier = {
+			modifier = mt_legendary_merchant
+			years = 20
+		}
+
+		ai_chance = {
+			base = 70
+
+			modifier = {
+				add = 30
+				has_trait = ambitious
+			}
+		}
+	}
+
+	# Accept humbly
+	option = {
+		name = mt_career.0012.b
+
+		add_prestige = 200
+		add_piety = 100
+
+		scope:ruler = {
+			add_opinion = {
+				target = root
+				modifier = humble_opinion
+				opinion = 30
+			}
+		}
+
+		custom_tooltip = mt_career.0012.a.tt
+
+		ai_chance = {
+			base = 30
+
+			modifier = {
+				add = 50
+				has_trait = humble
+			}
+		}
+	}
+}
+
+####################################
+# CHALLENGES (0013-0016)
+####################################
+
+# 0013: Bankruptcy looming
+mt_career.0013 = {
+	type = character_event
+	title = mt_career.0013.t
+	desc = mt_career.0013.desc
+	theme = stewardship
+
+	left_portrait = {
+		character = root
+		animation = sadness
+	}
+
+	trigger = {
+		OR = {
+			has_trait = trade_post_owner
+			has_trait = trading_company_head
+		}
+		gold <= 50
+		NOT = { has_character_flag = faced_bankruptcy_crisis }
+	}
+
+	weight_multiplier = {
+		base = 1
+	}
+
+	immediate = {
+		add_character_flag = faced_bankruptcy_crisis
+	}
+
+	# Liquidate assets
+	option = {
+		name = mt_career.0013.a
+
+		add_gold = 200
+		add_prestige = -150
+
+		add_character_modifier = {
+			modifier = mt_reduced_operations
+			years = 5
+		}
+
+		add_stress = 40
+
+		ai_chance = {
+			base = 40
+
+			modifier = {
+				add = 30
+				has_trait = craven
+			}
+		}
+	}
+
+	# Take risky venture
+	option = {
+		name = mt_career.0013.b
+
+		trigger = {
+			stewardship >= 10
+		}
+
+		random_list = {
+			40 = { # Success
+				desc = mt_career.0013.b.success
+				add_gold = 500
+				add_prestige = 200
+				add_stress = -30
+
+				# Gain brave or ambitious
+				random = {
+					chance = 30
+					random_list = {
+						50 = { add_trait = brave }
+						50 = { add_trait = ambitious }
+					}
+				}
+			}
+			60 = { # Failure
+				desc = mt_career.0013.b.failure
+				add_prestige = -200
+				add_stress = 60
+
+				# Might lose merchant tier
+				if = {
+					limit = {
+						has_trait = trade_post_owner
+					}
+					random = {
+						chance = 40
+						remove_trait = trade_post_owner
+						add_trait = wandering_merchant
+					}
+				}
+			}
+		}
+
+		ai_chance = {
+			base = 30
+
+			modifier = {
+				add = 40
+				has_trait = brave
+			}
+
+			modifier = {
+				add = 30
+				stewardship >= 14
+			}
+		}
+	}
+
+	# Ask for help from fellow merchants
+	option = {
+		name = mt_career.0013.c
+
+		trigger = {
+			OR = {
+				has_character_modifier = mt_guild_member
+				any_courtier = {
+					OR = {
+						has_trait = trade_post_owner
+						has_trait = trading_company_head
+						has_trait = merchant_prince
+					}
+					has_opinion = {
+						target = root
+						value >= 20
+					}
+				}
+			}
+		}
+
+		add_gold = 300
+		add_prestige = -50
+
+		add_character_modifier = {
+			modifier = mt_merchant_debt
+			years = 10
+		}
+
+		# Owe them a favor
+		every_courtier = {
+			limit = {
+				OR = {
+					has_trait = trade_post_owner
+					has_trait = trading_company_head
+					has_trait = merchant_prince
+				}
+			}
+			add_opinion = {
+				target = root
+				modifier = grateful_opinion
+				opinion = -20  # They helped you, so you owe them
+			}
+		}
+
+		ai_chance = {
+			base = 50
+
+			modifier = {
+				add = 30
+				has_character_modifier = mt_guild_member
+			}
+		}
+	}
+}
+
+# 0014: Competitor tries to sabotage you
+mt_career.0014 = {
+	type = character_event
+	title = mt_career.0014.t
+	desc = mt_career.0014.desc
+	theme = intrigue
+
+	left_portrait = {
+		character = root
+		animation = anger
+	}
+
+	right_portrait = {
+		character = scope:saboteur
+		animation = scheme
+	}
+
+	trigger = {
+		OR = {
+			has_trait = trade_post_owner
+			has_trait = trading_company_head
+			has_trait = merchant_prince
+		}
+		any_courtier = {
+			OR = {
+				has_trait = trade_post_owner
+				has_trait = trading_company_head
+			}
+			NOT = { this = root }
+		}
+	}
+
+	weight_multiplier = {
+		base = 1
+
+		# More likely if successful
+		modifier = {
+			add = 2
+			gold >= 1000
+		}
+	}
+
+	immediate = {
+		random_courtier = {
+			limit = {
+				OR = {
+					has_trait = trade_post_owner
+					has_trait = trading_company_head
+				}
+				NOT = { this = root }
+			}
+			save_scope_as = saboteur
+		}
+	}
+
+	# Investigate carefully
+	option = {
+		name = mt_career.0014.a
+
+		trigger = {
+			intrigue >= 12
+		}
+
+		duel = {
+			skill = intrigue
+			target = scope:saboteur
+
+			60 = { # Success - catch them
+				compare_modifier = {
+					value = scope:duel_value
+					multiplier = 3
+				}
+				desc = mt_career.0014.a.success
+
+				send_interface_toast = {
+					title = mt_career.0014.a.success
+					left_icon = root
+
+					scope:saboteur = {
+						add_prestige = -250
+						add_stress = 50
+
+						# Punish them
+						add_character_modifier = {
+							modifier = mt_caught_saboteur
+							years = 15
+						}
+
+						add_opinion = {
+							target = root
+							modifier = nemesis_opinion
+							opinion = -100
+						}
+					}
+
+					add_prestige = 150
+					add_gold = 100
+				}
+			}
+
+			40 = { # Failure - they cover their tracks
+				compare_modifier = {
+					value = scope:duel_value
+					multiplier = -3
+				}
+				desc = mt_career.0014.a.failure
+
+				send_interface_toast = {
+					title = mt_career.0014.a.failure
+					left_icon = root
+
+					# Suffer the sabotage
+					add_gold = -200
+					add_prestige = -100
+					add_stress = 40
+
+					add_character_modifier = {
+						modifier = mt_sabotaged_operations
+						years = 5
+					}
+				}
+			}
+		}
+
+		ai_chance = {
+			base = 50
+
+			modifier = {
+				add = 40
+				intrigue >= 14
+			}
+		}
+	}
+
+	# Hire guards to protect your interests
+	option = {
+		name = mt_career.0014.b
+
+		trigger = {
+			gold >= 150
+		}
+
+		remove_short_term_gold = 150
+
+		# Protection works
+		add_character_modifier = {
+			modifier = mt_protected_operations
+			years = 10
+		}
+
+		# Saboteur backs off
+		scope:saboteur = {
+			add_opinion = {
+				target = root
+				modifier = wary_opinion
+				opinion = -30
+			}
+		}
+
+		ai_chance = {
+			base = 40
+
+			modifier = {
+				add = 30
+				gold >= 500
+			}
+
+			modifier = {
+				add = 20
+				has_trait = paranoid
+			}
+		}
+	}
+
+	# Confront them directly
+	option = {
+		name = mt_career.0014.c
+
+		duel = {
+			skill = diplomacy
+			target = scope:saboteur
+
+			50 = { # Success
+				compare_modifier = {
+					value = scope:duel_value
+					multiplier = 3
+				}
+				desc = mt_career.0014.c.success
+
+				send_interface_toast = {
+					title = mt_career.0014.c.success
+					left_icon = root
+
+					scope:saboteur = {
+						add_opinion = {
+							target = root
+							modifier = intimidated_opinion
+							opinion = -50
+						}
+					}
+
+					add_prestige = 100
+
+					# They publicly back down
+					every_courtier = {
+						limit = {
+							OR = {
+								has_trait = wandering_merchant
+								has_trait = trade_post_owner
+								has_trait = trading_company_head
+								has_trait = merchant_prince
+							}
+						}
+						add_opinion = {
+							target = root
+							modifier = respect_opinion
+							opinion = 15
+						}
+					}
+				}
+			}
+
+			50 = { # Failure
+				compare_modifier = {
+					value = scope:duel_value
+					multiplier = -3
+				}
+				desc = mt_career.0014.c.failure
+
+				send_interface_toast = {
+					title = mt_career.0014.c.failure
+					left_icon = root
+
+					# Sabotage continues
+					add_gold = -250
+					add_prestige = -150
+					add_stress = 50
+
+					add_character_modifier = {
+						modifier = mt_sabotaged_operations
+						years = 7
+					}
+
+					# They become your rival
+					if = {
+						limit = {
+							NOT = {
+								has_relation_rival = scope:saboteur
+							}
+						}
+						set_relation_rival = scope:saboteur
+					}
+				}
+			}
+		}
+
+		ai_chance = {
+			base = 30
+
+			modifier = {
+				add = 30
+				has_trait = brave
+			}
+
+			modifier = {
+				add = 20
+				diplomacy >= 12
+			}
+		}
+	}
+
+	# Ignore it and focus on your business
+	option = {
+		name = mt_career.0014.d
+
+		# Take some losses
+		add_gold = -100
+		add_stress = 20
+
+		# But maintain dignity
+		add_prestige = 25
+
+		# Chance to gain patient trait
+		random = {
+			chance = 20
+			add_trait = patient
+		}
+
+		ai_chance = {
+			base = 20
+
+			modifier = {
+				add = 40
+				has_trait = patient
+			}
+
+			modifier = {
+				add = 30
+				has_trait = calm
+			}
+		}
+	}
+}
+
+# 0015: Health issues from travel
+mt_career.0015 = {
+	type = character_event
+	title = mt_career.0015.t
+	desc = mt_career.0015.desc
+	theme = stewardship
+
+	left_portrait = {
+		character = root
+		animation = sick
+	}
+
+	trigger = {
+		OR = {
+			has_trait = wandering_merchant
+			has_trait = trade_post_owner
+		}
+		age >= 35
+		NOT = { has_character_flag = faced_health_crisis }
+		NOT = { has_trait = infirm }
+	}
+
+	weight_multiplier = {
+		base = 1
+
+		modifier = {
+			add = 2
+			age >= 45
+		}
+
+		modifier = {
+			add = 1
+			age >= 55
+		}
+	}
+
+	immediate = {
+		add_character_flag = faced_health_crisis
+	}
+
+	# Reduce activities and rest
+	option = {
+		name = mt_career.0015.a
+
+		add_character_modifier = {
+			modifier = mt_reduced_travel
+			years = 5
+		}
+
+		add_stress = -30
+		add_health = 0.5
+
+		# Income penalty but better health
+		add_character_modifier = {
+			modifier = mt_health_focused
+			years = 5
+		}
+
+		ai_chance = {
+			base = 50
+
+			modifier = {
+				add = 40
+				age >= 50
+			}
+
+			modifier = {
+				add = 20
+				health < 3
+			}
+		}
+	}
+
+	# Push through the pain
+	option = {
+		name = mt_career.0015.b
+
+		add_stress = 40
+		add_health = -0.5
+
+		# Keep earning
+		add_gold = 200
+
+		# Risk of worse health issues
+		random_list = {
+			60 = { # Fine for now
+				add_prestige = 50
+				custom_tooltip = mt_career.0015.b.success
+			}
+			40 = { # Develop chronic condition
+				add_trait = ill
+				add_stress = 30
+				custom_tooltip = mt_career.0015.b.failure
+			}
+		}
+
+		ai_chance = {
+			base = 30
+
+			modifier = {
+				add = 40
+				has_trait = ambitious
+			}
+
+			modifier = {
+				add = 30
+				has_trait = greedy
+			}
+
+			modifier = {
+				factor = 0.2
+				health < 3
+			}
+		}
+	}
+
+	# Seek medical help
+	option = {
+		name = mt_career.0015.c
+
+		trigger = {
+			gold >= 100
+		}
+
+		remove_short_term_gold = 100
+
+		# Better chance of recovery
+		random_list = {
+			70 = { # Good treatment
+				add_health = 1
+				add_stress = -20
+				custom_tooltip = mt_career.0015.c.success
+			}
+			30 = { # Treatment doesn't work
+				add_stress = 10
+				custom_tooltip = mt_career.0015.c.failure
+			}
+		}
+
+		ai_chance = {
+			base = 40
+
+			modifier = {
+				add = 40
+				gold >= 500
+			}
+
+			modifier = {
+				add = 30
+				learning >= 10
+			}
+		}
+	}
+}
+
+# 0016: Family demands you settle down
+mt_career.0016 = {
+	type = character_event
+	title = mt_career.0016.t
+	desc = mt_career.0016.desc
+	theme = family
+
+	left_portrait = {
+		character = root
+		animation = worry
+	}
+
+	right_portrait = {
+		character = scope:family_member
+		animation = sadness
+	}
+
+	trigger = {
+		OR = {
+			has_trait = wandering_merchant
+			has_trait = trade_post_owner
+		}
+		is_married = yes
+		any_close_family_member = {
+			is_adult = yes
+		}
+	}
+
+	weight_multiplier = {
+		base = 1
+
+		modifier = {
+			add = 2
+			any_child = {
+				age < 10
+			}
+		}
+	}
+
+	immediate = {
+		if = {
+			limit = {
+				exists = primary_spouse
+			}
+			primary_spouse = {
+				save_scope_as = family_member
+			}
+		}
+		else = {
+			random_close_family_member = {
+				limit = {
+					is_adult = yes
+				}
+				save_scope_as = family_member
+			}
+		}
+	}
+
+	# Choose family over merchant life
+	option = {
+		name = mt_career.0016.a
+
+		add_character_modifier = {
+			modifier = mt_family_focused
+			years = 10
+		}
+
+		scope:family_member = {
+			add_opinion = {
+				target = root
+				modifier = love_opinion
+				opinion = 40
+			}
+		}
+
+		# Better family relations
+		every_close_family_member = {
+			add_opinion = {
+				target = root
+				modifier = devoted_parent_opinion
+				opinion = 20
+			}
+		}
+
+		add_stress = -40
+		add_prestige = -50
+
+		# Reduced income but happier
+		add_character_modifier = {
+			modifier = mt_reduced_operations
+			years = 10
+		}
+
+		ai_chance = {
+			base = 40
+
+			modifier = {
+				add = 40
+				has_trait = compassionate
+			}
+
+			modifier = {
+				add = 30
+				has_trait = family_first
+			}
+		}
+	}
+
+	# Try to balance both
+	option = {
+		name = mt_career.0016.b
+
+		add_stress = 30
+
+		scope:family_member = {
+			add_opinion = {
+				target = root
+				modifier = disappointed_opinion
+				opinion = -10
+			}
+		}
+
+		# Moderate solution
+		add_character_modifier = {
+			modifier = mt_work_life_balance
+			years = 10
+		}
+
+		ai_chance = {
+			base = 50
+
+			modifier = {
+				add = 20
+				diplomacy >= 12
+			}
+		}
+	}
+
+	# Choose merchant life
+	option = {
+		name = mt_career.0016.c
+
+		scope:family_member = {
+			add_opinion = {
+				target = root
+				modifier = neglected_opinion
+				opinion = -40
+			}
+		}
+
+		every_close_family_member = {
+			add_opinion = {
+				target = root
+				modifier = disappointed_opinion
+				opinion = -20
+			}
+		}
+
+		add_stress = 50
+		add_gold = 200
+		add_prestige = 100
+
+		# Chance to gain ambitious or callous
+		random = {
+			chance = 30
+			random_list = {
+				50 = { add_trait = ambitious }
+				50 = { add_trait = callous }
+			}
+		}
+
+		ai_chance = {
+			base = 30
+
+			modifier = {
+				add = 50
+				has_trait = ambitious
+			}
+
+			modifier = {
+				add = 40
+				has_trait = greedy
+			}
+
+			modifier = {
+				factor = 0.5
+				has_trait = compassionate
+			}
+		}
+	}
+}
+
+####################################
+# OPPORTUNITIES (0017-0020)
+####################################
+
+# 0017: Marriage proposal from merchant family
+mt_career.0017 = {
+	type = character_event
+	title = mt_career.0017.t
+	desc = mt_career.0017.desc
+	theme = diplomacy
+
+	left_portrait = {
+		character = root
+		animation = personality_rational
+	}
+
+	right_portrait = {
+		character = scope:marriage_prospect
+		animation = personality_content
+	}
+
+	trigger = {
+		OR = {
+			has_trait = trade_post_owner
+			has_trait = trading_company_head
+			has_trait = merchant_prince
+		}
+		is_married = no
+		age >= 16
+		age < 50
+		any_courtier = {
+			is_married = no
+			is_adult = yes
+			age < 40
+			reverse_opinion = {
+				target = root
+				value >= 0
+			}
+			OR = {
+				has_trait = wandering_merchant
+				has_trait = trade_post_owner
+				has_trait = trading_company_head
+				father = {
+					OR = {
+						has_trait = trade_post_owner
+						has_trait = trading_company_head
+						has_trait = merchant_prince
+					}
+				}
+			}
+		}
+	}
+
+	weight_multiplier = {
+		base = 1
+	}
+
+	immediate = {
+		random_courtier = {
+			limit = {
+				is_married = no
+				is_adult = yes
+				age < 40
+				reverse_opinion = {
+					target = root
+					value >= 0
+				}
+				OR = {
+					has_trait = wandering_merchant
+					has_trait = trade_post_owner
+					has_trait = trading_company_head
+					father = {
+						OR = {
+							has_trait = trade_post_owner
+							has_trait = trading_company_head
+							has_trait = merchant_prince
+						}
+					}
+				}
+			}
+			save_scope_as = marriage_prospect
+		}
+	}
+
+	# Accept for love and alliance
+	option = {
+		name = mt_career.0017.a
+
+		marry = scope:marriage_prospect
+
+		add_prestige = 100
+
+		# Strong bond
+		add_opinion = {
+			target = scope:marriage_prospect
+			modifier = love_opinion
+			opinion = 40
+		}
+
+		scope:marriage_prospect = {
+			add_opinion = {
+				target = root
+				modifier = love_opinion
+				opinion = 40
+			}
+		}
+
+		# Merchant network benefits
+		if = {
+			limit = {
+				scope:marriage_prospect = {
+					OR = {
+						has_trait = trade_post_owner
+						has_trait = trading_company_head
+					}
+				}
+			}
+			add_character_modifier = {
+				modifier = mt_merchant_alliance
+				years = 20
+			}
+		}
+
+		ai_chance = {
+			base = 60
+
+			modifier = {
+				add = 40
+				scope:marriage_prospect = {
+					has_high_opinion = root
+				}
+			}
+
+			modifier = {
+				add = 20
+				has_trait = romantic
+			}
+		}
+	}
+
+	# Accept for business reasons only
+	option = {
+		name = mt_career.0017.b
+
+		marry = scope:marriage_prospect
+
+		add_gold = 200
+		add_prestige = 50
+
+		# Practical relationship
+		add_opinion = {
+			target = scope:marriage_prospect
+			modifier = business_partner_opinion
+			opinion = 20
+		}
+
+		add_character_modifier = {
+			modifier = mt_merchant_alliance
+			years = 20
+		}
+
+		ai_chance = {
+			base = 30
+
+			modifier = {
+				add = 40
+				has_trait = greedy
+			}
+
+			modifier = {
+				add = 30
+				has_trait = ambitious
+			}
+		}
+	}
+
+	# Decline politely
+	option = {
+		name = mt_career.0017.c
+
+		add_prestige = 25
+
+		scope:marriage_prospect = {
+			add_opinion = {
+				target = root
+				modifier = disappointed_opinion
+				opinion = -20
+			}
+		}
+
+		ai_chance = {
+			base = 20
+
+			modifier = {
+				add = 40
+				has_trait = proud
+			}
+
+			modifier = {
+				factor = 0.1
+				scope:marriage_prospect = {
+					has_very_high_opinion = root
+				}
+			}
+		}
+	}
+}
+
+# 0018: Ruler offers position as trade advisor
+mt_career.0018 = {
+	type = character_event
+	title = mt_career.0018.t
+	desc = mt_career.0018.desc
+	theme = diplomacy
+
+	left_portrait = {
+		character = root
+		animation = personality_rational
+	}
+
+	right_portrait = {
+		character = scope:offering_ruler
+		animation = personality_content
+	}
+
+	trigger = {
+		OR = {
+			has_trait = trading_company_head
+			has_trait = merchant_prince
+		}
+		prestige >= 1500
+		exists = liege
+		liege = {
+			is_ruler = yes
+			has_opinion = {
+				target = root
+				value >= 20
+			}
+		}
+		NOT = { has_character_flag = offered_advisor_position }
+	}
+
+	weight_multiplier = {
+		base = 1
+
+		modifier = {
+			add = 2
+			diplomacy >= 14
+		}
+	}
+
+	immediate = {
+		add_character_flag = offered_advisor_position
+
+		liege = {
+			save_scope_as = offering_ruler
+		}
+	}
+
+	# Accept - stable income and influence
+	option = {
+		name = mt_career.0018.a
+
+		add_character_modifier = {
+			modifier = mt_royal_trade_advisor
+			years = 20
+		}
+
+		add_prestige = 200
+
+		scope:offering_ruler = {
+			add_opinion = {
+				target = root
+				modifier = loyal_opinion
+				opinion = 50
+			}
+		}
+
+		# Steady income
+		add_gold = 300
+
+		# But reduced merchant freedom
+		add_character_modifier = {
+			modifier = mt_reduced_operations
+			years = 20
+		}
+
+		ai_chance = {
+			base = 40
+
+			modifier = {
+				add = 30
+				age >= 45
+			}
+
+			modifier = {
+				add = 30
+				has_trait = content
+			}
+		}
+	}
+
+	# Negotiate for both position and independence
+	option = {
+		name = mt_career.0018.b
+
+		trigger = {
+			diplomacy >= 14
+		}
+
+		add_character_modifier = {
+			modifier = mt_independent_advisor
+			years = 20
+		}
+
+		add_prestige = 150
+		add_gold = 200
+
+		scope:offering_ruler = {
+			add_opinion = {
+				target = root
+				modifier = respectful_opinion
+				opinion = 30
+			}
+		}
+
+		ai_chance = {
+			base = 40
+
+			modifier = {
+				add = 50
+				diplomacy >= 16
+			}
+
+			modifier = {
+				add = 30
+				has_trait = ambitious
+			}
+		}
+	}
+
+	# Decline - maintain full independence
+	option = {
+		name = mt_career.0018.c
+
+		add_prestige = 100
+
+		scope:offering_ruler = {
+			add_opinion = {
+				target = root
+				modifier = disappointed_opinion
+				opinion = -20
+			}
+		}
+
+		add_character_modifier = {
+			modifier = mt_independent_reputation
+			years = 10
+		}
+
+		ai_chance = {
+			base = 30
+
+			modifier = {
+				add = 50
+				has_trait = proud
+			}
+
+			modifier = {
+				add = 40
+				has_trait = merchant_prince
+			}
+		}
+	}
+}
+
+# 0019: Invitation to exclusive auction
+mt_career.0019 = {
+	type = character_event
+	title = mt_career.0019.t
+	desc = mt_career.0019.desc
+	theme = stewardship
+
+	left_portrait = {
+		character = root
+		animation = happiness
+	}
+
+	trigger = {
+		OR = {
+			has_trait = trading_company_head
+			has_trait = merchant_prince
+		}
+		gold >= 200
+		prestige >= 1000
+	}
+
+	weight_multiplier = {
+		base = 1
+
+		modifier = {
+			add = 2
+			has_trait = merchant_prince
+		}
+	}
+
+	# Bid aggressively for rare items
+	option = {
+		name = mt_career.0019.a
+
+		trigger = {
+			gold >= 400
+		}
+
+		remove_short_term_gold = 400
+
+		random_list = {
+			60 = { # Win amazing items
+				desc = mt_career.0019.a.success
+				add_prestige = 200
+
+				# Future profits
+				trigger_event = {
+					id = mt_career.0027
+					days = { 120 240 }
+				}
+			}
+			40 = { # Overpay
+				desc = mt_career.0019.a.failure
+				add_prestige = 50
+				add_stress = 30
+				custom_tooltip = mt_career.0019.a.overpaid
+			}
+		}
+
+		ai_chance = {
+			base = 40
+
+			modifier = {
+				add = 40
+				gold >= 1000
+			}
+
+			modifier = {
+				add = 30
+				has_trait = greedy
+			}
+		}
+	}
+
+	# Bid cautiously
+	option = {
+		name = mt_career.0019.b
+
+		remove_short_term_gold = 200
+		add_gold = 150
+		add_prestige = 75
+
+		# Moderate gains
+		custom_tooltip = mt_career.0019.b.result
+
+		ai_chance = {
+			base = 50
+
+			modifier = {
+				add = 30
+				stewardship >= 12
+			}
+		}
+	}
+
+	# Just observe and network
+	option = {
+		name = mt_career.0019.c
+
+		add_prestige = 50
+
+		# Make valuable contacts
+		every_courtier = {
+			limit = {
+				OR = {
+					has_trait = trading_company_head
+					has_trait = merchant_prince
+				}
+			}
+			add_opinion = {
+				target = root
+				modifier = friend_opinion
+				opinion = 15
+			}
+		}
+
+		ai_chance = {
+			base = 30
+
+			modifier = {
+				add = 40
+				diplomacy >= 14
+			}
+
+			modifier = {
+				add = 30
+				gold < 400
+			}
+		}
+	}
+}
+
+# 0027: Follow-up for auction success
+mt_career.0027 = {
+	type = character_event
+	title = mt_career.0027.t
+	desc = mt_career.0027.desc
+	theme = stewardship
+
+	left_portrait = {
+		character = root
+		animation = happiness
+	}
+
+	option = {
+		name = mt_career.0027.a
+
+		add_gold = 800
+		add_prestige = 150
+
+		ai_chance = {
+			base = 100
+		}
+	}
+}
+
+# 0020: Foreign merchant wants to learn from you
+mt_career.0020 = {
+	type = character_event
+	title = mt_career.0020.t
+	desc = mt_career.0020.desc
+	theme = learning
+
+	left_portrait = {
+		character = root
+		animation = personality_content
+	}
+
+	right_portrait = {
+		character = scope:student_merchant
+		animation = personality_rational
+	}
+
+	trigger = {
+		OR = {
+			has_trait = trading_company_head
+			has_trait = merchant_prince
+		}
+		prestige >= 1500
+		any_courtier = {
+			OR = {
+				has_trait = wandering_merchant
+				has_trait = trade_post_owner
+			}
+			learning >= 8
+		}
+	}
+
+	weight_multiplier = {
+		base = 1
+
+		modifier = {
+			add = 2
+			learning >= 12
+		}
+	}
+
+	immediate = {
+		random_courtier = {
+			limit = {
+				OR = {
+					has_trait = wandering_merchant
+					has_trait = trade_post_owner
+				}
+				learning >= 8
+			}
+			save_scope_as = student_merchant
+		}
+	}
+
+	# Teach them everything you know
+	option = {
+		name = mt_career.0020.a
+
+		add_prestige = 100
+		add_learning = 1
+
+		scope:student_merchant = {
+			add_opinion = {
+				target = root
+				modifier = mentor_opinion
+				opinion = 75
+			}
+
+			# They improve
+			add_diplomacy = 2
+			add_stewardship = 2
+		}
+
+		# They become loyal ally
+		add_character_modifier = {
+			modifier = mt_respected_mentor
+			years = 15
+		}
+
+		# Future benefits
+		trigger_event = {
+			id = mt_career.0028
+			days = { 365 730 }
+		}
+
+		ai_chance = {
+			base = 50
+
+			modifier = {
+				add = 40
+				has_trait = patient
+			}
+
+			modifier = {
+				add = 30
+				learning >= 14
+			}
+		}
+	}
+
+	# Teach them the basics only
+	option = {
+		name = mt_career.0020.b
+
+		add_prestige = 50
+		add_gold = 100
+
+		scope:student_merchant = {
+			add_opinion = {
+				target = root
+				modifier = grateful_opinion
+				opinion = 30
+			}
+
+			add_diplomacy = 1
+		}
+
+		ai_chance = {
+			base = 40
+
+			modifier = {
+				add = 30
+				stewardship >= 12
+			}
+		}
+	}
+
+	# Refuse - keep your secrets
+	option = {
+		name = mt_career.0020.c
+
+		add_gold = 50
+
+		scope:student_merchant = {
+			add_opinion = {
+				target = root
+				modifier = disappointed_opinion
+				opinion = -30
+			}
+		}
+
+		# Other merchants see you as selfish
+		every_courtier = {
+			limit = {
+				OR = {
+					has_trait = wandering_merchant
+					has_trait = trade_post_owner
+					has_trait = trading_company_head
+				}
+			}
+			add_opinion = {
+				target = root
+				modifier = selfish_opinion
+				opinion = -10
+			}
+		}
+
+		ai_chance = {
+			base = 20
+
+			modifier = {
+				add = 40
+				has_trait = paranoid
+			}
+
+			modifier = {
+				add = 30
+				has_trait = greedy
+			}
+		}
+	}
+}
+
+# 0028: Student merchant becomes successful, returns favor
+mt_career.0028 = {
+	type = character_event
+	title = mt_career.0028.t
+	desc = mt_career.0028.desc
+	theme = diplomacy
+
+	left_portrait = {
+		character = root
+		animation = happiness
+	}
+
+	right_portrait = {
+		character = scope:successful_student
+		animation = personality_honorable
+	}
+
+	immediate = {
+		random_courtier = {
+			limit = {
+				has_opinion_modifier = {
+					target = root
+					modifier = mentor_opinion
+				}
+			}
+			save_scope_as = successful_student
+		}
+	}
+
+	option = {
+		name = mt_career.0028.a
+
+		add_gold = 500
+		add_prestige = 200
+
+		scope:successful_student = {
+			add_opinion = {
+				target = root
+				modifier = loyal_opinion
+				opinion = 50
+			}
+		}
+
+		# Gain permanent ally
+		add_character_modifier = {
+			modifier = mt_powerful_ally
+			years = 30
+		}
+
+		ai_chance = {
+			base = 100
+		}
+	}
+}
+
+####################################
+# LEGACY (0021-0023)
+####################################
+
+# 0021: Writing memoirs - preserve merchant knowledge
+mt_career.0021 = {
+	type = character_event
+	title = mt_career.0021.t
+	desc = mt_career.0021.desc
+	theme = learning
+
+	left_portrait = {
+		character = root
+		animation = personality_rational
+	}
+
+	trigger = {
+		OR = {
+			has_trait = trading_company_head
+			has_trait = merchant_prince
+		}
+		age >= 50
+		learning >= 10
+		NOT = { has_character_flag = wrote_memoirs }
+	}
+
+	weight_multiplier = {
+		base = 1
+
+		modifier = {
+			add = 3
+			age >= 60
+		}
+	}
+
+	immediate = {
+		add_character_flag = wrote_memoirs
+	}
+
+	# Write comprehensive guide to trading
+	option = {
+		name = mt_career.0021.a
+
+		add_prestige = 300
+		add_learning = 2
+
+		add_character_modifier = {
+			modifier = mt_legendary_merchant
+			years = 30
+		}
+
+		# Benefits for merchant dynasty
+		every_dynasty_member = {
+			limit = {
+				OR = {
+					has_trait = wandering_merchant
+					has_trait = trade_post_owner
+					has_trait = trading_company_head
+				}
+			}
+			add_diplomacy = 1
+			add_stewardship = 1
+		}
+
+		# Gain fame
+		add_prestige = 500
+
+		ai_chance = {
+			base = 60
+
+			modifier = {
+				add = 40
+				learning >= 14
+			}
+		}
+	}
+
+	# Write personal memoirs
+	option = {
+		name = mt_career.0021.b
+
+		add_prestige = 200
+		add_piety = 100
+
+		# Family appreciates it
+		every_close_family_member = {
+			add_opinion = {
+				target = root
+				modifier = grateful_opinion
+				opinion = 30
+			}
+		}
+
+		ai_chance = {
+			base = 40
+
+			modifier = {
+				add = 30
+				has_trait = family_first
+			}
+		}
+	}
+}
+
+# 0022: Found merchant dynasty - establish lasting trade empire
+mt_career.0022 = {
+	type = character_event
+	title = mt_career.0022.t
+	desc = mt_career.0022.desc
+	theme = dynasty
+
+	left_portrait = {
+		character = root
+		animation = personality_bold
+	}
+
+	trigger = {
+		has_trait = merchant_prince
+		prestige >= 3000
+		gold >= 2000
+		dynasty_prestige >= 1000
+		NOT = { has_character_flag = founded_merchant_dynasty }
+	}
+
+	weight_multiplier = {
+		base = 1
+
+		modifier = {
+			add = 3
+			prestige >= 5000
+		}
+	}
+
+	immediate = {
+		add_character_flag = founded_merchant_dynasty
+	}
+
+	# Establish the dynasty legacy
+	option = {
+		name = mt_career.0022.a
+
+		remove_short_term_gold = 1000
+		add_prestige = 1000
+		add_dynasty_prestige = 500
+
+		# Massive benefits for dynasty
+		add_dynasty_modifier = {
+			modifier = mt_merchant_dynasty_legacy
+			years = 100
+		}
+
+		# All dynasty members benefit
+		every_dynasty_member = {
+			add_prestige = 200
+
+			# Merchant dynasty members get bonuses
+			if = {
+				limit = {
+					OR = {
+						has_trait = wandering_merchant
+						has_trait = trade_post_owner
+						has_trait = trading_company_head
+						has_trait = merchant_prince
+					}
+				}
+				add_character_modifier = {
+					modifier = mt_dynasty_merchant
+					years = 50
+				}
+			}
+		}
+
+		ai_chance = {
+			base = 80
+
+			modifier = {
+				add = 20
+				has_trait = ambitious
+			}
+		}
+	}
+
+	# Focus on personal legacy instead
+	option = {
+		name = mt_career.0022.b
+
+		add_prestige = 500
+		add_gold = 500
+
+		add_character_modifier = {
+			modifier = mt_legendary_merchant
+			years = 30
+		}
+
+		ai_chance = {
+			base = 20
+
+			modifier = {
+				add = 30
+				has_trait = selfish
+			}
+		}
+	}
+}
+
+# 0023: Retirement consideration - pass business to heir
+mt_career.0023 = {
+	type = character_event
+	title = mt_career.0023.t
+	desc = mt_career.0023.desc
+	theme = family
+
+	left_portrait = {
+		character = root
+		animation = personality_content
+	}
+
+	right_portrait = {
+		character = scope:heir
+		animation = personality_rational
+	}
+
+	trigger = {
+		OR = {
+			has_trait = trading_company_head
+			has_trait = merchant_prince
+		}
+		age >= 60
+		any_child = {
+			is_adult = yes
+			OR = {
+				has_trait = wandering_merchant
+				has_trait = trade_post_owner
+				stewardship >= 10
+			}
+		}
+		NOT = { has_character_flag = considered_retirement }
+	}
+
+	weight_multiplier = {
+		base = 1
+
+		modifier = {
+			add = 3
+			age >= 70
+		}
+	}
+
+	immediate = {
+		add_character_flag = considered_retirement
+
+		random_child = {
+			limit = {
+				is_adult = yes
+				OR = {
+					has_trait = wandering_merchant
+					has_trait = trade_post_owner
+					stewardship >= 10
+				}
+			}
+			save_scope_as = heir
+		}
+	}
+
+	# Pass everything to your heir
+	option = {
+		name = mt_career.0023.a
+
+		scope:heir = {
+			# Boost their merchant career
+			add_gold = 1000
+			add_prestige = 500
+
+			if = {
+				limit = {
+					has_trait = wandering_merchant
+				}
+				remove_trait = wandering_merchant
+				add_trait = trade_post_owner
+			}
+			else_if = {
+				limit = {
+					has_trait = trade_post_owner
+				}
+				remove_trait = trade_post_owner
+				add_trait = trading_company_head
+			}
+
+			add_character_modifier = {
+				modifier = mt_inheritor_merchant
+				years = 20
+			}
+
+			add_opinion = {
+				target = root
+				modifier = grateful_opinion
+				opinion = 75
+			}
+		}
+
+		# You retire peacefully
+		add_stress = -50
+		add_piety = 200
+
+		add_character_modifier = {
+			modifier = mt_retired_merchant
+			years = 20
+		}
+
+		ai_chance = {
+			base = 50
+
+			modifier = {
+				add = 40
+				age >= 70
+			}
+
+			modifier = {
+				add = 30
+				has_trait = content
+			}
+		}
+	}
+
+	# Share the business but stay involved
+	option = {
+		name = mt_career.0023.b
+
+		scope:heir = {
+			add_gold = 500
+			add_prestige = 250
+			add_diplomacy = 1
+			add_stewardship = 1
+
+			add_opinion = {
+				target = root
+				modifier = grateful_opinion
+				opinion = 50
+			}
+		}
+
+		add_stress = -20
+
+		add_character_modifier = {
+			modifier = mt_mentoring_heir
+			years = 15
+		}
+
+		ai_chance = {
+			base = 40
+
+			modifier = {
+				add = 30
+				has_trait = diligent
+			}
+		}
+	}
+
+	# Keep working - not ready to retire
+	option = {
+		name = mt_career.0023.c
+
+		add_prestige = 100
+		add_stress = 20
+
+		scope:heir = {
+			add_opinion = {
+				target = root
+				modifier = disappointed_opinion
+				opinion = -30
+			}
+		}
+
+		# Continue building wealth
+		add_gold = 300
+
+		ai_chance = {
+			base = 30
+
+			modifier = {
+				add = 50
+				has_trait = ambitious
+			}
+
+			modifier = {
+				add = 40
+				has_trait = greedy
+			}
+
+			modifier = {
+				factor = 0.2
+				age >= 75
+			}
+		}
+	}
+}

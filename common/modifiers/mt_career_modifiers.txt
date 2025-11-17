@@ -1,0 +1,384 @@
+####################################
+# MERCHANTS AND TRADERS MOD
+# Merchant Career Modifiers
+####################################
+#
+# Character modifiers for merchant career progression events
+#
+####################################
+
+####################################
+# TRADE SPECIALIZATION MODIFIERS
+####################################
+
+# Focus on luxury goods trading
+mt_luxury_trade_focus = {
+	icon = "gfx/interface/icons/modifiers/trade.dds"
+
+	monthly_character_income_mult = 0.15
+	diplomacy = 1
+
+	stress_gain_mult = 0.1  # Higher risk = more stress
+}
+
+# Focus on staple goods trading
+mt_staple_trade_focus = {
+	icon = "gfx/interface/icons/modifiers/trade.dds"
+
+	monthly_character_income_mult = 0.08
+	stewardship = 1
+
+	stress_loss_mult = 0.1  # Steady and reliable
+}
+
+# Focus on networking and connections
+mt_networking_focus = {
+	icon = "gfx/interface/icons/modifiers/diplomacy.dds"
+
+	diplomacy = 2
+	monthly_prestige = 0.25
+
+	# Better at forming alliances
+	general_opinion = 5
+}
+
+####################################
+# FINANCIAL MODIFIERS
+####################################
+
+# Merchant debt to repay
+mt_merchant_debt = {
+	icon = "gfx/interface/icons/modifiers/stress.dds"
+
+	monthly_character_income_mult = -0.15
+	stress_gain_mult = 0.15
+
+	# Owes favors
+	general_opinion = -5
+}
+
+####################################
+# REPUTATION MODIFIERS
+####################################
+
+# Damaged reputation in merchant circles
+mt_damaged_reputation = {
+	icon = "gfx/interface/icons/modifiers/opinion.dds"
+
+	monthly_character_income_mult = -0.10
+	monthly_prestige = -0.25
+	diplomacy = -2
+
+	# Merchants distrust you
+	same_opinion = -15
+}
+
+# Known for independence
+mt_independent_reputation = {
+	icon = "gfx/interface/icons/modifiers/prestige.dds"
+
+	monthly_prestige = 0.35
+	diplomacy = 1
+
+	# Respected but seen as aloof
+	opposite_opinion = -5
+}
+
+# Legendary merchant status
+mt_legendary_merchant = {
+	icon = "gfx/interface/icons/modifiers/prestige.dds"
+
+	monthly_prestige = 1.0
+	monthly_character_income_mult = 0.20
+	diplomacy = 3
+
+	# Highly respected
+	general_opinion = 10
+	same_opinion = 20
+}
+
+####################################
+# MANAGEMENT STYLE MODIFIERS
+####################################
+
+# Delegates heavily to employees
+mt_delegated_management = {
+	icon = "gfx/interface/icons/modifiers/stewardship.dds"
+
+	monthly_character_income_mult = 0.10
+	stress_loss_mult = 0.15
+
+	# More free time
+	monthly_prestige = 0.15
+}
+
+# Hands-on micromanagement
+mt_hands_on_management = {
+	icon = "gfx/interface/icons/modifiers/stewardship.dds"
+
+	monthly_character_income_mult = 0.12
+	stewardship = 2
+	stress_gain_mult = 0.20
+
+	# Better control but more stressful
+}
+
+# Mentorship approach to employees
+mt_mentorship_approach = {
+	icon = "gfx/interface/icons/modifiers/learning.dds"
+
+	learning = 1
+	monthly_prestige = 0.30
+
+	# Respected as teacher
+	same_opinion = 10
+}
+
+# Respected as a mentor
+mt_respected_mentor = {
+	icon = "gfx/interface/icons/modifiers/learning.dds"
+
+	learning = 2
+	monthly_prestige = 0.40
+	diplomacy = 1
+
+	# Many seek your wisdom
+	general_opinion = 10
+}
+
+# Quiet confidence - lets results speak
+mt_quiet_confidence = {
+	icon = "gfx/interface/icons/modifiers/stewardship.dds"
+
+	stewardship = 1
+	stress_loss_mult = 0.10
+
+	# Some respect it, others find it cold
+	same_opinion = 5
+	opposite_opinion = -5
+}
+
+####################################
+# OPERATIONS MODIFIERS
+####################################
+
+# Reduced business operations
+mt_reduced_operations = {
+	icon = "gfx/interface/icons/modifiers/county_modifier_development.dds"
+
+	monthly_character_income_mult = -0.15
+	stress_loss_mult = 0.15
+
+	# Less income but less stress
+}
+
+# Operations sabotaged by rivals
+mt_sabotaged_operations = {
+	icon = "gfx/interface/icons/modifiers/stress.dds"
+
+	monthly_character_income_mult = -0.25
+	monthly_prestige = -0.35
+	stress_gain_mult = 0.25
+
+	# Business suffering
+}
+
+# Protected operations with guards
+mt_protected_operations = {
+	icon = "gfx/interface/icons/modifiers/advantage.dds"
+
+	monthly_character_income_mult = -0.05  # Cost of guards
+	monthly_prestige = 0.15
+
+	# Shows strength
+	opposite_opinion = -10  # Enemies wary
+}
+
+# Caught as a saboteur
+mt_caught_saboteur = {
+	icon = "gfx/interface/icons/modifiers/opinion.dds"
+
+	monthly_character_income_mult = -0.30
+	monthly_prestige = -1.0
+	diplomacy = -3
+
+	# Pariah in merchant community
+	same_opinion = -30
+	general_opinion = -15
+}
+
+####################################
+# HEALTH AND LIFESTYLE MODIFIERS
+####################################
+
+# Reduced travel schedule
+mt_reduced_travel = {
+	icon = "gfx/interface/icons/modifiers/health.dds"
+
+	monthly_character_income_mult = -0.10
+	health = 0.5
+	stress_loss_mult = 0.20
+
+	# Healthier but less active
+}
+
+# Health-focused lifestyle
+mt_health_focused = {
+	icon = "gfx/interface/icons/modifiers/health.dds"
+
+	monthly_character_income_mult = -0.08
+	health = 0.75
+	stress_loss_mult = 0.25
+
+	# Prioritizing wellbeing
+}
+
+####################################
+# FAMILY AND WORK-LIFE MODIFIERS
+####################################
+
+# Prioritizes family over business
+mt_family_focused = {
+	icon = "gfx/interface/icons/modifiers/piety.dds"
+
+	monthly_character_income_mult = -0.12
+	stress_loss_mult = 0.30
+
+	# Family loves it
+	dynasty_opinion = 15
+	close_relative_opinion = 25
+}
+
+# Attempting work-life balance
+mt_work_life_balance = {
+	icon = "gfx/interface/icons/modifiers/prestige.dds"
+
+	monthly_character_income_mult = -0.05
+	stress_gain_mult = 0.10
+
+	# Trying to please everyone
+	close_relative_opinion = 10
+}
+
+####################################
+# OPPORTUNITY MODIFIERS
+####################################
+
+# Strong merchant alliances
+mt_merchant_alliance = {
+	icon = "gfx/interface/icons/modifiers/diplomacy.dds"
+
+	monthly_character_income_mult = 0.10
+	diplomacy = 2
+
+	# Strong network
+	same_opinion = 15
+	merchant_opinion = 20
+}
+
+# Royal trade advisor position
+mt_royal_trade_advisor = {
+	icon = "gfx/interface/icons/modifiers/prestige.dds"
+
+	monthly_character_income_add = 5
+	monthly_prestige = 0.75
+	diplomacy = 2
+
+	# Reduced business freedom
+	monthly_character_income_mult = -0.10
+
+	# Ruler's favor
+	liege_opinion = 30
+}
+
+# Independent advisor role
+mt_independent_advisor = {
+	icon = "gfx/interface/icons/modifiers/prestige.dds"
+
+	monthly_character_income_add = 3
+	monthly_prestige = 0.50
+	diplomacy = 1
+
+	# Best of both worlds
+	liege_opinion = 20
+}
+
+# Has powerful merchant ally
+mt_powerful_ally = {
+	icon = "gfx/interface/icons/modifiers/advantage.dds"
+
+	monthly_character_income_mult = 0.08
+	monthly_prestige = 0.30
+
+	# Connected and protected
+	general_opinion = 5
+}
+
+####################################
+# GUILD MODIFIER
+####################################
+
+# Member of merchant guild
+mt_guild_member = {
+	icon = "gfx/interface/icons/modifiers/diplomacy.dds"
+
+	monthly_character_income_mult = 0.12
+	diplomacy = 1
+
+	# Guild benefits and obligations
+	same_opinion = 20
+	guild_opinion = 30
+}
+
+####################################
+# LEGACY AND RETIREMENT MODIFIERS
+####################################
+
+# Retired from active merchant life
+mt_retired_merchant = {
+	icon = "gfx/interface/icons/modifiers/piety.dds"
+
+	monthly_character_income_mult = -0.20
+	stress_loss_mult = 0.40
+	health = 0.5
+
+	# Peaceful retirement
+	monthly_piety = 0.5
+	close_relative_opinion = 15
+}
+
+# Mentoring heir in business
+mt_mentoring_heir = {
+	icon = "gfx/interface/icons/modifiers/learning.dds"
+
+	learning = 1
+	stress_loss_mult = 0.20
+
+	# Passing knowledge
+	close_relative_opinion = 20
+	dynasty_opinion = 10
+}
+
+# Inherited successful business
+mt_inheritor_merchant = {
+	icon = "gfx/interface/icons/modifiers/stewardship.dds"
+
+	monthly_character_income_mult = 0.15
+	stewardship = 2
+	monthly_prestige = 0.50
+
+	# Starting with advantages
+}
+
+# Dynasty merchant legacy bonus
+mt_dynasty_merchant = {
+	icon = "gfx/interface/icons/modifiers/dynasty.dds"
+
+	monthly_character_income_mult = 0.10
+	diplomacy = 1
+	stewardship = 1
+
+	# Legacy benefits
+	same_opinion = 10
+	dynasty_opinion = 15
+}

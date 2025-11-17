@@ -1,0 +1,378 @@
+l_english:
+ ####################################
+ # MERCHANT CAREER EVENTS LOCALIZATION
+ ####################################
+
+ ####################################
+ # STARTING OUT (0001-0004)
+ ####################################
+
+ # Event 0001: First successful trade
+ mt_career.0001.t:0 "First Success!"
+ mt_career.0001.desc:0 "The weight of the coin purse in my hands feels wonderful. My first truly successful trade! I bought low in [root.GetCapitalLocation.GetTitle.GetNameNoTier], traveled the dusty roads, and sold high in a distant market.\n\nThe profit isn't just gold - it's proof that I can make it as a merchant. Fellow traders at the market are already starting to recognize my face. Perhaps this wandering life will lead somewhere great after all!"
+ mt_career.0001.a:0 "Let us celebrate this moment!"
+ mt_career.0001.b:0 "Stay focused. This is just the beginning."
+
+ # Event 0002: Fellow merchant offers advice
+ mt_career.0002.t:0 "Advice from Experience"
+ mt_career.0002.desc:0 "[mentor_merchant.GetTitledFirstName], a [mentor_merchant.GetWomanMan] whose merchant reputation precedes [mentor_merchant.GetHerHim], has taken an interest in my budding career. Over cups of wine, [mentor_merchant.GetSheHe] shares hard-won wisdom about the merchant's path.\n\n\"You must choose your focus,\" [mentor_merchant.GetSheHe] advises. \"Will you chase luxury goods - silks, spices, precious gems? High profits, but high risks. Or deal in staples - grain, wool, iron? Steady and reliable. Or perhaps your real talent lies in making connections, building networks that others cannot?\"\n\nThe choice feels important."
+ mt_career.0002.a:0 "I shall focus on luxury goods - fortune favors the bold!"
+ mt_career.0002.b:0 "Staple goods are the foundation of reliable trade."
+ mt_career.0002.c:0 "Connections are worth more than any cargo."
+
+ # Event 0003: Lost all your money
+ mt_career.0003.t:0 "Ruined!"
+ mt_career.0003.desc:0 "It's all gone. The bandits, the spoiled goods, the deal that fell through - it doesn't matter how it happened. What matters is that I'm nearly penniless, my dreams of merchant success hanging by a thread.\n\nI sit in a shabby tavern, nursing the cheapest ale, wondering what to do. Take a loan and risk spiraling into debt? Start over from nothing, wiser but wounded? Or admit defeat and abandon this merchant life entirely?\n\nThe choice before me will define who I truly am."
+ mt_career.0003.a:0 "I will borrow to rebuild. Pride be damned."
+ mt_career.0003.b:0 "I will start over. I've learned from my mistakes."
+ mt_career.0003.c:0 "Perhaps merchant life is not for me..."
+
+ # Event 0004: Lucky find
+ mt_career.0004.t:0 "Fortune's Gift"
+ mt_career.0004.desc:0 "I can scarcely believe my luck! In a dusty corner of a struggling merchant's shop, I spotted something the owner had overlooked - [ROOT.Char.Custom('LuxuryGood')] of exceptional quality, priced as if they were common goods.\n\nThe shopkeeper, desperate for any sale, practically thrust them at me. Now I stand in my quarters, examining my prize. These could be sold immediately for quick profit, held for a better price, or even donated to the church for spiritual rewards.\n\nWhat a gift from fortune!"
+ mt_career.0004.a:0 "Sell them now while the opportunity is hot!"
+ mt_career.0004.b:0 "Hold them. The price will rise further."
+ mt_career.0004.c:0 "The church will put these to better use."
+
+ # Event 0025: Follow-up for holding goods
+ mt_career.0025.t:0 "Patience Rewarded"
+ mt_career.0025.desc:0 "My patience has paid off magnificently! The goods I held have tripled in value as scarcity drove up demand. Several noble houses competed for my stock, driving the price even higher.\n\nThis is the art of trading - knowing not just what to buy, but when to sell."
+ mt_career.0025.a:0 "A triumph of strategy!"
+ mt_career.0025.b:0 "A decent profit, at least."
+
+ ####################################
+ # BUILDING REPUTATION (0005-0008)
+ ####################################
+
+ # Event 0005: Successful delivery impresses noble
+ mt_career.0005.t:0 "Noble Patronage"
+ mt_career.0005.desc:0 "[impressed_noble.GetTitledFirstName] requested a difficult delivery - rare goods from distant lands, delivered within an impossible timeframe. Others refused the contract, but I saw opportunity where they saw risk.\n\nNow I stand in [impressed_noble.GetHerHis] hall, having delivered everything promised and more. [impressed_noble.GetSheHe] regards me with newfound respect.\n\n\"You have impressed me, [ROOT.GetFirstNameNoTooltip],\" [impressed_noble.GetSheHe] says. \"I could use someone of your reliability. Would you accept my patronage? Or do you prefer to remain independent?\""
+ mt_career.0005.a:0 "I would be honored by your patronage, [impressed_noble.GetTitledFirstNameNoTooltip]."
+ mt_career.0005.b:0 "I am grateful, but I must remain independent."
+
+ # Event 0006: Accused of fraud
+ mt_career.0006.t:0 "False Accusations!"
+ mt_career.0006.desc:0 "[accuser.GetTitledFirstName] stands before the assembled merchants, voice loud with accusation: \"This [ROOT.GetWomanMan] sold me spoiled goods! Passed off inferior merchandise as quality! [ROOT.GetSheHe] is a fraud!\"\n\nThe words sting like a slap. My reputation, built with such care, now hangs in the balance. Some merchants nod thoughtfully; others look skeptical. I must respond carefully - defend myself publicly, pay damages to avoid scandal, or turn the accusation back on my accuser.\n\nWhat happens next will affect my standing in the merchant community for years to come."
+ mt_career.0006.a:0 "These lies will be exposed before all!"
+ mt_career.0006.b:0 "I will pay damages to resolve this quietly."
+ mt_career.0006.c:0 "You dare accuse me? Let us examine YOUR business practices!"
+
+ mt_career.0006.a.success:0 "Victory in Truth"
+ mt_career.0006.a.failure:0 "Humiliating Defeat"
+ mt_career.0006.c.success:0 "Tables Turned"
+ mt_career.0006.c.failure:0 "Backfire"
+
+ # Event 0007: Invited to merchant guild
+ mt_career.0007.t:0 "The Guild Invites"
+ mt_career.0007.desc:0 "A formal letter, sealed with the merchant guild's symbol, arrived this morning. They have been watching my progress, noting my successes, and they wish to extend an invitation to join their ranks.\n\nThe guild offers connections, protection, shared knowledge, and collective bargaining power. But it also means obligations, dues, and following guild rules. Some of the most successful merchants I know are guild members. Others are proudly independent.\n\nThis decision will shape my merchant career going forward."
+ mt_career.0007.a:0 "I accept with gratitude."
+ mt_career.0007.b:0 "I must respectfully decline."
+
+ # Event 0008: Rival merchant spreads rumors
+ mt_career.0008.t:0 "Poisonous Rumors"
+ mt_career.0008.desc:0 "The rumors started subtly - whispers in marketplaces, doubts planted in customers' minds. But I've traced them to their source: [rival_merchant.GetTitledFirstName], a rival who envies my success.\n\n[rival_merchant.GetSheHe] has been telling anyone who will listen that my goods are overpriced, my word unreliable, my success built on deception. Already I've noticed customers hesitating, deals falling through.\n\nI cannot let this continue unchallenged, but how I respond matters greatly."
+ mt_career.0008.a:0 "Let it pass. Truth will prevail eventually."
+ mt_career.0008.b:0 "Confront them directly and publicly."
+ mt_career.0008.c:0 "Use my own network to counter their lies."
+
+ mt_career.0008.b.success:0 "Confrontation Succeeds"
+ mt_career.0008.b.failure:0 "Confrontation Fails"
+
+ ####################################
+ # TIER UP MOMENTS (0009-0012)
+ ####################################
+
+ # Event 0009: Ready to establish trade post
+ mt_career.0009.t:0 "Time for a Trade Post"
+ mt_career.0009.desc:0 "I've saved enough gold, built enough reputation. The time has come to stop wandering and establish a permanent trade post - a real business with a fixed location, storage, and staff.\n\n[mentor.Custom('MT_MentorAdvice')] advises celebration: \"This is a major milestone! How you mark this moment will be remembered.\"\n\nDo I host a grand celebration to announce my arrival as an established merchant? A modest ceremony with close associates? Or skip the festivities and focus entirely on business?"
+ mt_career.0009.a:0 "A grand celebration for all!"
+ mt_career.0009.b:0 "A modest ceremony with those who matter."
+ mt_career.0009.c:0 "No time for parties - there is money to be made."
+ mt_career.0009.a.tt:0 "When I establish a trade post, I will be recognized as a #bold Trade Post Owner#!"
+
+ # Event 0010: First employee hired
+ mt_career.0010.t:0 "My First Employee"
+ mt_career.0010.desc:0 "Until now, I've done everything myself - negotiating deals, hauling cargo, keeping records. But my business has grown beyond what one person can manage. I've hired my first employee, someone to help shoulder the burden.\n\nThe question is: how do I manage them? Trust them completely and delegate freely? Micromanage every detail to ensure quality? Or invest time in training them properly, which costs more now but may pay off later?\n\nThis decision will set the pattern for how I run my growing enterprise."
+ mt_career.0010.a:0 "I will trust them with full authority."
+ mt_career.0010.b:0 "I will oversee everything personally."
+ mt_career.0010.c:0 "I will invest in training them properly."
+ mt_career.0010.a.failure:0 "Unfortunately, they betrayed your trust and embezzled funds."
+
+ # Event 0026: Follow-up for mentorship
+ mt_career.0026.t:0 "The Student Becomes Valuable"
+ mt_career.0026.desc:0 "My investment in training has paid off spectacularly! My employee has grown into a truly skilled merchant in their own right, managing complex operations with expertise that rivals my own.\n\nMoreover, their loyalty is absolute. They've brought in deals I never could have secured alone and defended my interests as if they were their own. This is what proper mentorship creates."
+ mt_career.0026.a:0 "This is leadership done right!"
+
+ # Event 0011: Opening trading company
+ mt_career.0011.t:0 "The Trading Company Opens"
+ mt_career.0011.desc:0 "This is no longer a simple trade post. I now command a trading company - multiple locations, dozens of employees, extensive trade routes stretching across realms. This is the dream I've been building toward.\n\nThe grand opening ceremony awaits. Will I invite nobility and make this a spectacle of my success? Keep it professional with the merchant community? Or let my results speak for themselves with minimal fanfare?"
+ mt_career.0011.a:0 "Invite the nobility - let them witness my success!"
+ mt_career.0011.b:0 "A professional ceremony with fellow merchants."
+ mt_career.0011.c:0 "A quiet opening. Results matter more than ceremony."
+ mt_career.0011.a.tt:0 "When I establish a trading company, I will be recognized as a #bold Trading Company Head#!"
+
+ # Event 0012: Recognized as merchant prince
+ mt_career.0012.t:0 "Prince of Merchants"
+ mt_career.0012.desc:0 "[ruler.GetTitledFirstName], ruler of [ruler.GetPrimaryTitle.GetNameNoTier], has sent an envoy with a message that makes my heart race with pride.\n\n\"[ruler.GetFirstNameNoTooltip] wishes you to know that your reputation has reached even [ruler.GetHerHis] throne,\" the envoy announces. \"[ruler.GetSheHe] considers you one of the greatest merchants of this age - a true merchant prince, whose counsel is valued by rulers and whose wealth rivals that of lesser nobles.\"\n\nThis recognition is what every merchant dreams of - acknowledgment that we have risen to the very peak of our profession."
+ mt_career.0012.a:0 "I accept this honor with pride!"
+ mt_career.0012.b:0 "I am humbled by this recognition."
+ mt_career.0012.a.tt:0 "When I build my trade empire further, I may be recognized as a #bold Merchant Prince#!"
+
+ ####################################
+ # CHALLENGES (0013-0016)
+ ####################################
+
+ # Event 0013: Bankruptcy looming
+ mt_career.0013.t:0 "On the Brink"
+ mt_career.0013.desc:0 "I've spent years building this business, and now it's all crumbling. Bad investments, unexpected losses, deals that fell through - the reasons matter less than the reality. I'm nearly broke, and bankruptcy looms like a specter.\n\nI can liquidate assets and scale back operations. I can take a desperate, risky venture - one last roll of the dice. Or I can swallow my pride and ask fellow merchants for help.\n\nEvery choice has consequences, and failure could mean losing everything."
+ mt_career.0013.a:0 "Liquidate assets to survive."
+ mt_career.0013.b:0 "Take a risky venture - go big or go home!"
+ mt_career.0013.c:0 "Ask the merchant community for help."
+
+ mt_career.0013.b.success:0 "Against All Odds"
+ mt_career.0013.b.failure:0 "The Gamble Fails"
+
+ # Event 0014: Competitor tries to sabotage
+ mt_career.0014.t:0 "Sabotage!"
+ mt_career.0014.desc:0 "The fire in my warehouse wasn't an accident. The shipment that went missing wasn't bad luck. The deals that mysteriously fell through weren't coincidence. Someone is deliberately sabotaging my business.\n\nMy investigation points to [saboteur.GetTitledFirstName], a competitor who sees my success as a threat. [saboteur.GetSheHe] has been careful, but not careful enough.\n\nHow I handle this will determine whether my business survives this attack."
+ mt_career.0014.a:0 "Investigate carefully and catch them in the act."
+ mt_career.0014.b:0 "Hire guards to protect my operations."
+ mt_career.0014.c:0 "Confront them directly and publicly."
+ mt_career.0014.d:0 "Ignore it and focus on my business."
+
+ mt_career.0014.a.success:0 "Caught Red-Handed"
+ mt_career.0014.a.failure:0 "They Cover Their Tracks"
+ mt_career.0014.c.success:0 "They Back Down"
+ mt_career.0014.c.failure:0 "Confrontation Backfires"
+
+ # Event 0015: Health issues from travel
+ mt_career.0015.t:0 "The Body Protests"
+ mt_career.0015.desc:0 "I've pushed myself hard for years - long journeys on rough roads, sleeping in poor lodgings, eating whatever was available, working through illness and injury. Now my body is demanding payment for that abuse.\n\nI'm exhausted, aching, and the physician's expression was grave when examining me. \"You must rest,\" he said, \"or face serious consequences.\"\n\nBut resting means reduced income, lost opportunities, and letting others gain ground. Do I prioritize my health, or push through the pain?"
+ mt_career.0015.a:0 "My health comes first. I will rest."
+ mt_career.0015.b:0 "I cannot afford to stop now!"
+ mt_career.0015.c:0 "Seek the best medical help money can buy."
+
+ mt_career.0015.b.success:0 "You push through successfully"
+ mt_career.0015.b.failure:0 "Your health deteriorates further"
+ mt_career.0015.c.success:0 "The treatment works wonders"
+ mt_career.0015.c.failure:0 "The treatment proves ineffective"
+
+ # Event 0016: Family demands you settle down
+ mt_career.0016.t:0 "Family or Fortune?"
+ mt_career.0016.desc:0 "[family_member.GetFirstName] is crying. Not with anger, but with exhaustion and loneliness. \"You're always traveling, always at the markets, always thinking about the next deal,\" [family_member.GetSheHe] says. \"When will you be here? When will you be present for your family?\"\n\nThe words cut deep because they're true. I've been so focused on building my merchant empire that I've neglected those who matter most. But reducing my activities means reducing my income, my influence, my dreams.\n\nI must choose between family and fortune - or find a way to balance both."
+ mt_career.0016.a:0 "Family is more important than gold."
+ mt_career.0016.b:0 "I will try to balance both."
+ mt_career.0016.c:0 "My merchant career must come first."
+
+ ####################################
+ # OPPORTUNITIES (0017-0020)
+ ####################################
+
+ # Event 0017: Marriage proposal from merchant family
+ mt_career.0017.t:0 "A Merchant Marriage"
+ mt_career.0017.desc:0 "The proposal came through proper channels: [marriage_prospect.GetTitledFirstName]'s family wishes to unite our houses in marriage. [marriage_prospect.GetSheHe] comes from a respected merchant lineage, bringing both dowry and valuable trade connections.\n\nBut is this about love or business? Looking at [marriage_prospect.GetFirstNameNoTooltip], I wonder: can it be both? Or should I keep romance and commerce separate?\n\nThis marriage could strengthen my position considerably - or complicate my life in ways I haven't anticipated."
+ mt_career.0017.a:0 "For love and partnership both!"
+ mt_career.0017.b:0 "A sensible business arrangement."
+ mt_career.0017.c:0 "I must decline this proposal."
+
+ # Event 0018: Ruler offers trade advisor position
+ mt_career.0018.t:0 "The Royal Court Calls"
+ mt_career.0018.desc:0 "[offering_ruler.GetTitledFirstName] has made me an offer I never expected: a position as [offering_ruler.GetHerHis] royal trade advisor. \"Your expertise is exactly what my realm needs,\" [offering_ruler.GetSheHe] says.\n\nThe position offers stability, prestige, and the ear of power. But it also means obligations, restrictions, and less time for my own ventures. Some merchants would kill for this opportunity. Others would see it as a gilded cage.\n\nDo I accept the honor, negotiate for partial independence, or decline to maintain full control of my business?"
+ mt_career.0018.a:0 "I accept your generous offer, [offering_ruler.GetTitledFirstNameNoTooltip]."
+ mt_career.0018.b:0 "Perhaps we can arrange something more flexible?"
+ mt_career.0018.c:0 "I am honored, but I must remain independent."
+
+ # Event 0019: Invitation to exclusive auction
+ mt_career.0019.t:0 "The Exclusive Auction"
+ mt_career.0019.desc:0 "The invitation itself is worth more than many merchants earn in a year - thick paper, gold leaf, scented with exotic perfumes. An exclusive auction, attended only by the wealthiest merchants and collectors in the realm.\n\nRare goods from across the known world will be sold: artifacts from distant lands, luxuries that kings desire, investments that could multiply wealth many times over. But the bidding will be fierce, and it's easy to overpay in such company.\n\nDo I bid aggressively for the best items, bid cautiously, or simply attend to network with other elite merchants?"
+ mt_career.0019.a:0 "Bid aggressively - fortune favors the bold!"
+ mt_career.0019.b:0 "Bid cautiously and strategically."
+ mt_career.0019.c:0 "Observe and network more than bid."
+
+ mt_career.0019.a.success:0 "Excellent acquisitions!"
+ mt_career.0019.a.failure:0 "You overpaid significantly"
+ mt_career.0019.a.overpaid:0 "The items prove to be worth far less than paid"
+ mt_career.0019.b.result:0 "You acquire some decent items and turn a moderate profit"
+
+ # Event 0027: Follow-up for auction success
+ mt_career.0027.t:0 "Auction Treasures Pay Off"
+ mt_career.0027.desc:0 "My bold bidding at the auction has proven spectacularly profitable! The items I acquired have attracted wealthy buyers from across multiple realms, each eager to own these rarities.\n\nThe final sale price exceeds even my most optimistic projections. This is the kind of coup that merchant legends are built upon!"
+ mt_career.0027.a:0 "A masterful piece of business!"
+
+ # Event 0020: Foreign merchant wants to learn
+ mt_career.0020.t:0 "The Student Seeks a Master"
+ mt_career.0020.desc:0 "[student_merchant.GetTitledFirstName], a merchant from distant lands, has approached me with remarkable humility: \"I have heard of your legendary skill. Please, teach me your methods. I offer gold, service, anything you require.\"\n\nI've reached the point in my career where others seek to learn from me. The question is: do I share my hard-won knowledge freely? Teach only the basics? Or guard my secrets jealously?\n\nMy choice will reflect what kind of merchant - and what kind of person - I have become."
+ mt_career.0020.a:0 "I will teach you everything I know."
+ mt_career.0020.b:0 "I will teach you the basics."
+ mt_career.0020.c:0 "My knowledge is my own."
+
+ # Event 0028: Student returns successful
+ mt_career.0028.t:0 "The Student Returns"
+ mt_career.0028.desc:0 "[successful_student.GetTitledFirstName] stands before me, no longer the uncertain novice who sought my teaching. [successful_student.GetSheHe] has built a thriving business, and [successful_student.GetSheHe] hasn't forgotten who taught [successful_student.GetHerHim].\n\n\"Everything I am, I owe to your mentorship,\" [successful_student.GetSheHe] says, presenting a magnificent gift. \"Please accept this as a token of my eternal gratitude. And know that I am forever your ally.\"\n\nThis is the true reward of mentorship - not just wealth, but loyalty and friendship that transcends business."
+ mt_career.0028.a:0 "I am proud of what you have become!"
+
+ ####################################
+ # LEGACY (0021-0023)
+ ####################################
+
+ # Event 0021: Writing memoirs
+ mt_career.0021.t:0 "Preserving Knowledge"
+ mt_career.0021.desc:0 "I've lived a remarkable life as a merchant, learned lessons that took decades to master, made mistakes that cost fortunes, and achieved successes that seemed impossible. All this knowledge will die with me - unless I preserve it.\n\nI've begun writing my memoirs, recording everything I've learned about the merchant's trade. Should I create a comprehensive guide that will help future merchants? Or write something more personal for my family?\n\nEither way, this will be my legacy - wisdom passed down through generations."
+ mt_career.0021.a:0 "Write a comprehensive merchant's guide."
+ mt_career.0021.b:0 "Write personal memoirs for my family."
+
+ # Event 0022: Found merchant dynasty
+ mt_career.0022.t:0 "The Dynasty Legacy"
+ mt_career.0022.desc:0 "I've achieved everything a merchant can achieve: wealth beyond measure, influence that reaches across realms, a name that is spoken with respect in every market. But what happens when I'm gone?\n\nI can establish a formal merchant dynasty - an institution that will carry my family's name and business practices forward for generations. Trade routes, connections, methods, and reputation all preserved and passed down.\n\nThis is immortality of a kind: not in heaven, but in the markets and trade halls of the world."
+ mt_career.0022.a:0 "Establish the dynasty legacy!"
+ mt_career.0022.b:0 "Focus on personal legacy instead."
+
+ # Event 0023: Retirement consideration
+ mt_career.0023.t:0 "Time to Rest?"
+ mt_career.0023.desc:0 "I'm old now. My joints ache, my eyes tire easily, and the energy that once drove me to work from dawn to dusk has faded. [heir.GetFirstName], my [ROOT.Custom('GetChildRelation')], has been helping with the business.\n\n\"Let me take over,\" [heir.GetSheHe] says gently. \"You've earned your rest. Let me carry on what you've built.\"\n\nPart of me wants to keep control until my dying breath. But another part knows that holding on too long can destroy what I've built. Perhaps it's time to trust the next generation."
+ mt_career.0023.a:0 "The business is yours now, [heir.GetFirstNameNoTooltip]."
+ mt_career.0023.b:0 "Let us run it together for now."
+ mt_career.0023.c:0 "I'm not ready to step aside yet!"
+
+ ####################################
+ # MODIFIERS
+ ####################################
+
+ # Trade specialization modifiers
+ mt_luxury_trade_focus:0 "Luxury Trade Focus"
+ mt_luxury_trade_focus_desc:0 "This character specializes in trading high-value luxury goods like silks, spices, and precious gems."
+
+ mt_staple_trade_focus:0 "Staple Trade Focus"
+ mt_staple_trade_focus_desc:0 "This character specializes in reliable staple goods like grain, wool, and iron."
+
+ mt_networking_focus:0 "Networking Focus"
+ mt_networking_focus_desc:0 "This character focuses on building connections and relationships in the merchant world."
+
+ # Financial modifiers
+ mt_merchant_debt:0 "Merchant Debt"
+ mt_merchant_debt_desc:0 "This character owes significant debts to fellow merchants and must pay them back."
+
+ # Reputation modifiers
+ mt_damaged_reputation:0 "Damaged Reputation"
+ mt_damaged_reputation_desc:0 "This character's reputation in merchant circles has been seriously damaged."
+
+ mt_independent_reputation:0 "Independent Reputation"
+ mt_independent_reputation_desc:0 "This character is known for fiercely maintaining their independence."
+
+ mt_legendary_merchant:0 "Legendary Merchant"
+ mt_legendary_merchant_desc:0 "This character's merchant exploits are legendary across many realms."
+
+ # Management modifiers
+ mt_delegated_management:0 "Delegated Management"
+ mt_delegated_management_desc:0 "This character delegates heavily to their employees."
+
+ mt_hands_on_management:0 "Hands-On Management"
+ mt_hands_on_management_desc:0 "This character personally oversees every detail of their business."
+
+ mt_mentorship_approach:0 "Mentorship Approach"
+ mt_mentorship_approach_desc:0 "This character invests significant time in training and developing their employees."
+
+ mt_respected_mentor:0 "Respected Mentor"
+ mt_respected_mentor_desc:0 "This character is known as an excellent mentor who trains skilled merchants."
+
+ mt_quiet_confidence:0 "Quiet Confidence"
+ mt_quiet_confidence_desc:0 "This character lets their results speak for themselves rather than seeking attention."
+
+ # Operations modifiers
+ mt_reduced_operations:0 "Reduced Operations"
+ mt_reduced_operations_desc:0 "This character has scaled back their business operations."
+
+ mt_sabotaged_operations:0 "Sabotaged Operations"
+ mt_sabotaged_operations_desc:0 "This character's business is suffering from deliberate sabotage."
+
+ mt_protected_operations:0 "Protected Operations"
+ mt_protected_operations_desc:0 "This character has hired guards to protect their business interests."
+
+ mt_caught_saboteur:0 "Caught Saboteur"
+ mt_caught_saboteur_desc:0 "This character was caught attempting to sabotage a competitor's business."
+
+ # Health and lifestyle modifiers
+ mt_reduced_travel:0 "Reduced Travel"
+ mt_reduced_travel_desc:0 "This character has reduced their travel schedule for health reasons."
+
+ mt_health_focused:0 "Health Focused"
+ mt_health_focused_desc:0 "This character prioritizes their health over business expansion."
+
+ # Family modifiers
+ mt_family_focused:0 "Family Focused"
+ mt_family_focused_desc:0 "This character prioritizes family over business ambitions."
+
+ mt_work_life_balance:0 "Work-Life Balance"
+ mt_work_life_balance_desc:0 "This character attempts to balance merchant life with family obligations."
+
+ # Opportunity modifiers
+ mt_merchant_alliance:0 "Merchant Alliance"
+ mt_merchant_alliance_desc:0 "This character has strong alliances within the merchant community."
+
+ mt_royal_trade_advisor:0 "Royal Trade Advisor"
+ mt_royal_trade_advisor_desc:0 "This character serves as an official trade advisor to a ruler."
+
+ mt_independent_advisor:0 "Independent Advisor"
+ mt_independent_advisor_desc:0 "This character advises a ruler while maintaining business independence."
+
+ mt_powerful_ally:0 "Powerful Ally"
+ mt_powerful_ally_desc:0 "This character has a powerful and loyal ally in the merchant world."
+
+ # Guild modifiers
+ mt_guild_member:0 "Guild Member"
+ mt_guild_member_desc:0 "This character is a member of the merchant guild."
+
+ # Legacy modifiers
+ mt_retired_merchant:0 "Retired Merchant"
+ mt_retired_merchant_desc:0 "This character has retired from active merchant life."
+
+ mt_mentoring_heir:0 "Mentoring Heir"
+ mt_mentoring_heir_desc:0 "This character is mentoring their heir in the merchant trade."
+
+ mt_inheritor_merchant:0 "Inheritor Merchant"
+ mt_inheritor_merchant_desc:0 "This character inherited a thriving merchant business."
+
+ # Dynasty modifier
+ mt_merchant_dynasty_legacy:0 "Merchant Dynasty Legacy"
+ mt_merchant_dynasty_legacy_desc:0 "This dynasty has established a legendary merchant legacy."
+
+ mt_dynasty_merchant:0 "Dynasty Merchant"
+ mt_dynasty_merchant_desc:0 "This character benefits from their dynasty's merchant legacy."
+
+ ####################################
+ # OPINION MODIFIERS
+ ####################################
+
+ loyal_merchant_opinion:0 "Loyal Merchant"
+ trusted_merchant_opinion:0 "Trusted Merchant"
+ respectful_opinion:0 "Respectful"
+ impressed_opinion:0 "Impressed"
+ business_partner_opinion:0 "Business Partner"
+ loyal_opinion:0 "Loyal"
+ trusted_advisor_opinion:0 "Trusted Advisor"
+ humble_opinion:0 "Humble"
+ celebrated_together_opinion:0 "Celebrated Together"
+ mentor_opinion:0 "Grateful Student"
+ pious_opinion:0 "Pious"
+ guild_brother_opinion:0 "Guild Brother"
+ annoyed_opinion:0 "Annoyed"
+ humiliated_opinion:0 "Humiliated"
+ respect_opinion:0 "Respect"
+ defeated_opinion:0 "Defeated"
+ triumph_opinion:0 "Triumphant"
+ rival_opinion:0 "Rival"
+ wary_opinion:0 "Wary"
+ intimidated_opinion:0 "Intimidated"
+ disappointed_opinion:0 "Disappointed"
+ neglected_opinion:0 "Neglected"
+ love_opinion:0 "Love"
+ devoted_parent_opinion:0 "Devoted Parent"
+ selfish_opinion:0 "Selfish"
+ friend_opinion:0 "Friend"
+
+ ####################################
+ # CUSTOM LOCALIZATION
+ ####################################
+
+ # This would need to be added to custom loc file
+ # MT_MentorAdvice for mentor character
