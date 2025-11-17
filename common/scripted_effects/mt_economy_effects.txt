@@ -1,0 +1,887 @@
+####################################
+# Merchants and Traders - Economy Effects
+# Version: 0.1.0
+####################################
+
+# This file implements the SUPPLY & DEMAND ECONOMY scripted effects
+#
+# ECONOMIC SYSTEM OVERVIEW:
+# These effects manage the dynamic market economy, updating prices based on
+# supply/demand balance, distance, scarcity, oversupply, and seasonal factors.
+#
+# EFFECT EXECUTION ORDER (typical monthly cycle):
+# 1. update_regional_demand_effect - Recalculate what each region wants
+# 2. calculate_market_price_effect - Determine prices for specific trades
+# 3. apply_market_saturation_effect - Adjust for oversupply
+# 4. market_crash_effect / market_boom_effect - Handle extreme events
+#
+# KEY CONCEPTS:
+# - Supply: Local production + imports from trade routes + stockpiles
+# - Demand: Local consumption + exports to other regions
+# - Saturation: When supply greatly exceeds demand, triggering price crashes
+# - Scarcity: When demand exceeds supply, creating profit opportunities
+# - Market Balance: The system naturally seeks equilibrium through price signals
+
+####################################
+# PRICE CALCULATION EFFECTS
+####################################
+
+# Effect: Calculate final market price for a trade good
+# Scope: County (destination market)
+# Parameters:
+#   - trade_good: The good being traded (saved in var:mt_temp_trade_good)
+#   - origin_county: Where the good is coming from (saved in var:mt_temp_origin)
+# Result: Stores final price in var:mt_calculated_price
+# Usage: county = { calculate_market_price_effect = yes }
+#
+# CALCULATION STEPS:
+# 1. Get base price for the trade good
+# 2. Apply distance multiplier (origin to destination)
+# 3. Check supply/demand ratio at destination
+# 4. Apply scarcity bonus OR oversupply penalty
+# 5. Apply seasonal variance
+# 6. Add random daily fluctuation (market noise)
+# 7. Clamp to min/max bounds and round
+calculate_market_price_effect = {
+	# Step 1: Initialize with base price
+	# TODO: set_variable = {
+	#     name = mt_calculated_price
+	#     value = base_goods_price
+	# }
+
+	# Step 2: Calculate and apply distance multiplier
+	# Distance = number of counties between origin and destination
+	# Each county adds distance_multiplier to price (default 1.1x)
+	# TODO: set_variable = {
+	#     name = mt_route_distance
+	#     value = 0
+	# }
+	# TODO: Calculate actual pathfinding distance from origin to this county
+	# For each county in path:
+	#     change_variable = { name = mt_route_distance add = 1 }
+
+	# Apply distance multiplier (compound interest style)
+	# TODO: multiply_variable = {
+	#     name = mt_calculated_price
+	#     value = {
+	#         value = distance_multiplier
+	#         power = var:mt_route_distance
+	#     }
+	# }
+
+	# Step 3: Determine if market has scarcity or oversupply
+	# Calculate supply and demand for this specific good
+	# TODO: set_variable = {
+	#     name = mt_market_supply
+	#     value = county_total_supply  # From mt_economy_values.txt
+	# }
+	# TODO: set_variable = {
+	#     name = mt_market_demand
+	#     value = county_total_demand  # From mt_economy_values.txt
+	# }
+
+	# Step 4a: Apply scarcity bonus if demand > supply
+	# TODO: if = {
+	#     limit = {
+	#         var:mt_market_demand > var:mt_market_supply
+	#     }
+	#     multiply_variable = {
+	#         name = mt_calculated_price
+	#         value = scarcity_bonus
+	#     }
+	# }
+
+	# Step 4b: Apply oversupply penalty if supply > demand
+	# TODO: if = {
+	#     limit = {
+	#         var:mt_market_supply > var:mt_market_demand
+	#     }
+	#     multiply_variable = {
+	#         name = mt_calculated_price
+	#         value = oversupply_penalty
+	#     }
+	# }
+
+	# Step 5: Apply seasonal variance
+	# TODO: multiply_variable = {
+	#     name = mt_calculated_price
+	#     value = seasonal_variance
+	# }
+
+	# Step 6: Add random market fluctuation (±5% noise)
+	# This creates daily price volatility for realism
+	# TODO: set_variable = {
+	#     name = mt_market_noise
+	#     value = {
+	#         value = random
+	#         multiply = 0.1
+	#         subtract = 0.05
+	#     }
+	# }
+	# TODO: multiply_variable = {
+	#     name = mt_calculated_price
+	#     value = {
+	#         value = 1.0
+	#         add = var:mt_market_noise
+	#     }
+	# }
+
+	# Step 7: Apply absolute bounds and round
+	# TODO: if = {
+	#     limit = { var:mt_calculated_price < 15 }
+	#     set_variable = { name = mt_calculated_price value = 15 }
+	# }
+	# TODO: if = {
+	#     limit = { var:mt_calculated_price > 2000 }
+	#     set_variable = { name = mt_calculated_price value = 2000 }
+	# }
+	# TODO: round_variable = mt_calculated_price
+
+	# Cleanup temporary variables
+	# TODO: remove_variable = mt_route_distance
+	# TODO: remove_variable = mt_market_supply
+	# TODO: remove_variable = mt_market_demand
+	# TODO: remove_variable = mt_market_noise
+
+	# Result: var:mt_calculated_price now contains the final market price
+	# Other effects can read this value to determine trade profitability
+}
+
+####################################
+# REGIONAL DEMAND MANAGEMENT
+####################################
+
+# Effect: Monthly update of regional demand for all goods
+# Scope: County
+# Usage: county = { update_regional_demand_effect = yes }
+#
+# DEMAND FACTORS:
+# - Base consumption (population size, development level)
+# - Cultural preferences (different cultures value different goods)
+# - Economic conditions (prosperity increases luxury demand)
+# - Recent events (war increases weapon demand, famine increases food demand)
+# - Seasonal factors (winter increases fuel/clothing demand)
+#
+# This effect runs monthly for each county to keep demand values current
+update_regional_demand_effect = {
+	# Initialize demand tracking variables for each trade good
+	# These store how much of each good the county wants to buy
+
+	# GRAIN demand
+	# TODO: set_variable = {
+	#     name = mt_demand_grain
+	#     value = 10  # Base consumption
+	# }
+	# Scale with population
+	# TODO: change_variable = {
+	#     name = mt_demand_grain
+	#     add = {
+	#         value = development_level
+	#         multiply = 2
+	#     }
+	# }
+	# Increase during famine
+	# TODO: if = {
+	#     limit = { has_county_modifier = famine }
+	#     multiply_variable = { name = mt_demand_grain value = 2.0 }
+	# }
+	# Decrease during plague (population reduction)
+	# TODO: if = {
+	#     limit = { has_county_modifier = plague }
+	#     multiply_variable = { name = mt_demand_grain value = 0.7 }
+	# }
+
+	# WINE demand (luxury agricultural)
+	# TODO: set_variable = {
+	#     name = mt_demand_wine
+	#     value = 5  # Base luxury consumption
+	# }
+	# Scale with prosperity
+	# TODO: change_variable = {
+	#     name = mt_demand_wine
+	#     add = {
+	#         value = county_opinion
+	#         multiply = 0.1
+	#     }
+	# }
+	# Cultural modifier - Mediterranean cultures love wine
+	# TODO: if = {
+	#     limit = {
+	#         culture = { has_cultural_pillar = heritage_latin }
+	#     }
+	#     multiply_variable = { name = mt_demand_wine value = 1.5 }
+	# }
+	# Religious modifier - Islamic cultures have low demand
+	# TODO: if = {
+	#     limit = {
+	#         faith = { has_doctrine_parameter = alcohol_forbidden }
+	#     }
+	#     multiply_variable = { name = mt_demand_wine value = 0.3 }
+	# }
+
+	# SPICES demand (exotic luxury)
+	# TODO: set_variable = {
+	#     name = mt_demand_spices
+	#     value = 3  # Base luxury consumption
+	# }
+	# Only wealthy regions can afford spices
+	# TODO: if = {
+	#     limit = { development_level < 10 }
+	#     multiply_variable = { name = mt_demand_spices value = 0.5 }
+	# }
+	# Increased demand during plague (medieval "medicine")
+	# TODO: if = {
+	#     limit = { has_county_modifier = plague }
+	#     multiply_variable = { name = mt_demand_spices value = 1.8 }
+	# }
+
+	# SILK demand (ultra-luxury)
+	# TODO: set_variable = {
+	#     name = mt_demand_silk
+	#     value = 2  # Very low base demand
+	# }
+	# Only high development regions want silk
+	# TODO: if = {
+	#     limit = { development_level >= 15 }
+	#     change_variable = { name = mt_demand_silk add = 5 }
+	# }
+	# Nobility increases demand
+	# TODO: if = {
+	#     limit = {
+	#         holder = {
+	#             OR = {
+	#                 has_trait = lifestyle_reveler
+	#                 has_trait = greedy
+	#             }
+	#         }
+	#     }
+	#     multiply_variable = { name = mt_demand_silk value = 1.4 }
+	# }
+
+	# IRON demand (industrial/military)
+	# TODO: set_variable = {
+	#     name = mt_demand_iron
+	#     value = 8  # Moderate base demand
+	# }
+	# War dramatically increases demand
+	# TODO: if = {
+	#     limit = { holder.is_at_war = yes }
+	#     multiply_variable = { name = mt_demand_iron value = 2.5 }
+	# }
+	# Building construction increases demand
+	# TODO: if = {
+	#     limit = { has_any_building_being_constructed = yes }
+	#     multiply_variable = { name = mt_demand_iron value = 1.3 }
+	# }
+
+	# FUR demand (luxury clothing)
+	# TODO: set_variable = {
+	#     name = mt_demand_fur
+	#     value = 4  # Base demand
+	# }
+	# Seasonal - high in winter, low in summer
+	# TODO: if = {
+	#     limit = {
+	#         current_month = 12
+	#         OR = { current_month = 1 current_month = 2 }
+	#     }
+	#     multiply_variable = { name = mt_demand_fur value = 1.5 }
+	# }
+	# TODO: if = {
+	#     limit = {
+	#         current_month >= 6
+	#         current_month <= 8
+	#     }
+	#     multiply_variable = { name = mt_demand_fur value = 0.6 }
+	# }
+	# Cold regions need more furs
+	# TODO: if = {
+	#     limit = {
+	#         OR = {
+	#             geographical_region = world_europe_north
+	#             geographical_region = world_steppe
+	#         }
+	#     }
+	#     multiply_variable = { name = mt_demand_fur value = 1.4 }
+	# }
+
+	# SALT demand (preservation)
+	# TODO: set_variable = {
+	#     name = mt_demand_salt
+	#     value = 12  # High universal demand
+	# }
+	# Coastal regions can use sea salt, so less demand for trade
+	# TODO: if = {
+	#     limit = { is_coastal_county = yes }
+	#     multiply_variable = { name = mt_demand_salt value = 0.7 }
+	# }
+	# Pre-winter stocking season
+	# TODO: if = {
+	#     limit = {
+	#         current_month >= 9
+	#         current_month <= 11
+	#     }
+	#     multiply_variable = { name = mt_demand_salt value = 1.3 }
+	# }
+
+	# TIMBER demand (construction/fuel)
+	# TODO: set_variable = {
+	#     name = mt_demand_timber
+	#     value = 10  # High universal demand
+	# }
+	# Forested regions produce their own
+	# TODO: if = {
+	#     limit = {
+	#         any_county_province = {
+	#             terrain = forest
+	#         }
+	#     }
+	#     multiply_variable = { name = mt_demand_timber value = 0.5 }
+	# }
+	# Building construction increases demand
+	# TODO: if = {
+	#     limit = { has_any_building_being_constructed = yes }
+	#     multiply_variable = { name = mt_demand_timber value = 1.8 }
+	# }
+
+	# DYE demand (textile production)
+	# TODO: set_variable = {
+	#     name = mt_demand_dye
+	#     value = 6  # Moderate demand
+	# }
+	# Textile-producing regions need dyes
+	# TODO: if = {
+	#     limit = {
+	#         # Has textile buildings or production
+	#         # (This would check for specific building types)
+	#     }
+	#     multiply_variable = { name = mt_demand_dye value = 1.6 }
+	# }
+
+	# GLASS demand (luxury/specialized)
+	# TODO: set_variable = {
+	#     name = mt_demand_glass
+	#     value = 3  # Low base demand
+	# }
+	# High development regions want glass
+	# TODO: if = {
+	#     limit = { development_level >= 12 }
+	#     multiply_variable = { name = mt_demand_glass value = 1.5 }
+	# }
+
+	# Store timestamp of last update
+	# TODO: set_variable = {
+	#     name = mt_last_demand_update
+	#     value = current_date
+	# }
+
+	# Trigger any demand change events
+	# TODO: trigger_event = {
+	#     id = mt_economy.0001  # Demand fluctuation event
+	# }
+}
+
+####################################
+# MARKET SATURATION EFFECTS
+####################################
+
+# Effect: Reduce prices when trade routes oversupply a market
+# Scope: County (destination market)
+# Parameters:
+#   - trade_good: The good being checked (saved in var:mt_temp_trade_good)
+# Usage: county = { apply_market_saturation_effect = yes }
+#
+# SATURATION MECHANICS:
+# - Count how many trade routes are importing this good to the county
+# - Each route beyond the first reduces price by 15%
+# - 5+ routes to the same market = severe oversupply (minimum price floor)
+# - Applies the mt_oversupply_modifier to the county
+# - Warns merchants that the market is saturated
+#
+# This creates strategic depth: first merchant to a market profits, later ones crash it
+apply_market_saturation_effect = {
+	# Count incoming trade routes with this good
+	# TODO: set_variable = {
+	#     name = mt_routes_importing
+	#     value = 0
+	# }
+	# TODO: every_trade_route_to_county = {
+	#     limit = {
+	#         var:route_trade_good = scope:mt_temp_trade_good
+	#     }
+	#     root = {
+	#         change_variable = {
+	#             name = mt_routes_importing
+	#             add = 1
+	#         }
+	#     }
+	# }
+
+	# No saturation with 0-1 routes
+	# TODO: if = {
+	#     limit = { var:mt_routes_importing <= 1 }
+	#     # Remove any existing saturation modifier
+	#     remove_county_modifier = mt_oversupply_modifier
+	# }
+
+	# Moderate saturation with 2-3 routes
+	# TODO: if = {
+	#     limit = {
+	#         var:mt_routes_importing >= 2
+	#         var:mt_routes_importing <= 3
+	#     }
+	#     # Apply moderate oversupply penalty
+	#     add_county_modifier = {
+	#         modifier = mt_moderate_oversupply_modifier
+	#         years = 1
+	#     }
+	# }
+
+	# Severe saturation with 4-5 routes
+	# TODO: if = {
+	#     limit = {
+	#         var:mt_routes_importing >= 4
+	#         var:mt_routes_importing <= 5
+	#     }
+	#     # Apply severe oversupply penalty
+	#     add_county_modifier = {
+	#         modifier = mt_severe_oversupply_modifier
+	#         years = 1
+	#     }
+	#     # Notify merchants this market is saturated
+	#     every_trade_route_to_county = {
+	#         limit = {
+	#             var:route_trade_good = scope:mt_temp_trade_good
+	#         }
+	#         route_owner = {
+	#             trigger_event = mt_economy.0010  # Market saturation warning
+	#         }
+	#     }
+	# }
+
+	# Market crash with 6+ routes (critical oversupply)
+	# TODO: if = {
+	#     limit = { var:mt_routes_importing >= 6 }
+	#     # Trigger market crash effect
+	#     market_crash_effect = yes
+	# }
+
+	# Update county's saturation level variable
+	# TODO: set_variable = {
+	#     name = mt_saturation_level
+	#     value = var:mt_routes_importing
+	# }
+
+	# Cleanup
+	# TODO: remove_variable = mt_routes_importing
+}
+
+####################################
+# EXTREME MARKET EVENTS
+####################################
+
+# Effect: Handle economic disaster - market crash
+# Scope: County
+# Usage: county = { market_crash_effect = yes }
+#
+# CRASH TRIGGERS:
+# - Excessive oversupply (6+ routes importing same good)
+# - Sudden demand collapse (war ends, plague kills population)
+# - Economic disaster events (financial crisis, trade embargo)
+#
+# CRASH EFFECTS:
+# - Prices drop to minimum (0.3x base price)
+# - Trade routes become unprofitable and may auto-close
+# - Merchants lose significant money on inventory
+# - Recovery takes several months
+# - Neighboring markets may also crash (contagion)
+market_crash_effect = {
+	# Apply the market crash modifier
+	# TODO: add_county_modifier = {
+	#     modifier = mt_market_crash_modifier
+	#     years = 2  # Takes 2 years to recover
+	# }
+
+	# Set crash flag and timestamp
+	# TODO: set_variable = {
+	#     name = mt_market_crashed
+	#     value = yes
+	# }
+	# TODO: set_variable = {
+	#     name = mt_crash_date
+	#     value = current_date
+	# }
+
+	# Destroy unprofitable trade routes to this market
+	# TODO: every_trade_route_to_county = {
+	#     limit = {
+	#         # Route is now operating at a loss
+	#         trade_route_expected_profit < 0
+	#     }
+	#     # Close the route
+	#     mt_destroy_trade_route_effect = yes
+	#     # Notify the merchant
+	#     route_owner = {
+	#         trigger_event = mt_economy.0020  # Market crash - route closed
+	#     }
+	# }
+
+	# Notify ruler of the county
+	# TODO: holder = {
+	#     trigger_event = mt_economy.0021  # Market crash in your realm
+	# }
+
+	# Spread contagion to connected markets (50% chance)
+	# TODO: every_neighboring_county = {
+	#     limit = {
+	#         has_any_trade_route = yes
+	#         # Random chance of contagion
+	#         trigger_if = {
+	#             limit = { always = yes }
+	#             random = 50
+	#         }
+	#     }
+	#     # Cascade crash
+	#     market_crash_effect = yes
+	# }
+
+	# Major prestige hit for local merchants
+	# TODO: every_merchant_in_county = {
+	#     add_prestige = -500
+	#     add_gold = {
+	#         value = 0
+	#         subtract = {
+	#             value = gold
+	#             multiply = 0.3  # Lose 30% of wealth
+	#         }
+	#     }
+	# }
+}
+
+# Effect: Handle economic windfall - market boom
+# Scope: County
+# Usage: county = { market_boom_effect = yes }
+#
+# BOOM TRIGGERS:
+# - Severe scarcity (demand 3x supply)
+# - Sudden supply shock (war destroys production, harvest failure)
+# - Economic boom events (royal wedding, major construction)
+#
+# BOOM EFFECTS:
+# - Prices surge to maximum (3.0x base price)
+# - Existing trade routes become extremely profitable
+# - New merchants rush to enter the market
+# - Attracts attention from raiders/pirates
+# - Eventually leads to oversupply and price correction
+market_boom_effect = {
+	# Apply the market boom modifier
+	# TODO: add_county_modifier = {
+	#     modifier = mt_market_boom_modifier
+	#     years = 1  # Boom lasts 1 year before correction
+	# }
+
+	# Set boom flag and timestamp
+	# TODO: set_variable = {
+	#     name = mt_market_booming
+	#     value = yes
+	# }
+	# TODO: set_variable = {
+	#     name = mt_boom_date
+	#     value = current_date
+	# }
+
+	# Massively increase profits for existing routes to this market
+	# TODO: every_trade_route_to_county = {
+	#     multiply_variable = {
+	#         name = route_monthly_income
+	#         value = 2.5
+	#     }
+	#     # Notify the merchant of windfall
+	#     route_owner = {
+	#         trigger_event = mt_economy.0030  # Market boom - windfall profits!
+	#     }
+	# }
+
+	# Notify ruler of the county
+	# TODO: holder = {
+	#     trigger_event = mt_economy.0031  # Market boom in your realm
+	# }
+
+	# Attract new merchants (AI gets chance to create routes)
+	# TODO: every_neighboring_county = {
+	#     holder = {
+	#         trigger_event = {
+	#             id = mt_economy.0032  # Opportunity to exploit boom market
+	#             days = 30
+	#         }
+	#     }
+	# }
+
+	# Increased banditry risk (criminals target valuable goods)
+	# TODO: add_county_modifier = {
+	#     modifier = mt_increased_banditry_modifier
+	#     years = 1
+	# }
+
+	# Major prestige boost for local merchants
+	# TODO: every_merchant_in_county = {
+	#     add_prestige = 300
+	#     add_gold = {
+	#         value = 0
+	#         add = {
+	#             value = gold
+	#             multiply = 0.5  # Gain 50% wealth bonus
+	#         }
+	#     }
+	# }
+}
+
+####################################
+# REGIONAL SUPPLY MANAGEMENT
+####################################
+
+# Effect: Update regional supply for all goods
+# Scope: County
+# Usage: county = { update_regional_supply_effect = yes }
+#
+# SUPPLY FACTORS:
+# - Local production (terrain, buildings, development)
+# - Imports from trade routes
+# - Stockpiles and reserves
+# - Production modifiers (good harvest, mining boom, etc.)
+#
+# This effect runs monthly alongside update_regional_demand_effect
+update_regional_supply_effect = {
+	# Calculate GRAIN supply
+	# TODO: set_variable = {
+	#     name = mt_supply_grain
+	#     value = 5  # Base production
+	# }
+	# Farmland produces grain
+	# TODO: every_county_province = {
+	#     limit = { terrain = farmlands }
+	#     root = {
+	#         change_variable = { name = mt_supply_grain add = 5 }
+	#     }
+	# }
+	# Good harvest bonus
+	# TODO: if = {
+	#     limit = { has_county_modifier = good_harvest }
+	#     multiply_variable = { name = mt_supply_grain value = 1.5 }
+	# }
+
+	# Calculate WINE supply
+	# TODO: set_variable = {
+	#     name = mt_supply_wine
+	#     value = 2  # Base production
+	# }
+	# Mediterranean climate produces wine
+	# TODO: if = {
+	#     limit = {
+	#         OR = {
+	#             geographical_region = world_europe_south
+	#             geographical_region = world_middle_east
+	#         }
+	#     }
+	#     change_variable = { name = mt_supply_wine add = 8 }
+	# }
+
+	# Calculate SPICES supply (mostly imported)
+	# TODO: set_variable = {
+	#     name = mt_supply_spices
+	#     value = 0  # No local production in Europe
+	# }
+	# Only produced in specific regions
+	# TODO: if = {
+	#     limit = {
+	#         OR = {
+	#             geographical_region = world_india
+	#             geographical_region = world_southeast_asia
+	#         }
+	#     }
+	#     set_variable = { name = mt_supply_spices value = 15 }
+	# }
+
+	# Calculate SILK supply (mostly imported)
+	# TODO: set_variable = {
+	#     name = mt_supply_silk
+	#     value = 0  # No local production
+	# }
+	# Only produced in Far East
+	# TODO: if = {
+	#     limit = { geographical_region = world_china }
+	#     set_variable = { name = mt_supply_silk value = 20 }
+	# }
+
+	# Calculate IRON supply
+	# TODO: set_variable = {
+	#     name = mt_supply_iron
+	#     value = 3  # Base production
+	# }
+	# Mountains have iron deposits
+	# TODO: every_county_province = {
+	#     limit = { terrain = mountains }
+	#     root = {
+	#         change_variable = { name = mt_supply_iron add = 4 }
+	#     }
+	# }
+	# Mining buildings boost production
+	# TODO: if = {
+	#     limit = { has_building = mine }
+	#     multiply_variable = { name = mt_supply_iron value = 2.0 }
+	# }
+
+	# Calculate FUR supply
+	# TODO: set_variable = {
+	#     name = mt_supply_fur
+	#     value = 2  # Base production
+	# }
+	# Northern forests produce furs
+	# TODO: if = {
+	#     limit = {
+	#         OR = {
+	#             geographical_region = world_europe_north
+	#             geographical_region = world_steppe
+	#         }
+	#     }
+	#     change_variable = { name = mt_supply_fur add = 10 }
+	# }
+
+	# Calculate SALT supply
+	# TODO: set_variable = {
+	#     name = mt_supply_salt
+	#     value = 1  # Base production
+	# }
+	# Coastal regions can produce sea salt
+	# TODO: if = {
+	#     limit = { is_coastal_county = yes }
+	#     change_variable = { name = mt_supply_salt add = 8 }
+	# }
+	# Salt mines
+	# TODO: if = {
+	#     limit = { has_special_building = salt_mine }
+	#     change_variable = { name = mt_supply_salt add = 15 }
+	# }
+
+	# Calculate TIMBER supply
+	# TODO: set_variable = {
+	#     name = mt_supply_timber
+	#     value = 5  # Base production
+	# }
+	# Forests produce timber
+	# TODO: every_county_province = {
+	#     limit = { terrain = forest }
+	#     root = {
+	#         change_variable = { name = mt_supply_timber add = 6 }
+	#     }
+	# }
+
+	# Calculate DYE supply
+	# TODO: set_variable = {
+	#     name = mt_supply_dye
+	#     value = 2  # Base production
+	# }
+	# Specific regions produce specific dyes
+	# TODO: if = {
+	#     limit = { geographical_region = world_middle_east }
+	#     change_variable = { name = mt_supply_dye add = 5 }  # Purple dye
+	# }
+
+	# Calculate GLASS supply
+	# TODO: set_variable = {
+	#     name = mt_supply_glass
+	#     value = 1  # Base production
+	# }
+	# Venice and specialized regions
+	# TODO: if = {
+	#     limit = { title = c_venezia }
+	#     set_variable = { name = mt_supply_glass value = 15 }
+	# }
+
+	# Add imports from incoming trade routes
+	# TODO: every_trade_route_to_county = {
+	#     # Add the route's volume to relevant supply variable
+	#     root = {
+	#         change_variable = {
+	#             name = mt_supply_[trade_good]
+	#             add = prev.var:route_volume
+	#         }
+	#     }
+	# }
+
+	# Store timestamp of last update
+	# TODO: set_variable = {
+	#     name = mt_last_supply_update
+	#     value = current_date
+	# }
+}
+
+####################################
+# UTILITY EFFECTS
+####################################
+
+# Effect: Check if a market is oversaturated
+# Scope: County
+# Result: Stores yes/no in var:mt_is_oversaturated
+# Usage: county = { check_market_saturation_effect = yes }
+check_market_saturation_effect = {
+	# TODO: set_variable = {
+	#     name = mt_is_oversaturated
+	#     value = no
+	# }
+	# TODO: if = {
+	#     limit = {
+	#         market_saturation_level > 1.5  # 150%+ oversupply
+	#     }
+	#     set_variable = {
+	#         name = mt_is_oversaturated
+	#         value = yes
+	#     }
+	# }
+}
+
+# Effect: Check if a market has scarcity
+# Scope: County
+# Result: Stores yes/no in var:mt_has_scarcity
+# Usage: county = { check_market_scarcity_effect = yes }
+check_market_scarcity_effect = {
+	# TODO: set_variable = {
+	#     name = mt_has_scarcity
+	#     value = no
+	# }
+	# TODO: if = {
+	#     limit = {
+	#         market_saturation_level < -0.5  # 50%+ undersupply
+	#     }
+	#     set_variable = {
+	#         name = mt_has_scarcity
+	#         value = yes
+	#     }
+	# }
+}
+
+# Effect: Reset all economic variables for a county
+# Scope: County
+# Usage: county = { reset_economy_variables_effect = yes }
+reset_economy_variables_effect = {
+	# Clear supply variables
+	# TODO: remove_variable = mt_supply_grain
+	# TODO: remove_variable = mt_supply_wine
+	# [etc for all goods]
+
+	# Clear demand variables
+	# TODO: remove_variable = mt_demand_grain
+	# TODO: remove_variable = mt_demand_wine
+	# [etc for all goods]
+
+	# Clear market state variables
+	# TODO: remove_variable = mt_market_crashed
+	# TODO: remove_variable = mt_market_booming
+	# TODO: remove_variable = mt_saturation_level
+	# TODO: remove_variable = mt_calculated_price
+
+	# Remove all economic modifiers
+	# TODO: remove_county_modifier = mt_market_crash_modifier
+	# TODO: remove_county_modifier = mt_market_boom_modifier
+	# TODO: remove_county_modifier = mt_oversupply_modifier
+}
