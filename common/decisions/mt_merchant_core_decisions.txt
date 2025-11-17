@@ -1,0 +1,911 @@
+##############################################
+# MERCHANTS AND TRADERS - Core Decisions
+# Author: Merchants and Traders Mod Team
+# Description: Core gameplay decisions for merchant characters
+##############################################
+
+##############################################
+# ESTABLISH TRADE POST
+# Allows merchants to create a permanent trading presence in a county
+##############################################
+mt_establish_trade_post_decision = {
+	title = mt_establish_trade_post_decision_title
+	desc = mt_establish_trade_post_decision_desc
+	selection_tooltip = mt_establish_trade_post_decision_tooltip
+
+	picture = "gfx/interface/illustrations/decisions/decision_personal_religious.dds"
+
+	major = yes
+
+	is_shown = {
+		is_any_merchant_trigger = yes
+		can_establish_trade_post_trigger = yes
+	}
+
+	is_valid_showing_failures_only = {
+		is_imprisoned = no
+		is_incapable = no
+
+		# Must not own this county
+		custom_tooltip = {
+			text = mt_establish_trade_post_not_owner_tt
+			NOT = { capital_county.holder = root }
+		}
+
+		# Must be in a valid location
+		custom_tooltip = {
+			text = mt_establish_trade_post_valid_location_tt
+			location = {
+				any_county_province = {
+					barony.holder = {
+						OR = {
+							this = root.liege
+							is_allied_to = root
+							opinion = {
+								target = root
+								value >= 0
+							}
+						}
+					}
+				}
+			}
+		}
+
+		# Must not already have a trade post here
+		custom_tooltip = {
+			text = mt_establish_trade_post_no_existing_tt
+			location = {
+				NOT = { has_variable = mt_trade_post_owner }
+			}
+		}
+
+		# Must not exceed capacity
+		custom_tooltip = {
+			text = mt_establish_trade_post_capacity_tt
+			OR = {
+				NOT = { has_variable = mt_owned_trade_posts }
+				has_variable = mt_owned_trade_posts
+				AND = {
+					var:mt_owned_trade_posts < var:mt_max_trade_posts
+				}
+			}
+		}
+	}
+
+	cost = {
+		gold = 100
+	}
+
+	effect = {
+		# Store the county ID for this trade post
+		location = {
+			set_variable = {
+				name = mt_trade_post_owner
+				value = root
+			}
+
+			# Add trade post modifier to county
+			add_county_modifier = {
+				modifier = mt_trade_post_established
+				years = 100
+			}
+		}
+
+		# Track this trade post for the merchant
+		if = {
+			limit = { NOT = { has_variable = mt_owned_trade_posts } }
+			set_variable = {
+				name = mt_owned_trade_posts
+				value = 1
+			}
+		}
+		else = {
+			change_variable = {
+				name = mt_owned_trade_posts
+				add = 1
+			}
+		}
+
+		# Add reputation gain
+		change_variable = {
+			name = mt_reputation
+			add = 5
+		}
+
+		# Add prestige for establishing presence
+		add_prestige = 50
+
+		# Notification
+		custom_tooltip = mt_establish_trade_post_success_tt
+
+		# Trigger event for flavor
+		# trigger_event = mt_trade_post.1001
+	}
+
+	ai_check_interval = 60
+
+	ai_potential = {
+		is_any_merchant_trigger = yes
+		gold >= 200
+	}
+
+	ai_will_do = {
+		base = 50
+
+		# More likely if location is profitable
+		modifier = {
+			add = 25
+			location = {
+				county_is_trade_hub_trigger = yes
+			}
+		}
+
+		modifier = {
+			add = 15
+			location = {
+				has_luxury_good_trigger = yes
+			}
+		}
+
+		# Less likely if low on gold
+		modifier = {
+			factor = 0.5
+			gold < 300
+		}
+
+		# More likely if below capacity
+		modifier = {
+			add = 20
+			has_variable = mt_owned_trade_posts
+			var:mt_owned_trade_posts < 3
+		}
+
+		# Much less likely if near capacity
+		modifier = {
+			factor = 0.3
+			has_variable = mt_owned_trade_posts
+			has_variable = mt_max_trade_posts
+			var:mt_owned_trade_posts >= var:mt_max_trade_posts
+		}
+	}
+}
+
+##############################################
+# SCOUT TRADE OPPORTUNITY
+# Reveals profitable trade route opportunities
+##############################################
+mt_scout_trade_opportunity_decision = {
+	title = mt_scout_trade_opportunity_decision_title
+	desc = mt_scout_trade_opportunity_decision_desc
+	selection_tooltip = mt_scout_trade_opportunity_decision_tooltip
+
+	picture = "gfx/interface/illustrations/decisions/decision_personal_religious.dds"
+
+	is_shown = {
+		is_any_merchant_trigger = yes
+	}
+
+	is_valid_showing_failures_only = {
+		is_imprisoned = no
+		is_incapable = no
+
+		# Cooldown check
+		custom_tooltip = {
+			text = mt_scout_opportunity_cooldown_tt
+			NOT = { has_character_flag = mt_recently_scouted }
+		}
+	}
+
+	cost = {
+		gold = 20
+	}
+
+	cooldown = {
+		months = 3
+	}
+
+	effect = {
+		# Set cooldown flag
+		add_character_flag = {
+			flag = mt_recently_scouted
+			days = 90
+		}
+
+		# Generate trade opportunity hints
+		custom_tooltip = mt_scout_opportunity_reveal_tt
+
+		# Find profitable routes based on nearby counties with trade goods
+		hidden_effect = {
+			# Create temporary variables to store discovered opportunities
+			set_variable = {
+				name = mt_scouting_complete
+				value = yes
+				days = 90
+			}
+
+			# Opportunity 1: Find luxury good route
+			random_list = {
+				50 = {
+					trigger = {
+						any_county_in_region = {
+							region = world_europe
+							county_produces_goods_trigger = { GOOD = silk }
+						}
+					}
+					custom_tooltip = mt_scout_silk_opportunity_tt
+				}
+				50 = {
+					trigger = {
+						any_county_in_region = {
+							region = world_europe
+							county_produces_goods_trigger = { GOOD = spices }
+						}
+					}
+					custom_tooltip = mt_scout_spices_opportunity_tt
+				}
+				50 = {
+					trigger = {
+						any_county_in_region = {
+							region = world_europe
+							county_produces_goods_trigger = { GOOD = jade }
+						}
+					}
+					custom_tooltip = mt_scout_jade_opportunity_tt
+				}
+			}
+
+			# Opportunity 2: Find regional goods
+			random_list = {
+				33 = {
+					custom_tooltip = mt_scout_wine_opportunity_tt
+				}
+				33 = {
+					custom_tooltip = mt_scout_salt_opportunity_tt
+				}
+				34 = {
+					custom_tooltip = mt_scout_wool_opportunity_tt
+				}
+			}
+
+			# Opportunity 3: Find profitable destination
+			random_list = {
+				25 = {
+					custom_tooltip = mt_scout_destination_capital_tt
+				}
+				25 = {
+					custom_tooltip = mt_scout_destination_trade_hub_tt
+				}
+				25 = {
+					custom_tooltip = mt_scout_destination_wealthy_tt
+				}
+				25 = {
+					custom_tooltip = mt_scout_destination_coastal_tt
+				}
+			}
+
+			# Small reputation gain for proactive scouting
+			change_variable = {
+				name = mt_reputation
+				add = 1
+			}
+		}
+
+		# Trigger event to display opportunities
+		# trigger_event = mt_scouting.1001
+	}
+
+	ai_check_interval = 90
+
+	ai_potential = {
+		is_any_merchant_trigger = yes
+		gold >= 50
+	}
+
+	ai_will_do = {
+		base = 25
+
+		# More likely when low on gold (looking for opportunities)
+		modifier = {
+			add = 35
+			gold < 200
+		}
+
+		# More likely if no active routes
+		modifier = {
+			add = 40
+			OR = {
+				NOT = { has_variable = mt_active_routes }
+				var:mt_active_routes = 0
+			}
+		}
+
+		# Less likely if already profitable
+		modifier = {
+			factor = 0.3
+			gold > 500
+		}
+
+		# Less likely if many routes already
+		modifier = {
+			factor = 0.2
+			has_variable = mt_active_routes
+			var:mt_active_routes >= 5
+		}
+	}
+}
+
+##############################################
+# HIRE MERCHANT AGENT
+# Hire an agent to manage trade routes for you
+##############################################
+mt_hire_merchant_agent_decision = {
+	title = mt_hire_merchant_agent_decision_title
+	desc = mt_hire_merchant_agent_decision_desc
+	selection_tooltip = mt_hire_merchant_agent_decision_tooltip
+
+	picture = "gfx/interface/illustrations/decisions/decision_personal_religious.dds"
+
+	major = yes
+
+	is_shown = {
+		can_hire_agents_trigger = yes
+	}
+
+	is_valid_showing_failures_only = {
+		is_imprisoned = no
+		is_incapable = no
+
+		# Must have at least one trade post
+		custom_tooltip = {
+			text = mt_hire_agent_need_trade_post_tt
+			has_variable = mt_owned_trade_posts
+			var:mt_owned_trade_posts >= 1
+		}
+
+		# Must not exceed agent capacity
+		custom_tooltip = {
+			text = mt_hire_agent_capacity_tt
+			OR = {
+				NOT = { has_variable = mt_hired_agents }
+				AND = {
+					has_variable = mt_hired_agents
+					has_variable = mt_max_agents
+					var:mt_hired_agents < var:mt_max_agents
+				}
+			}
+		}
+
+		# Must be able to afford ongoing salary
+		custom_tooltip = {
+			text = mt_hire_agent_afford_salary_tt
+			monthly_character_income >= 10
+		}
+	}
+
+	cost = {
+		gold = 50
+	}
+
+	effect = {
+		# Create a lowborn merchant agent
+		create_character = {
+			location = root.capital_province
+			template = merchant_agent_template
+			gender_female_chance = 40
+			dynasty = none
+			save_scope_as = new_agent
+
+			culture = root.culture
+			faith = root.faith
+
+			age = {
+				min = 20
+				max = 35
+			}
+
+			random_traits = yes
+
+			# Give them merchant-related education
+			add_trait = education_stewardship_3
+		}
+
+		# Make them your agent (courtier)
+		scope:new_agent = {
+			set_employer = root
+
+			# Mark as merchant agent
+			add_character_flag = {
+				flag = mt_merchant_agent
+				years = 100
+			}
+
+			# Set salary
+			set_variable = {
+				name = mt_agent_salary
+				value = 2
+			}
+
+			# Link to employer
+			set_variable = {
+				name = mt_agent_employer
+				value = root
+			}
+		}
+
+		# Track hired agents
+		if = {
+			limit = { NOT = { has_variable = mt_hired_agents } }
+			set_variable = {
+				name = mt_hired_agents
+				value = 1
+			}
+		}
+		else = {
+			change_variable = {
+				name = mt_hired_agents
+				add = 1
+			}
+		}
+
+		# Add monthly salary cost
+		if = {
+			limit = { NOT = { has_variable = mt_monthly_agent_costs } }
+			set_variable = {
+				name = mt_monthly_agent_costs
+				value = 2
+			}
+		}
+		else = {
+			change_variable = {
+				name = mt_monthly_agent_costs
+				add = 2
+			}
+		}
+
+		# Small reputation gain
+		change_variable = {
+			name = mt_reputation
+			add = 3
+		}
+
+		custom_tooltip = mt_hire_agent_success_tt
+
+		# Trigger event for introduction
+		# trigger_event = mt_agents.1001
+	}
+
+	ai_check_interval = 120
+
+	ai_potential = {
+		can_hire_agents_trigger = yes
+		gold >= 150
+		monthly_character_income >= 15
+	}
+
+	ai_will_do = {
+		base = 75
+
+		# More likely if has profitable routes that need management
+		modifier = {
+			add = 50
+			has_variable = mt_active_routes
+			var:mt_active_routes >= 3
+		}
+
+		# More likely if wealthy
+		modifier = {
+			add = 25
+			gold >= 300
+		}
+
+		# Less likely if income is marginal
+		modifier = {
+			factor = 0.3
+			monthly_character_income < 20
+		}
+
+		# Much less likely if struggling financially
+		modifier = {
+			factor = 0.1
+			gold < 100
+		}
+
+		# More likely if has multiple trade posts
+		modifier = {
+			add = 30
+			has_variable = mt_owned_trade_posts
+			var:mt_owned_trade_posts >= 3
+		}
+
+		# Less likely if already has many agents
+		modifier = {
+			factor = 0.5
+			has_variable = mt_hired_agents
+			var:mt_hired_agents >= 3
+		}
+	}
+}
+
+##############################################
+# EXPAND TRADING COMPANY
+# Major expansion of trading operations
+##############################################
+mt_expand_trading_company_decision = {
+	title = mt_expand_trading_company_decision_title
+	desc = mt_expand_trading_company_decision_desc
+	selection_tooltip = mt_expand_trading_company_decision_tooltip
+
+	picture = "gfx/interface/illustrations/decisions/decision_major_religion.dds"
+
+	major = yes
+
+	is_shown = {
+		is_trading_company_trigger = yes
+	}
+
+	is_valid_showing_failures_only = {
+		is_imprisoned = no
+		is_incapable = no
+
+		# Must have minimum routes
+		custom_tooltip = {
+			text = mt_expand_company_need_routes_tt
+			has_variable = mt_active_routes
+			var:mt_active_routes >= 5
+		}
+
+		# Must have wealth
+		custom_tooltip = {
+			text = mt_expand_company_need_wealth_tt
+			gold >= 1000
+		}
+
+		# Must have good reputation
+		custom_tooltip = {
+			text = mt_expand_company_need_reputation_tt
+			has_variable = mt_reputation
+			var:mt_reputation >= 50
+		}
+
+		# Cooldown - can only expand periodically
+		custom_tooltip = {
+			text = mt_expand_company_cooldown_tt
+			NOT = { has_character_flag = mt_recently_expanded }
+		}
+	}
+
+	cost = {
+		gold = 500
+	}
+
+	cooldown = {
+		years = 5
+	}
+
+	effect = {
+		# Set cooldown
+		add_character_flag = {
+			flag = mt_recently_expanded
+			years = 5
+		}
+
+		# Increase route capacity
+		if = {
+			limit = { NOT = { has_variable = mt_max_trade_routes } }
+			set_variable = {
+				name = mt_max_trade_routes
+				value = 10
+			}
+		}
+		else = {
+			change_variable = {
+				name = mt_max_trade_routes
+				add = 5
+			}
+		}
+
+		# Increase other capacities
+		if = {
+			limit = { has_variable = mt_max_trade_posts }
+			change_variable = {
+				name = mt_max_trade_posts
+				add = 3
+			}
+		}
+
+		if = {
+			limit = { has_variable = mt_max_agents }
+			change_variable = {
+				name = mt_max_agents
+				add = 2
+			}
+		}
+
+		# Major prestige gain
+		add_prestige = 200
+
+		# Major reputation gain
+		change_variable = {
+			name = mt_reputation
+			add = 10
+		}
+
+		# Add temporary income bonus
+		add_character_modifier = {
+			modifier = mt_company_expansion_momentum
+			years = 10
+		}
+
+		# Fame gain
+		add_character_flag = {
+			flag = mt_expanded_company
+			years = 100
+		}
+
+		custom_tooltip = mt_expand_company_success_tt
+
+		# Trigger event for announcement
+		# trigger_event = mt_company.1001
+	}
+
+	ai_check_interval = 240
+
+	ai_potential = {
+		is_trading_company_trigger = yes
+		gold >= 1500
+		has_variable = mt_active_routes
+		var:mt_active_routes >= 7
+	}
+
+	ai_will_do = {
+		base = 50
+
+		# More likely if very wealthy
+		modifier = {
+			add = 40
+			gold >= 2000
+		}
+
+		# More likely if high reputation
+		modifier = {
+			add = 30
+			has_variable = mt_reputation
+			var:mt_reputation >= 100
+		}
+
+		# More likely if at capacity
+		modifier = {
+			add = 50
+			has_variable = mt_active_routes
+			has_variable = mt_max_trade_routes
+			var:mt_active_routes >= var:mt_max_trade_routes
+		}
+
+		# Less likely if struggling
+		modifier = {
+			factor = 0.2
+			gold < 1000
+		}
+
+		# More likely if ambitious
+		modifier = {
+			add = 25
+			has_trait = ambitious
+		}
+	}
+}
+
+##############################################
+# PETITION FOR MERCHANT REPUBLIC STATUS
+# Ultimate endgame decision for merchant playthrough
+##############################################
+mt_petition_merchant_republic_status_decision = {
+	title = mt_petition_merchant_republic_status_decision_title
+	desc = mt_petition_merchant_republic_status_decision_desc
+	selection_tooltip = mt_petition_merchant_republic_status_decision_tooltip
+
+	picture = "gfx/interface/illustrations/decisions/decision_realm.dds"
+
+	major = yes
+
+	is_shown = {
+		is_merchant_prince_trigger = yes
+
+		# Can only do this once
+		NOT = { has_character_flag = mt_merchant_republic_attempted }
+	}
+
+	is_valid_showing_failures_only = {
+		is_imprisoned = no
+		is_incapable = no
+
+		# Must control a county (preferably coastal/trade city)
+		custom_tooltip = {
+			text = mt_petition_republic_need_holding_tt
+			is_ruler = yes
+			highest_held_title_tier >= tier_county
+		}
+
+		# Must have extensive trade network
+		custom_tooltip = {
+			text = mt_petition_republic_need_routes_tt
+			has_variable = mt_active_routes
+			var:mt_active_routes >= 10
+		}
+
+		# Must have legendary reputation
+		custom_tooltip = {
+			text = mt_petition_republic_need_reputation_tt
+			has_legendary_reputation_trigger = yes
+		}
+
+		# Must have significant prestige
+		custom_tooltip = {
+			text = mt_petition_republic_need_prestige_tt
+			prestige >= 1000
+		}
+
+		# Must have good relations with liege (if applicable)
+		custom_tooltip = {
+			text = mt_petition_republic_need_approval_tt
+			OR = {
+				is_independent_ruler = yes
+				AND = {
+					exists = liege
+					liege = {
+						opinion = {
+							target = root
+							value >= 50
+						}
+					}
+				}
+			}
+		}
+
+		# Must have multiple trade posts
+		custom_tooltip = {
+			text = mt_petition_republic_need_infrastructure_tt
+			has_variable = mt_owned_trade_posts
+			var:mt_owned_trade_posts >= 5
+		}
+
+		# Must have established merchant guilds
+		custom_tooltip = {
+			text = mt_petition_republic_need_guilds_tt
+			has_character_flag = mt_established_guilds
+		}
+	}
+
+	cost = {
+		gold = 1000
+		prestige = 200
+	}
+
+	effect = {
+		# Mark as attempted
+		add_character_flag = {
+			flag = mt_merchant_republic_attempted
+			years = 100
+		}
+
+		# Add powerful permanent modifier representing merchant republic status
+		add_character_modifier = {
+			modifier = mt_merchant_republic_status
+			years = 100
+		}
+
+		# Massive prestige gain
+		add_prestige = 1000
+
+		# Major fame level increase
+		add_character_flag = {
+			flag = mt_legendary_merchant_prince
+			years = 100
+		}
+
+		# Legendary reputation boost
+		change_variable = {
+			name = mt_reputation
+			add = 50
+		}
+
+		# Grant special ability to influence realm politics
+		set_variable = {
+			name = mt_merchant_republic_influence
+			value = 100
+		}
+
+		# Unlock special interactions
+		add_character_flag = {
+			flag = mt_can_charter_merchant_fleets
+			years = 100
+		}
+
+		add_character_flag = {
+			flag = mt_can_establish_trade_monopolies
+			years = 100
+		}
+
+		add_character_flag = {
+			flag = mt_can_mint_currency
+			years = 100
+		}
+
+		# Apply modifier to capital county
+		capital_county = {
+			add_county_modifier = {
+				modifier = mt_merchant_republic_capital
+				years = 100
+			}
+		}
+
+		# Massive income bonus
+		add_character_modifier = {
+			modifier = mt_merchant_prince_economy
+			years = 100
+		}
+
+		custom_tooltip = mt_petition_republic_success_tt
+
+		# Trigger major event chain
+		# trigger_event = mt_republic.1001
+	}
+
+	ai_check_interval = 360
+
+	ai_potential = {
+		is_merchant_prince_trigger = yes
+		gold >= 2000
+		prestige >= 1500
+		has_variable = mt_active_routes
+		var:mt_active_routes >= 12
+	}
+
+	ai_will_do = {
+		base = 25
+
+		# More likely if extremely wealthy
+		modifier = {
+			add = 50
+			gold >= 5000
+		}
+
+		# More likely if legendary reputation
+		modifier = {
+			add = 40
+			has_variable = mt_reputation
+			var:mt_reputation >= 200
+		}
+
+		# More likely if ambitious
+		modifier = {
+			add = 30
+			has_trait = ambitious
+		}
+
+		# More likely if greedy
+		modifier = {
+			add = 20
+			has_trait = greedy
+		}
+
+		# Less likely if content
+		modifier = {
+			factor = 0.3
+			has_trait = content
+		}
+
+		# More likely if already very successful
+		modifier = {
+			add = 40
+			has_variable = mt_active_routes
+			var:mt_active_routes >= 20
+		}
+
+		# More likely if old (legacy building)
+		modifier = {
+			add = 25
+			age >= 50
+		}
+	}
+}

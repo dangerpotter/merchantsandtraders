@@ -1,0 +1,123 @@
+l_english:
+
+ ####################################
+ # TRADE TAXATION DECISIONS
+ ####################################
+
+ establish_trade_taxation_decision:0 "Establish Trade Taxation"
+ establish_trade_taxation_decision_desc:0 "As a ruler, you can impose taxes on all merchants operating trade routes through your lands. This will bring immediate gold income, but merchants will resent the burden and trade route health will suffer."
+ establish_trade_taxation_decision_tooltip:0 "Tax all merchants passing through your realm"
+ establish_trade_taxation_decision_effect_tooltip:0 "All trade routes through your lands will pay 10% tax to you, generating monthly gold income. However, route health decreases by 20% and merchants gain -15 opinion of you."
+ establish_trade_taxation_decision_confirm:0 "Begin Taxation"
+
+ revoke_trade_taxation_decision:0 "Revoke Trade Taxation"
+ revoke_trade_taxation_decision_desc:0 "End the taxation of merchants operating in your realm. Trade routes will become healthier and merchants will view you more favorably."
+ revoke_trade_taxation_decision_tooltip:0 "Stop taxing merchants in your realm"
+ revoke_trade_taxation_decision_effect_tooltip:0 "Remove trade taxation policy. Merchants will appreciate this change and trade route health will recover."
+ revoke_trade_taxation_decision_confirm:0 "End Taxation"
+
+ mt_trade_taxation_policy:0 "Trade Taxation Policy"
+ mt_trade_taxation_policy_desc:0 "This ruler taxes all merchants operating trade routes through their lands."
+
+ ####################################
+ # MERCHANT PROTECTION DECISIONS
+ ####################################
+
+ protect_merchant_caravans_decision:0 "Protect Merchant Caravans"
+ protect_merchant_caravans_decision_desc:0 "Invest in protecting merchant caravans from bandits and raiders. This costs gold to maintain guards and patrols, but makes your realm attractive for trade and improves route health significantly."
+ protect_merchant_caravans_decision_tooltip:0 "Spend gold to protect merchants in your realm"
+ protect_merchant_caravans_decision_effect_tooltip:0 "Costs 1 gold per month per active route in your realm. Routes through your lands gain +20% health and merchants gain +20 opinion of you. This attracts more merchants to your lands."
+ protect_merchant_caravans_decision_confirm:0 "Protect Merchants"
+
+ revoke_merchant_protection_decision:0 "Revoke Merchant Protection"
+ revoke_merchant_protection_decision_desc:0 "End the costly protection of merchant caravans. This will save gold but merchants will be disappointed and trade routes will become more dangerous."
+ revoke_merchant_protection_decision_tooltip:0 "Stop protecting merchants in your realm"
+ revoke_merchant_protection_decision_effect_tooltip:0 "Remove merchant protection policy. Save gold but lose merchant goodwill and trade route health bonuses."
+ revoke_merchant_protection_decision_confirm:0 "End Protection"
+
+ mt_merchant_protection_policy:0 "Merchant Protection Policy"
+ mt_merchant_protection_policy_desc:0 "This ruler actively protects merchant caravans from bandits and raiders."
+
+ ####################################
+ # TRADE MONOPOLY DECISIONS
+ ####################################
+
+ grant_trade_monopoly_decision:0 "Grant Trade Monopoly"
+ grant_trade_monopoly_decision_desc:0 "As a powerful monarch, you can grant exclusive trade rights for specific goods to a chosen merchant. This creates a monopoly that will make the chosen merchant extremely wealthy and loyal, but all other merchants will be furious at being excluded from profitable markets."
+ grant_trade_monopoly_decision_tooltip:0 "Grant exclusive trade rights to a specific merchant"
+ grant_trade_monopoly_decision_effect_tooltip:0 "Costs 100 prestige. The chosen merchant gains exclusive rights to trade specific goods in your kingdom, receiving massive profit bonuses. All other merchants gain -30 opinion of you, while the chosen merchant gains +50 opinion. Creates significant political conflict."
+ grant_trade_monopoly_decision_confirm:0 "Grant Monopoly"
+
+ revoke_trade_monopoly_decision:0 "Revoke Trade Monopoly"
+ revoke_trade_monopoly_decision_desc:0 "End the trade monopoly you granted. The monopoly holder will be angry, but other merchants will be pleased that fair competition is restored."
+ revoke_trade_monopoly_decision_tooltip:0 "End the trade monopoly"
+ revoke_trade_monopoly_decision_effect_tooltip:0 "Remove the trade monopoly. The monopoly holder will be angry (-30 opinion), but other merchants will appreciate the return to fair competition."
+ revoke_trade_monopoly_decision_confirm:0 "Revoke Monopoly"
+
+ mt_trade_monopoly_granted:0 "Trade Monopoly Granted"
+ mt_trade_monopoly_granted_desc:0 "This ruler has granted a trade monopoly to a specific merchant."
+
+ mt_trade_monopoly_holder:0 "Trade Monopoly Holder"
+ mt_trade_monopoly_holder_desc:0 "This merchant has been granted exclusive trade rights by their liege."
+
+ ####################################
+ # FOREIGN MERCHANTS DECISIONS
+ ####################################
+
+ invite_foreign_merchants_decision:0 "Invite Foreign Merchants"
+ invite_foreign_merchants_decision_desc:0 "Invest gold to attract foreign merchants to establish trade posts in your realm. This brings new goods, cultural exchange, and development growth, making your realm a cosmopolitan trade center."
+ invite_foreign_merchants_decision_tooltip:0 "Attract foreign merchants to your realm"
+ invite_foreign_merchants_decision_effect_tooltip:0 "Costs 50 gold. Random foreign merchants establish trade posts in your realm, providing +1.5 monthly gold from trade activity and +development growth. Your realm becomes more prosperous and cosmopolitan."
+ invite_foreign_merchants_decision_confirm:0 "Invite Merchants"
+
+ mt_foreign_merchants_active:0 "Foreign Merchants Active"
+ mt_foreign_merchants_active_desc:0 "Foreign merchants have established trade posts in this realm."
+
+ ####################################
+ # BAN MERCHANT ACTIVITY DECISIONS
+ ####################################
+
+ ban_merchant_activity_decision:0 "Ban Merchant Activity"
+ ban_merchant_activity_decision_desc:0 "Forbid all merchant activity in your realm. This is a drastic measure that will tank your economy and infuriate merchants, but prevents economic exploitation and foreign influence. Only use this if you want to completely opt out of the trade mechanics."
+ ban_merchant_activity_decision_tooltip:0 "Ban all merchant activity in your realm"
+ ban_merchant_activity_decision_effect_tooltip:0 "All trade posts close and merchant activity ceases. You lose significant monthly gold and development growth. All merchants gain -50 opinion of you. This is essentially opting out of the trade system."
+ ban_merchant_activity_decision_confirm:0 "Ban Merchants"
+ ban_merchant_activity_decision_warning:0 "This decision will severely damage your economy and close all trade posts. Only choose this if you truly want to exclude merchant activity from your realm."
+
+ revoke_merchant_ban_decision:0 "Revoke Merchant Ban"
+ revoke_merchant_ban_decision_desc:0 "Reverse your decision to ban merchant activity. This costs prestige as you admit the policy was too extreme, but allows trade to resume in your realm."
+ revoke_merchant_ban_decision_tooltip:0 "Allow merchant activity again"
+ revoke_merchant_ban_decision_effect_tooltip:0 "Costs 50 prestige. Merchant activity is permitted again, though merchants will remain resentful for some time. Trade routes can be re-established."
+ revoke_merchant_ban_decision_confirm:0 "Allow Merchants"
+
+ mt_merchant_activity_banned:0 "Merchant Activity Banned"
+ mt_merchant_activity_banned_desc:0 "This ruler has banned all merchant activity in their realm."
+
+ ####################################
+ # MERCHANT OPINION MODIFIERS
+ ####################################
+
+ mt_merchant_approval:0 "Merchant Approval"
+ mt_merchant_approval_desc:0 "This ruler has earned the approval of the merchant class through favorable policies."
+
+ mt_merchant_resentment:0 "Merchant Resentment"
+ mt_merchant_resentment_desc:0 "Merchants resent this ruler's policies toward trade."
+
+ mt_merchant_fury:0 "Merchant Fury"
+ mt_merchant_fury_desc:0 "Merchants are furious with this ruler's extreme restrictions on trade."
+
+ ####################################
+ # TOOLTIPS AND NOTIFICATIONS
+ ####################################
+
+ mt_trade_policy_decisions:0 "Trade Policy Decisions"
+ mt_trade_policy_decisions_desc:0 "Major decisions that affect how your realm interacts with merchants and trade routes."
+
+ mt_has_merchants_operating:0 "Merchants are operating in your realm"
+ mt_no_merchants_operating:0 "No merchants currently operate in your realm"
+
+ mt_has_coastal_trade_city:0 "You have a coastal or trade city"
+ mt_no_coastal_trade_city:0 "You need a coastal or trade city"
+
+ mt_not_isolationist:0 "You are not isolationist"
+ mt_is_isolationist:0 "Your culture values isolation"

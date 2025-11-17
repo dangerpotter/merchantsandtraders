@@ -1,0 +1,127 @@
+l_english:
+ ##############################################
+ # MERCHANTS AND TRADERS - Decision Localization
+ ##############################################
+
+ ##############################################
+ # ESTABLISH TRADE POST
+ ##############################################
+ mt_establish_trade_post_decision_title:0 "Establish Trade Post"
+ mt_establish_trade_post_decision_desc:0 "Establishing a permanent trade post in this county will grant me a foothold in the local economy, allowing me to conduct business more efficiently and build my merchant reputation. This is a significant investment that requires local cooperation and approval."
+ mt_establish_trade_post_decision_tooltip:0 "Create a permanent trading presence in this county"
+ mt_establish_trade_post_decision_confirm:0 "Establish Trade Post"
+
+ # Custom tooltips
+ mt_establish_trade_post_not_owner_tt:0 "You cannot establish a trade post in your own county"
+ mt_establish_trade_post_valid_location_tt:0 "The local ruler must have a neutral or positive opinion of you, or you must be allied"
+ mt_establish_trade_post_no_existing_tt:0 "You do not already have a trade post in this county"
+ mt_establish_trade_post_capacity_tt:0 "You have not reached your maximum number of trade posts"
+ mt_establish_trade_post_success_tt:0 "Trade post established! You can now operate more efficiently in this region.\n#P +5#! Merchant Reputation\n#P +50#! Prestige\n#P +1#! Trade Post Owned"
+
+ ##############################################
+ # SCOUT TRADE OPPORTUNITY
+ ##############################################
+ mt_scout_trade_opportunity_decision_title:0 "Scout Trade Opportunities"
+ mt_scout_trade_opportunity_decision_desc:0 "Send scouts and informants to gather intelligence on profitable trade routes, valuable goods in distant markets, and emerging economic opportunities. A wise merchant always keeps their finger on the pulse of commerce."
+ mt_scout_trade_opportunity_decision_tooltip:0 "Discover profitable trade routes and valuable goods"
+ mt_scout_trade_opportunity_decision_confirm:0 "Send Scouts"
+
+ # Custom tooltips
+ mt_scout_opportunity_cooldown_tt:0 "You have not scouted for opportunities recently (3 month cooldown)"
+ mt_scout_opportunity_reveal_tt:0 "You will discover #P 3 profitable trade opportunities#! based on current market conditions"
+
+ # Scouting results - Luxury goods
+ mt_scout_silk_opportunity_tt:0 "#T Silk Trade Opportunity:#! Silk from the Eastern markets commands premium prices in wealthy European courts. Establishing a route from Baghdad, Constantinople, or Samarkand to major Western cities could be extremely profitable."
+ mt_scout_spices_opportunity_tt:0 "#T Spice Trade Opportunity:#! Exotic spices from India and the Far East are in high demand. Routes from Eastern trade hubs to Mediterranean ports offer substantial profit margins."
+ mt_scout_jade_opportunity_tt:0 "#T Jade Trade Opportunity:#! Precious jade artifacts from the Orient are highly sought after by nobility. Long-distance routes to wealthy capitals could yield exceptional returns."
+
+ # Scouting results - Regional goods
+ mt_scout_wine_opportunity_tt:0 "#T Wine Trade Opportunity:#! Fine wines from renowned vineyards can be sold at premium prices in regions where wine is scarce. Look for routes from wine-producing counties to dry inland territories."
+ mt_scout_salt_opportunity_tt:0 "#T Salt Trade Opportunity:#! Salt remains one of the most reliable commodities. Routes from coastal salt-producing regions to inland populations offer steady, dependable profits."
+ mt_scout_wool_opportunity_tt:0 "#T Wool Trade Opportunity:#! Quality wool from pastoral regions is essential for textile production. Routes to manufacturing centers and wealthy cities ensure consistent demand."
+
+ # Scouting results - Destinations
+ mt_scout_destination_capital_tt:0 "#T Profitable Destination:#! Major capitals with large populations and wealthy courts offer the best prices for luxury goods. Prioritize routes ending in kingdom capitals."
+ mt_scout_destination_trade_hub_tt:0 "#T Profitable Destination:#! Established trade hubs provide excellent market infrastructure and buyer networks. Cities with existing trade networks maximize profit potential."
+ mt_scout_destination_wealthy_tt:0 "#T Profitable Destination:#! Counties with high development and prosperous holdings have strong purchasing power. Target wealthy developed regions for premium goods."
+ mt_scout_destination_coastal_tt:0 "#T Profitable Destination:#! Coastal cities with port access can redistribute your goods via maritime trade, creating secondary profit opportunities."
+
+ ##############################################
+ # HIRE MERCHANT AGENT
+ ##############################################
+ mt_hire_merchant_agent_decision_title:0 "Hire Merchant Agent"
+ mt_hire_merchant_agent_decision_desc:0 "As my trading operations expand, I can no longer personally oversee every route and transaction. Hiring a capable merchant agent will allow me to delegate the management of trade routes, freeing me to focus on strategy and expansion. The agent will require a modest salary but their expertise will prove invaluable."
+ mt_hire_merchant_agent_decision_tooltip:0 "Recruit a skilled agent to manage your trade routes"
+ mt_hire_merchant_agent_decision_confirm:0 "Hire Agent"
+
+ # Custom tooltips
+ mt_hire_agent_need_trade_post_tt:0 "You must have at least one trade post to hire an agent"
+ mt_hire_agent_capacity_tt:0 "You have not reached your maximum number of agents"
+ mt_hire_agent_afford_salary_tt:0 "You must have sufficient monthly income to afford their salary (#P 2 gold/month#!)"
+ mt_hire_agent_success_tt:0 "Merchant agent hired! They can now manage trade routes on your behalf.\n#P +1#! Merchant Agent\n#P -2 gold/month#! Salary Cost\n#P +3#! Merchant Reputation"
+
+ ##############################################
+ # EXPAND TRADING COMPANY
+ ##############################################
+ mt_expand_trading_company_decision_title:0 "Expand Trading Company"
+ mt_expand_trading_company_decision_desc:0 "My trading company has proven successful, and the time has come for major expansion. By investing substantial capital in new infrastructure, warehouses, additional ships or caravans, and administrative capacity, I can dramatically increase the scale of my operations. This is a pivotal moment that will cement my status as a major merchant power."
+ mt_expand_trading_company_decision_tooltip:0 "Major expansion of your trading operations and capacity"
+ mt_expand_trading_company_decision_confirm:0 "Expand Company"
+
+ # Custom tooltips
+ mt_expand_company_need_routes_tt:0 "You must have at least 5 active trade routes"
+ mt_expand_company_need_wealth_tt:0 "You must have accumulated at least 1000 gold in reserve capital"
+ mt_expand_company_need_reputation_tt:0 "You must have at least 50 merchant reputation"
+ mt_expand_company_cooldown_tt:0 "You cannot expand your company too frequently (5 year cooldown)"
+ mt_expand_company_success_tt:0 "Trading company expanded! Your operations can now scale to new heights.\n#P +5#! Maximum Trade Routes\n#P +3#! Maximum Trade Posts\n#P +2#! Maximum Agents\n#P +200#! Prestige\n#P +10#! Merchant Reputation\nGain #P Company Expansion Momentum#! modifier for 10 years"
+
+ ##############################################
+ # PETITION MERCHANT REPUBLIC STATUS
+ ##############################################
+ mt_petition_merchant_republic_status_decision_title:0 "Petition for Merchant Republic Status"
+ mt_petition_merchant_republic_status_decision_desc:0 "I have achieved what few merchants ever dream of - legendary reputation, vast wealth, and a trading empire spanning continents. The time has come to formalize my position as a merchant prince and petition for recognition as a true merchant republic. This will grant me unprecedented economic and political power, allowing me to shape the commercial future of entire regions.\n\n#bold This is a momentous decision that will define my legacy.#!"
+ mt_petition_merchant_republic_status_decision_tooltip:0 "Achieve the ultimate merchant status and unlock republic powers"
+ mt_petition_merchant_republic_status_decision_confirm:0 "Petition for Republic Status"
+
+ # Custom tooltips
+ mt_petition_republic_need_holding_tt:0 "You must control at least a county-level title"
+ mt_petition_republic_need_routes_tt:0 "You must have at least 10 active trade routes"
+ mt_petition_republic_need_reputation_tt:0 "You must have legendary merchant reputation (200+)"
+ mt_petition_republic_need_prestige_tt:0 "You must have accumulated at least 1000 prestige"
+ mt_petition_republic_need_approval_tt:0 "If you have a liege, they must have at least 50 opinion of you"
+ mt_petition_republic_need_infrastructure_tt:0 "You must have established at least 5 trade posts"
+ mt_petition_republic_need_guilds_tt:0 "You must have established merchant guilds in your domain"
+ mt_petition_republic_success_tt:0 "#bold MERCHANT REPUBLIC ESTABLISHED!#!\n\nYou have achieved the pinnacle of merchant power and established a true merchant republic!\n\n#P +1000#! Prestige\n#P +50#! Merchant Reputation\nGain #P Merchant Republic Status#! modifier\nGain #P Merchant Prince Economy#! modifier\nUnlock special abilities:\n • #P Charter Merchant Fleets#!\n • #P Establish Trade Monopolies#!\n • #P Mint Currency#!\nYour capital gains #P Merchant Republic Capital#! modifier\n\n#italic Your name will echo through the ages as one of history's greatest merchants.#!"
+
+ ##############################################
+ # CHARACTER MODIFIERS
+ ##############################################
+ mt_trade_post_established:0 "Trade Post Established"
+ mt_trade_post_established_desc:0 "A merchant has established a permanent trading presence in this county, bringing increased commercial activity."
+
+ mt_company_expansion_momentum:0 "Company Expansion Momentum"
+ mt_company_expansion_momentum_desc:0 "Recent expansion has energized our trading operations, leading to increased efficiency and profitability."
+
+ mt_merchant_republic_status:0 "Merchant Republic Status"
+ mt_merchant_republic_status_desc:0 "This merchant prince has achieved formal recognition as a merchant republic, wielding immense economic and political influence."
+
+ mt_merchant_republic_capital:0 "Merchant Republic Capital"
+ mt_merchant_republic_capital_desc:0 "This city serves as the seat of a powerful merchant republic, bringing prosperity and prestige."
+
+ mt_merchant_prince_economy:0 "Merchant Prince Economy"
+ mt_merchant_prince_economy_desc:0 "The vast trading empire controlled by this merchant prince generates extraordinary wealth."
+
+ ##############################################
+ # CHARACTER FLAGS (for reference)
+ ##############################################
+ # These are not directly localized but documented here for clarity
+ # mt_recently_scouted - Cooldown flag for scouting
+ # mt_recently_expanded - Cooldown flag for company expansion
+ # mt_merchant_republic_attempted - Can only petition once
+ # mt_merchant_agent - Marks characters as hired agents
+ # mt_expanded_company - Historical marker
+ # mt_established_guilds - Required for republic petition
+ # mt_legendary_merchant_prince - Ultimate achievement
+ # mt_can_charter_merchant_fleets - Special ability unlocked
+ # mt_can_establish_trade_monopolies - Special ability unlocked
+ # mt_can_mint_currency - Special ability unlocked

@@ -668,3 +668,176 @@ hire_caravan_guard_effect = {
 
 	debug_log = "Hired $guard_count$ guards for route $route_id$"
 }
+
+# ==============================================================================
+# find_next_available_route_slot_effect
+# Finds the next available route slot (0-4) and stores it in mt_temp_route_slot
+# ==============================================================================
+# SCOPE: Character
+# ==============================================================================
+find_next_available_route_slot_effect = {
+	save_temporary_scope_as = merchant_character
+
+	# Remove previous temp value if exists
+	if = {
+		limit = { exists = var:mt_temp_route_slot }
+		remove_variable = mt_temp_route_slot
+	}
+
+	# Check slots in order
+	if = {
+		limit = { NOT = { exists = var:mt_route_0_node_0 } }
+		set_variable = {
+			name = mt_temp_route_slot
+			value = 0
+		}
+	}
+	else_if = {
+		limit = { NOT = { exists = var:mt_route_1_node_0 } }
+		set_variable = {
+			name = mt_temp_route_slot
+			value = 1
+		}
+	}
+	else_if = {
+		limit = { NOT = { exists = var:mt_route_2_node_0 } }
+		set_variable = {
+			name = mt_temp_route_slot
+			value = 2
+		}
+	}
+	else_if = {
+		limit = { NOT = { exists = var:mt_route_3_node_0 } }
+		set_variable = {
+			name = mt_temp_route_slot
+			value = 3
+		}
+	}
+	else_if = {
+		limit = { NOT = { exists = var:mt_route_4_node_0 } }
+		set_variable = {
+			name = mt_temp_route_slot
+			value = 4
+		}
+	}
+	else = {
+		# No slots available - set to -1 as error indicator
+		set_variable = {
+			name = mt_temp_route_slot
+			value = -1
+		}
+	}
+}
+
+# ==============================================================================
+# track_route_profitability_effect
+# Tracks whether routes are profitable or unprofitable over time
+# Sets flags for routes that are losing money
+# ==============================================================================
+# SCOPE: Character
+# ==============================================================================
+track_route_profitability_effect = {
+	save_temporary_scope_as = merchant_character
+
+	# Track route 0
+	if = {
+		limit = { exists = var:mt_route_0_profit }
+		if = {
+			limit = { var:mt_route_0_profit <= 0 }
+			# Mark as unprofitable
+			if = {
+				limit = { NOT = { has_variable_flag = mt_route_0_unprofitable } }
+				set_variable_flag = {
+					flag = mt_route_0_unprofitable
+				}
+			}
+		}
+		else = {
+			# Remove unprofitable flag if now profitable
+			if = {
+				limit = { has_variable_flag = mt_route_0_unprofitable }
+				remove_variable_flag = mt_route_0_unprofitable
+			}
+		}
+	}
+
+	# Track route 1
+	if = {
+		limit = { exists = var:mt_route_1_profit }
+		if = {
+			limit = { var:mt_route_1_profit <= 0 }
+			if = {
+				limit = { NOT = { has_variable_flag = mt_route_1_unprofitable } }
+				set_variable_flag = {
+					flag = mt_route_1_unprofitable
+				}
+			}
+		}
+		else = {
+			if = {
+				limit = { has_variable_flag = mt_route_1_unprofitable }
+				remove_variable_flag = mt_route_1_unprofitable
+			}
+		}
+	}
+
+	# Track route 2
+	if = {
+		limit = { exists = var:mt_route_2_profit }
+		if = {
+			limit = { var:mt_route_2_profit <= 0 }
+			if = {
+				limit = { NOT = { has_variable_flag = mt_route_2_unprofitable } }
+				set_variable_flag = {
+					flag = mt_route_2_unprofitable
+				}
+			}
+		}
+		else = {
+			if = {
+				limit = { has_variable_flag = mt_route_2_unprofitable }
+				remove_variable_flag = mt_route_2_unprofitable
+			}
+		}
+	}
+
+	# Track route 3
+	if = {
+		limit = { exists = var:mt_route_3_profit }
+		if = {
+			limit = { var:mt_route_3_profit <= 0 }
+			if = {
+				limit = { NOT = { has_variable_flag = mt_route_3_unprofitable } }
+				set_variable_flag = {
+					flag = mt_route_3_unprofitable
+				}
+			}
+		}
+		else = {
+			if = {
+				limit = { has_variable_flag = mt_route_3_unprofitable }
+				remove_variable_flag = mt_route_3_unprofitable
+			}
+		}
+	}
+
+	# Track route 4
+	if = {
+		limit = { exists = var:mt_route_4_profit }
+		if = {
+			limit = { var:mt_route_4_profit <= 0 }
+			if = {
+				limit = { NOT = { has_variable_flag = mt_route_4_unprofitable } }
+				set_variable_flag = {
+					flag = mt_route_4_unprofitable
+				}
+			}
+		}
+		else = {
+			if = {
+				limit = { has_variable_flag = mt_route_4_unprofitable }
+				remove_variable_flag = mt_route_4_unprofitable
+			}
+		}
+	}
+}
