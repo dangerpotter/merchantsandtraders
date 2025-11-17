@@ -1,0 +1,453 @@
+####################################
+# MERCHANTS AND TRADERS MOD
+# Merchant Progression Triggers
+####################################
+#
+# This file contains all triggers related to merchant character progression
+# Including tier checks and rank-up eligibility requirements
+#
+####################################
+
+# ============================================
+# MERCHANT TIER TRIGGERS
+# ============================================
+# Simple checks to determine character's current merchant tier
+# Used throughout the mod for conditional logic
+#
+
+# Check if character is a Wandering Merchant (Tier 1)
+is_wandering_merchant_trigger = {
+	has_trait = wandering_merchant
+}
+
+# Check if character is a Trade Post Owner (Tier 2)
+is_trade_post_owner_trigger = {
+	has_trait = trade_post_owner
+}
+
+# Check if character is a Trading Company Head (Tier 3)
+is_trading_company_trigger = {
+	has_trait = trading_company_head
+}
+
+# Check if character is a Merchant Prince (Tier 4)
+is_merchant_prince_trigger = {
+	has_trait = merchant_prince
+}
+
+# Check if character has ANY merchant tier (is in merchant system)
+is_any_merchant_trigger = {
+	OR = {
+		has_trait = wandering_merchant
+		has_trait = trade_post_owner
+		has_trait = trading_company_head
+		has_trait = merchant_prince
+	}
+}
+
+# ============================================
+# RANK UP ELIGIBILITY TRIGGERS
+# ============================================
+# Detailed checks for whether character meets requirements for next tier
+# Each trigger validates all necessary conditions for promotion
+#
+
+# CAN RANK UP TO TIER 2 (Wandering Merchant -> Trade Post Owner)
+# Requirements:
+# - Currently Tier 1 (Wandering Merchant)
+# - At least 200 gold saved
+# - At least 1 active trade route established
+# - At least 10 reputation points earned
+# - Has been wandering merchant for at least 1 year
+can_rank_up_to_tier_2_trigger = {
+	# Must be current tier
+	has_trait = wandering_merchant
+
+	# Wealth requirement
+	gold >= 200
+
+	# Trade route requirement
+	has_variable = mt_active_routes
+	var:mt_active_routes >= 1
+
+	# Reputation requirement
+	has_variable = mt_reputation
+	var:mt_reputation >= 10
+
+	# Experience requirement (1 year)
+	has_trait_xp = {
+		trait = wandering_merchant
+		value >= 365
+	}
+
+	# Not bankrupt
+	NOT = { has_variable = mt_bankrupt }
+}
+
+# CAN RANK UP TO TIER 3 (Trade Post Owner -> Trading Company Head)
+# Requirements:
+# - Currently Tier 2 (Trade Post Owner)
+# - At least 1000 gold accumulated
+# - At least 5 active trade routes
+# - At least 50 reputation points
+# - Owns at least 2 trade posts
+# - Has hired at least 1 merchant agent
+can_rank_up_to_tier_3_trigger = {
+	# Must be current tier
+	has_trait = trade_post_owner
+
+	# Wealth requirement (substantial capital)
+	gold >= 1000
+
+	# Trade network requirement
+	has_variable = mt_active_routes
+	var:mt_active_routes >= 5
+
+	# Reputation requirement (established merchant)
+	has_variable = mt_reputation
+	var:mt_reputation >= 50
+
+	# Infrastructure requirement
+	has_variable = mt_owned_trade_posts
+	var:mt_owned_trade_posts >= 2
+
+	# Management requirement (must have hired help)
+	has_variable = mt_hired_agents
+	var:mt_hired_agents >= 1
+
+	# Not bankrupt
+	NOT = { has_variable = mt_bankrupt }
+
+	# Optional: Experience requirement (at least 2 years as trade post owner)
+	has_trait_xp = {
+		trait = trade_post_owner
+		value >= 730
+	}
+}
+
+# CAN RANK UP TO TIER 4 (Trading Company Head -> Merchant Prince)
+# Requirements:
+# - Currently Tier 3 (Trading Company Head)
+# - At least 5000 gold (significant wealth)
+# - At least 15 active trade routes (extensive network)
+# - At least 150 reputation points (renowned merchant)
+# - Owns at least 5 trade posts (major infrastructure)
+# - Has hired guards (route security)
+# - Has completed at least 3 legendary trades
+# - High prestige (at least 1000)
+can_rank_up_to_tier_4_trigger = {
+	# Must be current tier
+	has_trait = trading_company_head
+
+	# Wealth requirement (vast fortune)
+	gold >= 5000
+
+	# Trade network requirement (extensive)
+	has_variable = mt_active_routes
+	var:mt_active_routes >= 15
+
+	# Reputation requirement (legendary status)
+	has_variable = mt_reputation
+	var:mt_reputation >= 150
+
+	# Infrastructure requirement (trade empire)
+	has_variable = mt_owned_trade_posts
+	var:mt_owned_trade_posts >= 5
+
+	# Security requirement (protected routes)
+	has_variable = mt_hired_guards
+	var:mt_hired_guards >= 1
+
+	# Achievement requirement (legendary trades)
+	has_variable = mt_legendary_trades
+	var:mt_legendary_trades >= 3
+
+	# Prestige requirement (must be renowned)
+	prestige >= 1000
+
+	# Not bankrupt
+	NOT = { has_variable = mt_bankrupt }
+
+	# Experience requirement (at least 5 years as company head)
+	has_trait_xp = {
+		trait = trading_company_head
+		value >= 1825
+	}
+}
+
+# GENERAL CAN RANK UP TRIGGER
+# Checks if character can rank up to ANY next tier
+# Used for general eligibility checking in events and decisions
+can_rank_up_trigger = {
+	# Must be a merchant
+	is_any_merchant_trigger = yes
+
+	# Cannot be max tier
+	NOT = { has_trait = merchant_prince }
+
+	# Check tier-specific requirements
+	OR = {
+		# Tier 1 -> 2
+		AND = {
+			has_trait = wandering_merchant
+			can_rank_up_to_tier_2_trigger = yes
+		}
+		# Tier 2 -> 3
+		AND = {
+			has_trait = trade_post_owner
+			can_rank_up_to_tier_3_trigger = yes
+		}
+		# Tier 3 -> 4
+		AND = {
+			has_trait = trading_company_head
+			can_rank_up_to_tier_4_trigger = yes
+		}
+	}
+}
+
+# ============================================
+# ABILITY TRIGGERS
+# ============================================
+# Checks for specific merchant abilities based on tier
+#
+
+# Can carry trade goods
+can_carry_goods_trigger = {
+	is_any_merchant_trigger = yes
+	has_variable = mt_can_carry_goods
+}
+
+# Can establish new trade posts
+can_establish_trade_post_trigger = {
+	is_any_merchant_trigger = yes
+	has_variable = mt_can_establish_trade_post
+
+	# Must not have reached maximum trade posts
+	OR = {
+		NOT = { has_variable = mt_owned_trade_posts }
+		AND = {
+			has_variable = mt_owned_trade_posts
+			has_variable = mt_max_trade_posts
+			var:mt_owned_trade_posts < var:mt_max_trade_posts
+		}
+	}
+}
+
+# Can hire merchant agents (Tier 2+)
+can_hire_agents_trigger = {
+	OR = {
+		has_trait = trade_post_owner
+		has_trait = trading_company_head
+		has_trait = merchant_prince
+	}
+
+	has_variable = mt_can_hire_agents
+
+	# Must not have reached maximum agents
+	OR = {
+		NOT = { has_variable = mt_hired_agents }
+		AND = {
+			has_variable = mt_hired_agents
+			has_variable = mt_max_agents
+			var:mt_hired_agents < var:mt_max_agents
+		}
+	}
+
+	# Must have enough gold to hire
+	gold >= 50
+}
+
+# Can hire guards (Tier 3+)
+can_hire_guards_trigger = {
+	OR = {
+		has_trait = trading_company_head
+		has_trait = merchant_prince
+	}
+
+	has_variable = mt_can_hire_guards
+
+	# Must not have reached maximum guards
+	OR = {
+		NOT = { has_variable = mt_hired_guards }
+		AND = {
+			has_variable = mt_hired_guards
+			has_variable = mt_max_guards
+			var:mt_hired_guards < var:mt_max_guards
+		}
+	}
+
+	# Must have enough gold to hire
+	gold >= 100
+}
+
+# Can form trade alliances (Tier 3+)
+can_form_trade_alliances_trigger = {
+	OR = {
+		has_trait = trading_company_head
+		has_trait = merchant_prince
+	}
+
+	has_variable = mt_can_form_alliances
+
+	# Must have good reputation
+	has_variable = mt_reputation
+	var:mt_reputation >= 50
+}
+
+# Can influence rulers with wealth (Tier 4 only)
+can_influence_rulers_trigger = {
+	has_trait = merchant_prince
+	has_variable = mt_can_influence_rulers
+
+	# Must have substantial wealth to use influence
+	gold >= 500
+
+	# Must have high prestige
+	prestige >= 1000
+}
+
+# Can monopolize trade goods (Tier 4 only)
+can_monopolize_trigger = {
+	has_trait = merchant_prince
+	has_variable = mt_can_monopolize
+
+	# Must have extensive network
+	has_variable = mt_active_routes
+	var:mt_active_routes >= 10
+
+	# Must have high reputation
+	has_variable = mt_reputation
+	var:mt_reputation >= 100
+}
+
+# Can establish merchant guilds (Tier 4 only)
+can_establish_guilds_trigger = {
+	has_trait = merchant_prince
+	has_variable = mt_can_establish_guilds
+
+	# Must have vast wealth
+	gold >= 2000
+
+	# Must own significant infrastructure
+	has_variable = mt_owned_trade_posts
+	var:mt_owned_trade_posts >= 5
+}
+
+# ============================================
+# REPUTATION TRIGGERS
+# ============================================
+# Checks for merchant reputation levels
+#
+
+# Has minimal reputation (Unknown - 0-19)
+has_minimal_reputation_trigger = {
+	has_variable = mt_reputation
+	var:mt_reputation < 20
+}
+
+# Has low reputation (Known - 20-49)
+has_low_reputation_trigger = {
+	has_variable = mt_reputation
+	var:mt_reputation >= 20
+	var:mt_reputation < 50
+}
+
+# Has moderate reputation (Established - 50-99)
+has_moderate_reputation_trigger = {
+	has_variable = mt_reputation
+	var:mt_reputation >= 50
+	var:mt_reputation < 100
+}
+
+# Has high reputation (Renowned - 100-199)
+has_high_reputation_trigger = {
+	has_variable = mt_reputation
+	var:mt_reputation >= 100
+	var:mt_reputation < 200
+}
+
+# Has legendary reputation (Legendary - 200+)
+has_legendary_reputation_trigger = {
+	has_variable = mt_reputation
+	var:mt_reputation >= 200
+}
+
+# ============================================
+# FAILURE TRIGGERS
+# ============================================
+# Checks for bankruptcy and failure conditions
+#
+
+# Is bankrupt
+is_bankrupt_trigger = {
+	has_variable = mt_bankrupt
+}
+
+# At risk of bankruptcy (low gold, high debts)
+at_bankruptcy_risk_trigger = {
+	is_any_merchant_trigger = yes
+
+	# Low on gold
+	gold < 50
+
+	# Has active routes (overhead costs)
+	has_variable = mt_active_routes
+	var:mt_active_routes >= 1
+
+	# Not already bankrupt
+	NOT = { has_variable = mt_bankrupt }
+}
+
+# Should face bankruptcy (triggered when conditions are dire)
+should_face_bankruptcy_trigger = {
+	is_any_merchant_trigger = yes
+
+	OR = {
+		# Completely out of money
+		gold <= 0
+
+		# OR has suffered too many failed routes
+		AND = {
+			has_variable = mt_failed_routes
+			var:mt_failed_routes >= 5
+		}
+
+		# OR has lost all trade posts at tier 2+
+		AND = {
+			OR = {
+				has_trait = trade_post_owner
+				has_trait = trading_company_head
+				has_trait = merchant_prince
+			}
+			OR = {
+				NOT = { has_variable = mt_owned_trade_posts }
+				var:mt_owned_trade_posts = 0
+			}
+		}
+	}
+
+	# Not already bankrupt
+	NOT = { has_variable = mt_bankrupt }
+}
+
+# Can recover from bankruptcy
+can_recover_from_bankruptcy_trigger = {
+	has_variable = mt_bankrupt
+
+	# Has regained some wealth
+	gold >= 100
+
+	# Has at least one active route
+	has_variable = mt_active_routes
+	var:mt_active_routes >= 1
+
+	# Some reputation restored
+	has_variable = mt_reputation
+	var:mt_reputation >= 10
+
+	# Enough time has passed (at least 6 months)
+	had_variable_flag = {
+		flag = mt_bankrupt
+		days >= 180
+	}
+}
