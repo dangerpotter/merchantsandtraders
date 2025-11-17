@@ -1,0 +1,133 @@
+l_english:
+ ############################################
+ # MERCHANTS AND TRADERS MOD - INTERACTIONS LOCALIZATION
+ # English localization for character interactions
+ ############################################
+
+ #####################
+ # REQUEST TRADE RIGHTS INTERACTION
+ #####################
+
+ request_trade_rights_interaction_desc:0 "Request permission from this ruler to establish trade routes and conduct business within their realm. Successful merchants build relationships with local authorities."
+
+ REQUEST_TRADE_RIGHTS_NOTIFICATION:0 "[actor.GetTitledFirstName] requests trade rights"
+ request_trade_rights_interaction_notification:0 "[actor.GetTitledFirstName] has been granted trade rights in your realm"
+ request_trade_rights_declined_notification:0 "[recipient.GetTitledFirstName] has declined to grant you trade rights"
+
+ # Opinion modifier (defined in core file, but descriptor here)
+ disappointed_opinion:0 "Disappointed"
+ disappointed_opinion_desc:0 "This character is disappointed by a refusal or negative outcome."
+
+ #####################
+ # NEGOTIATE TRADE DEAL INTERACTION
+ #####################
+
+ negotiate_trade_deal_interaction_desc:0 "Propose a formal trade partnership with this merchant. By combining resources, routes, and expertise, both partners can profit more than they could alone."
+
+ NEGOTIATE_TRADE_DEAL_NOTIFICATION:0 "[actor.GetTitledFirstName] proposes a trade partnership"
+ negotiate_trade_deal_accepted_notification:0 "[actor.GetTitledFirstName] has formed a trade partnership with you"
+
+ #####################
+ # HIRE CARAVAN GUARD INTERACTION
+ #####################
+
+ hire_caravan_guard_interaction_desc:0 "Hire this capable warrior to guard your caravans against bandits and raiders. Protected trade routes are profitable trade routes."
+
+ HIRE_CARAVAN_GUARD_NOTIFICATION:0 "[actor.GetTitledFirstName] offers employment as caravan guard"
+ hire_caravan_guard_accepted_notification:0 "[recipient.GetTitledFirstName] has agreed to serve as your caravan guard"
+
+ #####################
+ # SEIZE MERCHANT ASSETS INTERACTION
+ #####################
+
+ seize_merchant_assets_interaction_desc:0 "Confiscate this merchant's wealth and trading operations by force. This tyrannical act will enrich your treasury but damage your reputation and earn the hatred of merchants everywhere."
+
+ SEIZE_MERCHANT_ASSETS_NOTIFICATION:0 "[actor.GetTitledFirstName] seizes your assets!"
+ seize_merchant_assets_notification:0 "[actor.GetTitledFirstName] has confiscated your wealth and trade rights"
+
+ # Opinion modifier (defined in core, but descriptor needed)
+ seized_assets_opinion:0 "Seized Assets"
+ seized_assets_opinion_desc:0 "This tyrant stole my livelihood through force."
+
+ #####################
+ # OFFER MERCHANT PROTECTION INTERACTION
+ #####################
+
+ offer_merchant_protection_interaction_desc:0 "Extend your protection to this merchant, ensuring safe passage through your realm. Protecting commerce earns gratitude and encourages trade, enriching your lands."
+
+ OFFER_MERCHANT_PROTECTION_NOTIFICATION:0 "[actor.GetTitledFirstName] offers protection"
+ offer_merchant_protection_accepted_notification:0 "[actor.GetTitledFirstName] will protect your trade routes"
+
+ #####################
+ # ADDITIONAL INTERACTION OPINION MODIFIERS
+ #####################
+
+ # These supplement the core opinion modifiers with interaction-specific variants
+
+ generous_payment_opinion:0 "Generous Payment"
+ generous_payment_opinion_desc:0 "This merchant pays fairly and generously."
+
+ reliable_partner_opinion:0 "Reliable Partner"
+ reliable_partner_opinion_desc:0 "This merchant honors their commitments and proves trustworthy in business."
+
+ unfair_competition_opinion:0 "Unfair Competition"
+ unfair_competition_opinion_desc:0 "This merchant undermines my business through underhanded tactics."
+
+ #####################
+ # INTERACTION NOTIFICATION TOOLTIPS
+ #####################
+
+ # These provide additional context in interaction notifications
+
+ trade_rights_granted_effect:0 "Trade rights have been granted for [DATE.GetTimeDiffFromNow]"
+ trade_partnership_formed_effect:0 "Trade partnership established for [DATE.GetTimeDiffFromNow]"
+ caravan_guard_hired_effect:0 "Caravan guard contract for [DATE.GetTimeDiffFromNow]"
+ merchant_protection_granted_effect:0 "Merchant protection for [DATE.GetTimeDiffFromNow]"
+
+ #####################
+ # INTERACTION SEND OPTIONS TOOLTIPS
+ #####################
+
+ # Standard vs generous payment for trade rights
+ trade_rights_standard_payment:0 "Standard Payment (20 gold)"
+ trade_rights_standard_payment_desc:0 "Pay the customary fee for trade rights."
+
+ trade_rights_generous_payment:0 "Generous Payment (40 gold)"
+ trade_rights_generous_payment_desc:0 "Pay double the customary fee to make a strong impression and gain enhanced trade rights."
+
+ # Equal vs senior partnership
+ equal_partnership_option:0 "Equal Partnership"
+ equal_partnership_option_desc:0 "Form a partnership of equals, sharing routes and profits evenly."
+
+ senior_partnership_option:0 "Senior Partnership (100 gold investment)"
+ senior_partnership_option_desc:0 "Invest capital to become senior partner, receiving the larger share of profits."
+
+ # Guard contract lengths
+ hire_guard_one_year:0 "One Year Contract (36 gold)"
+ hire_guard_one_year_desc:0 "Hire guard for one year of service."
+
+ hire_guard_two_years:0 "Two Year Contract (72 gold)"
+ hire_guard_two_years_desc:0 "Hire guard for two years of service."
+
+ hire_guard_five_years:0 "Five Year Contract (180 gold)"
+ hire_guard_five_years_desc:0 "Hire guard for five years of service—a long-term commitment that builds loyalty."
+
+ #####################
+ # INTERACTION OUTCOME DESCRIPTIONS
+ #####################
+
+ # These appear in tooltips explaining what will happen
+
+ trade_rights_outcome_standard:0 "You will gain trade rights in [recipient.GetHerHis] realm for 10 years, allowing you to establish trade routes and conduct business."
+
+ trade_rights_outcome_generous:0 "You will gain enhanced trade rights in [recipient.GetHerHis] realm for 15 years, with better terms and stronger protection."
+
+ trade_partnership_equal_outcome:0 "Both partners will share trade routes and profits equally for 20 years."
+
+ trade_partnership_senior_outcome:0 "You will become the senior partner, receiving larger profits while your partner receives capital investment."
+
+ caravan_guard_outcome:0 "[recipient.GetFirstName] will protect your caravans from bandits and raiders, reducing losses on dangerous routes."
+
+ merchant_protection_outcome:0 "[actor.GetFirstName] will ensure safe passage through [actor.GetHerHis] realm, providing military protection if needed."
+
+ seize_assets_outcome:0 "You will confiscate half of [recipient.GetFirstName]'s wealth, but suffer prestige loss and tyranny gain. Merchants everywhere will hate you for this injustice."
