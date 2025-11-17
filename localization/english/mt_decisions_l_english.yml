@@ -123,6 +123,50 @@ l_english:
  mt_is_isolationist:0 "Your culture values isolation"
 
  ####################################
+ # ROUTE MANAGEMENT DECISIONS
+ ####################################
+
+ # Establish New Trade Route
+ establish_new_trade_route_decision_title:0 "Establish New Trade Route"
+ establish_new_trade_route_decision_desc:0 "I have the resources and expertise to establish a new trade route. This will allow me to automatically transport goods between my capital and a destination of my choosing, generating regular profits without my constant attention.\n\nI must select which goods to trade and where to send them. The route's profitability depends on distance, market demand, route safety, and the value of goods transported."
+ establish_new_trade_route_decision_tooltip:0 "Create a new automated trade route"
+ establish_new_trade_route_decision_confirm:0 "Begin Planning the Route"
+ establish_new_trade_route_decision_toast:0 "Trade Route Planning"
+ establish_new_trade_route_decision_effect_tooltip:0 "You will be guided through selecting destination and goods for your new route"
+
+ # Close Trade Route
+ close_trade_route_decision_title:0 "Close Trade Route"
+ close_trade_route_decision_desc:0 "Sometimes a trade route becomes unprofitable or too dangerous to maintain. Whether due to war, market changes, or competition, it may be wise to close a route and free up resources for more profitable ventures.\n\nClosing a route is free, but you'll lose any ongoing income from it. Consider carefully which route to close."
+ close_trade_route_decision_tooltip:0 "Shut down an active trade route"
+ close_trade_route_decision_confirm:0 "Review My Routes"
+ close_trade_route_decision_toast:0 "Reviewing Trade Routes"
+ close_trade_route_decision_effect_tooltip:0 "Select which route to close from your active routes"
+
+ # Reroute Trade Goods
+ reroute_trade_goods_decision_title:0 "Reroute Trade Goods"
+ reroute_trade_goods_decision_desc:0 "Markets change. Wars erupt. Competition increases. When circumstances shift, a wise merchant adapts their routes rather than abandoning them entirely.\n\nRerouting allows you to change the destination or goods of an existing route without closing it. This costs gold but preserves your route capacity and adjusts to new market conditions."
+ reroute_trade_goods_decision_tooltip:0 "Change destination or goods for an existing route"
+ reroute_trade_goods_decision_confirm:0 "Adjust My Routes"
+ reroute_trade_goods_decision_toast:0 "Rerouting Trade"
+ reroute_trade_goods_decision_effect_tooltip:0 "Select a route to reroute and choose new destination or goods"
+
+ # Inspect Route Health
+ inspect_route_health_decision_title:0 "Inspect Route Health"
+ inspect_route_health_decision_desc:0 "A successful merchant must keep close watch on their trade routes. Bandits, wars, market fluctuations, and natural disasters can all affect route profitability.\n\nInspecting your routes provides detailed information about their current health, profit margins, and any issues affecting them. This knowledge allows you to make informed decisions about which routes to maintain, reroute, or close."
+ inspect_route_health_decision_tooltip:0 "Get detailed reports on all active routes"
+ inspect_route_health_decision_confirm:0 "Review Route Reports"
+ inspect_route_health_decision_toast:0 "Route Inspection"
+ inspect_route_health_decision_effect_tooltip:0 "Receive detailed breakdown of each route's status and profitability"
+
+ # Emergency Close All Routes
+ emergency_close_all_routes_decision_title:0 "Emergency: Close All Routes"
+ emergency_close_all_routes_decision_desc:0 "In times of desperate crisis - bankruptcy, devastating war, or catastrophic losses - sometimes the only option is to immediately shut down all trade operations to stop the bleeding.\n\n#bold Warning:#! This is a drastic measure that will close ALL your trade routes simultaneously. You'll lose prestige and suffer a recovery period before you can establish new routes. Only use this in true emergencies."
+ emergency_close_all_routes_decision_tooltip:0 "Immediately shut down all trade operations"
+ emergency_close_all_routes_decision_confirm:0 "Close Everything (Emergency)"
+ emergency_close_all_routes_decision_toast:0 "Trade Operations Collapsed"
+ emergency_close_all_routes_decision_effect_tooltip:0 "All routes close immediately. You lose 25 prestige and cannot establish new routes for 3 months"
+
+ ####################################
  # CORE MERCHANT DECISIONS
  ####################################
 

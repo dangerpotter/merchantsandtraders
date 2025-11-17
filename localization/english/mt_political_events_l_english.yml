@@ -1,0 +1,201 @@
+l_english:
+
+ ####################################
+ # POLITICAL EVENTS LOCALIZATION
+ # Events: mt_politics.0001-0025
+ ####################################
+
+ ####################################
+ # RULER DEMANDS (0001-0004)
+ ####################################
+
+ # 0001: Ruler demands "loan" (shakedown)
+ mt_politics.0001.t:0 "The Ruler's 'Request'"
+ mt_politics.0001.desc:0 "[demanding_ruler.GetTitledFirstName] summons you to [demanding_ruler.GetHerHis] court. The guards' demeanor tells you this is not a social call. As you kneel before the throne, [demanding_ruler.GetSheHe] wastes no time on pleasantries:\n\n'I am informed that your merchant ventures prosper greatly. How fortunate for you. Less fortunate is my own situation - the treasury requires... supplementing. I'm certain a loyal subject such as yourself would be eager to provide a loan to your liege. Shall we say, one hundred and fifty gold? To be repaid at my convenience, of course.'\n\nThe way [demanding_ruler.GetSheHe] emphasizes 'loan' makes it clear this is no request, and repayment is unlikely. Around the throne, courtiers watch to see how you'll respond to this barely disguised shakedown."
+ mt_politics.0001.a:0 "Of course, my liege. It would be my honor."
+ mt_politics.0001.b:0 "My liege, I regret that my funds are currently committed..."
+ mt_politics.0001.c:0 "Perhaps we could discuss a more formal arrangement?"
+
+ # 0002: Ruler wants you to finance war
+ mt_politics.0002.t:0 "Finance the War Effort"
+ mt_politics.0002.desc:0 "[demanding_ruler.GetTitledFirstName] has declared war, and [demanding_ruler.GetHerHis] steward approaches you with a proposition that sounds more like a command:\n\n'The war will be expensive. Soldiers must be paid, supplies purchased, fortifications strengthened. His Lordship has identified several prominent merchants who will contribute to the war chest. Your name is at the top of that list. Two hundred gold would demonstrate appropriate loyalty. Of course, victory would mean new territories, new markets, new opportunities for trade... for those who supported the war.'\n\nThe implicit threat is clear: support the war, or face consequences. But war is unpredictable, and financing it could drain your resources."
+ mt_politics.0002.a:0 "I shall contribute gladly to our realm's glory"
+ mt_politics.0002.b:0 "I cannot afford such a sum - my business would collapse"
+ mt_politics.0002.c:0 "I will provide supplies instead of gold"
+
+ # 0003: Ruler seizing merchant assets
+ mt_politics.0003.t:0 "Seizure of Assets"
+ mt_politics.0003.desc:0 "Armed men bearing [demanding_ruler.GetTitledFirstName]'s seal arrive at your warehouses. Their captain presents a royal writ:\n\n'By order of [demanding_ruler.GetHerHis] Majesty, all foreign merchants' assets are hereby seized for the crown's use. Recent events have demonstrated that foreign traders cannot be trusted. Your goods, your warehouses, your trade posts - all now belong to the realm.'\n\nThis is catastrophic. Years of work, gone with a stroke of a pen. But you're not without options. You could appeal to other merchants to form a united front. You could seek intervention from your own liege. Or you could accept the loss and rebuild elsewhere. Each path has risks."
+ mt_politics.0003.a:0 "Organize merchant coalition to resist this tyranny"
+ mt_politics.0003.b:0 "Appeal to my liege to intervene on my behalf"
+ mt_politics.0003.c:0 "Accept the loss and relocate my operations"
+
+ # 0004: Ruler offers tax exemption for loyalty
+ mt_politics.0004.t:0 "A Generous Exemption"
+ mt_politics.0004.desc:0 "[demanding_ruler.GetTitledFirstName] invites you to a private audience. [demanding_ruler.GetHerHis] manner is surprisingly warm:\n\n'I've been reviewing the tax records, and I see that your merchant ventures pay substantial sums to the treasury. It occurs to me that a merchant of your quality could expand operations significantly if unburdened by such taxation. I'm prepared to grant you a ten-year tax exemption... in exchange for certain assurances.'\n\n[demanding_ruler.GetSheHe] slides a document across the table. 'Firstly, you would grant me first option on any rare or valuable goods. Secondly, your trade network would occasionally carry messages and packages for me, no questions asked. Thirdly, absolute discretion about our arrangement. Do we have an understanding?'"
+ mt_politics.0004.a:0 "I accept your generous offer, my liege"
+ mt_politics.0004.b:0 "I must respectfully decline such... entanglements"
+
+ ####################################
+ # COURT POLITICS (0005-0008)
+ ####################################
+
+ # 0005: Invited to royal court
+ mt_politics.0005.t:0 "Summons to Court"
+ mt_politics.0005.desc:0 "A royal messenger arrives bearing a formal invitation: [ruler.GetTitledFirstName] invites you to join the court for the winter season. This is unprecedented - merchants are rarely welcomed into noble circles as equals.\n\nYour advisors debate the implications. 'This could open doors to the highest levels of power,' one argues. 'Or it could be a trap,' counters another. 'The court is a nest of vipers, and we're merchants, not courtiers. One wrong word, one political misstep, and our reputation could be ruined.'\n\nBut the opportunity is undeniable. At court, you could forge alliances with powerful nobles, learn political secrets that would help your trade, and elevate your status beyond mere merchant to something approaching nobility."
+ mt_politics.0005.a:0 "Accept - I'll navigate court politics as I navigate markets"
+ mt_politics.0005.b:0 "Decline gracefully - the court is too dangerous"
+ mt_politics.0005.c:0 "Attend briefly to make connections, then depart"
+
+ # 0006: Noble asks for secret loan
+ mt_politics.0006.t:0 "A Discreet Proposition"
+ mt_politics.0006.desc:0 "While at court, [noble.GetTitledFirstName] pulls you aside into a private alcove. [noble.GetSheHe] glances around nervously before speaking in hushed tones:\n\n'I find myself in... difficult circumstances. Gambling debts, if you must know. My creditors are not patient men, and if my liege discovers my situation, I'll be ruined politically. I need three hundred gold, quickly and quietly. I can repay you within the year, with generous interest. More importantly, I can become a valuable patron to your business. I have the ear of powerful people. What say you?'\n\nLoaning to desperate nobles is risky - they may default. But their gratitude, if they repay, can be worth more than gold."
+ mt_politics.0006.a:0 "I shall provide the loan discreetly"
+ mt_politics.0006.b:0 "I cannot risk such a sum, I'm sorry"
+
+ # 0007: Spymaster investigates your activities
+ mt_politics.0007.t:0 "Under Scrutiny"
+ mt_politics.0007.desc:0 "Your contacts at court send urgent warning: the realm's spymaster has been asking questions about you. Your trade routes, your contacts in foreign lands, the frequency of your correspondence with merchants across borders - all under investigation.\n\nThe spymaster's agents have been interviewing your employees, examining your records, following your couriers. The implication is clear: you're suspected of espionage, using your merchant network to gather intelligence for a foreign power.\n\nThe accusation is absurd, but in the realm of court politics, truth matters less than perception. You must handle this carefully."
+ mt_politics.0007.a:0 "Cooperate fully - I have nothing to hide"
+ mt_politics.0007.b:0 "Confront the spymaster directly about these accusations"
+ mt_politics.0007.c:0 "Use my merchant contacts to investigate who set this in motion"
+
+ # 0008: Rival merchant bribing officials against you
+ mt_politics.0008.t:0 "Corruption Most Foul"
+ mt_politics.0008.desc:0 "Your informant within the trade ministry reveals disturbing news: [rival_merchant.GetTitledFirstName] has been systematically bribing officials to obstruct your business. Trade licenses delayed, shipments 'randomly' inspected and held up, your complaints filed and forgotten.\n\n'The corruption goes deep,' your informant explains nervously. 'Harbor masters, tax assessors, even some judges - [rival_merchant.GetSheHe]'s paying them all. Not enough to be obvious, just enough to make your life difficult while [rival_merchant.GetHerHis] own ventures sail smoothly through all bureaucracy. If you don't counter this, [rival_merchant.GetSheHe]'ll strangle your business with red tape.'\n\nHow do you fight an enemy who's corrupted the very system meant to ensure fair trade?"
+ mt_politics.0008.a:0 "Pay larger bribes - outbid the rival"
+ mt_politics.0008.b:0 "Expose the corruption publicly"
+ mt_politics.0008.c:0 "Gather evidence and present it to the ruler personally"
+
+ ####################################
+ # DIPLOMATIC EVENTS (0009-0012)
+ ####################################
+
+ # 0009: Foreign ruler wants trade agreement
+ mt_politics.0009.t:0 "A Foreign Proposition"
+ mt_politics.0009.desc:0 "An ambassador from [foreign_realm.GetName] requests an audience. After diplomatic pleasantries, the ambassador reveals the purpose of the visit:\n\n'[foreign_ruler.GetTitledFirstName] has heard of your commercial acumen and extensive trade network. My liege proposes a formal trade agreement - you would establish routes between our realms, receiving official protection and favorable terms. In exchange, my ruler would receive preferential pricing and priority on certain goods.'\n\nThe ambassador's smile doesn't reach his eyes. 'Of course, such an arrangement would need to be... discreetly managed. Your own liege need not know all the details. This would be a private understanding between you and [foreign_ruler.GetTitledFirstName].'\n\nProfit and potential treason, offered in the same breath."
+ mt_politics.0009.a:0 "Accept - business knows no borders"
+ mt_politics.0009.b:0 "Inform my liege of this offer immediately"
+ mt_politics.0009.c:0 "Decline - I will not risk accusations of divided loyalty"
+
+ # 0010: War between realms affects your routes
+ mt_politics.0010.t:0 "Caught Between Warring Realms"
+ mt_politics.0010.desc:0 "Your worst nightmare has materialized: [realm_1.GetName] and [realm_2.GetName] are at war, and you have extensive trade operations in both realms. Envoys from both sides arrive simultaneously with the same message: 'You must choose a side.'\n\n[realm_1.GetName]'s representative is blunt: 'Continue trading with our enemies, and we'll confiscate your assets here as contraband supply to our foes.' [realm_2.GetName]'s envoy says the same. Both demand you choose - immediately.\n\nYou've spent years building trade networks in both realms. Choosing sides means losing half your business. Trying to trade with both means risking everything."
+ mt_politics.0010.a:0 "Support [realm_1.GetName] and cease trading with [realm_2.GetName]"
+ mt_politics.0010.b:0 "Support [realm_2.GetName] and abandon operations in [realm_1.GetName]"
+ mt_politics.0010.c:0 "Attempt to maintain neutrality and trade with both"
+
+ # 0011: Marriage alliance proposed
+ mt_politics.0011.t:0 "Marriage and Merchant Houses"
+ mt_politics.0011.desc:0 "[noble.GetTitledFirstName] makes an unexpected proposal over dinner:\n\n'Your merchant house and my noble lineage could be mutually beneficial. I have a [noble.GetSonDaughter] of marriageable age, well-educated and attractive. You have wealth and commercial connections. A marriage would unite our strengths - my political influence and your economic power. Our grandchildren would be both nobles and master merchants.'\n\n[noble.GetSheHe] sips wine, watching your reaction. 'Of course, such an alliance requires trust. My family's reputation would be tied to your business practices. And your fortune would be entangled with my political fortunes. We would rise or fall together. What think you?'"
+ mt_politics.0011.a:0 "I am honored - let our houses be joined"
+ mt_politics.0011.b:0 "I prefer to keep business and noble politics separate"
+
+ # 0012: Invited to peace negotiations
+ mt_politics.0012.t:0 "The Merchant Peacemaker"
+ mt_politics.0012.desc:0 "An extraordinary invitation arrives: both [realm_1.GetTitledFirstName] and [realm_2.GetTitledFirstName], rulers of warring realms, request your presence at peace negotiations. The letter explains:\n\n'You are one of the few persons trusted by both sides. Your commercial interests give you incentive to seek peace, yet you have no territorial ambitions that would bias your counsel. We invite you to mediate our discussions and help craft a treaty that both realms can accept.'\n\nThis is unprecedented - a merchant invited to negotiate between kings. Success would bring you immense prestige and gratitude from both rulers. Failure could make you the scapegoat if negotiations collapse."
+ mt_politics.0012.a:0 "I shall mediate and work toward peace"
+ mt_politics.0012.b:0 "Attend but take no active role - too risky"
+ mt_politics.0012.c:0 "Decline - this is above my station"
+
+ ####################################
+ # CONFLICTS (0013-0016)
+ ####################################
+
+ # 0013: Accused of spying via trade routes
+ mt_politics.0013.t:0 "Accusations of Espionage"
+ mt_politics.0013.desc:0 "You're awakened before dawn by armed guards. 'Come with us,' the captain orders. No explanation, no charges, just an escort to the dungeons. In a damp cell, you wait for hours before [ruler.GetTitledFirstName]'s inquisitor arrives.\n\n'We have evidence,' the inquisitor states coldly, 'that you've been using your trade caravans to carry intelligence to enemy realms. Coded messages hidden in shipment manifests. Suspicious meetings with foreign agents. Your merchant network is the perfect cover for espionage. Confess now, and the punishment will be less severe.'\n\nYou're a merchant, not a spy, but how do you prove innocence when your entire business involves extensive foreign contacts?"
+ mt_politics.0013.a:0 "Demand a formal trial - I'll prove my innocence"
+ mt_politics.0013.b:0 "Offer to open my records completely for inspection"
+ mt_politics.0013.c:0 "Use my connections to discover who made these accusations"
+
+ # 0014: Ruler wants to nationalize your trade company
+ mt_politics.0014.t:0 "The Nationalization Decree"
+ mt_politics.0014.desc:0 "[ruler.GetTitledFirstName] announces a new policy: all major trade operations will be brought under crown control 'for the good of the realm.' A royal administrator arrives at your headquarters:\n\n'By royal decree, your trade company is now a state enterprise. You will remain as a paid manager, receiving a generous salary. But ownership, profits, and control now belong to the crown. This is not negotiable. Your cooperation in the transition will be... remembered favorably. Resistance will be viewed as treason.'\n\nYour life's work, seized with a stroke of a pen. Do you accept this theft disguised as policy, or fight it knowing the odds are against you?"
+ mt_politics.0014.a:0 "Accept the arrangement - at least I can still manage it"
+ mt_politics.0014.b:0 "Flee the realm with portable assets before seizure is complete"
+ mt_politics.0014.c:0 "Rally merchant guilds to resist this decree"
+
+ # 0015: Noble defaulted on debt to you
+ mt_politics.0015.t:0 "The Defaulted Loan"
+ mt_politics.0015.desc:0 "[noble.GetTitledFirstName], to whom you loaned a substantial sum, has defaulted. Worse, [noble.GetSheHe] claims the debt never existed:\n\n'A loan? I recall no such arrangement. You must be mistaken. Perhaps you're attempting to extort money from me with false claims? That would be a serious crime.'\n\nYour advisors are furious. 'We have the promissory note [noble.GetSheHe] signed! This is theft! But [noble.GetSheHe]'s a noble with powerful friends, and we're merchants. The courts may not rule in our favor, especially if [noble.GetSheHe] bribes the right people.'\n\nHow do you collect from someone who has both the power to refuse payment and the audacity to deny the debt existed?"
+ mt_politics.0015.a:0 "Take the noble to court - I have documentation"
+ mt_politics.0015.b:0 "Spread word of the default - ruin the noble's reputation"
+ mt_politics.0015.c:0 "Write off the loss - fighting nobles is too dangerous"
+
+ # 0016: Two realms bidding for your exclusive service
+ mt_politics.0016.t:0 "A Bidding War"
+ mt_politics.0016.desc:0 "You find yourself in the enviable position of being courted by two powerful realms. [ruler_1.GetTitledFirstName] and [ruler_2.GetTitledFirstName] both want exclusive trade agreements with your merchant empire.\n\nEnvoys from both rulers present increasingly generous offers: tax exemptions, monopolies, noble titles, protection guarantees. Each tries to outbid the other. But both demand exclusivity - you cannot serve both.\n\nYour reputation has reached the point where kings compete for your services. But choosing one means making an enemy of the other. This is the kind of problem successful merchants dream of having."
+ mt_politics.0016.a:0 "Choose [realm_1.GetName] - their offer is superior"
+ mt_politics.0016.b:0 "Choose [realm_2.GetName] - better long-term prospects"
+ mt_politics.0016.c:0 "Refuse both - maintain independence from all political entanglements"
+
+ ####################################
+ # INFLUENCE & POWER (0017-0020)
+ ####################################
+
+ # 0017: Ruler notices your wealth - council position offered
+ mt_politics.0017.t:0 "The Merchant Councilor"
+ mt_politics.0017.desc:0 "[ruler.GetTitledFirstName] summons you to court for an unexpected offer:\n\n'I'm reorganizing my council. The position of steward requires someone who understands finance, trade, and economic management. My current steward is a nobleman who knows heraldry and hunting but couldn't balance a ledger if his life depended on it. You, however, have built a commercial empire from nothing. I want you as my steward.'\n\n[ruler.GetSheHe] gestures dismissively at the nobles around the throne. 'They'll mutter about a merchant on the council, but I care about competence, not bloodlines. You'll have real power to shape this realm's economic policies. What say you?'"
+ mt_politics.0017.a:0 "I accept this honor, my liege"
+ mt_politics.0017.b:0 "I must focus on my merchant ventures - I decline"
+
+ # 0018: Merchants form coalition, elect you leader
+ mt_politics.0018.t:0 "The Merchant Guild Master"
+ mt_politics.0018.desc:0 "Representatives from merchant houses across the realm gather in your hall. The mood is serious. The spokesman addresses you:\n\n'Nobles push us around. Rulers tax us arbitrarily. Bandits prey on our caravans, and authorities do nothing. Separately, we're powerless. Together, we could have influence rivaling the nobility. We want to form a formal merchant guild - a united voice for commercial interests. And we want you to lead it.'\n\nMurmurs of agreement circle the room. 'You have the respect of all merchant houses. You've proven you can stand up to nobles. Lead the guild, and we'll follow. Together, we'll make rulers think twice before abusing merchants.'\n\nThis is power of a different sort - not armies or titles, but economic influence that even kings must respect."
+ mt_politics.0018.a:0 "I accept - together we'll protect merchant interests"
+ mt_politics.0018.b:0 "I decline - I prefer to avoid such political prominence"
+
+ # 0019: Fund cathedral construction
+ mt_politics.0019.t:0 "The Cathedral's Patron"
+ mt_politics.0019.desc:0 "The bishop requests an audience, arriving with architectural plans:\n\n'A great cathedral is to be built here, a monument to faith that will stand for centuries. But such projects require funding beyond what the church alone can provide. We seek patrons - wealthy individuals who will contribute to this holy work. In exchange, your name will be carved in stone, masses said for your soul in perpetuity, and your family honored as benefactors.'\n\nThe bishop's eyes gleam. 'More practically, the cathedral will attract pilgrims and commerce to this city. Your trade businesses here will prosper. And rulers favor those who support the church. This is investment in both this world and the next.'"
+ mt_politics.0019.a:0 "I shall fund the construction - for faith and fortune"
+ mt_politics.0019.b:0 "I'll contribute modestly but not as primary patron"
+ mt_politics.0019.c:0 "I must decline - my resources are committed elsewhere"
+
+ # 0020: Broker peace deal between warring merchants
+ mt_politics.0020.t:0 "The Merchant Peacemaker"
+ mt_politics.0020.desc:0 "Two powerful merchant houses are locked in a destructive feud. Price wars, sabotage, even violence have erupted. Their conflict is destabilizing markets and hurting all merchants' business.\n\nBoth sides approach you separately, asking you to mediate. 'You're respected by both houses,' they say. 'We'll accept your judgment.' If you can broker peace, you'll earn tremendous gratitude and prestige in merchant circles. If you fail or appear biased, you'll make powerful enemies.\n\nThe question is whether you're willing to take the risk to restore peace to the markets."
+ mt_politics.0020.a:0 "I'll mediate and craft a fair settlement"
+ mt_politics.0020.b:0 "I'll encourage peace but won't formally mediate"
+ mt_politics.0020.c:0 "This is their problem - I won't get involved"
+
+ ####################################
+ # SUCCESSION EVENTS (0021-0023)
+ ####################################
+
+ # 0021: Ruler dies, heir uncertain about merchants
+ mt_politics.0021.t:0 "A New Reign Begins"
+ mt_politics.0021.desc:0 "[old_ruler.GetTitledFirstName] is dead. The realm has a new ruler: [new_ruler.GetTitledFirstName], young and untested. Your contacts at court send worrying reports:\n\n'The new ruler is surrounded by advisors hostile to merchant interests. They whisper that merchants have too much power, that they should be taxed more heavily, that foreign traders cannot be trusted. The young [new_ruler.GetLadyLord] seems inclined to listen.'\n\nYou enjoyed favorable terms under the old ruler. But now those arrangements are in jeopardy. You must either curry favor with the new regime, or prepare for a less friendly business environment."
+ mt_politics.0021.a:0 "Send a lavish gift and pledge of loyalty to the new ruler"
+ mt_politics.0021.b:0 "Request formal audience to explain merchant contributions to the realm"
+ mt_politics.0021.c:0 "Prepare to shift operations to friendlier territories"
+
+ # 0022: Succession crisis - support candidate
+ mt_politics.0022.t:0 "The Merchant Kingmaker"
+ mt_politics.0022.desc:0 "The ruler has died without clear heir. Three claimants vie for the throne, and civil war threatens. Each sends envoys seeking your support:\n\n[claimant_1.GetTitledFirstName]: 'I promise merchant-friendly policies. Support me financially and I'll grant you monopolies and tax exemptions when I take the throne.'\n\n[claimant_2.GetTitledFirstName]: 'I represent stability. Back me, and I'll preserve the existing trade arrangements you've worked so hard to build.'\n\n[claimant_3.GetTitledFirstName]: 'The others will tax you to fund their wars. I'll leave merchants alone if you stay neutral.'\n\nYour choice could determine who rules - and what that means for your business."
+ mt_politics.0022.a:0 "Support [claimant_1.GetTitledFirstName] with funds and resources"
+ mt_politics.0022.b:0 "Support [claimant_2.GetTitledFirstName] - stability is valuable"
+ mt_politics.0022.c:0 "Remain neutral - don't gamble on succession"
+
+ # 0023: Your heir wants political career instead
+ mt_politics.0023.t:0 "The Heir's Ambitions"
+ mt_politics.0023.desc:0 "Your heir, [heir.GetTitledFirstName], whom you've groomed to inherit your merchant empire, makes a shocking announcement:\n\n'I'm grateful for everything you've built, but I don't want to be a merchant. I've been offered a position at court - a real political career. I could become a councilor, maybe even more. This is my chance to be more than just a trader counting coins.'\n\n[heir.GetSheHe] looks at you defiantly. 'You can disown me if you wish, but I'm taking this opportunity. Find another heir for your precious trade routes.'\n\nYour succession plans, carefully laid over years, have just collapsed."
+ mt_politics.0023.a:0 "Support the heir's ambition - political connections have value"
+ mt_politics.0023.b:0 "Try to persuade the heir to reconsider"
+ mt_politics.0023.c:0 "Disown the ungrateful wretch and find a new heir"
+
+ ####################################
+ # FOLLOW-UP EVENTS (0024-0025)
+ ####################################
+
+ # 0024: Consequences of refusing ruler's demand
+ mt_politics.0024.t:0 "The Price of Refusal"
+ mt_politics.0024.desc:0 "Your refusal of [demanding_ruler.GetTitledFirstName]'s 'loan request' has consequences. Royal tax assessors arrive at your properties:\n\n'We've discovered irregularities in your tax records,' they announce with barely concealed satisfaction. 'Significant back taxes are owed. With penalties and interest, you owe the crown three hundred gold. Payment is due immediately.'\n\nThis is revenge, pure and simple. The 'irregularities' are fabricated or exaggerated. But fighting it means expensive legal battles you'll likely lose. Paying means the ruler has successfully punished your defiance.\n\nRefusing a ruler's demands is expensive, you're learning."
+ mt_politics.0024.a:0 "Pay the extortionate 'back taxes' to end this"
+ mt_politics.0024.b:0 "Fight this in court despite the odds"
+
+ # 0025: Political investment pays off
+ mt_politics.0025.t:0 "The Fruits of Influence"
+ mt_politics.0025.desc:0 "Your political maneuvering has borne fruit beyond expectation. The noble you supported has risen to power and remembers your assistance:\n\n'When I needed help, you provided it without hesitation. I don't forget my friends. I'm now in a position to return the favor many times over. Consider this just the beginning of our mutually beneficial relationship.'\n\nRoyal contracts flow your way. Trade licenses are approved instantly. Competitors find themselves facing unexpected difficulties. This is power - not the crude force of armies, but the subtle influence of having powerful friends.\n\nYour investment in political capital has paid dividends that gold alone could never buy."
+ mt_politics.0025.a:0 "This is how empires are truly built"

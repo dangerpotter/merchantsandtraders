@@ -5,17 +5,26 @@ l_english:
  ###################################
 
  # Become Wandering Merchant Decision
+ become_wandering_merchant_decision_title:0 "Become a Wandering Merchant"
  become_wandering_merchant_decision:0 "Become a Wandering Merchant"
  become_wandering_merchant_decision_desc:0 "I have decided to pursue the life of a merchant. With some starting capital and a keen eye for opportunity, I can begin trading goods between settlements. Though the path is uncertain, successful merchants can build vast fortunes and even rival the wealth of kings.\n\n#bold The Merchant Progression:#!\n• #bold Wandering Merchant:#! Carry goods manually, establish your first trade post\n• #bold Trade Post Owner:#! Multiple routes, hire merchant agents\n• #bold Trading Company Head:#! Extensive network, hire guards for protection\n• #bold Merchant Prince:#! Vast empire with unlimited expansion and massive income"
+ become_wandering_merchant_decision_tooltip:0 "Begin your journey as a wandering merchant"
+ become_wandering_merchant_decision_confirm:0 "Embark on the Merchant's Path"
  must_be_unlanded_or_courtier:0 "Unlanded characters and courtiers are ideal for merchant careers, but landed rulers can also pursue trade"
 
  # Purchase Starting Goods Decision
+ purchase_starting_goods_decision_title:0 "Purchase Starting Goods"
  purchase_starting_goods_decision:0 "Purchase Starting Goods"
  purchase_starting_goods_decision_desc:0 "To begin trading, I must first purchase goods to sell. Different goods offer different profit margins, but also require different levels of investment.\n\n#bold Available Options:#!\n• #bold Common Goods#! (10 gold): Grain, wool, basic supplies - Low profit margins but safe\n• #bold Regional Goods#! (30 gold): Wine, furs, quality crafts - Medium profit potential\n• #bold Luxury Goods#! (100 gold): Silk, spices, gems - High profit but requires significant capital"
+ purchase_starting_goods_decision_tooltip:0 "Buy your first trade goods to begin your merchant career"
+ purchase_starting_goods_decision_confirm:0 "Enter the Marketplace"
 
  # Manual Trade Goods Decision
+ manual_trade_goods_decision_title:0 "Trade Goods Manually"
  manual_trade_goods_decision:0 "Trade Goods Manually"
  manual_trade_goods_decision_desc:0 "I am carrying valuable trade goods. I should seek out markets where these goods are in demand and sell them for profit.\n\nDifferent markets offer different prices based on:\n• #bold Distance:#! Farther markets pay more\n• #bold Wealth:#! Wealthy counties have higher demand\n• #bold Development:#! Well-developed areas offer better prices\n\nOnce I establish automated trade routes, I won't need to do this manually anymore."
+ manual_trade_goods_decision_tooltip:0 "Seek out markets to sell your trade goods"
+ manual_trade_goods_decision_confirm:0 "Go to Market"
  manual_trade_cooldown_expired:0 "You must wait before trading again (represents travel time)"
  must_have_market_access:0 "You must have access to markets (not in hostile territory or under siege)"
 
