@@ -1,0 +1,235 @@
+##############################################
+# MERCHANTS AND TRADERS - Decision Modifiers
+# Author: Merchants and Traders Mod Team
+# Description: Modifiers applied by merchant decisions
+##############################################
+
+##############################################
+# TRADE POST MODIFIERS
+##############################################
+
+# Applied to counties with established trade posts
+mt_trade_post_established = {
+	county_opinion_add = 5
+	development_growth_factor = 0.05
+	tax_mult = 0.10
+	levy_size = 0.05
+
+	icon = stewardship_positive
+}
+
+##############################################
+# COMPANY EXPANSION MODIFIERS
+##############################################
+
+# Applied when trading company is expanded
+mt_company_expansion_momentum = {
+	monthly_income_mult = 0.15
+	diplomacy = 2
+	stewardship = 1
+	monthly_prestige_gain_mult = 0.10
+
+	stress_loss_mult = 0.10
+
+	icon = stewardship_positive
+}
+
+##############################################
+# MERCHANT REPUBLIC MODIFIERS
+##############################################
+
+# Ultimate status modifier for merchant republic
+mt_merchant_republic_status = {
+	monthly_income_mult = 0.30
+	diplomacy = 5
+	stewardship = 5
+	monthly_prestige_gain_mult = 0.25
+
+	republic_government_opinion = 20
+	theocracy_government_opinion = 10
+
+	vassal_opinion = 10
+	same_faith_opinion = 5
+
+	development_growth_factor = 0.10
+
+	icon = stewardship_positive
+}
+
+# Applied to capital of merchant republic
+mt_merchant_republic_capital = {
+	county_opinion_add = 15
+	development_growth = 0.30
+	development_growth_factor = 0.15
+	tax_mult = 0.25
+	levy_size = 0.10
+
+	supply_limit_mult = 0.20
+	garrison_size = 0.15
+
+	fort_level = 1
+
+	icon = county_modifier_positive
+}
+
+# Economic powerhouse modifier for merchant princes
+mt_merchant_prince_economy = {
+	monthly_income_mult = 0.40
+	domain_tax_mult = 0.20
+
+	monthly_prestige_gain_mult = 0.15
+
+	stewardship_per_prestige_level = 1
+	diplomacy_per_prestige_level = 1
+
+	character_capital_county_monthly_development_growth_add = 0.20
+
+	icon = stewardship_positive
+}
+
+##############################################
+# SPECIAL ABILITY MODIFIERS
+##############################################
+
+# Granted when player can charter merchant fleets
+mt_merchant_fleet_charter_power = {
+	monthly_income_mult = 0.10
+	monthly_prestige = 0.25
+
+	sea_travel_danger = -0.20
+	sea_speed = 0.15
+
+	icon = stewardship_positive
+}
+
+# Granted when player establishes monopolies
+mt_trade_monopoly_power = {
+	monthly_income_mult = 0.25
+	diplomacy = 2
+
+	vassal_opinion = -5
+
+	icon = stewardship_positive
+}
+
+# Granted when player can mint currency
+mt_currency_minting_power = {
+	monthly_income_mult = 0.15
+	monthly_prestige = 0.50
+
+	short_reign_duration_mult = -0.25
+	vassal_opinion = 5
+
+	icon = stewardship_positive
+}
+
+##############################################
+# AGENT EMPLOYMENT MODIFIERS
+##############################################
+
+# Applied when character has hired agents
+mt_employed_merchant_agents = {
+	monthly_income_mult = 0.05
+	stress_loss_mult = 0.05
+
+	icon = stewardship_positive
+}
+
+# Applied to individual agent characters
+mt_merchant_agent_employment = {
+	monthly_income = 2
+	learning = 1
+	stewardship = 1
+
+	attraction_opinion = 10
+
+	icon = stewardship_positive
+}
+
+##############################################
+# PROGRESSION SUPPORT MODIFIERS
+##############################################
+
+# Temporary boost after establishing first trade post
+mt_first_trade_post_established = {
+	monthly_prestige = 0.10
+	diplomacy = 1
+
+	monthly_income_mult = 0.05
+
+	icon = stewardship_positive
+}
+
+# Temporary boost after hiring first agent
+mt_first_agent_hired = {
+	stress_loss_mult = 0.10
+	stewardship = 1
+
+	icon = stewardship_positive
+}
+
+##############################################
+# TRADE INFRASTRUCTURE MODIFIERS
+##############################################
+
+# Applied when merchant has extensive trade network
+mt_extensive_trade_network = {
+	monthly_income_mult = 0.20
+	monthly_prestige_gain_mult = 0.10
+
+	diplomacy = 2
+	stewardship = 2
+
+	attraction_opinion = 5
+
+	icon = stewardship_positive
+}
+
+# Applied when merchant controls strategic trade routes
+mt_strategic_trade_control = {
+	monthly_income_mult = 0.15
+	diplomacy = 1
+
+	short_reign_duration_mult = -0.10
+
+	icon = stewardship_positive
+}
+
+##############################################
+# REPUTATION-BASED MODIFIERS
+##############################################
+
+# Applied when merchant achieves legendary status
+mt_legendary_merchant_reputation = {
+	monthly_income_mult = 0.10
+	monthly_prestige_gain_mult = 0.15
+
+	diplomacy = 3
+	stewardship = 2
+
+	general_opinion = 10
+	republic_government_opinion = 15
+
+	icon = stewardship_positive
+}
+
+# Applied when merchant is known for reliability
+mt_reliable_merchant = {
+	diplomacy = 2
+	general_opinion = 5
+
+	monthly_income_mult = 0.05
+
+	icon = diplomacy_positive
+}
+
+# Applied when merchant is known for innovation
+mt_innovative_merchant = {
+	stewardship = 2
+	learning = 1
+
+	monthly_income_mult = 0.08
+	development_growth_factor = 0.05
+
+	icon = learning_positive
+}

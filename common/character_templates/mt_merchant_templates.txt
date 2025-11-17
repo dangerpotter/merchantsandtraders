@@ -1,0 +1,267 @@
+##############################################
+# MERCHANTS AND TRADERS - Character Templates
+# Author: Merchants and Traders Mod Team
+# Description: Templates for merchant-related characters
+##############################################
+
+##############################################
+# MERCHANT AGENT TEMPLATE
+# Used when hiring merchant agents via decision
+##############################################
+merchant_agent_template = {
+	# Age range handled by decision
+	# Culture and faith inherited from employer
+
+	# Give them merchant-relevant traits
+	random_traits_list = {
+		count = { min = 2 max = 4 }
+
+		# Positive merchant traits (higher weight)
+		diligent = { weight = 20 }
+		greedy = { weight = 15 }
+		ambitious = { weight = 15 }
+		patient = { weight = 10 }
+		temperate = { weight = 10 }
+		shrewd = { weight = 12 }
+		calm = { weight = 8 }
+		humble = { weight = 5 }
+
+		# Negative traits (lower weight)
+		lazy = { weight = 3 }
+		content = { weight = 5 }
+		impatient = { weight = 4 }
+		reckless = { weight = 3 }
+		arrogant = { weight = 4 }
+		shy = { weight = 5 }
+	}
+
+	# Attributes biased toward merchant skills
+	diplomacy = {
+		min_template_high_skill = 10
+		max_template_high_skill = 16
+	}
+
+	stewardship = {
+		min_template_high_skill = 10
+		max_template_high_skill = 16
+	}
+
+	martial = {
+		min_template_low_skill = 3
+		max_template_low_skill = 8
+	}
+
+	intrigue = {
+		min_template_low_skill = 5
+		max_template_low_skill = 12
+	}
+
+	learning = {
+		min_template_low_skill = 4
+		max_template_low_skill = 10
+	}
+}
+
+##############################################
+# ADVANCED MERCHANT AGENT TEMPLATE
+# Higher quality agents (future use)
+##############################################
+advanced_merchant_agent_template = {
+	random_traits_list = {
+		count = { min = 3 max = 5 }
+
+		# Better traits
+		diligent = { weight = 25 }
+		shrewd = { weight = 20 }
+		ambitious = { weight = 18 }
+		patient = { weight = 15 }
+		greedy = { weight = 12 }
+		temperate = { weight = 10 }
+		calm = { weight = 10 }
+		brave = { weight = 8 }
+
+		# Fewer negative traits
+		lazy = { weight = 1 }
+		content = { weight = 2 }
+		impatient = { weight = 2 }
+	}
+
+	# Better attributes
+	diplomacy = {
+		min_template_high_skill = 12
+		max_template_high_skill = 18
+	}
+
+	stewardship = {
+		min_template_high_skill = 12
+		max_template_high_skill = 18
+	}
+
+	martial = {
+		min_template_low_skill = 4
+		max_template_low_skill = 10
+	}
+
+	intrigue = {
+		min_template_low_skill = 6
+		max_template_low_skill = 14
+	}
+
+	learning = {
+		min_template_low_skill = 5
+		max_template_low_skill = 12
+	}
+}
+
+##############################################
+# MERCHANT GUARD TEMPLATE
+# For hired guards (future implementation)
+##############################################
+merchant_guard_template = {
+	random_traits_list = {
+		count = { min = 2 max = 3 }
+
+		# Combat-focused traits
+		brave = { weight = 25 }
+		strong = { weight = 15 }
+		robust = { weight = 12 }
+		aggressive_attacker = { weight = 10 }
+		loyal = { weight = 15 }
+		diligent = { weight = 10 }
+
+		# Negative traits
+		craven = { weight = 2 }
+		weak = { weight = 2 }
+		lazy = { weight = 3 }
+	}
+
+	# Combat-focused attributes
+	martial = {
+		min_template_high_skill = 10
+		max_template_high_skill = 16
+	}
+
+	prowess = {
+		min_template_high_skill = 8
+		max_template_high_skill = 14
+	}
+
+	diplomacy = {
+		min_template_low_skill = 3
+		max_template_low_skill = 8
+	}
+
+	stewardship = {
+		min_template_low_skill = 3
+		max_template_low_skill = 8
+	}
+
+	intrigue = {
+		min_template_low_skill = 5
+		max_template_low_skill = 10
+	}
+
+	learning = {
+		min_template_low_skill = 2
+		max_template_low_skill = 6
+	}
+}
+
+##############################################
+# RIVAL MERCHANT TEMPLATE
+# For generating rival merchants (future events)
+##############################################
+rival_merchant_template = {
+	random_traits_list = {
+		count = { min = 3 max = 5 }
+
+		# Competitive traits
+		ambitious = { weight = 25 }
+		greedy = { weight = 20 }
+		arrogant = { weight = 15 }
+		shrewd = { weight = 15 }
+		deceitful = { weight = 12 }
+		vengeful = { weight = 10 }
+		diligent = { weight = 10 }
+
+		# Some positive traits too
+		patient = { weight = 8 }
+		brave = { weight = 5 }
+	}
+
+	# Well-rounded merchant skills
+	diplomacy = {
+		min_template_high_skill = 11
+		max_template_high_skill = 17
+	}
+
+	stewardship = {
+		min_template_high_skill = 11
+		max_template_high_skill = 17
+	}
+
+	intrigue = {
+		min_template_low_skill = 7
+		max_template_low_skill = 14
+	}
+
+	martial = {
+		min_template_low_skill = 4
+		max_template_low_skill = 9
+	}
+
+	learning = {
+		min_template_low_skill = 5
+		max_template_low_skill = 11
+	}
+}
+
+##############################################
+# MERCHANT GUILD MASTER TEMPLATE
+# For guild establishment (future use)
+##############################################
+guild_master_template = {
+	random_traits_list = {
+		count = { min = 4 max = 6 }
+
+		# Leadership and wisdom traits
+		shrewd = { weight = 25 }
+		just = { weight = 20 }
+		patient = { weight = 18 }
+		diligent = { weight = 15 }
+		temperate = { weight = 12 }
+		humble = { weight = 10 }
+		calm = { weight = 10 }
+		ambitious = { weight = 8 }
+
+		# Negative traits rare
+		lazy = { weight = 1 }
+		arbitrary = { weight = 2 }
+	}
+
+	# Experienced, skilled merchant
+	diplomacy = {
+		min_template_high_skill = 14
+		max_template_high_skill = 20
+	}
+
+	stewardship = {
+		min_template_high_skill = 14
+		max_template_high_skill = 20
+	}
+
+	learning = {
+		min_template_low_skill = 8
+		max_template_low_skill = 14
+	}
+
+	intrigue = {
+		min_template_low_skill = 6
+		max_template_low_skill = 12
+	}
+
+	martial = {
+		min_template_low_skill = 3
+		max_template_low_skill = 8
+	}
+}
