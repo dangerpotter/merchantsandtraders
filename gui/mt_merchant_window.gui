@@ -1,0 +1,1417 @@
+######################################################
+# MERCHANTS AND TRADERS MOD - MERCHANT PORTFOLIO GUI
+# Custom GUI window for viewing merchant character sheet
+######################################################
+
+types mt_merchant_types
+{
+	######################################################
+	# MAIN MERCHANT PORTFOLIO WINDOW
+	######################################################
+
+	type mt_merchant_window = window {
+		name = "mt_merchant_window"
+		size = { 1200 850 }
+		position = { 360 50 }
+		movable = yes
+		layer = windows_layer
+
+		using = Window_Background
+		using = Window_Decoration_Spike
+
+		vbox = {
+			layoutpolicy_horizontal = expanding
+			layoutpolicy_vertical = expanding
+
+			##############################
+			# HEADER
+			##############################
+			widget = {
+				size = { 0 70 }
+				layoutpolicy_horizontal = expanding
+
+				background = {
+					using = Background_Area_Dark
+				}
+
+				hbox = {
+					margin = { 20 10 }
+					spacing = 15
+
+					# Character portrait
+					portrait_head_small = {
+						name = "merchant_portrait"
+						datacontext = "[GetPlayer]"
+						size = { 50 50 }
+					}
+
+					vbox = {
+						spacing = 3
+
+						# Window title with character name
+						text_single = {
+							name = "title"
+							text = "MT_MERCHANT_PORTFOLIO_TITLE"
+							default_format = "#high"
+							using = Font_Size_Big
+							align = nobaseline
+						}
+
+						# Merchant tier display
+						hbox = {
+							spacing = 5
+
+							icon = {
+								name = "tier_icon"
+								size = { 24 24 }
+								texture = "[mt_merchant_window.GetMerchantTierIcon]"
+								tooltip = "MT_MERCHANT_TIER_TOOLTIP"
+							}
+
+							text_single = {
+								name = "tier_name"
+								text = "[mt_merchant_window.GetMerchantTierName]"
+								default_format = "#high"
+								using = Font_Size_Medium
+								align = nobaseline
+							}
+						}
+					}
+
+					expand = {}
+
+					button_close = {
+						name = "close_button"
+						onclick = "[mt_merchant_window.Close]"
+						size = { 30 30 }
+					}
+				}
+			}
+
+			divider_light = {
+				layoutpolicy_horizontal = expanding
+			}
+
+			##############################
+			# MAIN CONTENT AREA
+			##############################
+			hbox = {
+				layoutpolicy_horizontal = expanding
+				layoutpolicy_vertical = expanding
+				margin = { 10 10 }
+				spacing = 10
+
+				# Left column - Stats and Status
+				vbox = {
+					name = "left_column"
+					layoutpolicy_vertical = expanding
+					minimumsize = { 380 0 }
+					spacing = 10
+
+					# MERCHANT STATUS OVERVIEW
+					mt_merchant_status_section = {}
+
+					# PROGRESSION TRACKER
+					mt_merchant_progression_section = {}
+
+					expand = {}
+				}
+
+				# Middle column - Assets and Market
+				vbox = {
+					name = "middle_column"
+					layoutpolicy_vertical = expanding
+					minimumsize = { 380 0 }
+					spacing = 10
+
+					# ASSETS SECTION
+					mt_merchant_assets_section = {}
+
+					# MARKET OVERVIEW
+					mt_merchant_market_section = {}
+
+					expand = {}
+				}
+
+				# Right column - Statistics and Actions
+				vbox = {
+					name = "right_column"
+					layoutpolicy_vertical = expanding
+					minimumsize = { 380 0 }
+					spacing = 10
+
+					# TRADE STATISTICS
+					mt_merchant_statistics_section = {}
+
+					# AVAILABLE ACTIONS
+					mt_merchant_actions_section = {}
+
+					expand = {}
+				}
+			}
+		}
+	}
+
+	######################################################
+	# MERCHANT STATUS OVERVIEW SECTION
+	######################################################
+
+	type mt_merchant_status_section = vbox {
+		name = "status_section"
+		layoutpolicy_horizontal = expanding
+		spacing = 8
+
+		# Section header
+		text_single = {
+			text = "MT_STATUS_OVERVIEW"
+			default_format = "#high"
+			using = Font_Size_Medium
+		}
+
+		# Status box
+		widget = {
+			layoutpolicy_horizontal = expanding
+			size = { 0 260 }
+
+			background = {
+				using = Background_Area
+			}
+
+			vbox = {
+				margin = { 15 12 }
+				spacing = 8
+				layoutpolicy_horizontal = expanding
+
+				# Total wealth
+				hbox = {
+					layoutpolicy_horizontal = expanding
+					spacing = 10
+
+					icon = {
+						size = { 32 32 }
+						texture = "gfx/interface/icons/icon_gold.dds"
+					}
+
+					vbox = {
+						spacing = 2
+
+						text_single = {
+							text = "MT_TOTAL_WEALTH"
+							default_format = "#weak"
+							using = Font_Size_Small
+						}
+
+						text_single = {
+							name = "total_wealth_value"
+							text = "[mt_merchant_window.GetTotalWealth]"
+							default_format = "#high"
+							using = Font_Size_Big
+							align = nobaseline
+						}
+					}
+
+					expand = {}
+				}
+
+				divider_light = {
+					layoutpolicy_horizontal = expanding
+				}
+
+				# Monthly income
+				hbox = {
+					layoutpolicy_horizontal = expanding
+
+					text_single = {
+						text = "MT_MONTHLY_INCOME"
+						default_format = "#weak"
+						using = Font_Size_Small
+					}
+
+					expand = {}
+
+					text_single = {
+						name = "monthly_income"
+						text = "[mt_merchant_window.GetMonthlyIncome]"
+						default_format = "#P"
+						using = Font_Size_Small
+						tooltip = "MT_MONTHLY_INCOME_TOOLTIP"
+					}
+				}
+
+				# Monthly expenses
+				hbox = {
+					layoutpolicy_horizontal = expanding
+
+					text_single = {
+						text = "MT_MONTHLY_EXPENSES"
+						default_format = "#weak"
+						using = Font_Size_Small
+					}
+
+					expand = {}
+
+					text_single = {
+						name = "monthly_expenses"
+						text = "[mt_merchant_window.GetMonthlyExpenses]"
+						default_format = "#N"
+						using = Font_Size_Small
+						tooltip = "MT_MONTHLY_EXPENSES_TOOLTIP"
+					}
+				}
+
+				divider_light = {
+					layoutpolicy_horizontal = expanding
+				}
+
+				# Net monthly profit
+				hbox = {
+					layoutpolicy_horizontal = expanding
+
+					text_single = {
+						text = "MT_NET_MONTHLY_PROFIT"
+						default_format = "#high"
+						using = Font_Size_Small
+					}
+
+					expand = {}
+
+					text_single = {
+						name = "net_profit"
+						text = "[mt_merchant_window.GetNetMonthlyProfit]"
+						default_format = "[mt_merchant_window.GetProfitColor]"
+						using = Font_Size_Medium
+						tooltip = "MT_NET_PROFIT_TOOLTIP"
+					}
+				}
+
+				divider_light = {
+					layoutpolicy_horizontal = expanding
+				}
+
+				# Total routes
+				hbox = {
+					layoutpolicy_horizontal = expanding
+
+					text_single = {
+						text = "MT_TOTAL_ROUTES"
+						default_format = "#weak"
+						using = Font_Size_Small
+					}
+
+					expand = {}
+
+					text_single = {
+						name = "total_routes"
+						text = "[mt_merchant_window.GetActiveRoutes]/[mt_merchant_window.GetMaxRoutes]"
+						default_format = "#high"
+						using = Font_Size_Small
+						tooltip = "MT_TOTAL_ROUTES_TOOLTIP"
+					}
+				}
+
+				# Trade posts owned
+				hbox = {
+					layoutpolicy_horizontal = expanding
+
+					text_single = {
+						text = "MT_TRADE_POSTS_OWNED"
+						default_format = "#weak"
+						using = Font_Size_Small
+					}
+
+					expand = {}
+
+					text_single = {
+						name = "trade_posts"
+						text = "[mt_merchant_window.GetTradePostCount]"
+						default_format = "#high"
+						using = Font_Size_Small
+						tooltip = "MT_TRADE_POSTS_TOOLTIP"
+					}
+				}
+
+				# Merchant reputation
+				hbox = {
+					layoutpolicy_horizontal = expanding
+
+					text_single = {
+						text = "MT_MERCHANT_REPUTATION"
+						default_format = "#weak"
+						using = Font_Size_Small
+					}
+
+					expand = {}
+
+					text_single = {
+						name = "reputation"
+						text = "[mt_merchant_window.GetReputationScore]"
+						default_format = "#high"
+						using = Font_Size_Small
+						tooltip = "MT_REPUTATION_TOOLTIP"
+					}
+				}
+			}
+		}
+	}
+
+	######################################################
+	# PROGRESSION TRACKER SECTION
+	######################################################
+
+	type mt_merchant_progression_section = vbox {
+		name = "progression_section"
+		layoutpolicy_horizontal = expanding
+		spacing = 8
+
+		# Section header
+		text_single = {
+			text = "MT_PROGRESSION_TRACKER"
+			default_format = "#high"
+			using = Font_Size_Medium
+		}
+
+		# Progression box
+		widget = {
+			layoutpolicy_horizontal = expanding
+			size = { 0 280 }
+
+			background = {
+				using = Background_Area
+			}
+
+			vbox = {
+				margin = { 15 12 }
+				spacing = 10
+				layoutpolicy_horizontal = expanding
+
+				# Current tier display
+				text_single = {
+					text = "MT_CURRENT_TIER"
+					default_format = "#weak"
+					using = Font_Size_Small
+				}
+
+				hbox = {
+					spacing = 8
+
+					icon = {
+						name = "current_tier_icon"
+						size = { 40 40 }
+						texture = "[mt_merchant_window.GetMerchantTierIcon]"
+					}
+
+					text_single = {
+						name = "current_tier_text"
+						text = "[mt_merchant_window.GetMerchantTierName]"
+						default_format = "#high"
+						using = Font_Size_Medium
+						align = nobaseline
+					}
+				}
+
+				divider_light = {
+					layoutpolicy_horizontal = expanding
+				}
+
+				# Next tier requirements
+				text_single = {
+					text = "MT_NEXT_TIER_REQUIREMENTS"
+					default_format = "#weak"
+					using = Font_Size_Small
+				}
+
+				# Gold requirement
+				vbox = {
+					layoutpolicy_horizontal = expanding
+					spacing = 3
+
+					hbox = {
+						layoutpolicy_horizontal = expanding
+
+						text_single = {
+							text = "MT_GOLD_REQUIREMENT"
+							default_format = "#weak"
+							using = Font_Size_Small
+						}
+
+						expand = {}
+
+						text_single = {
+							name = "gold_progress"
+							text = "[mt_merchant_window.GetGoldProgress]"
+							default_format = "[mt_merchant_window.GetGoldProgressColor]"
+							using = Font_Size_Small
+						}
+					}
+
+					progressbar_standard = {
+						name = "gold_progressbar"
+						layoutpolicy_horizontal = expanding
+						size = { 0 10 }
+						min = 0
+						max = 100
+						value = "[mt_merchant_window.GetGoldProgressPercent]"
+					}
+				}
+
+				# Routes requirement
+				vbox = {
+					layoutpolicy_horizontal = expanding
+					spacing = 3
+
+					hbox = {
+						layoutpolicy_horizontal = expanding
+
+						text_single = {
+							text = "MT_ROUTES_REQUIREMENT"
+							default_format = "#weak"
+							using = Font_Size_Small
+						}
+
+						expand = {}
+
+						text_single = {
+							name = "routes_progress"
+							text = "[mt_merchant_window.GetRoutesProgress]"
+							default_format = "[mt_merchant_window.GetRoutesProgressColor]"
+							using = Font_Size_Small
+						}
+					}
+
+					progressbar_standard = {
+						name = "routes_progressbar"
+						layoutpolicy_horizontal = expanding
+						size = { 0 10 }
+						min = 0
+						max = 100
+						value = "[mt_merchant_window.GetRoutesProgressPercent]"
+					}
+				}
+
+				# Reputation requirement
+				vbox = {
+					layoutpolicy_horizontal = expanding
+					spacing = 3
+
+					hbox = {
+						layoutpolicy_horizontal = expanding
+
+						text_single = {
+							text = "MT_REPUTATION_REQUIREMENT"
+							default_format = "#weak"
+							using = Font_Size_Small
+						}
+
+						expand = {}
+
+						text_single = {
+							name = "reputation_progress"
+							text = "[mt_merchant_window.GetReputationProgress]"
+							default_format = "[mt_merchant_window.GetReputationProgressColor]"
+							using = Font_Size_Small
+						}
+					}
+
+					progressbar_standard = {
+						name = "reputation_progressbar"
+						layoutpolicy_horizontal = expanding
+						size = { 0 10 }
+						min = 0
+						max = 100
+						value = "[mt_merchant_window.GetReputationProgressPercent]"
+					}
+				}
+
+				# Special requirements (if any)
+				vbox = {
+					name = "special_requirements"
+					layoutpolicy_horizontal = expanding
+					spacing = 3
+					visible = "[mt_merchant_window.HasSpecialRequirements]"
+
+					text_multi = {
+						name = "special_requirements_text"
+						text = "[mt_merchant_window.GetSpecialRequirements]"
+						default_format = "#weak"
+						using = Font_Size_Small
+						autoresize = yes
+						max_width = 340
+					}
+				}
+
+				expand = {}
+
+				# Rank up button
+				button_primary = {
+					name = "rank_up_button"
+					text = "MT_RANK_UP"
+					onclick = "[mt_merchant_window.RankUp]"
+					enabled = "[mt_merchant_window.CanRankUp]"
+					tooltip = "MT_RANK_UP_TOOLTIP"
+					layoutpolicy_horizontal = expanding
+					size = { 0 35 }
+				}
+			}
+		}
+	}
+
+	######################################################
+	# ASSETS SECTION
+	######################################################
+
+	type mt_merchant_assets_section = vbox {
+		name = "assets_section"
+		layoutpolicy_horizontal = expanding
+		layoutpolicy_vertical = expanding
+		spacing = 8
+
+		# Section header
+		text_single = {
+			text = "MT_ASSETS"
+			default_format = "#high"
+			using = Font_Size_Medium
+		}
+
+		# Assets box
+		widget = {
+			layoutpolicy_horizontal = expanding
+			layoutpolicy_vertical = expanding
+
+			background = {
+				using = Background_Area
+			}
+
+			vbox = {
+				margin = { 15 12 }
+				spacing = 8
+				layoutpolicy_horizontal = expanding
+				layoutpolicy_vertical = expanding
+
+				# Tab buttons for different asset types
+				hbox = {
+					layoutpolicy_horizontal = expanding
+					spacing = 5
+
+					button_tab = {
+						name = "trade_posts_tab"
+						text = "MT_TRADE_POSTS_TAB"
+						onclick = "[mt_merchant_window.ShowTradePostsTab]"
+						down = "[mt_merchant_window.IsShowingTradePostsTab]"
+						size = { 90 25 }
+					}
+
+					button_tab = {
+						name = "agents_tab"
+						text = "MT_AGENTS_TAB"
+						onclick = "[mt_merchant_window.ShowAgentsTab]"
+						down = "[mt_merchant_window.IsShowingAgentsTab]"
+						size = { 90 25 }
+					}
+
+					button_tab = {
+						name = "special_tab"
+						text = "MT_SPECIAL_TAB"
+						onclick = "[mt_merchant_window.ShowSpecialTab]"
+						down = "[mt_merchant_window.IsShowingSpecialTab]"
+						size = { 90 25 }
+					}
+
+					expand = {}
+				}
+
+				divider_light = {
+					layoutpolicy_horizontal = expanding
+				}
+
+				# Scrollable content area
+				scrollbox = {
+					name = "assets_scrollbox"
+					layoutpolicy_horizontal = expanding
+					layoutpolicy_vertical = expanding
+
+					blockoverride "scrollbox_content" {
+						vbox = {
+							name = "assets_content"
+							layoutpolicy_horizontal = expanding
+							spacing = 5
+
+							# Trade Posts List
+							container = {
+								name = "trade_posts_container"
+								visible = "[mt_merchant_window.IsShowingTradePostsTab]"
+
+								vbox = {
+									name = "trade_posts_list"
+									datamodel = "[mt_merchant_window.GetTradePosts]"
+									spacing = 3
+									layoutpolicy_horizontal = expanding
+
+									item = {
+										mt_trade_post_entry = {}
+									}
+								}
+							}
+
+							# Merchant Agents List
+							container = {
+								name = "agents_container"
+								visible = "[mt_merchant_window.IsShowingAgentsTab]"
+
+								vbox = {
+									name = "agents_list"
+									datamodel = "[mt_merchant_window.GetMerchantAgents]"
+									spacing = 3
+									layoutpolicy_horizontal = expanding
+
+									item = {
+										mt_merchant_agent_entry = {}
+									}
+								}
+							}
+
+							# Special Assets List
+							container = {
+								name = "special_container"
+								visible = "[mt_merchant_window.IsShowingSpecialTab]"
+
+								vbox = {
+									name = "special_list"
+									datamodel = "[mt_merchant_window.GetSpecialAssets]"
+									spacing = 3
+									layoutpolicy_horizontal = expanding
+
+									item = {
+										mt_special_asset_entry = {}
+									}
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+
+	######################################################
+	# MARKET OVERVIEW SECTION
+	######################################################
+
+	type mt_merchant_market_section = vbox {
+		name = "market_section"
+		layoutpolicy_horizontal = expanding
+		spacing = 8
+
+		# Section header
+		text_single = {
+			text = "MT_MARKET_OVERVIEW"
+			default_format = "#high"
+			using = Font_Size_Medium
+		}
+
+		# Market box
+		widget = {
+			layoutpolicy_horizontal = expanding
+			size = { 0 220 }
+
+			background = {
+				using = Background_Area
+			}
+
+			vbox = {
+				margin = { 15 12 }
+				spacing = 8
+				layoutpolicy_horizontal = expanding
+
+				text_single = {
+					text = "MT_CURRENT_PRICES"
+					default_format = "#weak"
+					using = Font_Size_Small
+				}
+
+				# Market prices scrollbox
+				scrollbox = {
+					name = "market_scrollbox"
+					layoutpolicy_horizontal = expanding
+					size = { 0 140 }
+
+					blockoverride "scrollbox_content" {
+						vbox = {
+							name = "market_prices"
+							datamodel = "[mt_merchant_window.GetMarketPrices]"
+							spacing = 2
+							layoutpolicy_horizontal = expanding
+
+							item = {
+								mt_market_price_entry = {}
+							}
+						}
+					}
+				}
+
+				divider_light = {
+					layoutpolicy_horizontal = expanding
+				}
+
+				# Opportunities highlight
+				hbox = {
+					spacing = 5
+
+					icon = {
+						size = { 20 20 }
+						texture = "gfx/interface/icons/symbols/icon_check.dds"
+					}
+
+					text_single = {
+						name = "opportunities_text"
+						text = "[mt_merchant_window.GetOpportunitiesText]"
+						default_format = "#P"
+						using = Font_Size_Small
+						tooltip = "MT_OPPORTUNITIES_TOOLTIP"
+					}
+				}
+			}
+		}
+	}
+
+	######################################################
+	# TRADE STATISTICS SECTION
+	######################################################
+
+	type mt_merchant_statistics_section = vbox {
+		name = "statistics_section"
+		layoutpolicy_horizontal = expanding
+		layoutpolicy_vertical = expanding
+		spacing = 8
+
+		# Section header
+		text_single = {
+			text = "MT_TRADE_STATISTICS"
+			default_format = "#high"
+			using = Font_Size_Medium
+		}
+
+		# Statistics box
+		widget = {
+			layoutpolicy_horizontal = expanding
+			layoutpolicy_vertical = expanding
+
+			background = {
+				using = Background_Area
+			}
+
+			scrollbox = {
+				layoutpolicy_horizontal = expanding
+				layoutpolicy_vertical = expanding
+
+				blockoverride "scrollbox_content" {
+					vbox = {
+						margin = { 15 12 }
+						spacing = 8
+						layoutpolicy_horizontal = expanding
+
+						# Total lifetime profit
+						hbox = {
+							layoutpolicy_horizontal = expanding
+							spacing = 10
+
+							icon = {
+								size = { 24 24 }
+								texture = "gfx/interface/icons/icon_gold.dds"
+							}
+
+							vbox = {
+								spacing = 2
+
+								text_single = {
+									text = "MT_LIFETIME_PROFIT"
+									default_format = "#weak"
+									using = Font_Size_Small
+								}
+
+								text_single = {
+									name = "lifetime_profit"
+									text = "[mt_merchant_window.GetLifetimeProfit]"
+									default_format = "#high"
+									using = Font_Size_Medium
+									align = nobaseline
+								}
+							}
+
+							expand = {}
+						}
+
+						divider_light = {
+							layoutpolicy_horizontal = expanding
+						}
+
+						# Most profitable route
+						vbox = {
+							layoutpolicy_horizontal = expanding
+							spacing = 3
+
+							text_single = {
+								text = "MT_MOST_PROFITABLE_ROUTE"
+								default_format = "#weak"
+								using = Font_Size_Small
+							}
+
+							text_single = {
+								name = "most_profitable_route"
+								text = "[mt_merchant_window.GetMostProfitableRoute]"
+								default_format = "#high"
+								using = Font_Size_Small
+							}
+						}
+
+						# Most traded good
+						vbox = {
+							layoutpolicy_horizontal = expanding
+							spacing = 3
+
+							text_single = {
+								text = "MT_MOST_TRADED_GOOD"
+								default_format = "#weak"
+								using = Font_Size_Small
+							}
+
+							hbox = {
+								spacing = 5
+
+								icon = {
+									name = "most_traded_icon"
+									size = { 24 24 }
+									texture = "[mt_merchant_window.GetMostTradedGoodIcon]"
+								}
+
+								text_single = {
+									name = "most_traded_good"
+									text = "[mt_merchant_window.GetMostTradedGood]"
+									default_format = "#high"
+									using = Font_Size_Small
+									align = nobaseline
+								}
+							}
+						}
+
+						# Longest active route
+						vbox = {
+							layoutpolicy_horizontal = expanding
+							spacing = 3
+
+							text_single = {
+								text = "MT_LONGEST_ROUTE"
+								default_format = "#weak"
+								using = Font_Size_Small
+							}
+
+							text_single = {
+								name = "longest_route"
+								text = "[mt_merchant_window.GetLongestRoute]"
+								default_format = "#high"
+								using = Font_Size_Small
+							}
+						}
+
+						# Total goods moved
+						vbox = {
+							layoutpolicy_horizontal = expanding
+							spacing = 3
+
+							text_single = {
+								text = "MT_TOTAL_GOODS_MOVED"
+								default_format = "#weak"
+								using = Font_Size_Small
+							}
+
+							text_single = {
+								name = "total_goods"
+								text = "[mt_merchant_window.GetTotalGoodsMoved]"
+								default_format = "#high"
+								using = Font_Size_Small
+							}
+						}
+
+						divider_light = {
+							layoutpolicy_horizontal = expanding
+						}
+
+						# Milestones/Achievements
+						text_single = {
+							text = "MT_MILESTONES"
+							default_format = "#weak"
+							using = Font_Size_Small
+						}
+
+						vbox = {
+							name = "milestones_list"
+							datamodel = "[mt_merchant_window.GetMilestones]"
+							spacing = 3
+							layoutpolicy_horizontal = expanding
+
+							item = {
+								mt_milestone_entry = {}
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+
+	######################################################
+	# AVAILABLE ACTIONS SECTION
+	######################################################
+
+	type mt_merchant_actions_section = vbox {
+		name = "actions_section"
+		layoutpolicy_horizontal = expanding
+		spacing = 8
+
+		# Section header
+		text_single = {
+			text = "MT_QUICK_ACTIONS"
+			default_format = "#high"
+			using = Font_Size_Medium
+		}
+
+		# Actions box
+		widget = {
+			layoutpolicy_horizontal = expanding
+			size = { 0 280 }
+
+			background = {
+				using = Background_Area
+			}
+
+			vbox = {
+				margin = { 15 12 }
+				spacing = 8
+				layoutpolicy_horizontal = expanding
+
+				# Scout Opportunities
+				button_standard = {
+					name = "scout_button"
+					layoutpolicy_horizontal = expanding
+					size = { 0 40 }
+					onclick = "[mt_merchant_window.ScoutOpportunities]"
+					enabled = "[mt_merchant_window.CanScoutOpportunities]"
+					tooltip = "MT_SCOUT_OPPORTUNITIES_TOOLTIP"
+
+					hbox = {
+						margin = { 10 5 }
+						spacing = 8
+
+						icon = {
+							size = { 28 28 }
+							texture = "gfx/interface/icons/icon_search.dds"
+						}
+
+						text_single = {
+							text = "MT_SCOUT_OPPORTUNITIES"
+							default_format = "#clickable"
+							using = Font_Size_Small
+							align = nobaseline
+						}
+
+						expand = {}
+					}
+				}
+
+				# Establish Trade Post
+				button_standard = {
+					name = "establish_post_button"
+					layoutpolicy_horizontal = expanding
+					size = { 0 40 }
+					onclick = "[mt_merchant_window.EstablishTradePost]"
+					enabled = "[mt_merchant_window.CanEstablishTradePost]"
+					tooltip = "MT_ESTABLISH_POST_TOOLTIP"
+
+					hbox = {
+						margin = { 10 5 }
+						spacing = 8
+
+						icon = {
+							size = { 28 28 }
+							texture = "gfx/interface/icons/icon_castle.dds"
+						}
+
+						text_single = {
+							text = "MT_ESTABLISH_POST"
+							default_format = "#clickable"
+							using = Font_Size_Small
+							align = nobaseline
+						}
+
+						expand = {}
+					}
+				}
+
+				# Hire Agent
+				button_standard = {
+					name = "hire_agent_button"
+					layoutpolicy_horizontal = expanding
+					size = { 0 40 }
+					onclick = "[mt_merchant_window.HireAgent]"
+					enabled = "[mt_merchant_window.CanHireAgent]"
+					tooltip = "MT_HIRE_AGENT_TOOLTIP"
+
+					hbox = {
+						margin = { 10 5 }
+						spacing = 8
+
+						icon = {
+							size = { 28 28 }
+							texture = "gfx/interface/icons/icon_character.dds"
+						}
+
+						text_single = {
+							text = "MT_HIRE_AGENT"
+							default_format = "#clickable"
+							using = Font_Size_Small
+							align = nobaseline
+						}
+
+						expand = {}
+					}
+				}
+
+				# View Trade Routes
+				button_standard = {
+					name = "view_routes_button"
+					layoutpolicy_horizontal = expanding
+					size = { 0 40 }
+					onclick = "[mt_merchant_window.OpenTradeRoutesWindow]"
+					enabled = "[mt_merchant_window.HasTradeRoutes]"
+					tooltip = "MT_VIEW_ROUTES_TOOLTIP"
+
+					hbox = {
+						margin = { 10 5 }
+						spacing = 8
+
+						icon = {
+							size = { 28 28 }
+							texture = "gfx/interface/icons/icon_gold.dds"
+						}
+
+						text_single = {
+							text = "MT_VIEW_ROUTES"
+							default_format = "#clickable"
+							using = Font_Size_Small
+							align = nobaseline
+						}
+
+						expand = {}
+					}
+				}
+
+				divider_light = {
+					layoutpolicy_horizontal = expanding
+				}
+
+				# Merchant decisions quick access
+				text_single = {
+					text = "MT_MERCHANT_DECISIONS"
+					default_format = "#weak"
+					using = Font_Size_Small
+				}
+
+				scrollbox = {
+					name = "decisions_scrollbox"
+					layoutpolicy_horizontal = expanding
+					size = { 0 100 }
+
+					blockoverride "scrollbox_content" {
+						vbox = {
+							name = "decisions_list"
+							datamodel = "[mt_merchant_window.GetAvailableDecisions]"
+							spacing = 2
+							layoutpolicy_horizontal = expanding
+
+							item = {
+								mt_decision_entry = {}
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+
+	######################################################
+	# TRADE POST ENTRY
+	######################################################
+
+	type mt_trade_post_entry = widget {
+		layoutpolicy_horizontal = expanding
+		size = { 0 50 }
+
+		background = {
+			using = Background_Area_Dark
+			margin = { 2 2 }
+		}
+
+		hbox = {
+			margin = { 10 5 }
+			spacing = 10
+			layoutpolicy_horizontal = expanding
+
+			# Location icon
+			icon = {
+				size = { 32 32 }
+				texture = "gfx/interface/icons/icon_castle.dds"
+			}
+
+			vbox = {
+				spacing = 2
+
+				# Location name
+				text_single = {
+					name = "location_name"
+					text = "[TradePost.GetLocationName]"
+					default_format = "#high"
+					using = Font_Size_Small
+					align = nobaseline
+				}
+
+				# Status
+				text_single = {
+					name = "status"
+					text = "[TradePost.GetStatus]"
+					default_format = "#weak"
+					using = Font_Size_Small
+					fontsize_min = 10
+				}
+			}
+
+			expand = {}
+
+			# Income
+			hbox = {
+				spacing = 3
+
+				icon = {
+					size = { 16 16 }
+					texture = "gfx/interface/icons/icon_gold.dds"
+				}
+
+				text_single = {
+					name = "income"
+					text = "[TradePost.GetIncome]"
+					default_format = "#P"
+					using = Font_Size_Small
+				}
+			}
+		}
+	}
+
+	######################################################
+	# MERCHANT AGENT ENTRY
+	######################################################
+
+	type mt_merchant_agent_entry = widget {
+		layoutpolicy_horizontal = expanding
+		size = { 0 50 }
+
+		background = {
+			using = Background_Area_Dark
+			margin = { 2 2 }
+		}
+
+		hbox = {
+			margin = { 10 5 }
+			spacing = 10
+			layoutpolicy_horizontal = expanding
+
+			# Agent portrait
+			portrait_head_small = {
+				name = "agent_portrait"
+				datacontext = "[MerchantAgent.GetCharacter]"
+				size = { 32 32 }
+			}
+
+			vbox = {
+				spacing = 2
+
+				# Agent name
+				text_single = {
+					name = "agent_name"
+					text = "[MerchantAgent.GetName]"
+					default_format = "#high"
+					using = Font_Size_Small
+					align = nobaseline
+				}
+
+				# Role
+				text_single = {
+					name = "role"
+					text = "[MerchantAgent.GetRole]"
+					default_format = "#weak"
+					using = Font_Size_Small
+					fontsize_min = 10
+				}
+			}
+
+			expand = {}
+
+			# Performance indicator
+			icon = {
+				name = "performance"
+				size = { 20 20 }
+				texture = "[MerchantAgent.GetPerformanceIcon]"
+				tooltip = "[MerchantAgent.GetPerformanceTooltip]"
+			}
+		}
+	}
+
+	######################################################
+	# SPECIAL ASSET ENTRY
+	######################################################
+
+	type mt_special_asset_entry = widget {
+		layoutpolicy_horizontal = expanding
+		size = { 0 50 }
+
+		background = {
+			using = Background_Area_Dark
+			margin = { 2 2 }
+		}
+
+		hbox = {
+			margin = { 10 5 }
+			spacing = 10
+			layoutpolicy_horizontal = expanding
+
+			# Asset icon
+			icon = {
+				name = "asset_icon"
+				size = { 32 32 }
+				texture = "[SpecialAsset.GetIcon]"
+			}
+
+			vbox = {
+				spacing = 2
+
+				# Asset name
+				text_single = {
+					name = "asset_name"
+					text = "[SpecialAsset.GetName]"
+					default_format = "#high"
+					using = Font_Size_Small
+					align = nobaseline
+				}
+
+				# Description
+				text_single = {
+					name = "description"
+					text = "[SpecialAsset.GetDescription]"
+					default_format = "#weak"
+					using = Font_Size_Small
+					fontsize_min = 10
+				}
+			}
+
+			expand = {}
+		}
+	}
+
+	######################################################
+	# MARKET PRICE ENTRY
+	######################################################
+
+	type mt_market_price_entry = hbox {
+		layoutpolicy_horizontal = expanding
+		spacing = 8
+
+		# Good icon
+		icon = {
+			name = "good_icon"
+			size = { 24 24 }
+			texture = "[MarketPrice.GetGoodIcon]"
+		}
+
+		# Good name
+		text_single = {
+			name = "good_name"
+			text = "[MarketPrice.GetGoodName]"
+			default_format = "#high"
+			using = Font_Size_Small
+			minimumsize = { 120 0 }
+		}
+
+		# Supply/demand indicator
+		icon = {
+			name = "trend_icon"
+			size = { 16 16 }
+			texture = "[MarketPrice.GetTrendIcon]"
+			tooltip = "[MarketPrice.GetTrendTooltip]"
+		}
+
+		expand = {}
+
+		# Price
+		text_single = {
+			name = "price"
+			text = "[MarketPrice.GetPrice]"
+			default_format = "[MarketPrice.GetPriceColor]"
+			using = Font_Size_Small
+		}
+	}
+
+	######################################################
+	# MILESTONE ENTRY
+	######################################################
+
+	type mt_milestone_entry = hbox {
+		layoutpolicy_horizontal = expanding
+		spacing = 8
+
+		# Achievement icon
+		icon = {
+			name = "milestone_icon"
+			size = { 20 20 }
+			texture = "[Milestone.GetIcon]"
+		}
+
+		# Milestone text
+		text_single = {
+			name = "milestone_text"
+			text = "[Milestone.GetText]"
+			default_format = "[Milestone.GetFormat]"
+			using = Font_Size_Small
+		}
+
+		expand = {}
+	}
+
+	######################################################
+	# DECISION ENTRY (Quick Actions)
+	######################################################
+
+	type mt_decision_entry = button_standard {
+		layoutpolicy_horizontal = expanding
+		size = { 0 30 }
+		onclick = "[MerchantDecision.Execute]"
+		enabled = "[MerchantDecision.CanExecute]"
+		tooltip = "[MerchantDecision.GetTooltip]"
+
+		hbox = {
+			margin = { 8 3 }
+			spacing = 5
+
+			icon = {
+				size = { 20 20 }
+				texture = "[MerchantDecision.GetIcon]"
+			}
+
+			text_single = {
+				name = "decision_name"
+				text = "[MerchantDecision.GetName]"
+				default_format = "#clickable"
+				using = Font_Size_Small
+				fontsize_min = 10
+			}
+
+			expand = {}
+		}
+	}
+}
