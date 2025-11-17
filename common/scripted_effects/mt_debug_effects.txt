@@ -1,0 +1,686 @@
+####################################
+# Merchants and Traders - Debug Effects
+# Version: 0.1.0
+####################################
+#
+# This file contains debug and testing effects for modders and testers
+# Use these effects via console commands for rapid testing
+#
+# USAGE IN CONSOLE:
+# effect = { mt_debug_add_gold = yes }
+# effect = { mt_debug_become_merchant = yes }
+# effect = { mt_debug_force_rank_up = yes }
+#
+# WARNING: These effects are for testing only!
+# Using them will invalidate achievements and may break game balance
+#
+####################################
+
+####################################
+# QUICK GOLD INJECTION
+####################################
+
+# Effect: Add 1000 gold for testing
+# Scope: Character
+# Console: effect = { mt_debug_add_gold = yes }
+mt_debug_add_gold = {
+	add_gold = 1000
+
+	send_interface_toast = {
+		title = mt_debug_gold_added
+		left_icon = root
+		custom_tooltip = mt_debug_gold_added_desc
+	}
+
+	debug_log = "MT DEBUG: Added 1000 gold to character"
+}
+
+# Effect: Add 5000 gold (rich testing)
+# Scope: Character
+# Console: effect = { mt_debug_add_gold_rich = yes }
+mt_debug_add_gold_rich = {
+	add_gold = 5000
+
+	send_interface_toast = {
+		title = mt_debug_gold_added
+		left_icon = root
+		custom_tooltip = mt_debug_gold_added_rich_desc
+	}
+
+	debug_log = "MT DEBUG: Added 5000 gold to character"
+}
+
+# Effect: Add 100 gold (small amount)
+# Scope: Character
+# Console: effect = { mt_debug_add_gold_small = yes }
+mt_debug_add_gold_small = {
+	add_gold = 100
+
+	send_interface_toast = {
+		title = mt_debug_gold_added
+		left_icon = root
+		custom_tooltip = mt_debug_gold_added_small_desc
+	}
+
+	debug_log = "MT DEBUG: Added 100 gold to character"
+}
+
+####################################
+# INSTANT MERCHANT CONVERSION
+####################################
+
+# Effect: Instantly become a Wandering Merchant (Tier 1)
+# Scope: Character
+# Console: effect = { mt_debug_become_merchant = yes }
+mt_debug_become_merchant = {
+	# Remove any existing merchant traits
+	if = {
+		limit = { has_trait = trade_post_owner }
+		remove_trait = trade_post_owner
+	}
+	if = {
+		limit = { has_trait = trading_company_head }
+		remove_trait = trading_company_head
+	}
+	if = {
+		limit = { has_trait = merchant_prince }
+		remove_trait = merchant_prince
+	}
+
+	# Add wandering merchant trait
+	add_trait = wandering_merchant
+
+	# Initialize merchant variables
+	set_variable = {
+		name = mt_active_routes
+		value = 0
+	}
+	set_variable = {
+		name = mt_reputation
+		value = 0
+	}
+	set_variable = {
+		name = mt_carrying_goods
+		value = 0
+	}
+	set_variable = {
+		name = mt_owned_trade_posts
+		value = 0
+	}
+	set_variable = {
+		name = mt_max_trade_routes
+		value = 1
+	}
+	set_variable = {
+		name = mt_can_carry_goods
+		value = yes
+	}
+
+	# Give starting gold
+	add_gold = 50
+
+	send_interface_toast = {
+		title = mt_debug_became_merchant
+		left_icon = root
+		custom_tooltip = mt_debug_became_merchant_desc
+	}
+
+	debug_log = "MT DEBUG: Character became Wandering Merchant"
+}
+
+####################################
+# TIER PROGRESSION
+####################################
+
+# Effect: Force rank up to next merchant tier
+# Scope: Character (must be a merchant)
+# Console: effect = { mt_debug_force_rank_up = yes }
+mt_debug_force_rank_up = {
+	# Tier 1 → Tier 2
+	if = {
+		limit = {
+			has_trait = wandering_merchant
+		}
+		remove_trait = wandering_merchant
+		add_trait = trade_post_owner
+
+		set_variable = {
+			name = mt_max_trade_routes
+			value = 3
+		}
+		set_variable = {
+			name = mt_owned_trade_posts
+			value = 1
+		}
+
+		add_prestige = 100
+		add_gold = 200
+
+		send_interface_toast = {
+			title = mt_debug_ranked_up
+			left_icon = root
+			custom_tooltip = mt_debug_ranked_up_tier2_desc
+		}
+
+		debug_log = "MT DEBUG: Ranked up to Trade Post Owner"
+	}
+
+	# Tier 2 → Tier 3
+	else_if = {
+		limit = {
+			has_trait = trade_post_owner
+		}
+		remove_trait = trade_post_owner
+		add_trait = trading_company_head
+
+		set_variable = {
+			name = mt_max_trade_routes
+			value = 10
+		}
+		set_variable = {
+			name = mt_owned_trade_posts
+			value = 3
+		}
+
+		add_prestige = 200
+		add_gold = 500
+
+		send_interface_toast = {
+			title = mt_debug_ranked_up
+			left_icon = root
+			custom_tooltip = mt_debug_ranked_up_tier3_desc
+		}
+
+		debug_log = "MT DEBUG: Ranked up to Trading Company Head"
+	}
+
+	# Tier 3 → Tier 4
+	else_if = {
+		limit = {
+			has_trait = trading_company_head
+		}
+		remove_trait = trading_company_head
+		add_trait = merchant_prince
+
+		set_variable = {
+			name = mt_max_trade_routes
+			value = 999
+		}
+		set_variable = {
+			name = mt_owned_trade_posts
+			value = 10
+		}
+
+		add_prestige = 500
+		add_gold = 2000
+
+		send_interface_toast = {
+			title = mt_debug_ranked_up
+			left_icon = root
+			custom_tooltip = mt_debug_ranked_up_tier4_desc
+		}
+
+		debug_log = "MT DEBUG: Ranked up to Merchant Prince"
+	}
+
+	# Already max tier
+	else_if = {
+		limit = {
+			has_trait = merchant_prince
+		}
+		send_interface_toast = {
+			title = mt_debug_max_rank
+			left_icon = root
+			custom_tooltip = mt_debug_max_rank_desc
+		}
+
+		debug_log = "MT DEBUG: Already at max merchant rank"
+	}
+
+	# Not a merchant
+	else = {
+		send_interface_toast = {
+			title = mt_debug_not_merchant
+			left_icon = root
+			custom_tooltip = mt_debug_not_merchant_desc
+		}
+
+		debug_log = "MT DEBUG: Character is not a merchant"
+	}
+}
+
+# Effect: Set to specific merchant tier
+# Scope: Character
+# Parameter: tier (1-4)
+# Console: effect = { mt_debug_set_tier = { tier = 3 } }
+mt_debug_set_tier = {
+	# Remove all merchant traits first
+	if = {
+		limit = { has_trait = wandering_merchant }
+		remove_trait = wandering_merchant
+	}
+	if = {
+		limit = { has_trait = trade_post_owner }
+		remove_trait = trade_post_owner
+	}
+	if = {
+		limit = { has_trait = trading_company_head }
+		remove_trait = trading_company_head
+	}
+	if = {
+		limit = { has_trait = merchant_prince }
+		remove_trait = merchant_prince
+	}
+
+	# Add requested tier
+	if = {
+		limit = { $tier$ = 1 }
+		add_trait = wandering_merchant
+		set_variable = { name = mt_max_trade_routes value = 1 }
+		debug_log = "MT DEBUG: Set to Tier 1 (Wandering Merchant)"
+	}
+	else_if = {
+		limit = { $tier$ = 2 }
+		add_trait = trade_post_owner
+		set_variable = { name = mt_max_trade_routes value = 3 }
+		set_variable = { name = mt_owned_trade_posts value = 1 }
+		debug_log = "MT DEBUG: Set to Tier 2 (Trade Post Owner)"
+	}
+	else_if = {
+		limit = { $tier$ = 3 }
+		add_trait = trading_company_head
+		set_variable = { name = mt_max_trade_routes value = 10 }
+		set_variable = { name = mt_owned_trade_posts value = 3 }
+		debug_log = "MT DEBUG: Set to Tier 3 (Trading Company Head)"
+	}
+	else_if = {
+		limit = { $tier$ = 4 }
+		add_trait = merchant_prince
+		set_variable = { name = mt_max_trade_routes value = 999 }
+		set_variable = { name = mt_owned_trade_posts value = 10 }
+		debug_log = "MT DEBUG: Set to Tier 4 (Merchant Prince)"
+	}
+
+	# Initialize common variables
+	if = {
+		limit = { NOT = { has_variable = mt_active_routes } }
+		set_variable = { name = mt_active_routes value = 0 }
+	}
+	if = {
+		limit = { NOT = { has_variable = mt_reputation } }
+		set_variable = { name = mt_reputation value = 50 }
+	}
+}
+
+####################################
+# PERFECT TRADE ROUTE
+####################################
+
+# Effect: Create a guaranteed profitable trade route
+# Scope: Character (must be merchant with available route slots)
+# Console: effect = { mt_debug_create_perfect_route = yes }
+mt_debug_create_perfect_route = {
+	if = {
+		limit = {
+			OR = {
+				has_trait = wandering_merchant
+				has_trait = trade_post_owner
+				has_trait = trading_company_head
+				has_trait = merchant_prince
+			}
+			var:mt_active_routes < var:mt_max_trade_routes
+		}
+
+		# Find first available route slot
+		if = {
+			limit = { NOT = { exists = var:mt_route_0_node_0 } }
+			# Create route 0 with perfect conditions
+			set_variable = { name = mt_route_0_node_0 value = capital_province }
+			set_variable = { name = mt_route_0_profit value = 50 }
+			set_variable = { name = mt_route_0_health value = 100 }
+			set_variable = { name = mt_route_0_good value = 1 } # Silk
+
+			change_variable = { name = mt_active_routes add = 1 }
+
+			send_interface_toast = {
+				title = mt_debug_perfect_route
+				left_icon = root
+				custom_tooltip = mt_debug_perfect_route_desc
+			}
+
+			debug_log = "MT DEBUG: Created perfect trade route in slot 0"
+		}
+		else_if = {
+			limit = { NOT = { exists = var:mt_route_1_node_0 } }
+			set_variable = { name = mt_route_1_node_0 value = capital_province }
+			set_variable = { name = mt_route_1_profit value = 50 }
+			set_variable = { name = mt_route_1_health value = 100 }
+			set_variable = { name = mt_route_1_good value = 2 } # Spices
+
+			change_variable = { name = mt_active_routes add = 1 }
+
+			send_interface_toast = {
+				title = mt_debug_perfect_route
+				left_icon = root
+				custom_tooltip = mt_debug_perfect_route_desc
+			}
+
+			debug_log = "MT DEBUG: Created perfect trade route in slot 1"
+		}
+		else_if = {
+			limit = { NOT = { exists = var:mt_route_2_node_0 } }
+			set_variable = { name = mt_route_2_node_0 value = capital_province }
+			set_variable = { name = mt_route_2_profit value = 50 }
+			set_variable = { name = mt_route_2_health value = 100 }
+			set_variable = { name = mt_route_2_good value = 3 } # Jade
+
+			change_variable = { name = mt_active_routes add = 1 }
+
+			send_interface_toast = {
+				title = mt_debug_perfect_route
+				left_icon = root
+				custom_tooltip = mt_debug_perfect_route_desc
+			}
+
+			debug_log = "MT DEBUG: Created perfect trade route in slot 2"
+		}
+	}
+	else = {
+		send_interface_toast = {
+			title = mt_debug_cannot_create_route
+			left_icon = root
+			custom_tooltip = mt_debug_cannot_create_route_desc
+		}
+	}
+}
+
+####################################
+# MARKET MANIPULATION
+####################################
+
+# Effect: Crash the global market (testing economic disaster)
+# Scope: Any (uses global variables)
+# Console: effect = { mt_debug_crash_market = yes }
+mt_debug_crash_market = {
+	# Set economic state to depression
+	set_global_variable = { name = mt_economic_state value = 0 }
+
+	# Set all market trends to crash
+	set_global_variable = { name = mt_market_trend_luxury value = -2 }
+	set_global_variable = { name = mt_market_trend_common value = -2 }
+	set_global_variable = { name = mt_market_trend_bulk value = -2 }
+
+	# Slash all prices by 30%
+	change_variable = { name = global_var:mt_price_silk multiply = 0.7 }
+	change_variable = { name = global_var:mt_price_spices multiply = 0.7 }
+	change_variable = { name = global_var:mt_price_jade multiply = 0.7 }
+	change_variable = { name = global_var:mt_price_pearls multiply = 0.7 }
+	change_variable = { name = global_var:mt_price_wine multiply = 0.7 }
+	change_variable = { name = global_var:mt_price_grain multiply = 0.7 }
+
+	# High supply, low demand
+	set_global_variable = { name = mt_supply_luxury value = 90 }
+	set_global_variable = { name = mt_demand_luxury value = 20 }
+
+	debug_log = "MT DEBUG: Global market crashed!"
+
+	send_interface_message = {
+		type = event_generic_neutral
+		title = mt_debug_market_crash_title
+		desc = mt_debug_market_crash_desc
+	}
+}
+
+# Effect: Boom the global market (testing economic prosperity)
+# Scope: Any (uses global variables)
+# Console: effect = { mt_debug_boom_market = yes }
+mt_debug_boom_market = {
+	# Set economic state to boom
+	set_global_variable = { name = mt_economic_state value = 4 }
+
+	# Set all market trends to growth
+	set_global_variable = { name = mt_market_trend_luxury value = 2 }
+	set_global_variable = { name = mt_market_trend_common value = 2 }
+	set_global_variable = { name = mt_market_trend_bulk value = 2 }
+
+	# Increase all prices by 50%
+	change_variable = { name = global_var:mt_price_silk multiply = 1.5 }
+	change_variable = { name = global_var:mt_price_spices multiply = 1.5 }
+	change_variable = { name = global_var:mt_price_jade multiply = 1.5 }
+	change_variable = { name = global_var:mt_price_pearls multiply = 1.5 }
+	change_variable = { name = global_var:mt_price_wine multiply = 1.5 }
+	change_variable = { name = global_var:mt_price_grain multiply = 1.5 }
+
+	# Low supply, high demand
+	set_global_variable = { name = mt_supply_luxury value = 20 }
+	set_global_variable = { name = mt_demand_luxury value = 90 }
+
+	debug_log = "MT DEBUG: Global market booming!"
+
+	send_interface_message = {
+		type = event_generic_good
+		title = mt_debug_market_boom_title
+		desc = mt_debug_market_boom_desc
+	}
+}
+
+# Effect: Reset market to baseline
+# Scope: Any
+# Console: effect = { mt_debug_reset_market = yes }
+mt_debug_reset_market = {
+	# Reset economic state to stable
+	set_global_variable = { name = mt_economic_state value = 2 }
+
+	# Reset all trends to neutral
+	set_global_variable = { name = mt_market_trend_luxury value = 0 }
+	set_global_variable = { name = mt_market_trend_common value = 0 }
+	set_global_variable = { name = mt_market_trend_bulk value = 0 }
+
+	# Reset prices to baseline
+	set_global_variable = { name = mt_price_silk value = 80 }
+	set_global_variable = { name = mt_price_spices value = 75 }
+	set_global_variable = { name = mt_price_jade value = 85 }
+	set_global_variable = { name = mt_price_pearls value = 90 }
+	set_global_variable = { name = mt_price_wine value = 50 }
+	set_global_variable = { name = mt_price_grain value = 25 }
+
+	# Reset supply/demand
+	set_global_variable = { name = mt_supply_luxury value = 60 }
+	set_global_variable = { name = mt_demand_luxury value = 50 }
+
+	debug_log = "MT DEBUG: Market reset to baseline"
+
+	send_interface_message = {
+		type = event_generic_neutral
+		title = mt_debug_market_reset_title
+		desc = mt_debug_market_reset_desc
+	}
+}
+
+####################################
+# VARIABLE INSPECTION
+####################################
+
+# Effect: Display all merchant variables for character
+# Scope: Character
+# Console: effect = { mt_debug_show_all_variables = yes }
+mt_debug_show_all_variables = {
+	debug_log = "========== MT DEBUG: Character Variables =========="
+	debug_log = "Character: [Character.GetName]"
+
+	if = {
+		limit = { has_trait = wandering_merchant }
+		debug_log = "Merchant Tier: 1 (Wandering Merchant)"
+	}
+	else_if = {
+		limit = { has_trait = trade_post_owner }
+		debug_log = "Merchant Tier: 2 (Trade Post Owner)"
+	}
+	else_if = {
+		limit = { has_trait = trading_company_head }
+		debug_log = "Merchant Tier: 3 (Trading Company Head)"
+	}
+	else_if = {
+		limit = { has_trait = merchant_prince }
+		debug_log = "Merchant Tier: 4 (Merchant Prince)"
+	}
+	else = {
+		debug_log = "Merchant Tier: None (not a merchant)"
+	}
+
+	if = {
+		limit = { has_variable = mt_active_routes }
+		debug_log = "Active Routes: [Character.Var('mt_active_routes').GetValue]"
+	}
+	if = {
+		limit = { has_variable = mt_max_trade_routes }
+		debug_log = "Max Routes: [Character.Var('mt_max_trade_routes').GetValue]"
+	}
+	if = {
+		limit = { has_variable = mt_reputation }
+		debug_log = "Reputation: [Character.Var('mt_reputation').GetValue]"
+	}
+	if = {
+		limit = { has_variable = mt_carrying_goods }
+		debug_log = "Carrying Goods: [Character.Var('mt_carrying_goods').GetValue]"
+	}
+	if = {
+		limit = { has_variable = mt_owned_trade_posts }
+		debug_log = "Owned Trade Posts: [Character.Var('mt_owned_trade_posts').GetValue]"
+	}
+
+	# Check for active routes
+	if = {
+		limit = { exists = var:mt_route_0_node_0 }
+		debug_log = "Route 0: Active (Profit: [Character.Var('mt_route_0_profit').GetValue])"
+	}
+	if = {
+		limit = { exists = var:mt_route_1_node_0 }
+		debug_log = "Route 1: Active (Profit: [Character.Var('mt_route_1_profit').GetValue])"
+	}
+	if = {
+		limit = { exists = var:mt_route_2_node_0 }
+		debug_log = "Route 2: Active (Profit: [Character.Var('mt_route_2_profit').GetValue])"
+	}
+
+	debug_log = "Gold: [Character.GetGold.GetValue]"
+	debug_log = "Prestige: [Character.GetPrestige.GetValue]"
+	debug_log = "=================================================="
+
+	send_interface_toast = {
+		title = mt_debug_variables_logged
+		left_icon = root
+		custom_tooltip = mt_debug_variables_logged_desc
+	}
+}
+
+# Effect: Display global economic variables
+# Scope: Any
+# Console: effect = { mt_debug_show_global_economy = yes }
+mt_debug_show_global_economy = {
+	debug_log = "========== MT DEBUG: Global Economy =========="
+
+	if = {
+		limit = { has_global_variable = mt_economic_state }
+		debug_log = "Economic State: [Global.Var('mt_economic_state').GetValue]"
+	}
+	if = {
+		limit = { has_global_variable = mt_price_silk }
+		debug_log = "Silk Price: [Global.Var('mt_price_silk').GetValue]"
+	}
+	if = {
+		limit = { has_global_variable = mt_price_spices }
+		debug_log = "Spices Price: [Global.Var('mt_price_spices').GetValue]"
+	}
+	if = {
+		limit = { has_global_variable = mt_price_jade }
+		debug_log = "Jade Price: [Global.Var('mt_price_jade').GetValue]"
+	}
+	if = {
+		limit = { has_global_variable = mt_market_trend_luxury }
+		debug_log = "Luxury Trend: [Global.Var('mt_market_trend_luxury').GetValue]"
+	}
+	if = {
+		limit = { has_global_variable = mt_supply_luxury }
+		debug_log = "Luxury Supply: [Global.Var('mt_supply_luxury').GetValue]"
+	}
+	if = {
+		limit = { has_global_variable = mt_demand_luxury }
+		debug_log = "Luxury Demand: [Global.Var('mt_demand_luxury').GetValue]"
+	}
+	if = {
+		limit = { has_global_variable = mt_total_merchants }
+		debug_log = "Total Merchants: [Global.Var('mt_total_merchants').GetValue]"
+	}
+
+	debug_log = "=============================================="
+
+	send_interface_toast = {
+		title = mt_debug_economy_logged
+		left_icon = root
+		custom_tooltip = mt_debug_economy_logged_desc
+	}
+}
+
+####################################
+# REPUTATION MANIPULATION
+####################################
+
+# Effect: Max out merchant reputation
+# Scope: Character
+# Console: effect = { mt_debug_max_reputation = yes }
+mt_debug_max_reputation = {
+	set_variable = {
+		name = mt_reputation
+		value = 100
+	}
+
+	send_interface_toast = {
+		title = mt_debug_reputation_maxed
+		left_icon = root
+		custom_tooltip = mt_debug_reputation_maxed_desc
+	}
+
+	debug_log = "MT DEBUG: Reputation set to 100"
+}
+
+# Effect: Tank merchant reputation
+# Scope: Character
+# Console: effect = { mt_debug_tank_reputation = yes }
+mt_debug_tank_reputation = {
+	set_variable = {
+		name = mt_reputation
+		value = -50
+	}
+
+	send_interface_toast = {
+		title = mt_debug_reputation_tanked
+		left_icon = root
+		custom_tooltip = mt_debug_reputation_tanked_desc
+	}
+
+	debug_log = "MT DEBUG: Reputation set to -50"
+}
+
+####################################
+# NOTES
+####################################
+# To use these effects in console:
+#
+# Basic usage:
+#   effect = { mt_debug_add_gold = yes }
+#   effect = { mt_debug_become_merchant = yes }
+#   effect = { mt_debug_force_rank_up = yes }
+#
+# With parameters:
+#   effect = { mt_debug_set_tier = { tier = 3 } }
+#
+# Global effects:
+#   effect = { mt_debug_crash_market = yes }
+#   effect = { mt_debug_boom_market = yes }
+#
+# Inspection:
+#   effect = { mt_debug_show_all_variables = yes }
+#   effect = { mt_debug_show_global_economy = yes }
+#
+####################################
