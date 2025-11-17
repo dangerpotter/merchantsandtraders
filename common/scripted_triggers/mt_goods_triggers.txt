@@ -1,0 +1,503 @@
+############################################################################################
+# MERCHANTS AND TRADERS - GOODS TRIGGERS
+############################################################################################
+#
+# This file contains scripted triggers for checking trade goods production and status.
+# Triggers return yes/no and are used in conditions throughout the mod.
+#
+# TRIGGER DESIGN PRINCIPLES:
+# - Fast evaluation - triggers are called frequently, keep them efficient
+# - Clear naming - trigger names describe what they check
+# - Flexible parameters - use $PARAMETER$ syntax for reusability
+# - Scope-safe - document what scope (county, character, etc.) is expected
+#
+# INTEGRATION POINTS:
+# - Use in event conditions to check if county produces specific goods
+# - Use in AI evaluation to target valuable counties
+# - Use in building requirements to unlock specialized structures
+# - Use in decision conditions to gate economic actions
+#
+############################################################################################
+
+############################################################################################
+# COUNTY PRODUCES GOODS TRIGGER
+############################################################################################
+# ROOT: County
+# Checks if a county produces a specific trade good
+#
+# PARAMETERS:
+#   GOOD - The trade good to check (e.g., silk, spices, grain)
+#
+# USAGE:
+#   any_county = {
+#       county_produces_goods_trigger = { GOOD = silk }
+#   }
+#
+# RETURNS: yes if county has the specified trade good modifier
+#
+# INTEGRATION:
+# [HOOK] Events can check for goods before triggering trade events
+# [HOOK] AI can evaluate county value based on goods produced
+# [HOOK] Buildings can require specific goods to be constructed
+############################################################################################
+
+county_produces_goods_trigger = {
+	has_county_modifier = mt_trade_good_$GOOD$
+}
+
+############################################################################################
+# HAS LUXURY GOOD TRIGGER
+############################################################################################
+# ROOT: County
+# Checks if a county produces any luxury trade good
+#
+# LUXURY GOODS: silk, spices, jade, amber, pearls, ivory, purple_dye, incense, saffron
+#
+# USAGE:
+#   any_county = {
+#       has_luxury_good_trigger = yes
+#   }
+#
+# RETURNS: yes if county produces at least one luxury good
+#
+# INTEGRATION:
+# [HOOK] AI can prioritize conquering luxury-producing counties
+# [HOOK] Events can trigger based on luxury good availability
+# [HOOK] Trade routes can calculate higher profits for luxury goods
+# [HOOK] Diplomatic actions can reference luxury goods as gifts
+############################################################################################
+
+has_luxury_good_trigger = {
+	OR = {
+		has_county_modifier = mt_trade_good_silk
+		has_county_modifier = mt_trade_good_spices
+		has_county_modifier = mt_trade_good_jade
+		has_county_modifier = mt_trade_good_amber
+		has_county_modifier = mt_trade_good_pearls
+		has_county_modifier = mt_trade_good_ivory
+		has_county_modifier = mt_trade_good_purple_dye
+		has_county_modifier = mt_trade_good_incense
+		has_county_modifier = mt_trade_good_saffron
+	}
+}
+
+############################################################################################
+# GOODS PRODUCTION LEVEL TRIGGER
+############################################################################################
+# ROOT: County
+# Checks if a county's production level matches a specific tier
+#
+# PARAMETERS:
+#   LEVEL - Production level to check: 0=poor, 1=modest, 2=rich, 3=abundant
+#
+# USAGE:
+#   any_county = {
+#       goods_production_level_trigger = { LEVEL = 3 }  # Check for abundant
+#   }
+#
+# RETURNS: yes if county's mt_production_level variable equals LEVEL
+#
+# INTEGRATION:
+# [HOOK] Events can trigger based on prosperity or decline
+# [HOOK] Buildings may require certain production levels
+# [HOOK] AI can evaluate investment opportunities
+# [HOOK] Trade route efficiency depends on production levels
+############################################################################################
+
+goods_production_level_trigger = {
+	has_variable = mt_production_level
+	var:mt_production_level = $LEVEL$
+}
+
+############################################################################################
+# ADDITIONAL UTILITY TRIGGERS
+# These provide extended functionality for the trade goods system
+############################################################################################
+
+############################################################################################
+# HAS COMMON GOOD TRIGGER
+############################################################################################
+# ROOT: County
+# Checks if county produces any common trade good
+#
+# COMMON GOODS: grain, wine, iron, wool, furs, salt, timber, horses, cattle
+#
+# USAGE:
+#   any_county = {
+#       has_common_good_trigger = yes
+#   }
+#
+# RETURNS: yes if county produces at least one common good
+############################################################################################
+
+has_common_good_trigger = {
+	OR = {
+		has_county_modifier = mt_trade_good_grain
+		has_county_modifier = mt_trade_good_wine
+		has_county_modifier = mt_trade_good_iron
+		has_county_modifier = mt_trade_good_wool
+		has_county_modifier = mt_trade_good_furs
+		has_county_modifier = mt_trade_good_salt
+		has_county_modifier = mt_trade_good_timber
+		has_county_modifier = mt_trade_good_horses
+		has_county_modifier = mt_trade_good_cattle
+	}
+}
+
+############################################################################################
+# HAS REGIONAL GOOD TRIGGER
+############################################################################################
+# ROOT: County
+# Checks if county produces any regional specialty good
+#
+# REGIONAL GOODS: tea, porcelain, dates, olive_oil, honey, linen, glass
+#
+# USAGE:
+#   any_county = {
+#       has_regional_good_trigger = yes
+#   }
+#
+# RETURNS: yes if county produces at least one regional good
+############################################################################################
+
+has_regional_good_trigger = {
+	OR = {
+		has_county_modifier = mt_trade_good_tea
+		has_county_modifier = mt_trade_good_porcelain
+		has_county_modifier = mt_trade_good_dates
+		has_county_modifier = mt_trade_good_olive_oil
+		has_county_modifier = mt_trade_good_honey
+		has_county_modifier = mt_trade_good_linen
+		has_county_modifier = mt_trade_good_glass
+	}
+}
+
+############################################################################################
+# HAS MILITARY GOOD TRIGGER
+############################################################################################
+# ROOT: County
+# Checks if county produces goods valuable for military purposes
+#
+# MILITARY GOODS: iron (weapons/armor), horses (cavalry), grain (supply), salt (supply)
+#
+# USAGE:
+#   any_county = {
+#       has_military_good_trigger = yes
+#   }
+#
+# RETURNS: yes if county produces military-relevant goods
+#
+# INTEGRATION:
+# [HOOK] AI can prioritize these counties during wartime
+# [HOOK] Supply system can reference these goods
+# [HOOK] Events about military preparation can check these
+############################################################################################
+
+has_military_good_trigger = {
+	OR = {
+		has_county_modifier = mt_trade_good_iron
+		has_county_modifier = mt_trade_good_horses
+		has_county_modifier = mt_trade_good_grain
+		has_county_modifier = mt_trade_good_salt
+		has_county_modifier = mt_trade_good_timber  # Siege equipment
+	}
+}
+
+############################################################################################
+# HAS FOOD GOOD TRIGGER
+############################################################################################
+# ROOT: County
+# Checks if county produces food/sustenance goods
+#
+# FOOD GOODS: grain, wine, cattle, dates, olive_oil, honey
+#
+# USAGE:
+#   any_county = {
+#       has_food_good_trigger = yes
+#   }
+#
+# RETURNS: yes if county produces food items
+#
+# INTEGRATION:
+# [HOOK] Famine events can check food production
+# [HOOK] Supply system calculates available provisions
+# [HOOK] Trade can focus on food during shortages
+############################################################################################
+
+has_food_good_trigger = {
+	OR = {
+		has_county_modifier = mt_trade_good_grain
+		has_county_modifier = mt_trade_good_wine
+		has_county_modifier = mt_trade_good_cattle
+		has_county_modifier = mt_trade_good_dates
+		has_county_modifier = mt_trade_good_olive_oil
+		has_county_modifier = mt_trade_good_honey
+	}
+}
+
+############################################################################################
+# PRODUCES MULTIPLE GOODS TRIGGER
+############################################################################################
+# ROOT: County
+# Checks if county produces multiple trade goods (diversified economy)
+#
+# PARAMETERS:
+#   COUNT - Minimum number of goods required (default 2)
+#
+# USAGE:
+#   any_county = {
+#       produces_multiple_goods_trigger = { COUNT = 3 }
+#   }
+#
+# RETURNS: yes if county produces at least COUNT different goods
+#
+# NOTE: This is a framework trigger. Full implementation would count active modifiers.
+# Current version checks for common multi-good combinations.
+#
+# INTEGRATION:
+# [HOOK] Economic prosperity events favor diversified counties
+# [HOOK] AI rates diversified counties as more valuable
+# [HOOK] Trade hubs tend to have multiple goods
+############################################################################################
+
+produces_multiple_goods_trigger = {
+	# Framework implementation: check for presence of multiple goods
+	# In full implementation, this would count active trade good modifiers
+
+	# Check for at least 2 goods (simplified check)
+	OR = {
+		# Luxury + Common combination
+		AND = {
+			has_luxury_good_trigger = yes
+			has_common_good_trigger = yes
+		}
+		# Luxury + Regional combination
+		AND = {
+			has_luxury_good_trigger = yes
+			has_regional_good_trigger = yes
+		}
+		# Common + Regional combination
+		AND = {
+			has_common_good_trigger = yes
+			has_regional_good_trigger = yes
+		}
+		# Multiple commons (example: grain + cattle)
+		AND = {
+			has_county_modifier = mt_trade_good_grain
+			OR = {
+				has_county_modifier = mt_trade_good_cattle
+				has_county_modifier = mt_trade_good_wine
+				has_county_modifier = mt_trade_good_iron
+			}
+		}
+	}
+}
+
+############################################################################################
+# IS PROSPEROUS COUNTY TRIGGER
+############################################################################################
+# ROOT: County
+# Checks if county is economically prosperous (rich/abundant production)
+#
+# USAGE:
+#   any_county = {
+#       is_prosperous_county_trigger = yes
+#   }
+#
+# RETURNS: yes if production level is rich (2) or abundant (3)
+#
+# INTEGRATION:
+# [HOOK] Prosperity events require this condition
+# [HOOK] Special buildings may require prosperity
+# [HOOK] AI evaluates investment opportunities
+############################################################################################
+
+is_prosperous_county_trigger = {
+	OR = {
+		goods_production_level_trigger = { LEVEL = 2 }  # Rich
+		goods_production_level_trigger = { LEVEL = 3 }  # Abundant
+	}
+}
+
+############################################################################################
+# IS STRUGGLING COUNTY TRIGGER
+############################################################################################
+# ROOT: County
+# Checks if county has poor economic production
+#
+# USAGE:
+#   any_county = {
+#       is_struggling_county_trigger = yes
+#   }
+#
+# RETURNS: yes if production level is poor (0)
+#
+# INTEGRATION:
+# [HOOK] Economic crisis events can trigger
+# [HOOK] Rebellion risk may increase
+# [HOOK] AI can target for improvement investments
+############################################################################################
+
+is_struggling_county_trigger = {
+	goods_production_level_trigger = { LEVEL = 0 }  # Poor
+}
+
+############################################################################################
+# CAN PRODUCE LUXURY GOODS TRIGGER
+############################################################################################
+# ROOT: County
+# Checks if county has potential to produce luxury goods (geography/development)
+#
+# USAGE:
+#   any_county = {
+#       can_produce_luxury_goods_trigger = yes
+#   }
+#
+# RETURNS: yes if county is in a region known for luxury goods or has high development
+#
+# INTEGRATION:
+# [HOOK] Investment decisions can check potential
+# [HOOK] AI can plan long-term development
+# [HOOK] Events about discovering new resources
+############################################################################################
+
+can_produce_luxury_goods_trigger = {
+	OR = {
+		# Already produces luxury goods
+		has_luxury_good_trigger = yes
+
+		# High development suggests capacity for luxury production
+		development_level >= 20
+
+		# Located in known luxury-producing regions
+		geographical_region = world_india
+		geographical_region = world_persia
+		geographical_region = world_steppe_east
+
+		# Coastal Mediterranean (purple dye, glass)
+		AND = {
+			is_coastal_county = yes
+			OR = {
+				geographical_region = world_europe_south
+				geographical_region = world_middle_east
+			}
+		}
+
+		# Baltic coast (amber)
+		AND = {
+			is_coastal_county = yes
+			geographical_region = world_europe_north
+		}
+	}
+}
+
+############################################################################################
+# HAS TEXTILE GOOD TRIGGER
+############################################################################################
+# ROOT: County
+# Checks if county produces textile-related goods
+#
+# TEXTILE GOODS: silk, wool, linen, cotton (future)
+#
+# USAGE:
+#   any_county = {
+#       has_textile_good_trigger = yes
+#   }
+#
+# RETURNS: yes if county produces textiles
+#
+# INTEGRATION:
+# [HOOK] Textile industry events and buildings
+# [HOOK] Trade routes specialized in cloth
+# [HOOK] Cultural clothing traditions
+############################################################################################
+
+has_textile_good_trigger = {
+	OR = {
+		has_county_modifier = mt_trade_good_silk
+		has_county_modifier = mt_trade_good_wool
+		has_county_modifier = mt_trade_good_linen
+	}
+}
+
+############################################################################################
+# CHARACTER CONTROLS LUXURY GOODS TRIGGER
+############################################################################################
+# ROOT: Character
+# Checks if character controls any counties that produce luxury goods
+#
+# USAGE:
+#   any_ruler = {
+#       character_controls_luxury_goods_trigger = yes
+#   }
+#
+# RETURNS: yes if any county in character's realm produces luxury goods
+#
+# INTEGRATION:
+# [HOOK] Diplomatic interactions about trade rights
+# [HOOK] AI personality for merchant rulers
+# [HOOK] Economic power evaluation
+############################################################################################
+
+character_controls_luxury_goods_trigger = {
+	any_held_title = {
+		tier = tier_county
+		county = {
+			has_luxury_good_trigger = yes
+		}
+	}
+}
+
+############################################################################################
+# TRADE ROUTE COMPATIBLE TRIGGER
+############################################################################################
+# ROOT: County
+# Checks if county can participate in trade routes (produces tradeable goods)
+#
+# USAGE:
+#   any_county = {
+#       trade_route_compatible_trigger = yes
+#   }
+#
+# RETURNS: yes if county produces any trade good
+#
+# INTEGRATION:
+# [HOOK] Trade route pathfinding uses this
+# [HOOK] Merchant decisions require this
+# [HOOK] Trade port buildings check this
+############################################################################################
+
+trade_route_compatible_trigger = {
+	OR = {
+		has_luxury_good_trigger = yes
+		has_common_good_trigger = yes
+		has_regional_good_trigger = yes
+	}
+}
+
+############################################################################################
+# FUTURE TRIGGER EXPANSIONS
+############################################################################################
+# Additional triggers that can be implemented:
+#
+# has_monopoly_on_good_trigger:
+#   - Check if character controls majority of specific good production
+#   - Used for monopoly mechanics and trade advantages
+#
+# goods_in_high_demand_trigger:
+#   - Check if goods are scarce and valuable (supply/demand)
+#   - Dynamic pricing and trade opportunities
+#
+# can_export_goods_trigger:
+#   - Check if county has surplus production for trade
+#   - Requires production level and trade route access
+#
+# is_trade_hub_trigger:
+#   - Check if county is major trading center
+#   - Multiple goods, high development, trade routes
+#
+# goods_match_culture_trigger:
+#   - Check if goods produced match cultural preferences
+#   - Bonuses for culturally-appropriate production
+#
+############################################################################################

@@ -1,0 +1,729 @@
+############################################################################################
+# MERCHANTS AND TRADERS - GOODS PRODUCTION SCRIPTED EFFECTS
+############################################################################################
+#
+# This file contains scripted effects for managing the trade goods supply chain system.
+#
+# SUPPLY CHAIN CONCEPT:
+# The trade goods system models a complete economic cycle:
+# 1. PRODUCTION - Counties generate goods based on terrain, culture, and development
+# 2. QUANTITY - Production levels determine output volume (poor/modest/rich/abundant)
+# 3. VALUE - Each good has base value modified by supply/demand (see modifiers file)
+# 4. TRADE - Goods flow along trade routes to markets (future integration)
+# 5. CONSUMPTION - Goods are consumed, generating income and effects
+#
+# MODULAR DESIGN:
+# - Effects are self-contained and can be called independently
+# - Use variables to pass state between effects
+# - Hook points marked with [INTEGRATION] for future systems
+# - All effects scope-safe (clearly documented who ROOT/THIS refers to)
+#
+# KEY VARIABLES USED:
+# - mt_production_level: 0=poor, 1=modest, 2=rich, 3=abundant
+# - mt_goods_count: Number of goods county produces (1-3)
+# - mt_goods_value: Calculated value of production
+#
+############################################################################################
+
+############################################################################################
+# ASSIGN COUNTY TRADE GOODS
+############################################################################################
+# ROOT: County
+# Assigns 1-3 trade goods to a county based on its terrain, culture, and geographic features
+# This is the foundation of the production system - determining what each county makes
+#
+# USAGE:
+#   any_county = {
+#       assign_county_trade_goods_effect = yes
+#   }
+#
+# INTEGRATION POINTS:
+# [HOOK] Can be called on game start to initialize all counties
+# [HOOK] Can be called when province changes hands or is developed
+# [HOOK] Can be modified by buildings to add specialized goods
+############################################################################################
+
+assign_county_trade_goods_effect = {
+	# Clear any existing trade goods first to prevent stacking
+	# [INTEGRATION] Future: Add check to preserve player-set goods
+	remove_county_modifier = mt_trade_good_silk
+	remove_county_modifier = mt_trade_good_spices
+	remove_county_modifier = mt_trade_good_jade
+	remove_county_modifier = mt_trade_good_amber
+	remove_county_modifier = mt_trade_good_pearls
+	remove_county_modifier = mt_trade_good_ivory
+	remove_county_modifier = mt_trade_good_purple_dye
+	remove_county_modifier = mt_trade_good_incense
+	remove_county_modifier = mt_trade_good_saffron
+	remove_county_modifier = mt_trade_good_grain
+	remove_county_modifier = mt_trade_good_wine
+	remove_county_modifier = mt_trade_good_iron
+	remove_county_modifier = mt_trade_good_wool
+	remove_county_modifier = mt_trade_good_furs
+	remove_county_modifier = mt_trade_good_salt
+	remove_county_modifier = mt_trade_good_timber
+	remove_county_modifier = mt_trade_good_horses
+	remove_county_modifier = mt_trade_good_cattle
+	remove_county_modifier = mt_trade_good_tea
+	remove_county_modifier = mt_trade_good_porcelain
+	remove_county_modifier = mt_trade_good_dates
+	remove_county_modifier = mt_trade_good_olive_oil
+	remove_county_modifier = mt_trade_good_honey
+	remove_county_modifier = mt_trade_good_linen
+	remove_county_modifier = mt_trade_good_glass
+
+	# PRIMARY GOOD - All counties produce at least one staple commodity
+	# Based on terrain type (hills, plains, forest, etc.)
+
+	# FARMLANDS & PLAINS - Grain production (breadbasket regions)
+	if = {
+		limit = {
+			OR = {
+				terrain = farmlands
+				terrain = plains
+			}
+		}
+		add_county_modifier = {
+			modifier = mt_trade_good_grain
+			years = -1  # Permanent until changed
+		}
+	}
+
+	# FORESTS - Timber and furs (woodland resources)
+	else_if = {
+		limit = { terrain = forest }
+		add_county_modifier = {
+			modifier = mt_trade_good_timber
+			years = -1
+		}
+		# 50% chance for furs as secondary good
+		random = {
+			chance = 50
+			add_county_modifier = {
+				modifier = mt_trade_good_furs
+				years = -1
+			}
+		}
+	}
+
+	# MOUNTAINS & HILLS - Iron and minerals (mining regions)
+	else_if = {
+		limit = {
+			OR = {
+				terrain = mountains
+				terrain = hills
+			}
+		}
+		add_county_modifier = {
+			modifier = mt_trade_good_iron
+			years = -1
+		}
+	}
+
+	# STEPPES & DRYLANDS - Horses and livestock (pastoral regions)
+	else_if = {
+		limit = {
+			OR = {
+				terrain = steppe
+				terrain = drylands
+			}
+		}
+		add_county_modifier = {
+			modifier = mt_trade_good_horses
+			years = -1
+		}
+	}
+
+	# DESERT & OASIS - Dates and regional specialties
+	else_if = {
+		limit = {
+			OR = {
+				terrain = desert
+				terrain = oasis
+			}
+		}
+		add_county_modifier = {
+			modifier = mt_trade_good_dates
+			years = -1
+		}
+	}
+
+	# DEFAULT - Cattle (general livestock)
+	else = {
+		add_county_modifier = {
+			modifier = mt_trade_good_cattle
+			years = -1
+		}
+	}
+
+	# SECONDARY GOOD - Regional specialties based on culture and geography
+	# [INTEGRATION] This section can be expanded with more culture-specific goods
+
+	# MEDITERRANEAN REGION - Wine and olive oil
+	if = {
+		limit = {
+			geographical_region = world_europe_south
+		}
+		random = {
+			chance = 60
+			add_county_modifier = {
+				modifier = mt_trade_good_wine
+				years = -1
+			}
+		}
+		random = {
+			chance = 40
+			add_county_modifier = {
+				modifier = mt_trade_good_olive_oil
+				years = -1
+			}
+		}
+	}
+
+	# COASTAL REGIONS - Salt from sea water
+	if = {
+		limit = { is_coastal_county = yes }
+		random = {
+			chance = 30
+			add_county_modifier = {
+				modifier = mt_trade_good_salt
+				years = -1
+			}
+		}
+		# Coastal chance for pearls (rare)
+		random = {
+			chance = 5
+			add_county_modifier = {
+				modifier = mt_trade_good_pearls
+				years = -1
+			}
+		}
+	}
+
+	# SILK ROAD REGIONS - Luxury goods from Asia
+	# [INTEGRATION] Check if county is on Silk Road trade route
+	if = {
+		limit = {
+			OR = {
+				geographical_region = world_india
+				geographical_region = world_persia
+				geographical_region = world_steppe_east
+			}
+		}
+		random = {
+			chance = 20
+			add_county_modifier = {
+				modifier = mt_trade_good_silk
+				years = -1
+			}
+		}
+		random = {
+			chance = 25
+			add_county_modifier = {
+				modifier = mt_trade_good_spices
+				years = -1
+			}
+		}
+	}
+
+	# EAST ASIA - Tea, porcelain, jade
+	if = {
+		limit = {
+			OR = {
+				geographical_region = world_tibet
+				geographical_region = world_steppe_east
+			}
+		}
+		random = {
+			chance = 30
+			add_county_modifier = {
+				modifier = mt_trade_good_tea
+				years = -1
+			}
+		}
+		random = {
+			chance = 15
+			add_county_modifier = {
+				modifier = mt_trade_good_porcelain
+				years = -1
+			}
+		}
+		random = {
+			chance = 10
+			add_county_modifier = {
+				modifier = mt_trade_good_jade
+				years = -1
+			}
+		}
+	}
+
+	# BALTIC REGION - Amber (fossilized resin)
+	if = {
+		limit = {
+			geographical_region = world_europe_north
+			is_coastal_county = yes
+		}
+		random = {
+			chance = 15
+			add_county_modifier = {
+				modifier = mt_trade_good_amber
+				years = -1
+			}
+		}
+	}
+
+	# AFRICA - Ivory, incense, purple dye (coastal Phoenicia)
+	if = {
+		limit = {
+			OR = {
+				geographical_region = world_africa_north
+				geographical_region = world_africa_east
+			}
+		}
+		random = {
+			chance = 10
+			add_county_modifier = {
+				modifier = mt_trade_good_ivory
+				years = -1
+			}
+		}
+		random = {
+			chance = 15
+			add_county_modifier = {
+				modifier = mt_trade_good_incense
+				years = -1
+			}
+		}
+	}
+
+	# SHEEP COUNTRY - Wool production (temperate grasslands)
+	if = {
+		limit = {
+			OR = {
+				geographical_region = world_europe_west
+				geographical_region = world_europe_north
+			}
+			OR = {
+				terrain = plains
+				terrain = hills
+			}
+		}
+		random = {
+			chance = 40
+			add_county_modifier = {
+				modifier = mt_trade_good_wool
+				years = -1
+			}
+		}
+	}
+
+	# HONEY PRODUCTION - Forest and temperate regions (beekeeping)
+	if = {
+		limit = {
+			OR = {
+				terrain = forest
+				terrain = jungle
+			}
+		}
+		random = {
+			chance = 25
+			add_county_modifier = {
+				modifier = mt_trade_good_honey
+				years = -1
+			}
+		}
+	}
+
+	# LUXURY SPECIALTIES - Very rare, high-value goods (5% chance in specific regions)
+	# Purple Dye - Eastern Mediterranean (Phoenician specialty)
+	if = {
+		limit = {
+			geographical_region = world_middle_east_jerusalem
+			is_coastal_county = yes
+		}
+		random = {
+			chance = 5
+			add_county_modifier = {
+				modifier = mt_trade_good_purple_dye
+				years = -1
+			}
+		}
+	}
+
+	# Saffron - Persia, Mediterranean (labor-intensive crop)
+	if = {
+		limit = {
+			OR = {
+				geographical_region = world_persia
+				geographical_region = world_europe_south_italy
+			}
+		}
+		random = {
+			chance = 8
+			add_county_modifier = {
+				modifier = mt_trade_good_saffron
+				years = -1
+			}
+		}
+	}
+
+	# Linen - Egypt and Mediterranean (flax cultivation)
+	if = {
+		limit = {
+			geographical_region = world_africa_north
+		}
+		random = {
+			chance = 30
+			add_county_modifier = {
+				modifier = mt_trade_good_linen
+				years = -1
+			}
+		}
+	}
+
+	# Glass - Advanced manufacturing regions (Venice, Syria)
+	if = {
+		limit = {
+			OR = {
+				geographical_region = world_europe_south_italy
+				geographical_region = world_middle_east
+			}
+			development_level >= 15  # Requires skilled artisans
+		}
+		random = {
+			chance = 12
+			add_county_modifier = {
+				modifier = mt_trade_good_glass
+				years = -1
+			}
+		}
+	}
+
+	# [INTEGRATION] Future: Add buildings that unlock specific goods
+	# [INTEGRATION] Future: Add events that can change county specialization
+	# [INTEGRATION] Future: Add cultural traditions that boost certain goods
+}
+
+############################################################################################
+# UPDATE GOODS PRODUCTION LEVEL
+############################################################################################
+# ROOT: County
+# Changes the production level of trade goods in a county
+# Multiplies base modifier values based on production tier
+#
+# PRODUCTION LEVELS:
+# - POOR (0): 0.5x base value - war, disease, bad weather, mismanagement
+# - MODEST (1): 1.0x base value - normal production (default)
+# - RICH (2): 1.5x base value - good conditions, investment, skilled workers
+# - ABUNDANT (3): 2.0x base value - ideal conditions, advanced infrastructure
+#
+# USAGE:
+#   any_county = {
+#       set_variable = { name = mt_production_level value = 2 }  # Set to RICH
+#       update_goods_production_effect = yes
+#   }
+#
+# INTEGRATION POINTS:
+# [HOOK] Development level can influence production tier
+# [HOOK] Buildings can boost production level
+# [HOOK] Events (plague, prosperity, innovation) can change level
+# [HOOK] Trade route efficiency can affect production incentives
+############################################################################################
+
+update_goods_production_effect = {
+	# Store the production level (default to MODEST if not set)
+	if = {
+		limit = { NOT = { has_variable = mt_production_level } }
+		set_variable = { name = mt_production_level value = 1 }  # MODEST default
+	}
+
+	# POOR PRODUCTION (0.5x multiplier)
+	# Conditions: War, low development, no investment
+	if = {
+		limit = { var:mt_production_level = 0 }
+
+		# Apply 50% penalty to all economic modifiers
+		# [TECHNICAL] In full implementation, this would iterate through active goods
+		# and adjust their values. For now, this is a framework placeholder.
+		# [INTEGRATION] County modifier values can be scaled via scripted effects
+
+		add_county_modifier = {
+			modifier = mt_production_poor
+			years = -1
+		}
+		remove_county_modifier = mt_production_modest
+		remove_county_modifier = mt_production_rich
+		remove_county_modifier = mt_production_abundant
+	}
+
+	# MODEST PRODUCTION (1.0x multiplier - baseline)
+	# Conditions: Normal peacetime operation
+	else_if = {
+		limit = { var:mt_production_level = 1 }
+
+		# Base production, no modifiers needed
+		add_county_modifier = {
+			modifier = mt_production_modest
+			years = -1
+		}
+		remove_county_modifier = mt_production_poor
+		remove_county_modifier = mt_production_rich
+		remove_county_modifier = mt_production_abundant
+	}
+
+	# RICH PRODUCTION (1.5x multiplier)
+	# Conditions: Peace, good stewardship, some investment
+	else_if = {
+		limit = { var:mt_production_level = 2 }
+
+		# Apply 50% bonus to production value
+		add_county_modifier = {
+			modifier = mt_production_rich
+			years = -1
+		}
+		remove_county_modifier = mt_production_poor
+		remove_county_modifier = mt_production_modest
+		remove_county_modifier = mt_production_abundant
+	}
+
+	# ABUNDANT PRODUCTION (2.0x multiplier)
+	# Conditions: Long peace, high development, infrastructure, skilled management
+	else_if = {
+		limit = { var:mt_production_level = 3 }
+
+		# Apply 100% bonus to production value
+		add_county_modifier = {
+			modifier = mt_production_abundant
+			years = -1
+		}
+		remove_county_modifier = mt_production_poor
+		remove_county_modifier = mt_production_modest
+		remove_county_modifier = mt_production_rich
+	}
+
+	# [INTEGRATION] Hook for trade route system to read production level
+	# [INTEGRATION] Hook for AI to evaluate county value
+	# [INTEGRATION] Hook for events to reference prosperity
+}
+
+############################################################################################
+# CALCULATE GOODS BASE VALUE
+############################################################################################
+# ROOT: County or Character
+# Calculates the total base value of all trade goods produced/controlled
+# Stores result in mt_goods_value variable for use by other systems
+#
+# VALUE CALCULATION:
+# - Sums the monthly_income from all active trade good modifiers
+# - Applies production level multiplier
+# - Can be modified by supply/demand (future integration)
+# - Returns base gold value before trade route bonuses
+#
+# USAGE:
+#   any_county = {
+#       calculate_goods_base_value_effect = yes
+#       # Now var:mt_goods_value contains total value
+#   }
+#
+# INTEGRATION POINTS:
+# [HOOK] Trade route system uses this to calculate profit
+# [HOOK] AI uses this to evaluate county wealth
+# [HOOK] Taxation system can reference this value
+# [HOOK] Supply/demand system modifies base value
+############################################################################################
+
+calculate_goods_base_value_effect = {
+	# Initialize value counter
+	set_variable = { name = mt_goods_value value = 0 }
+
+	# Add value from each luxury good (if present)
+	if = {
+		limit = { has_county_modifier = mt_trade_good_silk }
+		change_variable = { name = mt_goods_value add = 2.5 }
+	}
+	if = {
+		limit = { has_county_modifier = mt_trade_good_spices }
+		change_variable = { name = mt_goods_value add = 2.5 }
+	}
+	if = {
+		limit = { has_county_modifier = mt_trade_good_jade }
+		change_variable = { name = mt_goods_value add = 2.0 }
+	}
+	if = {
+		limit = { has_county_modifier = mt_trade_good_amber }
+		change_variable = { name = mt_goods_value add = 1.8 }
+	}
+	if = {
+		limit = { has_county_modifier = mt_trade_good_pearls }
+		change_variable = { name = mt_goods_value add = 2.2 }
+	}
+	if = {
+		limit = { has_county_modifier = mt_trade_good_ivory }
+		change_variable = { name = mt_goods_value add = 2.0 }
+	}
+	if = {
+		limit = { has_county_modifier = mt_trade_good_purple_dye }
+		change_variable = { name = mt_goods_value add = 3.0 }
+	}
+	if = {
+		limit = { has_county_modifier = mt_trade_good_incense }
+		change_variable = { name = mt_goods_value add = 1.8 }
+	}
+	if = {
+		limit = { has_county_modifier = mt_trade_good_saffron }
+		change_variable = { name = mt_goods_value add = 2.8 }
+	}
+
+	# Add value from common goods
+	if = {
+		limit = { has_county_modifier = mt_trade_good_grain }
+		change_variable = { name = mt_goods_value add = 1.0 }
+	}
+	if = {
+		limit = { has_county_modifier = mt_trade_good_wine }
+		change_variable = { name = mt_goods_value add = 1.5 }
+	}
+	if = {
+		limit = { has_county_modifier = mt_trade_good_iron }
+		change_variable = { name = mt_goods_value add = 1.3 }
+	}
+	if = {
+		limit = { has_county_modifier = mt_trade_good_wool }
+		change_variable = { name = mt_goods_value add = 1.2 }
+	}
+	if = {
+		limit = { has_county_modifier = mt_trade_good_furs }
+		change_variable = { name = mt_goods_value add = 1.4 }
+	}
+	if = {
+		limit = { has_county_modifier = mt_trade_good_salt }
+		change_variable = { name = mt_goods_value add = 1.5 }
+	}
+	if = {
+		limit = { has_county_modifier = mt_trade_good_timber }
+		change_variable = { name = mt_goods_value add = 1.0 }
+	}
+	if = {
+		limit = { has_county_modifier = mt_trade_good_horses }
+		change_variable = { name = mt_goods_value add = 1.6 }
+	}
+	if = {
+		limit = { has_county_modifier = mt_trade_good_cattle }
+		change_variable = { name = mt_goods_value add = 1.1 }
+	}
+
+	# Add value from regional goods
+	if = {
+		limit = { has_county_modifier = mt_trade_good_tea }
+		change_variable = { name = mt_goods_value add = 1.7 }
+	}
+	if = {
+		limit = { has_county_modifier = mt_trade_good_porcelain }
+		change_variable = { name = mt_goods_value add = 2.0 }
+	}
+	if = {
+		limit = { has_county_modifier = mt_trade_good_dates }
+		change_variable = { name = mt_goods_value add = 1.2 }
+	}
+	if = {
+		limit = { has_county_modifier = mt_trade_good_olive_oil }
+		change_variable = { name = mt_goods_value add = 1.4 }
+	}
+	if = {
+		limit = { has_county_modifier = mt_trade_good_honey }
+		change_variable = { name = mt_goods_value add = 1.3 }
+	}
+	if = {
+		limit = { has_county_modifier = mt_trade_good_linen }
+		change_variable = { name = mt_goods_value add = 1.3 }
+	}
+	if = {
+		limit = { has_county_modifier = mt_trade_good_glass }
+		change_variable = { name = mt_goods_value add = 1.5 }
+	}
+
+	# Apply production level multiplier
+	if = {
+		limit = { has_variable = mt_production_level }
+
+		# POOR: Multiply by 0.5
+		if = {
+			limit = { var:mt_production_level = 0 }
+			multiply_variable = { name = mt_goods_value value = 0.5 }
+		}
+		# MODEST: Multiply by 1.0 (no change)
+		# RICH: Multiply by 1.5
+		else_if = {
+			limit = { var:mt_production_level = 2 }
+			multiply_variable = { name = mt_goods_value value = 1.5 }
+		}
+		# ABUNDANT: Multiply by 2.0
+		else_if = {
+			limit = { var:mt_production_level = 3 }
+			multiply_variable = { name = mt_goods_value value = 2.0 }
+		}
+	}
+
+	# [INTEGRATION] Future: Apply supply/demand modifiers
+	# [INTEGRATION] Future: Apply trade route efficiency bonuses
+	# [INTEGRATION] Future: Apply taxation rates
+	# Result stored in var:mt_goods_value for other systems to read
+}
+
+############################################################################################
+# FUTURE EXPANSION EFFECTS
+############################################################################################
+# Additional effects that can be implemented:
+#
+# apply_supply_demand_effect:
+#   - Tracks regional supply/demand for each good
+#   - Adjusts prices based on scarcity/abundance
+#   - Creates dynamic market conditions
+#
+# transfer_goods_along_route_effect:
+#   - Moves goods from producer to consumer via trade route
+#   - Calculates transport costs and risks
+#   - Generates profit for merchants
+#
+# consume_goods_effect:
+#   - Reduces stockpiles as goods are used
+#   - Applies benefits to consuming region
+#   - Creates demand for more production
+#
+# disrupt_production_effect:
+#   - War, raids, disease reduce production
+#   - Temporary or permanent disruption
+#   - Can target specific goods or all production
+#
+# boost_production_effect:
+#   - Buildings, innovations, stewardship improve output
+#   - Can specialize in certain goods
+#   - Requires investment and maintenance
+#
+############################################################################################
+
+# Production level modifiers (referenced by update_goods_production_effect)
+# These would normally go in modifiers file but included here for clarity
+
+# NOTE: The modifiers below should be added to mt_trade_goods.txt
+# They are documented here to show the complete system design
+
+# mt_production_poor = {
+#     county_tax_mult = -0.25
+#     levy_size = -0.1
+# }
+#
+# mt_production_modest = {
+#     # Baseline, no modifiers
+# }
+#
+# mt_production_rich = {
+#     county_tax_mult = 0.25
+#     development_growth = 0.1
+# }
+#
+# mt_production_abundant = {
+#     county_tax_mult = 0.5
+#     development_growth = 0.2
+#     levy_size = 0.1
+# }

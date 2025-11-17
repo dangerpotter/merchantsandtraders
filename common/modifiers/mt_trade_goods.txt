@@ -1,0 +1,295 @@
+############################################################################################
+# MERCHANTS AND TRADERS - TRADE GOODS MODIFIERS
+############################################################################################
+#
+# This file defines all trade goods as modifiers that can be applied to counties, characters,
+# or holdings to represent production and trade of various commodities.
+#
+# DESIGN PHILOSOPHY:
+# - Each trade good provides a base monthly income representing its market value
+# - Additional modifiers reflect the strategic/cultural value of each good
+# - Goods are categorized by rarity and utility (Luxury, Common, Regional)
+# - Modifiers are intentionally modest to allow stacking without breaking game balance
+#
+# INTEGRATION POINTS:
+# - These modifiers can be applied via scripted effects (see mt_goods_production.txt)
+# - Production levels (poor/modest/rich/abundant) multiply these base values
+# - Trade route systems can reference these modifiers for pricing
+# - AI systems can check for luxury goods to inform diplomatic behavior
+#
+# USAGE PATTERN:
+# - Apply to counties: add_county_modifier = { modifier = mt_trade_good_silk years = -1 }
+# - Check production: county_produces_goods_trigger (see mt_goods_triggers.txt)
+# - Stack multiple goods per county to represent diverse production
+#
+############################################################################################
+
+############################################################################################
+# LUXURY TRADE GOODS
+# High-value commodities that provide prestige and significant income
+# Typically produced in limited regions and traded across vast distances
+############################################################################################
+
+# Silk - Luxurious fabric from China/Byzantium, symbol of wealth and status
+mt_trade_good_silk = {
+	monthly_income = 2.5				# High base value
+	monthly_prestige = 0.10				# Silk production brings renown
+	icon = stewardship
+}
+
+# Spices - Rare seasonings and preservatives from Asia and Africa
+mt_trade_good_spices = {
+	monthly_income = 2.5				# Extremely valuable in medieval period
+	health = 0.05						# Medicinal properties
+	icon = stewardship
+}
+
+# Jade - Precious stone valued in East Asia
+mt_trade_good_jade = {
+	monthly_income = 2.0				# High value for carved items
+	monthly_prestige = 0.08				# Symbol of nobility
+	icon = stewardship
+}
+
+# Amber - Fossilized resin from Baltic region, used in jewelry
+mt_trade_good_amber = {
+	monthly_income = 1.8				# Valuable for decoration
+	monthly_prestige = 0.05				# Associated with luxury
+	icon = stewardship
+}
+
+# Pearls - Gems from oysters, prized for jewelry
+mt_trade_good_pearls = {
+	monthly_income = 2.2				# Very high value
+	monthly_prestige = 0.08				# Royal jewelry material
+	icon = stewardship
+}
+
+# Ivory - Elephant tusks, carved for art and decoration
+mt_trade_good_ivory = {
+	monthly_income = 2.0				# High demand for carvings
+	monthly_prestige = 0.06				# Luxury material
+	icon = stewardship
+}
+
+# Purple Dye - Tyrian purple from murex snails, color of emperors
+mt_trade_good_purple_dye = {
+	monthly_income = 3.0				# Most expensive dye in medieval world
+	monthly_prestige = 0.15				# Imperial color
+	icon = stewardship
+}
+
+# Incense - Frankincense and myrrh for religious ceremonies
+mt_trade_good_incense = {
+	monthly_income = 1.8				# Religious demand
+	monthly_piety = 0.10				# Used in worship
+	icon = stewardship
+}
+
+# Saffron - Most expensive spice, from crocus flowers
+mt_trade_good_saffron = {
+	monthly_income = 2.8				# Weight-for-weight most valuable spice
+	health = 0.03						# Culinary and medicinal uses
+	icon = stewardship
+}
+
+############################################################################################
+# COMMON TRADE GOODS
+# Essential commodities produced widely, fundamental to economy and warfare
+# Lower individual value but crucial for sustaining realms
+############################################################################################
+
+# Grain - Wheat, barley, rye; staple food crop
+mt_trade_good_grain = {
+	monthly_income = 1.0				# Basic but essential commodity
+	supply_limit = 100					# Feeds armies
+	icon = stewardship
+}
+
+# Wine - Fermented grape beverage, both luxury and staple
+mt_trade_good_wine = {
+	monthly_income = 1.5				# Good profit margins
+	monthly_prestige = 0.03				# Fine wines are prestigious
+	icon = stewardship
+}
+
+# Iron - Essential metal for tools, weapons, and construction
+mt_trade_good_iron = {
+	monthly_income = 1.3				# Vital industrial commodity
+	levy_size = 0.02					# Better equipment for troops
+	icon = stewardship
+}
+
+# Wool - Sheep fleece for textile production
+mt_trade_good_wool = {
+	monthly_income = 1.2				# Major medieval trade commodity
+	icon = stewardship
+}
+
+# Furs - Animal pelts for warmth and luxury
+mt_trade_good_furs = {
+	monthly_income = 1.4				# High demand in cold regions
+	monthly_prestige = 0.02				# Luxury furs are status symbols
+	icon = stewardship
+}
+
+# Salt - Preservation and flavor, essential commodity
+mt_trade_good_salt = {
+	monthly_income = 1.5				# Extremely valuable (salary = salt money)
+	supply_limit = 50					# Preserves food for armies
+	icon = stewardship
+}
+
+# Timber - Wood for construction and fuel
+mt_trade_good_timber = {
+	monthly_income = 1.0				# Basic construction material
+	build_speed = 0.03					# Faster construction
+	icon = stewardship
+}
+
+# Horses - Mounts for cavalry and transportation
+mt_trade_good_horses = {
+	monthly_income = 1.6				# Military and civilian demand
+	knight_effectiveness = 0.05			# Better cavalry
+	icon = stewardship
+}
+
+# Cattle - Livestock for meat, leather, and labor
+mt_trade_good_cattle = {
+	monthly_income = 1.1				# Food and materials
+	supply_limit = 75					# Meat on the hoof
+	icon = stewardship
+}
+
+############################################################################################
+# REGIONAL TRADE GOODS
+# Specialized commodities with geographic concentration
+# Represent unique products that define regional trade identities
+############################################################################################
+
+# Tea - Beverage from East Asia, growing in popularity
+mt_trade_good_tea = {
+	monthly_income = 1.7				# High value in tea-drinking cultures
+	health = 0.02						# Stimulant and health benefits
+	icon = stewardship
+}
+
+# Porcelain - Fine ceramics from China, "white gold"
+mt_trade_good_porcelain = {
+	monthly_income = 2.0				# Highly valued in Europe
+	monthly_prestige = 0.07				# Status symbol
+	icon = stewardship
+}
+
+# Dates - Fruit from palm trees, Middle Eastern staple
+mt_trade_good_dates = {
+	monthly_income = 1.2				# Important desert crop
+	supply_limit = 40					# Nutritious and preservable
+	icon = stewardship
+}
+
+# Olive Oil - Mediterranean cooking oil and fuel
+mt_trade_good_olive_oil = {
+	monthly_income = 1.4				# Versatile commodity
+	health = 0.02						# Dietary benefits
+	icon = stewardship
+}
+
+# Honey - Natural sweetener and preservative
+mt_trade_good_honey = {
+	monthly_income = 1.3				# Valuable before sugar
+	health = 0.03						# Medicinal properties
+	icon = stewardship
+}
+
+# Linen - Flax-based textile, high quality fabric
+mt_trade_good_linen = {
+	monthly_income = 1.3				# Fine clothing material
+	icon = stewardship
+}
+
+# Glass - Manufactured from silica, for windows and vessels
+mt_trade_good_glass = {
+	monthly_income = 1.5				# Skilled craft product
+	monthly_prestige = 0.04				# Fine glasswork is prestigious
+	icon = stewardship
+}
+
+############################################################################################
+# FUTURE EXPANSION NOTES:
+############################################################################################
+#
+# PRODUCTION LEVELS:
+# - Base modifiers here represent "modest" production
+# - Scripted effects will multiply these values:
+#   * Poor: 0.5x multiplier
+#   * Modest: 1.0x multiplier (base)
+#   * Rich: 1.5x multiplier
+#   * Abundant: 2.0x multiplier
+#
+# ADDITIONAL GOODS TO CONSIDER:
+# - Gems (diamonds, rubies, emeralds)
+# - Copper/Bronze
+# - Tin
+# - Cotton
+# - Sugar (later period)
+# - Dyes (indigo, cochineal)
+# - Paper/Papyrus
+# - Glassware
+# - Ceramics
+# - Perfumes
+#
+# MODIFIER STACKING:
+# - Counties should receive 1-3 trade goods based on terrain and culture
+# - Example: Coastal Mediterranean county might have: olive_oil, wine, salt
+# - Mountain county in Persia: saffron, incense
+# - Forest region in Rus: furs, timber, amber
+#
+# INTEGRATION WITH OTHER SYSTEMS:
+# - Trade routes can check for production and calculate profit margins
+# - AI can be weighted to target counties with luxury goods
+# - Events can reference specific goods for flavor
+# - Buildings can boost production of specific goods
+# - Cultural traditions can grant bonuses to regional specialties
+#
+############################################################################################
+
+############################################################################################
+# PRODUCTION LEVEL MODIFIERS
+# These modifiers represent the overall productivity and efficiency of trade good production
+# Applied by update_goods_production_effect in mt_goods_production.txt
+############################################################################################
+
+# Poor Production - War, mismanagement, or poor conditions reduce output
+mt_production_poor = {
+	county_tax_mult = -0.25			# 25% less tax revenue
+	levy_size = -0.10				# Fewer resources for troops
+	development_growth = -0.10		# Economic decline
+	icon = stewardship
+}
+
+# Modest Production - Normal baseline production (no modifier needed, but defined for clarity)
+mt_production_modest = {
+	# Baseline production level, no bonuses or penalties
+	icon = stewardship
+}
+
+# Rich Production - Good stewardship and investment improve output
+mt_production_rich = {
+	county_tax_mult = 0.25			# 25% more tax revenue
+	development_growth = 0.10		# Economic growth
+	monthly_county_prestige = 0.05	# Prosperous counties gain renown
+	icon = stewardship
+}
+
+# Abundant Production - Ideal conditions, advanced infrastructure, maximum efficiency
+mt_production_abundant = {
+	county_tax_mult = 0.50			# 50% more tax revenue
+	development_growth = 0.20		# Rapid economic growth
+	levy_size = 0.10				# More resources for military
+	monthly_county_prestige = 0.10	# Great prosperity brings fame
+	supply_limit = 100				# Well-stocked for campaigns
+	icon = stewardship
+}
+
+############################################################################################
