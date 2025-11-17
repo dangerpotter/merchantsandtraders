@@ -140,3 +140,265 @@ bad_reputation_opinion = {
 
 	monthly_decay = 0.5
 }
+
+####################################
+# CAREER EVENT OPINION MODIFIERS
+####################################
+
+# Loyal merchant to noble patron
+loyal_merchant_opinion = {
+	opinion = {
+		value = 30
+	}
+
+	monthly_decay = -0.5
+
+	prison_release_modifier = yes
+}
+
+# Trusted merchant
+trusted_merchant_opinion = {
+	opinion = {
+		value = 40
+	}
+
+	monthly_decay = -0.5
+
+	prison_release_modifier = yes
+}
+
+# Respectful opinion
+respectful_opinion = {
+	opinion = {
+		value = 15
+	}
+
+	monthly_decay = -1
+}
+
+# Impressed by actions
+impressed_opinion = {
+	opinion = {
+		value = 25
+	}
+
+	monthly_decay = -1
+}
+
+# Business partnership
+business_partner_opinion = {
+	opinion = {
+		value = 20
+	}
+
+	monthly_decay = -0.5
+
+	prison_release_modifier = yes
+}
+
+# Loyal relationship
+loyal_opinion = {
+	opinion = {
+		value = 50
+	}
+
+	monthly_decay = -0.5
+
+	prison_release_modifier = yes
+}
+
+# Trusted advisor to ruler
+trusted_advisor_opinion = {
+	opinion = {
+		value = 40
+	}
+
+	monthly_decay = -0.5
+
+	prison_release_modifier = yes
+}
+
+# Humble character
+humble_opinion = {
+	opinion = {
+		value = 30
+	}
+
+	monthly_decay = -1
+}
+
+# Celebrated together
+celebrated_together_opinion = {
+	opinion = {
+		value = 15
+	}
+
+	monthly_decay = -1
+}
+
+# Mentor-student relationship
+mentor_opinion = {
+	opinion = {
+		value = 75
+	}
+
+	monthly_decay = -0.5
+
+	prison_release_modifier = yes
+}
+
+# Pious action appreciated
+pious_opinion = {
+	opinion = {
+		value = 15
+	}
+
+	monthly_decay = -0.5
+}
+
+# Guild brotherhood
+guild_brother_opinion = {
+	opinion = {
+		value = 25
+	}
+
+	monthly_decay = -0.5
+}
+
+# Annoyed
+annoyed_opinion = {
+	opinion = {
+		value = -10
+	}
+
+	monthly_decay = -1
+}
+
+# Humiliated
+humiliated_opinion = {
+	opinion = {
+		value = -50
+	}
+
+	monthly_decay = 1
+}
+
+# Respect
+respect_opinion = {
+	opinion = {
+		value = 10
+	}
+
+	monthly_decay = -1
+}
+
+# Defeated in confrontation
+defeated_opinion = {
+	opinion = {
+		value = -50
+	}
+
+	monthly_decay = 1
+}
+
+# Triumphant over someone
+triumph_opinion = {
+	opinion = {
+		value = -25
+	}
+
+	monthly_decay = 1
+}
+
+# Rival relationship
+rival_opinion = {
+	opinion = {
+		value = -100
+	}
+
+	monthly_decay = 1
+
+	prison_release_modifier = yes
+}
+
+# Wary of someone
+wary_opinion = {
+	opinion = {
+		value = -30
+	}
+
+	monthly_decay = 1
+}
+
+# Intimidated
+intimidated_opinion = {
+	opinion = {
+		value = -50
+	}
+
+	monthly_decay = 1
+}
+
+# Neglected family
+neglected_opinion = {
+	opinion = {
+		value = -40
+	}
+
+	monthly_decay = 1
+
+	close_family_opinion = yes
+}
+
+# Love
+love_opinion = {
+	opinion = {
+		value = 40
+	}
+
+	monthly_decay = -0.5
+
+	close_family_opinion = yes
+}
+
+# Devoted parent
+devoted_parent_opinion = {
+	opinion = {
+		value = 20
+	}
+
+	monthly_decay = -0.5
+
+	close_family_opinion = yes
+}
+
+# Selfish behavior
+selfish_opinion = {
+	opinion = {
+		value = -10
+	}
+
+	monthly_decay = 0.5
+}
+
+# Friend
+friend_opinion = {
+	opinion = {
+		value = 15
+	}
+
+	monthly_decay = -1
+}
+
+# Nemesis (extreme rival)
+nemesis_opinion = {
+	opinion = {
+		value = -100
+	}
+
+	monthly_decay = 0.5
+
+	prison_release_modifier = yes
+
+	crime = yes
+}

@@ -1,0 +1,22 @@
+####################################
+# MERCHANTS AND TRADERS MOD
+# Dynasty Modifiers
+####################################
+#
+# Dynasty-wide modifiers for merchant families
+#
+####################################
+
+# Legendary merchant dynasty legacy
+mt_merchant_dynasty_legacy = {
+	icon = "gfx/interface/icons/modifiers/dynasty.dds"
+
+	# Economic benefits for entire dynasty
+	dynasty_monthly_prestige_mult = 0.15
+
+	# All dynasty members gain advantages
+	monthly_dynasty_piety_gain = 0.10
+
+	# Better reputation
+	dynasty_house_opinion = 25
+}
