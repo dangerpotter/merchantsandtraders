@@ -1,0 +1,416 @@
+####################################
+# MERCHANTS AND TRADERS MOD
+# Merchant Events
+####################################
+#
+# Event namespace: mt_merchant_events
+#
+# 100-199: Asset seizure and merchant response events
+# 200-299: Trade partnership events
+# 300-399: Guard contract events
+# 400-499: Protection agreement events
+#
+####################################
+
+namespace = mt_merchant_events
+
+####################################
+# ASSET SEIZURE EVENTS (100-199)
+####################################
+
+# 100: Merchant decides whether to flee after asset seizure
+# Triggered by seize_merchant_assets_interaction
+mt_merchant_events.100 = {
+	type = character_event
+	title = mt_merchant_events.100.t
+	desc = mt_merchant_events.100.desc
+	theme = stewardship
+
+	left_portrait = {
+		character = root
+		animation = sadness
+	}
+
+	# Merchant flees to another realm
+	option = {
+		name = mt_merchant_events.100.a
+
+		# Flee to a neighboring realm
+		trigger = {
+			any_neighboring_top_liege_realm_owner = {
+				NOT = { this = liege }
+				is_at_war_with = root.liege
+			}
+		}
+
+		# Move to neighboring realm
+		random_neighboring_top_liege_realm_owner = {
+			limit = {
+				NOT = { this = root.liege }
+				NOT = { is_at_war_with = root }
+			}
+
+			root = {
+				# Join their court
+				add_visiting_courtier = root
+
+				# Gain small prestige for escaping
+				add_prestige = 25
+
+				# Lose all trade rights in old realm
+				remove_character_modifier = mt_granted_trade_rights
+				remove_character_modifier = mt_granted_trade_rights_enhanced
+			}
+		}
+
+		ai_chance = {
+			base = 70
+
+			# More likely if young
+			modifier = {
+				add = 20
+				age < 35
+			}
+
+			# More likely if still have some gold
+			modifier = {
+				add = 30
+				gold >= 100
+			}
+
+			# Less likely if old
+			modifier = {
+				add = -40
+				age >= 50
+			}
+		}
+	}
+
+	# Merchant stays and rebuilds
+	option = {
+		name = mt_merchant_events.100.b
+
+		# Lose prestige from humiliation
+		add_prestige = -50
+
+		# Gain ambitious/vengeful stress
+		if = {
+			limit = {
+				OR = {
+					has_trait = ambitious
+					has_trait = vengeful
+				}
+			}
+			add_stress = 30
+		}
+		else = {
+			add_stress = 15
+		}
+
+		# Small chance to gain vengeful trait
+		random = {
+			chance = 20
+
+			add_trait = vengeful
+		}
+
+		ai_chance = {
+			base = 30
+
+			# More likely if old
+			modifier = {
+				add = 40
+				age >= 50
+			}
+
+			# More likely if have family here
+			modifier = {
+				add = 30
+				any_close_family_member = {
+					is_vassal_of = root.liege
+				}
+			}
+
+			# Less likely if vengeful
+			modifier = {
+				add = -20
+				has_trait = vengeful
+			}
+		}
+	}
+
+	# Merchant plots revenge (if vengeful)
+	option = {
+		name = mt_merchant_events.100.c
+
+		trigger = {
+			has_trait = vengeful
+			gold >= 200
+		}
+
+		# Pay for revenge plot (future event)
+		remove_short_term_gold = 200
+
+		# Add scheme or hostile opinion
+		add_opinion = {
+			target = liege
+			modifier = plotting_revenge_opinion
+			opinion = -200
+		}
+
+		# Trigger revenge event later
+		trigger_event = {
+			id = mt_merchant_events.101
+			days = { 180 360 }
+		}
+
+		ai_chance = {
+			base = 20
+
+			# More likely if vengeful
+			modifier = {
+				add = 40
+				has_trait = vengeful
+			}
+
+			# More likely if merchant prince (has resources)
+			modifier = {
+				add = 30
+				has_trait = merchant_prince
+			}
+
+			# Less likely if forgiving
+			modifier = {
+				add = -50
+				has_trait = forgiving
+			}
+		}
+	}
+}
+
+# 101: Merchant's revenge attempt
+mt_merchant_events.101 = {
+	type = character_event
+	title = mt_merchant_events.101.t
+	desc = mt_merchant_events.101.desc
+	theme = intrigue
+
+	left_portrait = {
+		character = root
+		animation = scheme
+	}
+
+	right_portrait = {
+		character = scope:revenge_target
+		animation = worry
+	}
+
+	immediate = {
+		save_scope_as = merchant
+
+		liege = {
+			save_scope_as = revenge_target
+		}
+	}
+
+	# Economic sabotage - disrupt their trade
+	option = {
+		name = mt_merchant_events.101.a
+
+		scope:revenge_target = {
+			# Economic damage
+			every_held_title = {
+				limit = {
+					tier = tier_county
+				}
+				county = {
+					add_county_modifier = {
+						modifier = mt_trade_disruption
+						years = 5
+					}
+				}
+			}
+
+			# Prestige loss
+			add_prestige = -100
+		}
+
+		root = {
+			# Gain prestige from successful revenge
+			add_prestige = 50
+
+			# Stress relief
+			add_stress = -30
+
+			# Remove revenge opinion
+			remove_opinion = {
+				target = scope:revenge_target
+				modifier = plotting_revenge_opinion
+			}
+		}
+
+		ai_chance = {
+			base = 60
+		}
+	}
+
+	# Assassination attempt
+	option = {
+		name = mt_merchant_events.101.b
+
+		trigger = {
+			intrigue >= 12
+		}
+
+		# Random success chance
+		random = {
+			chance = 30
+
+			# Success
+			scope:revenge_target = {
+				death = {
+					death_reason = death_murder
+					killer = root
+				}
+			}
+
+			root = {
+				add_prestige = 100
+				add_stress = -50
+
+				# But gain murderer trait
+				add_trait = murderer
+			}
+		}
+
+		random = {
+			chance = 70
+
+			# Failure - discovered
+			scope:revenge_target = {
+				add_opinion = {
+					target = root
+					modifier = attempted_murder_opinion
+					opinion = -100
+				}
+			}
+
+			root = {
+				# Imprisoned or banished
+				random = {
+					chance = 50
+					scope:revenge_target = {
+						imprison = {
+							target = root
+							type = dungeon
+						}
+					}
+				}
+			}
+		}
+
+		ai_chance = {
+			base = 20
+
+			# More likely if high intrigue
+			modifier = {
+				add = 30
+				intrigue >= 15
+			}
+		}
+	}
+
+	# Spread rumors and damage reputation
+	option = {
+		name = mt_merchant_events.101.c
+
+		scope:revenge_target = {
+			# Opinion penalties with vassals
+			every_vassal = {
+				add_opinion = {
+					target = scope:revenge_target
+					modifier = bad_reputation_opinion
+					opinion = -10
+				}
+			}
+
+			# Prestige loss
+			add_prestige = -75
+		}
+
+		root = {
+			# Small prestige gain
+			add_prestige = 25
+
+			# Stress relief
+			add_stress = -20
+
+			# Remove revenge opinion
+			remove_opinion = {
+				target = scope:revenge_target
+				modifier = plotting_revenge_opinion
+			}
+		}
+
+		ai_chance = {
+			base = 40
+
+			# More likely if high diplomacy
+			modifier = {
+				add = 20
+				diplomacy >= 12
+			}
+		}
+	}
+
+	# Forgive and move on
+	option = {
+		name = mt_merchant_events.101.d
+
+		trigger = {
+			OR = {
+				has_trait = forgiving
+				has_trait = compassionate
+			}
+		}
+
+		root = {
+			# Gain stress from letting go
+			add_stress = 10
+
+			# Remove revenge opinion
+			remove_opinion = {
+				target = scope:revenge_target
+				modifier = plotting_revenge_opinion
+			}
+
+			# May gain forgiving trait
+			random = {
+				chance = 30
+				add_trait = forgiving
+			}
+
+			# Gain piety
+			add_piety = 50
+		}
+
+		ai_chance = {
+			base = 20
+
+			# Much more likely if forgiving
+			modifier = {
+				add = 60
+				has_trait = forgiving
+			}
+		}
+	}
+}
+
+####################################
+# ADDITIONAL OPINION MODIFIERS
+####################################
+
+# These need to be defined in opinion_modifiers file
+# plotting_revenge_opinion
+# attempted_murder_opinion
+# bad_reputation_opinion

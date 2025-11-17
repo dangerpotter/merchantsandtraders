@@ -1,0 +1,1447 @@
+####################################
+# MERCHANTS AND TRADERS MOD
+# Character Interactions
+####################################
+#
+# This file defines character interactions for the merchant system:
+# 1. request_trade_rights_interaction - Merchant requests permission from ruler
+# 2. negotiate_trade_deal_interaction - Merchants form partnerships
+# 3. hire_caravan_guard_interaction - Hire protection for trade routes
+# 4. seize_merchant_assets_interaction - Ruler confiscates merchant wealth
+# 5. offer_merchant_protection_interaction - Ruler offers protection
+#
+####################################
+
+####################################
+# 1. REQUEST TRADE RIGHTS
+# Merchant asks county ruler for permission to establish trade routes
+####################################
+
+request_trade_rights_interaction = {
+	category = interaction_category_diplomacy
+
+	desc = request_trade_rights_interaction_desc
+
+	greeting = positive
+	notification_text = REQUEST_TRADE_RIGHTS_NOTIFICATION
+
+	ai_targets = {
+		ai_recipients = neighboring_rulers
+		ai_recipients = liege
+		ai_recipients = vassals
+	}
+
+	ai_frequency = 24  # Check every 2 years
+
+	# Show to merchants when targeting rulers
+	is_shown = {
+		scope:actor = {
+			# Actor must be a merchant
+			OR = {
+				has_trait = wandering_merchant
+				has_trait = trade_post_owner
+				has_trait = trading_company_head
+				has_trait = merchant_prince
+			}
+		}
+		scope:recipient = {
+			# Recipient must be a ruler with holdings
+			is_ruler = yes
+			any_held_title = {
+				tier = tier_county
+			}
+		}
+		# Not the same character
+		scope:actor != scope:recipient
+	}
+
+	is_valid_showing_failures_only = {
+		# Not at war with each other
+		scope:actor = {
+			NOR = {
+				is_at_war_with = scope:recipient
+				has_truce = scope:recipient
+			}
+		}
+		# Actor has enough gold
+		scope:actor = {
+			gold >= 20
+		}
+		# Recipient controls territory
+		scope:recipient = {
+			any_held_title = {
+				tier = tier_county
+				count >= 1
+			}
+		}
+		# Don't already have trade rights
+		scope:actor = {
+			NOT = {
+				has_character_modifier = mt_granted_trade_rights
+			}
+		}
+	}
+
+	can_send = {
+		# Actor must be independent or have liege permission
+		scope:actor = {
+			trigger_if = {
+				limit = { is_independent_ruler = no }
+				liege = {
+					opinion = {
+						target = scope:actor
+						value >= 0
+					}
+				}
+			}
+		}
+	}
+
+	# Cost: 20 gold payment to ruler
+	send_option = {
+		is_valid = {
+			scope:actor = {
+				gold >= 20
+			}
+		}
+		flag = standard_payment
+	}
+
+	send_option = {
+		is_valid = {
+			scope:actor = {
+				gold >= 40
+			}
+		}
+		flag = generous_payment
+	}
+
+	on_accept = {
+		# Standard payment
+		if = {
+			limit = { scope:standard_payment = yes }
+
+			scope:actor = {
+				pay_short_term_gold = {
+					gold = 20
+					target = scope:recipient
+				}
+
+				# Grant trade rights modifier (10 years)
+				add_character_modifier = {
+					modifier = mt_granted_trade_rights
+					years = 10
+				}
+
+				# Positive opinion from successful negotiation
+				add_opinion = {
+					target = scope:recipient
+					modifier = grateful_opinion
+					opinion = 10
+				}
+			}
+
+			scope:recipient = {
+				# Recipient gains prestige for supporting trade
+				add_prestige = 25
+
+				# Slight opinion boost
+				add_opinion = {
+					target = scope:actor
+					modifier = merchant_partner_opinion
+					opinion = 5
+				}
+			}
+		}
+
+		# Generous payment - better relationship
+		if = {
+			limit = { scope:generous_payment = yes }
+
+			scope:actor = {
+				pay_short_term_gold = {
+					gold = 40
+					target = scope:recipient
+				}
+
+				# Grant enhanced trade rights modifier (15 years)
+				add_character_modifier = {
+					modifier = mt_granted_trade_rights_enhanced
+					years = 15
+				}
+
+				# Better opinion from generosity
+				add_opinion = {
+					target = scope:recipient
+					modifier = grateful_opinion
+					opinion = 20
+				}
+			}
+
+			scope:recipient = {
+				# Recipient gains more prestige
+				add_prestige = 50
+
+				# Better opinion boost
+				add_opinion = {
+					target = scope:actor
+					modifier = merchant_partner_opinion
+					opinion = 15
+				}
+			}
+		}
+
+		# Send notification
+		scope:recipient = {
+			send_interface_toast = {
+				title = request_trade_rights_interaction_notification
+				left_icon = scope:actor
+
+				show_as_tooltip = {
+					scope:actor = {
+						add_character_modifier = {
+							modifier = mt_granted_trade_rights
+							years = 10
+						}
+					}
+				}
+			}
+		}
+	}
+
+	on_decline = {
+		scope:actor = {
+			add_opinion = {
+				target = scope:recipient
+				modifier = disappointed_opinion
+				opinion = -10
+			}
+		}
+
+		# Send rejection notification
+		scope:actor = {
+			send_interface_toast = {
+				title = request_trade_rights_declined_notification
+				left_icon = scope:recipient
+			}
+		}
+	}
+
+	# AI acceptance logic
+	ai_accept = {
+		base = 75
+
+		# Opinion modifiers
+		opinion_modifier = {
+			who = scope:recipient
+			opinion_target = scope:actor
+			multiplier = 0.5
+		}
+
+		# More likely if generous payment
+		modifier = {
+			add = 20
+			scope:generous_payment = yes
+			desc = AI_GENEROUS_PAYMENT
+		}
+
+		# More likely if merchant is wealthy (shows they're successful)
+		modifier = {
+			add = 10
+			scope:actor = {
+				gold >= 500
+			}
+			desc = AI_WEALTHY_MERCHANT
+		}
+
+		# More likely if recipient is greedy
+		modifier = {
+			add = 15
+			scope:recipient = {
+				has_trait = greedy
+			}
+			desc = AI_GREEDY
+		}
+
+		# Less likely if recipient is at war
+		modifier = {
+			add = -30
+			scope:recipient = {
+				is_at_war = yes
+			}
+			desc = AI_AT_WAR
+		}
+
+		# More likely if recipient has good economy
+		modifier = {
+			add = 10
+			scope:recipient = {
+				any_held_title = {
+					tier = tier_county
+					county = {
+						development_level >= 15
+					}
+				}
+			}
+			desc = AI_DEVELOPED_REALM
+		}
+
+		# Less likely if recipient is xenophobic
+		modifier = {
+			add = -20
+			scope:recipient = {
+				has_trait = vengeful
+			}
+			desc = AI_SUSPICIOUS
+		}
+	}
+
+	ai_potential = yes
+
+	ai_will_do = {
+		base = 50
+
+		# More likely if actor is higher tier merchant
+		modifier = {
+			add = 20
+			scope:actor = {
+				has_trait = merchant_prince
+			}
+		}
+
+		modifier = {
+			add = 10
+			scope:actor = {
+				has_trait = trading_company_head
+			}
+		}
+
+		# Less likely if already have good relations
+		modifier = {
+			add = -30
+			scope:recipient = {
+				opinion = {
+					target = scope:actor
+					value >= 50
+				}
+			}
+		}
+	}
+}
+
+####################################
+# 2. NEGOTIATE TRADE DEAL
+# Merchants form partnerships to share routes and profits
+####################################
+
+negotiate_trade_deal_interaction = {
+	category = interaction_category_diplomacy
+
+	desc = negotiate_trade_deal_interaction_desc
+
+	greeting = positive
+	notification_text = NEGOTIATE_TRADE_DEAL_NOTIFICATION
+
+	ai_targets = {
+		ai_recipients = neighboring_rulers
+		ai_recipients = realm_characters
+		ai_recipients = vassals
+	}
+
+	ai_frequency = 36  # Check every 3 years
+
+	# Show between merchants only
+	is_shown = {
+		scope:actor = {
+			# Actor must be a merchant
+			OR = {
+				has_trait = wandering_merchant
+				has_trait = trade_post_owner
+				has_trait = trading_company_head
+				has_trait = merchant_prince
+			}
+		}
+		scope:recipient = {
+			# Recipient must also be a merchant
+			OR = {
+				has_trait = wandering_merchant
+				has_trait = trade_post_owner
+				has_trait = trading_company_head
+				has_trait = merchant_prince
+			}
+		}
+		# Not the same character
+		scope:actor != scope:recipient
+	}
+
+	is_valid_showing_failures_only = {
+		# Not at war
+		scope:actor = {
+			NOT = { is_at_war_with = scope:recipient }
+		}
+		# Don't already have a partnership
+		scope:actor = {
+			NOT = {
+				has_relation_friend = scope:recipient
+				has_character_modifier = mt_trade_partnership
+			}
+		}
+	}
+
+	can_send = {
+		# Both must be adults
+		scope:actor = { is_adult = yes }
+		scope:recipient = { is_adult = yes }
+	}
+
+	# Different partnership types
+	send_option = {
+		is_valid = {
+			always = yes
+		}
+		flag = equal_partnership
+	}
+
+	send_option = {
+		is_valid = {
+			scope:actor = {
+				gold >= 100
+			}
+		}
+		flag = senior_partnership
+	}
+
+	on_accept = {
+		# Equal partnership - share routes and profits equally
+		if = {
+			limit = { scope:equal_partnership = yes }
+
+			scope:actor = {
+				add_character_modifier = {
+					modifier = mt_trade_partnership
+					years = 20
+				}
+
+				# Boost relations
+				add_opinion = {
+					target = scope:recipient
+					modifier = trade_partner_opinion
+					opinion = 25
+				}
+
+				# Small income boost from partnership
+				add_character_modifier = {
+					modifier = mt_partnership_income_boost
+					years = 20
+				}
+			}
+
+			scope:recipient = {
+				add_character_modifier = {
+					modifier = mt_trade_partnership
+					years = 20
+				}
+
+				add_opinion = {
+					target = scope:actor
+					modifier = trade_partner_opinion
+					opinion = 25
+				}
+
+				add_character_modifier = {
+					modifier = mt_partnership_income_boost
+					years = 20
+				}
+			}
+		}
+
+		# Senior partnership - actor invests gold for larger share
+		if = {
+			limit = { scope:senior_partnership = yes }
+
+			scope:actor = {
+				remove_short_term_gold = 100
+
+				add_character_modifier = {
+					modifier = mt_senior_trade_partner
+					years = 20
+				}
+
+				add_opinion = {
+					target = scope:recipient
+					modifier = trade_partner_opinion
+					opinion = 30
+				}
+
+				# Better income boost
+				add_character_modifier = {
+					modifier = mt_senior_partnership_income_boost
+					years = 20
+				}
+			}
+
+			scope:recipient = {
+				add_gold = 100
+
+				add_character_modifier = {
+					modifier = mt_junior_trade_partner
+					years = 20
+				}
+
+				add_opinion = {
+					target = scope:actor
+					modifier = trade_partner_opinion
+					opinion = 35
+				}
+
+				# Smaller income boost
+				add_character_modifier = {
+					modifier = mt_partnership_income_boost
+					years = 20
+				}
+			}
+		}
+
+		# Notification
+		scope:recipient = {
+			send_interface_toast = {
+				title = negotiate_trade_deal_accepted_notification
+				left_icon = scope:actor
+
+				add_prestige = 15
+			}
+		}
+
+		scope:actor = {
+			add_prestige = 15
+		}
+	}
+
+	on_decline = {
+		scope:actor = {
+			add_opinion = {
+				target = scope:recipient
+				modifier = disappointed_opinion
+				opinion = -5
+			}
+		}
+	}
+
+	# AI acceptance
+	ai_accept = {
+		base = 50
+
+		# Opinion is important for partnerships
+		opinion_modifier = {
+			who = scope:recipient
+			opinion_target = scope:actor
+			multiplier = 1.0
+		}
+
+		# More likely if equal tier merchants
+		modifier = {
+			add = 25
+			scope:actor = {
+				trait_tier = scope:recipient.trait_tier
+			}
+			desc = AI_EQUAL_STATUS
+		}
+
+		# Senior partnership is attractive if recipient needs gold
+		modifier = {
+			add = 30
+			scope:senior_partnership = yes
+			scope:recipient = {
+				gold < 100
+			}
+			desc = AI_NEEDS_INVESTMENT
+		}
+
+		# More likely if greedy
+		modifier = {
+			add = 15
+			scope:recipient = {
+				has_trait = greedy
+			}
+			desc = AI_GREEDY
+		}
+
+		# More likely if ambitious
+		modifier = {
+			add = 15
+			scope:recipient = {
+				has_trait = ambitious
+			}
+			desc = AI_AMBITIOUS
+		}
+
+		# Less likely if already very wealthy
+		modifier = {
+			add = -20
+			scope:recipient = {
+				gold >= 1000
+			}
+			desc = AI_ALREADY_WEALTHY
+		}
+
+		# More likely if same culture
+		modifier = {
+			add = 15
+			scope:actor = {
+				culture = scope:recipient.culture
+			}
+			desc = AI_SAME_CULTURE
+		}
+	}
+
+	ai_potential = yes
+
+	ai_will_do = {
+		base = 30
+
+		# More likely if both are successful merchants
+		modifier = {
+			add = 20
+			scope:actor = {
+				OR = {
+					has_trait = trading_company_head
+					has_trait = merchant_prince
+				}
+			}
+			scope:recipient = {
+				OR = {
+					has_trait = trading_company_head
+					has_trait = merchant_prince
+				}
+			}
+		}
+	}
+}
+
+####################################
+# 3. HIRE CARAVAN GUARD
+# Merchant hires protection for trade routes
+####################################
+
+hire_caravan_guard_interaction = {
+	category = interaction_category_diplomacy
+
+	desc = hire_caravan_guard_interaction_desc
+
+	greeting = positive
+	notification_text = HIRE_CARAVAN_GUARD_NOTIFICATION
+
+	ai_targets = {
+		ai_recipients = neighboring_rulers
+		ai_recipients = vassals
+		ai_recipients = courtiers
+	}
+
+	ai_frequency = 48  # Check every 4 years
+
+	# Show to merchants targeting knights/mercenaries
+	is_shown = {
+		scope:actor = {
+			# Actor must be a merchant
+			OR = {
+				has_trait = wandering_merchant
+				has_trait = trade_post_owner
+				has_trait = trading_company_head
+				has_trait = merchant_prince
+			}
+			# Must have enough gold for at least 1 guard for 1 year
+			gold >= 36
+		}
+		scope:recipient = {
+			# Recipient must be a capable warrior
+			OR = {
+				has_trait = knight
+				has_trait = blademaster
+				prowess >= 12
+				is_knight_of = scope:recipient.liege
+			}
+			# Not already employed as guard
+			NOT = { has_character_modifier = mt_caravan_guard }
+		}
+		# Not the same character
+		scope:actor != scope:recipient
+	}
+
+	is_valid_showing_failures_only = {
+		# Not at war
+		scope:actor = {
+			NOT = { is_at_war_with = scope:recipient }
+		}
+		# Recipient is available
+		scope:recipient = {
+			is_adult = yes
+			is_imprisoned = no
+			is_incapable = no
+		}
+	}
+
+	can_send = {
+		scope:actor = {
+			# Can hire 1-5 guards per route (tracked via modifier stacks)
+			# TODO: Check active route count
+			gold >= 36  # Minimum 3 gold/month for 1 year
+		}
+	}
+
+	# Options for number of months
+	send_option = {
+		is_valid = {
+			scope:actor = { gold >= 36 }
+		}
+		flag = hire_one_year
+	}
+
+	send_option = {
+		is_valid = {
+			scope:actor = { gold >= 72 }
+		}
+		flag = hire_two_years
+	}
+
+	send_option = {
+		is_valid = {
+			scope:actor = { gold >= 180 }
+		}
+		flag = hire_five_years
+	}
+
+	on_accept = {
+		# One year contract
+		if = {
+			limit = { scope:hire_one_year = yes }
+
+			scope:actor = {
+				pay_short_term_gold = {
+					gold = 36
+					target = scope:recipient
+				}
+
+				# Reduce route danger
+				add_character_modifier = {
+					modifier = mt_hired_caravan_guards
+					years = 1
+				}
+			}
+
+			scope:recipient = {
+				add_character_modifier = {
+					modifier = mt_caravan_guard
+					years = 1
+				}
+
+				add_opinion = {
+					target = scope:actor
+					modifier = employer_opinion
+					opinion = 10
+				}
+			}
+		}
+
+		# Two year contract
+		if = {
+			limit = { scope:hire_two_years = yes }
+
+			scope:actor = {
+				pay_short_term_gold = {
+					gold = 72
+					target = scope:recipient
+				}
+
+				add_character_modifier = {
+					modifier = mt_hired_caravan_guards
+					years = 2
+				}
+			}
+
+			scope:recipient = {
+				add_character_modifier = {
+					modifier = mt_caravan_guard
+					years = 2
+				}
+
+				add_opinion = {
+					target = scope:actor
+					modifier = employer_opinion
+					opinion = 15
+				}
+			}
+		}
+
+		# Five year contract
+		if = {
+			limit = { scope:hire_five_years = yes }
+
+			scope:actor = {
+				pay_short_term_gold = {
+					gold = 180
+					target = scope:recipient
+				}
+
+				add_character_modifier = {
+					modifier = mt_hired_caravan_guards
+					years = 5
+				}
+			}
+
+			scope:recipient = {
+				add_character_modifier = {
+					modifier = mt_caravan_guard
+					years = 5
+				}
+
+				add_opinion = {
+					target = scope:actor
+					modifier = employer_opinion
+					opinion = 25
+				}
+			}
+		}
+
+		# Notification
+		scope:recipient = {
+			send_interface_toast = {
+				title = hire_caravan_guard_accepted_notification
+				left_icon = scope:actor
+
+				show_as_tooltip = {
+					add_gold = 36
+				}
+			}
+		}
+	}
+
+	on_decline = {
+		scope:actor = {
+			add_opinion = {
+				target = scope:recipient
+				modifier = disappointed_opinion
+				opinion = -5
+			}
+		}
+	}
+
+	# AI acceptance
+	ai_accept = {
+		base = 90  # High base - reasonable pay
+
+		# Opinion matters less for employment
+		opinion_modifier = {
+			who = scope:recipient
+			opinion_target = scope:actor
+			multiplier = 0.2
+		}
+
+		# More likely if recipient needs money
+		modifier = {
+			add = 30
+			scope:recipient = {
+				gold < 50
+			}
+			desc = AI_NEEDS_GOLD
+		}
+
+		# Less likely if recipient is wealthy
+		modifier = {
+			add = -40
+			scope:recipient = {
+				gold >= 500
+			}
+			desc = AI_ALREADY_WEALTHY
+		}
+
+		# More likely for longer contracts (stability)
+		modifier = {
+			add = 10
+			scope:hire_two_years = yes
+			desc = AI_LONGER_CONTRACT
+		}
+
+		modifier = {
+			add = 20
+			scope:hire_five_years = yes
+			desc = AI_LONG_CONTRACT
+		}
+
+		# Less likely if recipient is proud/arrogant
+		modifier = {
+			add = -30
+			scope:recipient = {
+				has_trait = arrogant
+			}
+			desc = AI_PROUD
+		}
+
+		# More likely if humble
+		modifier = {
+			add = 20
+			scope:recipient = {
+				has_trait = humble
+			}
+			desc = AI_HUMBLE
+		}
+
+		# Less likely if recipient is a ruler
+		modifier = {
+			add = -50
+			scope:recipient = {
+				is_ruler = yes
+				higher_tier_than = tier_barony
+			}
+			desc = AI_HAS_RESPONSIBILITIES
+		}
+	}
+
+	ai_potential = yes
+
+	ai_will_do = {
+		base = 40
+
+		# More likely if actor has dangerous routes
+		modifier = {
+			add = 30
+			scope:actor = {
+				# TODO: Check for dangerous route modifier
+				OR = {
+					has_character_modifier = mt_dangerous_route
+					any_held_title = {
+						tier = tier_county
+						county = {
+							county_control < 50
+						}
+					}
+				}
+			}
+		}
+
+		# More likely if wealthy merchant
+		modifier = {
+			add = 20
+			scope:actor = {
+				gold >= 500
+			}
+		}
+	}
+}
+
+####################################
+# 4. SEIZE MERCHANT ASSETS
+# Ruler confiscates merchant's wealth and trade posts
+####################################
+
+seize_merchant_assets_interaction = {
+	category = interaction_category_hostile
+
+	desc = seize_merchant_assets_interaction_desc
+
+	greeting = negative
+	notification_text = SEIZE_MERCHANT_ASSETS_NOTIFICATION
+
+	ai_targets = {
+		ai_recipients = realm_characters
+		ai_recipients = vassals
+	}
+
+	ai_frequency = 120  # Check every 10 years (rare)
+
+	# Show to rulers targeting wealthy merchants in their realm
+	is_shown = {
+		scope:actor = {
+			# Actor must be a ruler
+			is_ruler = yes
+			higher_tier_than = tier_barony
+		}
+		scope:recipient = {
+			# Recipient must be a merchant
+			OR = {
+				has_trait = wandering_merchant
+				has_trait = trade_post_owner
+				has_trait = trading_company_head
+				has_trait = merchant_prince
+			}
+			# Must have significant wealth
+			gold >= 100
+		}
+		# Merchant operates in actor's realm
+		scope:recipient = {
+			OR = {
+				liege = scope:actor
+				capital_province = {
+					county = {
+						holder = scope:actor
+					}
+				}
+			}
+		}
+	}
+
+	is_valid_showing_failures_only = {
+		scope:actor = {
+			# Must have the authority
+			is_independent_ruler = yes
+		}
+		scope:recipient = {
+			# Not imprisoned already
+			is_imprisoned = no
+		}
+	}
+
+	can_send = {
+		scope:actor = {
+			# This is a hostile action - always allowed but has consequences
+			always = yes
+		}
+	}
+
+	# Always auto-accept (hostile action)
+	auto_accept = yes
+
+	on_accept = {
+		scope:actor = {
+			# Gain half of merchant's gold
+			if = {
+				limit = {
+					scope:recipient = { gold >= 100 }
+				}
+				add_gold = {
+					value = scope:recipient.gold
+					multiply = 0.5
+				}
+			}
+
+			# Lose prestige for tyranny
+			add_prestige = -100
+
+			# Severe opinion penalty
+			add_opinion = {
+				target = scope:recipient
+				modifier = seized_assets_opinion
+				opinion = -100
+			}
+
+			# Realm characters disapprove
+			every_vassal = {
+				add_opinion = {
+					target = scope:actor
+					modifier = tyrant_opinion
+					opinion = -15
+				}
+			}
+
+			# Gain tyranny
+			add_tyranny = 20
+		}
+
+		scope:recipient = {
+			# Lose half their gold
+			if = {
+				limit = { gold >= 100 }
+				remove_short_term_gold = {
+					value = gold
+					multiply = 0.5
+				}
+			}
+
+			# Lose all trade modifiers
+			remove_character_modifier = mt_granted_trade_rights
+			remove_character_modifier = mt_granted_trade_rights_enhanced
+			remove_character_modifier = mt_trade_partnership
+			remove_character_modifier = mt_senior_trade_partner
+			remove_character_modifier = mt_junior_trade_partner
+
+			# Severe opinion penalty
+			add_opinion = {
+				target = scope:actor
+				modifier = seized_my_assets_opinion
+				opinion = -100
+			}
+
+			# Lose prestige
+			add_prestige = -50
+
+			# May flee realm (handled by event)
+			trigger_event = {
+				id = mt_merchant_events.100
+				days = 7
+			}
+		}
+
+		# Notification
+		scope:recipient = {
+			send_interface_toast = {
+				title = seize_merchant_assets_notification
+				left_icon = scope:actor
+				type = event_toast_effect_bad
+
+				show_as_tooltip = {
+					remove_short_term_gold = {
+						value = gold
+						multiply = 0.5
+					}
+				}
+			}
+		}
+	}
+
+	# AI logic - very unlikely unless specific conditions
+	ai_accept = {
+		base = 100  # Auto-accept (hostile)
+	}
+
+	ai_potential = yes
+
+	ai_will_do = {
+		base = 10  # Very low base chance
+
+		# Much more likely if greedy
+		modifier = {
+			add = 40
+			scope:actor = {
+				has_trait = greedy
+			}
+		}
+
+		# More likely if merchant is very wealthy
+		modifier = {
+			add = 30
+			scope:recipient = {
+				gold >= 1000
+			}
+		}
+
+		# More likely if low opinion
+		modifier = {
+			add = 30
+			scope:actor = {
+				opinion = {
+					target = scope:recipient
+					value <= -25
+				}
+			}
+		}
+
+		# Less likely if just
+		modifier = {
+			add = -80
+			scope:actor = {
+				has_trait = just
+			}
+		}
+
+		# Less likely if honorable/compassionate
+		modifier = {
+			add = -60
+			scope:actor = {
+				OR = {
+					has_trait = compassionate
+					has_trait = humble
+				}
+			}
+		}
+
+		# More likely if desperate for money
+		modifier = {
+			add = 40
+			scope:actor = {
+				gold < 50
+				monthly_character_income < 5
+			}
+		}
+
+		# Less likely if actor is wealthy
+		modifier = {
+			add = -50
+			scope:actor = {
+				gold >= 500
+			}
+		}
+
+		# Much less likely if merchant is a vassal
+		modifier = {
+			add = -60
+			scope:recipient = {
+				is_vassal_of = scope:actor
+			}
+		}
+	}
+}
+
+####################################
+# 5. OFFER MERCHANT PROTECTION
+# Ruler offers protection to merchants in their realm
+####################################
+
+offer_merchant_protection_interaction = {
+	category = interaction_category_diplomacy
+
+	desc = offer_merchant_protection_interaction_desc
+
+	greeting = positive
+	notification_text = OFFER_MERCHANT_PROTECTION_NOTIFICATION
+
+	ai_targets = {
+		ai_recipients = realm_characters
+		ai_recipients = neighboring_rulers
+	}
+
+	ai_frequency = 60  # Check every 5 years
+
+	# Show to rulers targeting merchants
+	is_shown = {
+		scope:actor = {
+			# Actor must be a ruler
+			is_ruler = yes
+			any_held_title = {
+				tier = tier_county
+			}
+		}
+		scope:recipient = {
+			# Recipient must be a merchant
+			OR = {
+				has_trait = wandering_merchant
+				has_trait = trade_post_owner
+				has_trait = trading_company_head
+				has_trait = merchant_prince
+			}
+		}
+		# Not the same character
+		scope:actor != scope:recipient
+	}
+
+	is_valid_showing_failures_only = {
+		# Not at war
+		scope:actor = {
+			NOT = { is_at_war_with = scope:recipient }
+		}
+		# Don't already have protection arrangement
+		scope:recipient = {
+			NOT = {
+				has_character_modifier = mt_ruler_protection
+			}
+		}
+		# Actor controls stable territory
+		scope:actor = {
+			any_held_title = {
+				tier = tier_county
+				county = {
+					county_control >= 50
+				}
+			}
+		}
+	}
+
+	can_send = {
+		scope:actor = {
+			# Must have military strength to protect
+			max_military_strength >= 500
+		}
+	}
+
+	# No cost - this is an offer of alliance-like relationship
+	on_accept = {
+		scope:actor = {
+			# Gain prestige for protecting commerce
+			add_prestige = 30
+
+			# Excellent opinion boost
+			add_opinion = {
+				target = scope:recipient
+				modifier = protector_opinion
+				opinion = 30
+			}
+
+			# Modifier showing they protect merchants
+			add_character_modifier = {
+				modifier = mt_merchant_protector
+				years = 20
+			}
+		}
+
+		scope:recipient = {
+			# Gain protection
+			add_character_modifier = {
+				modifier = mt_ruler_protection
+				years = 20
+			}
+
+			# Excellent opinion boost
+			add_opinion = {
+				target = scope:actor
+				modifier = grateful_opinion
+				opinion = 50
+			}
+
+			# Routes in actor's realm get bonus
+			if = {
+				limit = {
+					any_held_title = {
+						tier = tier_county
+						holder = scope:actor
+					}
+				}
+				add_character_modifier = {
+					modifier = mt_protected_trade_routes
+					years = 20
+				}
+			}
+
+			# Small prestige gain
+			add_prestige = 20
+		}
+
+		# Notification
+		scope:recipient = {
+			send_interface_toast = {
+				title = offer_merchant_protection_accepted_notification
+				left_icon = scope:actor
+
+				show_as_tooltip = {
+					add_character_modifier = {
+						modifier = mt_ruler_protection
+						years = 20
+					}
+				}
+			}
+		}
+	}
+
+	on_decline = {
+		scope:actor = {
+			add_opinion = {
+				target = scope:recipient
+				modifier = disappointed_opinion
+				opinion = -10
+			}
+		}
+	}
+
+	# AI acceptance
+	ai_accept = {
+		base = 80  # High base - it's a good deal
+
+		# Opinion is important for trust
+		opinion_modifier = {
+			who = scope:recipient
+			opinion_target = scope:actor
+			multiplier = 0.8
+		}
+
+		# More likely if routes are dangerous
+		modifier = {
+			add = 30
+			scope:recipient = {
+				has_character_modifier = mt_dangerous_route
+			}
+			desc = AI_ROUTES_DANGEROUS
+		}
+
+		# More likely if recipient operates in actor's realm
+		modifier = {
+			add = 25
+			scope:recipient = {
+				any_held_title = {
+					tier = tier_county
+					county = {
+						holder = scope:actor
+					}
+				}
+			}
+			desc = AI_OPERATES_IN_REALM
+		}
+
+		# More likely if actor is lawful/honorable
+		modifier = {
+			add = 20
+			scope:actor = {
+				OR = {
+					has_trait = just
+					has_trait = humble
+					has_trait = compassionate
+				}
+			}
+			desc = AI_HONORABLE_RULER
+		}
+
+		# Less likely if actor is known to be tyrannical
+		modifier = {
+			add = -40
+			scope:actor = {
+				OR = {
+					has_trait = tyrannical
+					has_trait = greedy
+					tyranny >= 50
+				}
+			}
+			desc = AI_UNTRUSTWORTHY
+		}
+
+		# More likely if actor has strong military
+		modifier = {
+			add = 15
+			scope:actor = {
+				max_military_strength >= 2000
+			}
+			desc = AI_STRONG_PROTECTOR
+		}
+
+		# Less likely if merchant is independent and powerful
+		modifier = {
+			add = -30
+			scope:recipient = {
+				has_trait = merchant_prince
+				is_independent_ruler = yes
+			}
+			desc = AI_INDEPENDENT_MAGNATE
+		}
+	}
+
+	ai_potential = yes
+
+	ai_will_do = {
+		base = 50
+
+		# More likely if actor is lawful/just
+		modifier = {
+			add = 30
+			scope:actor = {
+				has_trait = just
+			}
+		}
+
+		# More likely if actor wants to develop economy
+		modifier = {
+			add = 25
+			scope:actor = {
+				any_held_title = {
+					tier = tier_county
+					county = {
+						development_level >= 10
+					}
+				}
+			}
+		}
+
+		# Less likely if greedy (wants payment instead)
+		modifier = {
+			add = -40
+			scope:actor = {
+				has_trait = greedy
+			}
+		}
+
+		# More likely if merchant is very successful
+		modifier = {
+			add = 20
+			scope:recipient = {
+				OR = {
+					has_trait = trading_company_head
+					has_trait = merchant_prince
+				}
+			}
+		}
+	}
+}

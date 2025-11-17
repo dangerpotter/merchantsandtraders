@@ -612,6 +612,198 @@ mt_agricultural_heartland = {
 }
 
 ####################################
+# CHARACTER INTERACTION MODIFIERS
+####################################
+
+# Granted by request_trade_rights_interaction
+# Allows merchant to establish trade routes through ruler's lands
+mt_granted_trade_rights = {
+	icon = "gfx/interface/icons/modifiers/diplomacy.dds"
+
+	# Permission to operate freely
+	diplomacy = 1
+
+	# Better trade deals in this realm
+	monthly_income_mult = 0.05				# +5% income from routes
+
+	# Legitimate merchant status
+	general_opinion = 5
+	monthly_prestige = 0.1
+}
+
+# Enhanced version with generous payment
+mt_granted_trade_rights_enhanced = {
+	icon = "gfx/interface/icons/modifiers/diplomacy.dds"
+
+	# Better permission benefits
+	diplomacy = 2
+	stewardship = 1
+
+	# Much better trade deals
+	monthly_income_mult = 0.10				# +10% income from routes
+
+	# Prestigious status
+	general_opinion = 10
+	monthly_prestige = 0.2
+}
+
+# Equal partnership between merchants
+mt_trade_partnership = {
+	icon = "gfx/interface/icons/modifiers/diplomacy.dds"
+
+	# Shared knowledge and routes
+	diplomacy = 1
+	stewardship = 1
+
+	# General prestige from partnership
+	monthly_prestige = 0.1
+}
+
+# Senior partner in trade deal
+mt_senior_trade_partner = {
+	icon = "gfx/interface/icons/modifiers/diplomacy.dds"
+
+	# Leadership benefits
+	diplomacy = 2
+	stewardship = 1
+
+	# Prestige from senior position
+	monthly_prestige = 0.15
+}
+
+# Junior partner in trade deal
+mt_junior_trade_partner = {
+	icon = "gfx/interface/icons/modifiers/diplomacy.dds"
+
+	# Learning from senior partner
+	diplomacy = 1
+	learning = 1
+
+	# Small prestige
+	monthly_prestige = 0.05
+}
+
+# Income boost from equal partnership
+mt_partnership_income_boost = {
+	icon = "gfx/interface/icons/modifiers/county_modifier_development.dds"
+
+	# Shared profits and reduced costs
+	monthly_income_mult = 0.08				# +8% income
+
+	# Efficiency gains
+	monthly_character_expenses_mult = -0.05	# -5% expenses
+}
+
+# Senior partnership income boost
+mt_senior_partnership_income_boost = {
+	icon = "gfx/interface/icons/modifiers/county_modifier_development.dds"
+
+	# Larger share of profits
+	monthly_income_mult = 0.15				# +15% income
+
+	# Better deals
+	monthly_character_expenses_mult = -0.08	# -8% expenses
+}
+
+# Hired caravan guards protecting routes
+mt_hired_caravan_guards = {
+	icon = "gfx/interface/icons/modifiers/county_modifier_development.dds"
+
+	# Route protection benefits
+	# Reduces danger by 20%
+	health = 0.25							# Safer travel
+
+	# Lower losses from bandits
+	monthly_income_mult = 0.05				# +5% income (fewer losses)
+
+	# Peace of mind
+	stress_loss_mult = 0.10					# +10% stress loss
+}
+
+# Character working as caravan guard
+mt_caravan_guard = {
+	icon = "gfx/interface/icons/modifiers/diplomacy.dds"
+
+	# Employed as guard
+	monthly_prestige = 0.05
+
+	# Combat experience
+	prowess = 1
+
+	# Steady income already paid
+	# (Payment handled in interaction)
+}
+
+# Ruler protection for merchant
+mt_ruler_protection = {
+	icon = "gfx/interface/icons/modifiers/county_modifier_development.dds"
+
+	# Protected by powerful ruler
+	health = 0.5							# +0.5 health (much safer)
+
+	# Routes in their realm get +15% safety
+	monthly_income_mult = 0.10				# +10% income (security)
+
+	# Prestige from association
+	monthly_prestige = 0.15
+
+	# Reduced stress
+	stress_loss_mult = 0.15					# +15% stress loss
+
+	# Better opinion from realm characters
+	general_opinion = 10
+}
+
+# Ruler who protects merchants
+mt_merchant_protector = {
+	icon = "gfx/interface/icons/modifiers/diplomacy.dds"
+
+	# Reputation for supporting trade
+	monthly_prestige = 0.2
+
+	# Economic benefits from protected trade
+	monthly_income_mult = 0.05				# +5% income (trade taxes)
+
+	# Merchants like this ruler
+	general_opinion = 5
+
+	# Attracts more merchants
+	# (Event effects)
+}
+
+# Protected trade routes bonus
+mt_protected_trade_routes = {
+	icon = "gfx/interface/icons/modifiers/county_modifier_development.dds"
+
+	# Routes are much safer
+	monthly_income_mult = 0.15				# +15% income from routes
+
+	# Efficiency from security
+	monthly_character_expenses_mult = -0.10	# -10% expenses
+
+	# Health bonus
+	health = 0.3							# +0.3 health
+}
+
+# Trade disruption from merchant revenge
+mt_trade_disruption = {
+	icon = "gfx/interface/icons/modifiers/county_modifier_control.dds"
+
+	# Economic sabotage effects
+	tax_mult = -0.20						# -20% taxes
+	levy_size = -0.10						# -10% levies
+
+	# Development damage
+	development_growth_factor = -0.15		# -15% development
+
+	# County control
+	monthly_county_control = -0.3			# Instability
+
+	# Opinion
+	county_opinion_add = -10				# People upset
+}
+
+####################################
 # ROUTE MANAGEMENT MODIFIERS
 ####################################
 
