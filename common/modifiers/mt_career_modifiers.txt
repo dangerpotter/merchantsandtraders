@@ -382,3 +382,403 @@ mt_dynasty_merchant = {
 	same_opinion = 10
 	dynasty_opinion = 15
 }
+
+####################################
+# TRADE ROUTE MODIFIERS
+####################################
+
+# Smooth trade operations
+mt_smooth_operations = {
+	icon = "gfx/interface/icons/modifiers/stewardship.dds"
+
+	monthly_character_income_mult = 0.08
+	stress_loss_mult = 0.10
+
+	# Everything running well
+}
+
+# Caravan delayed by weather
+mt_weather_delayed = {
+	icon = "gfx/interface/icons/modifiers/county_modifier_development.dds"
+
+	monthly_character_income_mult = -0.20
+	stress_gain_mult = 0.10
+
+	# Routes disrupted
+}
+
+# Successfully defended caravan
+mt_defended_caravan = {
+	icon = "gfx/interface/icons/modifiers/advantage.dds"
+
+	monthly_prestige = 0.30
+	martial = 1
+
+	# Reputation for being tough
+	opposite_opinion = -15  # Bandits fear you
+	same_opinion = 10  # Merchants respect you
+}
+
+# Using efficient routes
+mt_efficient_routes = {
+	icon = "gfx/interface/icons/modifiers/stewardship.dds"
+
+	monthly_character_income_mult = 0.15
+	stewardship = 1
+
+	# Faster deliveries, better profits
+}
+
+# Has secret shortcuts
+mt_secret_routes = {
+	icon = "gfx/interface/icons/modifiers/intrigue.dds"
+
+	monthly_character_income_mult = 0.12
+	intrigue = 1
+
+	# Competitive advantage
+}
+
+# Using alternate route to avoid tolls
+mt_alternate_route = {
+	icon = "gfx/interface/icons/modifiers/county_modifier_development.dds"
+
+	monthly_character_income_mult = -0.05
+	stress_gain_mult = 0.05
+
+	# Longer but avoids fees
+}
+
+# Improved preservation techniques
+mt_improved_preservation = {
+	icon = "gfx/interface/icons/modifiers/learning.dds"
+
+	monthly_character_income_mult = 0.08
+	learning = 1
+
+	# Less spoilage
+}
+
+# Trades in exotic goods
+mt_exotic_goods_trader = {
+	icon = "gfx/interface/icons/modifiers/prestige.dds"
+
+	monthly_character_income_mult = 0.18
+	monthly_prestige = 0.50
+
+	# Luxury market access
+	general_opinion = 5
+}
+
+# Routes disrupted by war
+mt_war_disrupted_routes = {
+	icon = "gfx/interface/icons/modifiers/stress.dds"
+
+	monthly_character_income_mult = -0.50
+	stress_gain_mult = 0.20
+
+	# Severe disruption
+}
+
+# Suspended routes during conflict
+mt_suspended_routes = {
+	icon = "gfx/interface/icons/modifiers/county_modifier_development.dds"
+
+	monthly_character_income_mult = -0.40
+	stress_loss_mult = 0.10
+
+	# Waiting it out safely
+}
+
+# Bribed for safe passage during war
+mt_bribed_safe_passage = {
+	icon = "gfx/interface/icons/modifiers/gold.dds"
+
+	monthly_character_income_mult = -0.20
+	monthly_character_income_add = -2
+
+	# Expensive but routes continue
+}
+
+# Plague disrupting trade
+mt_plague_disruption = {
+	icon = "gfx/interface/icons/modifiers/health.dds"
+
+	monthly_character_income_mult = -0.30
+	stress_gain_mult = 0.15
+
+	# Market closed
+}
+
+# Known as generous merchant
+mt_generous_merchant = {
+	icon = "gfx/interface/icons/modifiers/piety.dds"
+
+	monthly_prestige = 0.40
+	monthly_piety = 0.30
+
+	# Remembered fondly
+	general_opinion = 15
+	same_opinion = 20
+}
+
+# Expanded trading network
+mt_expanded_network = {
+	icon = "gfx/interface/icons/modifiers/diplomacy.dds"
+
+	monthly_character_income_mult = 0.12
+	diplomacy = 1
+
+	# More opportunities
+}
+
+# Patron of infrastructure
+mt_infrastructure_patron = {
+	icon = "gfx/interface/icons/modifiers/prestige.dds"
+
+	monthly_prestige = 0.50
+	monthly_character_income_mult = 0.05
+
+	# Respected for public works
+	general_opinion = 15
+	liege_opinion = 20
+}
+
+# Facing market competition
+mt_market_competition = {
+	icon = "gfx/interface/icons/modifiers/stress.dds"
+
+	monthly_character_income_mult = -0.15
+	stress_gain_mult = 0.10
+
+	# Price pressure
+}
+
+# Competitive pricing strategy
+mt_competitive_pricing = {
+	icon = "gfx/interface/icons/modifiers/stewardship.dds"
+
+	monthly_character_income_mult = -0.05
+	stewardship = 1
+
+	# Lower margins but keep customers
+}
+
+# Merchant partnership
+mt_merchant_partnership = {
+	icon = "gfx/interface/icons/modifiers/diplomacy.dds"
+
+	monthly_character_income_mult = 0.10
+	diplomacy = 1
+
+	# Shared routes and resources
+	same_opinion = 15
+}
+
+# Premium goods reputation
+mt_premium_goods_reputation = {
+	icon = "gfx/interface/icons/modifiers/prestige.dds"
+
+	monthly_character_income_mult = 0.15
+	monthly_prestige = 0.40
+
+	# Quality over quantity
+	general_opinion = 10
+}
+
+# Pirate threat on sea routes
+mt_pirate_threat = {
+	icon = "gfx/interface/icons/modifiers/stress.dds"
+
+	monthly_character_income_mult = -0.25
+	stress_gain_mult = 0.15
+
+	# Dangerous waters
+}
+
+# Naval protection hired
+mt_naval_protection = {
+	icon = "gfx/interface/icons/modifiers/advantage.dds"
+
+	monthly_character_income_mult = -0.08
+	monthly_character_income_add = -1
+
+	# Guards cost money but routes safe
+}
+
+# Using overland routes
+mt_overland_routes = {
+	icon = "gfx/interface/icons/modifiers/county_modifier_development.dds"
+
+	monthly_character_income_mult = -0.10
+	stress_loss_mult = 0.05
+
+	# Slower but safer
+}
+
+# Agreement with pirates
+mt_pirate_agreement = {
+	icon = "gfx/interface/icons/modifiers/intrigue.dds"
+
+	monthly_character_income_add = -1
+	monthly_prestige = -0.20
+
+	# Shameful but practical
+	just_opinion = -15
+}
+
+# Organized merchant fleet
+mt_merchant_fleet = {
+	icon = "gfx/interface/icons/modifiers/advantage.dds"
+
+	monthly_character_income_mult = 0.05
+	martial = 1
+	monthly_prestige = 0.35
+
+	# Collective defense
+	same_opinion = 20
+}
+
+# Favorable partnership terms
+mt_favorable_partnership = {
+	icon = "gfx/interface/icons/modifiers/diplomacy.dds"
+
+	monthly_character_income_mult = 0.15
+	diplomacy = 1
+
+	# Better deal negotiated
+	same_opinion = 10
+}
+
+# Royal contract (exclusive)
+mt_royal_contract = {
+	icon = "gfx/interface/icons/modifiers/prestige.dds"
+
+	monthly_character_income_add = 8
+	monthly_prestige = 0.60
+
+	# Guaranteed income but locked in
+	monthly_character_income_mult = -0.12
+	liege_opinion = 40
+}
+
+# Flexible royal contract
+mt_flexible_contract = {
+	icon = "gfx/interface/icons/modifiers/prestige.dds"
+
+	monthly_character_income_add = 5
+	monthly_prestige = 0.40
+	diplomacy = 1
+
+	# Best of both worlds
+	liege_opinion = 30
+}
+
+# Access to new market
+mt_new_market_access = {
+	icon = "gfx/interface/icons/modifiers/stewardship.dds"
+
+	monthly_character_income_mult = 0.18
+	monthly_prestige = 0.30
+
+	# New opportunities
+}
+
+# Optimized market entry
+mt_optimized_market_entry = {
+	icon = "gfx/interface/icons/modifiers/learning.dds"
+
+	monthly_character_income_mult = 0.22
+	learning = 1
+	monthly_prestige = 0.40
+
+	# Researched approach pays off
+}
+
+# Local partnerships in new market
+mt_local_partnerships = {
+	icon = "gfx/interface/icons/modifiers/diplomacy.dds"
+
+	monthly_character_income_mult = 0.14
+	diplomacy = 1
+
+	# Local knowledge helps
+	general_opinion = 10
+}
+
+# Renowned for quality
+mt_renowned_quality = {
+	icon = "gfx/interface/icons/modifiers/prestige.dds"
+
+	monthly_character_income_mult = 0.12
+	monthly_prestige = 0.50
+
+	# Premium reputation
+	general_opinion = 15
+}
+
+# Paying higher wages to agents
+mt_higher_wages = {
+	icon = "gfx/interface/icons/modifiers/gold.dds"
+
+	monthly_character_income_add = -2
+	monthly_character_income_mult = 0.05
+
+	# Loyal and motivated staff
+	courtier_opinion = 15
+}
+
+# Partnership with agent
+mt_agent_partnership = {
+	icon = "gfx/interface/icons/modifiers/diplomacy.dds"
+
+	monthly_character_income_mult = 0.10
+	diplomacy = 1
+
+	# Invested in success together
+	courtier_opinion = 20
+}
+
+# Excellent management team
+mt_excellent_management = {
+	icon = "gfx/interface/icons/modifiers/stewardship.dds"
+
+	monthly_character_income_mult = 0.18
+	stewardship = 2
+	stress_loss_mult = 0.15
+
+	# Top talent
+}
+
+# Elite partnership with skilled agent
+mt_elite_partnership = {
+	icon = "gfx/interface/icons/modifiers/advantage.dds"
+
+	monthly_character_income_mult = 0.22
+	stewardship = 1
+	diplomacy = 1
+
+	# Powerful combination
+	courtier_opinion = 25
+}
+
+# Understaffed operations
+mt_understaffed = {
+	icon = "gfx/interface/icons/modifiers/stress.dds"
+
+	monthly_character_income_mult = -0.20
+	stress_gain_mult = 0.20
+
+	# Struggling without help
+}
+
+# Secret leverage over rivals
+mt_secret_leverage = {
+	icon = "gfx/interface/icons/modifiers/intrigue.dds"
+
+	intrigue = 2
+	monthly_character_income_mult = 0.08
+
+	# Blackmail material
+	opposite_opinion = -20
+}
