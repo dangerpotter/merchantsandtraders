@@ -1,0 +1,226 @@
+l_english:
+
+ ####################################
+ # TRADE ROUTE EVENTS LOCALIZATION
+ # Events: mt_route.0001-0025
+ ####################################
+
+ ####################################
+ # CARAVAN EVENTS (0001-0005)
+ ####################################
+
+ # 0001: Caravan arrives successfully
+ mt_route.0001.t:0 "Caravan Arrives Triumphant!"
+ mt_route.0001.desc:0 "The dust-covered rider dismounts in your courtyard, his face split by a wide grin. 'My lord, the caravan has arrived safely!' He hands you a manifest showing full delivery of all goods - not a single crate lost to bandits, weather, or misfortune.\n\nYour factors report that the goods sold for excellent prices, and the coin chests are heavy with profit. This is the merchant's dream - a route operating smoothly, delivering wealth like clockwork.\n\nWord of this success will spread through trading circles, enhancing your reputation as a reliable merchant."
+ mt_route.0001.a:0 "Excellent! Let us celebrate with the caravan masters!"
+ mt_route.0001.b:0 "Good. Now prepare the next shipment immediately."
+
+ # 0002: Caravan delayed by weather
+ mt_route.0002.t:0 "Storm-Delayed Caravan"
+ mt_route.0002.desc:0 "Your trade master arrives looking weary. 'The caravan was caught in terrible storms two days out from the city. The roads turned to rivers of mud, and we had to shelter in a nearby village for three days waiting for the deluge to pass.'\n\nHe unfurls a rain-spotted map, showing where they were forced to halt. 'The goods are safe, but we've lost time. The buyers in the destination city were expecting us days ago. Some may have purchased from competitors instead.'\n\nHow shall you handle this unfortunate delay?"
+ mt_route.0002.a:0 "Push the caravan to make up time - speed is essential"
+ mt_route.0002.b:0 "Accept the delay - better late than losing goods to haste"
+ mt_route.0002.c:0 "Send fast riders ahead to reassure our buyers"
+
+ # 0003: Bandits attack caravan
+ mt_route.0003.t:0 "Bandits on the Road!"
+ mt_route.0003.desc:0 "Your caravan master bursts into your chambers, face pale with worry and anger. 'Bandits ambushed us at the narrow pass near the old mill. Twenty men, maybe more, well-armed and clearly experienced. They've seized three wagons and are demanding ransom - fifty gold, or they burn everything and scatter our men to the winds.'\n\nHe clenches his fists. 'My lord, what are your orders? Do we pay these dogs their blood money? Or do we show them that our caravans are not easy prey?'\n\nThrough the window, you can see armed men readying themselves, awaiting your command."
+ mt_route.0003.a:0 "Pay the ransom - the goods are worth more than the gold"
+ mt_route.0003.a.tt:0 "Lose gold but recover goods and maintain route safety"
+ mt_route.0003.b:0 "Hire mercenaries to rescue the caravan by force!"
+ mt_route.0003.b.success:0 "The mercenaries rout the bandits and recover the goods"
+ mt_route.0003.b.failure:0 "The attack fails - goods are lost and men are wounded"
+ mt_route.0003.c:0 "Cut our losses - the goods are not worth the risk"
+ mt_route.0003.d:0 "Negotiate with the bandits - perhaps we can reduce the ransom"
+ mt_route.0003.d.success:0 "Your silver tongue saves you gold"
+ mt_route.0003.d.failure:0 "The bandits refuse to bargain"
+
+ # 0004: Caravan discovers shortcut
+ mt_route.0004.t:0 "A Merchant's Shortcut"
+ mt_route.0004.desc:0 "Your most experienced caravan master arrives with exciting news. 'My lord, we've discovered something remarkable. While detouring around a washed-out bridge, we found an old mountain path that the locals use. It cuts two full days from our usual route!'\n\nHe spreads a hand-drawn map before you. 'The path is narrow and steep in places, but it's well-maintained and quite safe. The local shepherds use it regularly. If we adopt this route permanently, we'll save time and costs on every trip.'\n\nThis could be a significant advantage over your competitors."
+ mt_route.0004.a:0 "Adopt the new route immediately - time is money!"
+ mt_route.0004.b:0 "Test it thoroughly first before committing"
+ mt_route.0004.c:0 "Keep it secret - this gives us an edge over rivals"
+
+ # 0005: Local lord demands toll
+ mt_route.0005.t:0 "An Unexpected Toll"
+ mt_route.0005.desc:0 "A courier brings troubling news from your trade route. Lord [local_lord.GetTitledFirstName] has erected a toll gate on the road through [local_lord.GetHerHis] lands. Your caravan master's letter is blunt:\n\n'This greedy fool demands five gold per caravan passage. He claims he's maintaining the roads and providing protection, but the roads are as rutted as ever and his guards are nowhere to be seen when bandits prowl. If we pay, it cuts directly into our profits. If we refuse, he threatens to bar our caravans entirely.'\n\nThis is the merchant's eternal frustration - dealing with petty lords who see traders as easy sources of revenue."
+ mt_route.0005.a:0 "Pay the toll - we cannot afford route disruption"
+ mt_route.0005.b:0 "Refuse and find an alternate route"
+ mt_route.0005.b.success:0 "You find a serviceable detour that avoids his lands"
+ mt_route.0005.b.failure:0 "All alternate routes are worse - you must pay or stop trading"
+ mt_route.0005.c:0 "Appeal to my own liege to intervene"
+ mt_route.0005.d:0 "Offer the lord a 'gift' in exchange for permanent passage rights"
+ mt_route.0005.d.success:0 "The lord accepts and grants you toll-free passage"
+ mt_route.0005.d.failure:0 "The lord takes your gift and still demands tolls"
+
+ ####################################
+ # GOODS EVENTS (0006-0009)
+ ####################################
+
+ # 0006: Goods spoiled in transit
+ mt_route.0006.t:0 "Spoiled Cargo"
+ mt_route.0006.desc:0 "The warehouse master approaches you with the expression of a man bearing bad news. 'My lord, I must report a significant loss. The shipment of perishable goods from our last caravan - the fine wines, the aged cheeses, the exotic fruits - much of it has spoiled.'\n\nHe leads you to the warehouse where the smell confirms his report. 'There was an unexpected delay at a river crossing. The summer heat did the rest. Perhaps half the shipment is ruined, maybe more. We can sell what remains at a loss, or... well, there might be less scrupulous buyers who wouldn't inspect too carefully.'\n\nThe loss stings. How do you handle this setback?"
+ mt_route.0006.a:0 "Accept the loss and sell only the good merchandise"
+ mt_route.0006.b:0 "Try to pass off the spoiled goods - buyer beware"
+ mt_route.0006.b.success:0 "The buyers don't notice - you recover most losses"
+ mt_route.0006.b.failure:0 "You're caught! Your reputation suffers terribly"
+ mt_route.0006.c:0 "Salvage what I can and write off the rest"
+
+ # 0007: Exceptional quality goods
+ mt_route.0007.t:0 "Goods of Extraordinary Quality"
+ mt_route.0007.desc:0 "Your trade factor arrives with barely contained excitement. 'My lord, you must see what we've acquired! The silk merchant I dealt with had a special shipment - silk of such quality that I've never seen its equal. The weave is perfect, the color vibrant and pure, the texture like water made solid.'\n\nHe carefully unfolds a sample, and even your untrained eye can see this is exceptional. 'The merchant didn't even realize what he had - I purchased at normal prices. But this... nobles will pay a fortune for cloth like this. We could make ten times our investment, perhaps more.'\n\nThis is the kind of fortunate discovery that can make a merchant's year."
+ mt_route.0007.a:0 "Sell immediately to the highest bidder!"
+ mt_route.0007.b:0 "Market this carefully to noble houses for maximum profit"
+ mt_route.0007.c:0 "Use this to gain favor with a powerful lord as a gift"
+
+ # 0008: Contraband discovered in shipment
+ mt_route.0008.t:0 "Contraband Crisis"
+ mt_route.0008.desc:0 "Your warehouse master pulls you aside urgently, speaking in hushed tones. 'My lord, we have a serious problem. While unpacking the latest shipment, we found items hidden in false-bottomed crates. Prohibited goods - things that could get us arrested, or worse.'\n\nHe glances around nervously. 'Someone in the supply chain is using our caravans to smuggle contraband. I don't know if it's our own people, the suppliers, or someone along the route. If the authorities find this in our possession, we'll be held responsible regardless of our knowledge or intent.'\n\nThis could destroy everything you've built if handled poorly."
+ mt_route.0008.a:0 "Immediately report this to the authorities"
+ mt_route.0008.b:0 "Quietly dispose of the contraband and say nothing"
+ mt_route.0008.b.success:0 "The contraband disappears without incident"
+ mt_route.0008.b.failure:0 "You're caught disposing of evidence - suspicion falls on you"
+ mt_route.0008.c:0 "Sell the contraband and profit from it"
+ mt_route.0008.d:0 "Launch an investigation to find who planted this"
+
+ # 0009: Rare goods discovered
+ mt_route.0009.t:0 "A Merchant's Treasure"
+ mt_route.0009.desc:0 "Your trade agent sends word from a distant market: 'My lord, fortune has blessed us! In a dusty corner of an estate sale, I found a collection of rare spices from the far East - varieties I've only heard mentioned in tales. The deceased owner collected them decades ago, and the heirs have no idea of their value.\n\nI've purchased the entire lot for a modest sum. Properly marketed to the right buyers - master cooks, nobles seeking exotic flavors for their feasts, physicians who use rare ingredients - these could fetch extraordinary prices. I await your instructions on how to best capitalize on this windfall.'\n\nOpportunities like this are why you became a merchant."
+ mt_route.0009.a:0 "Sell to wealthy epicures at premium prices"
+ mt_route.0009.b:0 "Auction them publicly to create competitive bidding"
+ mt_route.0009.c:0 "Hold them - such rarities will only increase in value"
+
+ ####################################
+ # ROUTE DISRUPTION (0010-0014)
+ ####################################
+
+ # 0010: War breaks out along route
+ mt_route.0010.t:0 "War Blocks the Trade Road"
+ mt_route.0010.desc:0 "The messenger arrives at dawn, mud-spattered and exhausted from hard riding. 'My lord, war has broken out! [realm_1.GetName] and [realm_2.GetName] are at each other's throats. Armies are mustering on both sides of our primary trade route.'\n\nHe unfurls a map with shaking hands. 'The route passes directly through what will become a war zone. Caravans will be seized by both sides for supplies. The roads will be choked with troops and refugees. If we try to continue trading through there, we risk losing everything - goods, wagons, even our people's lives.'\n\nWar is catastrophic for trade, but sometimes it creates opportunities for those bold enough to seize them."
+ mt_route.0010.a:0 "Suspend the route immediately until peace returns"
+ mt_route.0010.b:0 "Find an alternate route around the conflict"
+ mt_route.0010.c:0 "Approach both sides offering to supply their armies"
+
+ # 0011: Plague in trading city
+ mt_route.0011.t:0 "Plague at the Market"
+ mt_route.0011.desc:0 "Your caravan master returns early, his face grim. 'My lord, we did not complete our delivery. The city... plague has struck. The gates are barred, guards turn away all visitors. We could see smoke from burning corpses rising over the walls, hear the bells tolling for the dead.'\n\nHe spreads his hands helplessly. 'Our goods sit in the wagons, unsold. The city was our primary buyer. Without access to that market, the route is crippled. And there's worse - some of our men entered the city just before the quarantine. They're trapped inside. We can only pray they survive.'\n\nPlague is every merchant's nightmare - it kills both people and commerce."
+ mt_route.0011.a:0 "Wait for the plague to pass - do not risk contagion"
+ mt_route.0011.a.tt:0 "Safe but costly as goods sit unsold"
+ mt_route.0011.b:0 "Find another market to sell these goods"
+ mt_route.0011.c:0 "Attempt to smuggle goods into the city despite quarantine"
+
+ # 0012: Bridge collapsed - must repair or reroute
+ mt_route.0012.t:0 "The Bridge is Down"
+ mt_route.0012.desc:0 "Your route overseer arrives with frustrating news. 'The stone bridge over the Torrent River has collapsed. Spring floods undermined the foundations, and the whole center span gave way three nights ago. Thank the saints no one was crossing at the time.'\n\nHe shows you sketches of the damage. 'The bridge was crucial to our route - the nearest ford is fifteen miles upstream, and it adds five days to every journey. We have three options: We can fund repairs to the bridge ourselves - expensive but ensures it's done right. We can wait for the local lord to repair it - cheaper but might take months. Or we can permanently reroute through the ford and accept the longer journey.'\n\nEach choice has costs."
+ mt_route.0012.a:0 "Pay to repair the bridge ourselves - we need it operational"
+ mt_route.0012.b:0 "Use the ford route until the lord repairs the bridge"
+ mt_route.0012.c:0 "Pressure the local lord to repair it immediately"
+
+ # 0013: New competing merchant on same route
+ mt_route.0013.t:0 "A Rival Emerges"
+ mt_route.0013.desc:0 "Your factor in the trading city sends an urgent letter: 'My lord, a new merchant has established operations here - [rival_merchant.GetTitledFirstName] of [rival_merchant.GetHouse.GetName]. This newcomer is trading in the exact same goods we do, along the same route, targeting our customers.\n\nWorse, they're undercutting our prices significantly. I suspect they're operating at a loss to drive us out and capture our market share. Some of our regular buyers have already switched to this rival. If we don't respond, we could lose this route entirely. But matching their prices would drain our profits to nothing.\n\nHow shall we handle this threat to our business?'"
+ mt_route.0013.a:0 "Compete on price - match or beat their rates"
+ mt_route.0013.b:0 "Compete on quality and service, not price"
+ mt_route.0013.c:0 "Try to buy out the rival merchant"
+ mt_route.0013.d:0 "Sabotage their operations"
+ mt_route.0013.d.success:0 "Your underhanded tactics drive them out of business"
+ mt_route.0013.d.failure:0 "You're caught - your reputation is ruined"
+
+ # 0014: Piracy on sea routes
+ mt_route.0014.t:0 "Pirates on the Waves"
+ mt_route.0014.desc:0 "The ship's captain stands before you, hat in hand, his usually jovial face dark with anger. 'My lord, pirates took the Fortune's Wind. We were three days out of port when they struck - two fast galleys flying no colors. They boarded us before we could run. Took half the cargo, valuable goods worth hundreds of gold. Left us just enough to limp back to port.'\n\nHe clenches his jaw. 'The seas aren't safe anymore. These raiders grow bolder by the month. If we continue shipping by sea, we must either accept these losses as the cost of doing business, hire naval escorts, or find land routes instead. Each option cuts into our profits.'"
+ mt_route.0014.a:0 "Hire armed escorts for future sea voyages"
+ mt_route.0014.b:0 "Switch to slower but safer land routes"
+ mt_route.0014.c:0 "Accept the risk and continue - profits justify occasional losses"
+ mt_route.0014.d:0 "Organize a merchant coalition to hunt down these pirates"
+
+ ####################################
+ # OPPORTUNITIES (0015-0018)
+ ####################################
+
+ # 0015: Local merchant offers partnership
+ mt_route.0015.t:0 "A Partnership Proposal"
+ mt_route.0015.desc:0 "A prosperous local merchant, [partner_merchant.GetTitledFirstName], requests a private audience. Over wine, [partner_merchant.GetSheHe] makes an intriguing proposition:\n\n'I've watched your operation with admiration. You have excellent supply connections but limited distribution in this region. I have the opposite - strong local relationships but weak supply chains. Together, we could dominate this market. I propose a formal partnership: you supply the goods, I handle distribution, we split profits equally.'\n\n[partner_merchant.GetSheHe] slides a contract across the table. 'This could be very profitable for both of us. What say you?'"
+ mt_route.0015.a:0 "Accept the partnership - together we'll profit more"
+ mt_route.0015.b:0 "Negotiate for better terms than 50/50 split"
+ mt_route.0015.b.success:0 "You secure a 60/40 split in your favor"
+ mt_route.0015.b.failure:0 "The merchant is offended and withdraws the offer"
+ mt_route.0015.c:0 "Decline - I prefer to maintain full control"
+
+ # 0016: Ruler offers exclusive contract
+ mt_route.0016.t:0 "An Exclusive Contract"
+ mt_route.0016.desc:0 "[ruler.GetTitledFirstName] summons you to [ruler.GetHerHis] court. After the formalities, [ruler.GetSheHe] makes an extraordinary offer:\n\n'Your reputation as a reliable merchant has reached my ears. I require someone trustworthy to handle exclusive supply contracts for my household - fine wines, luxury fabrics, exotic goods. You would be my official purveyor, with all the prestige and profit that entails. In exchange, you would grant me favorable rates and priority on rare items. Additionally, I expect... discretion. And occasional special deliveries of a sensitive nature.'\n\n[ruler.GetSheHe] watches you carefully. This could make your fortune, but exclusive contracts create powerful enemies among rival merchants."
+ mt_route.0016.a:0 "Accept this honor - I shall serve you faithfully"
+ mt_route.0016.b:0 "Negotiate to maintain some independence in the contract"
+ mt_route.0016.b.success:0 "The ruler accepts reasonable terms"
+ mt_route.0016.b.failure:0 "The ruler is insulted - the offer is withdrawn"
+ mt_route.0016.c:0 "Respectfully decline - I must remain independent"
+
+ # 0017: New market opens
+ mt_route.0017.t:0 "A New Market Emerges"
+ mt_route.0017.desc:0 "Your scouts bring exciting news: 'My lord, a new city is rising in the borderlands. Settlers and merchants are flocking there, and the population grows by the week. They're desperate for goods - building materials, food supplies, luxury items to make the frontier feel civilized. Right now there's almost no competition.'\n\nOne scout unfurls a rough map showing the location. 'It's a hard journey, four days through difficult terrain. But the profits could be enormous for whoever establishes the first trade routes there. We could move now and dominate that market for years, or wait until roads improve and competition arrives.'\n\nOpportunity knocks, but the frontier is always risky."
+ mt_route.0017.a:0 "Establish a route immediately - fortune favors the bold!"
+ mt_route.0017.b:0 "Study the market carefully before committing resources"
+ mt_route.0017.c:0 "Partner with settlers to build infrastructure first"
+
+ # 0018: Festival in trading city
+ mt_route.0018.t:0 "The Grand Festival"
+ mt_route.0018.desc:0 "Word reaches you from your factor in the great trading city: 'My lord, the High Festival approaches! The duke has proclaimed a month-long celebration - tournaments, feasts, performances, merchants from every realm gathering to display their finest wares. Nobles and wealthy buyers will flock here with coin burning holes in their purses.'\n\nYour factor's excitement is palpable in the letter. 'If we bring our best goods to sell during the festival, we could make extraordinary profits. But it requires significant investment - renting prime market space, hiring skilled salespeople, displaying goods attractively. And the competition will be fierce. Every ambitious merchant will be there.'\n\nFestivals can make fortunes or cause embarrassing failures."
+ mt_route.0018.a:0 "Invest heavily - we'll dominate the festival markets!"
+ mt_route.0018.a.success:0 "Your display impresses everyone - sales exceed all expectations"
+ mt_route.0018.a.failure:0 "You're outshone by competitors - money wasted"
+ mt_route.0018.b:0 "Participate modestly - steady sales without huge risk"
+ mt_route.0018.c:0 "Avoid the festival chaos - the costs don't justify the risk"
+
+ ####################################
+ # AGENT EVENTS (0019-0021)
+ ####################################
+
+ # 0019: Merchant agent requests raise
+ mt_route.0019.t:0 "An Agent's Request"
+ mt_route.0019.desc:0 "Your chief merchant agent, [agent.GetTitledFirstName], requests a private meeting. [agent.GetSheHe] has served you well for several years, managing your routes efficiently and honestly.\n\n'My lord, I've been offered a position with another merchant house - triple my current salary. I don't want to leave your service; I believe in what we're building here. But I have a family to support. If you could see your way to increasing my compensation, I would remain gladly. If not... I must consider my family's future.'\n\n[agent.GetSheHe] looks uncomfortable making this request, but clearly serious about it."
+ mt_route.0019.a:0 "Grant the raise - good agents are worth their cost"
+ mt_route.0019.b:0 "Refuse - no one is irreplaceable"
+ mt_route.0019.c:0 "Offer a smaller raise and profit-sharing instead"
+
+ # 0020: Agent embezzles funds
+ mt_route.0020.t:0 "Theft Most Foul"
+ mt_route.0020.desc:0 "Your accountant bursts into your chambers, ledgers clutched in trembling hands. 'My lord, I've discovered a terrible fraud! [agent.GetTitledFirstName], the agent you trusted with the eastern routes, has been embezzling funds for months. False invoices, inflated costs, shipments recorded but never sent. I estimate the theft at nearly two hundred gold, perhaps more.'\n\nYour accountant's face is grim. 'I have proof - the documents are damning. [agent.GetSheHe] must have thought we'd never notice the discrepancies. The question is, what do we do about it? Public prosecution will recover some funds but create scandal. Private confrontation might preserve our reputation but embolden others.'"
+ mt_route.0020.a:0 "Prosecute publicly - justice must be seen"
+ mt_route.0020.b:0 "Confront privately and demand repayment"
+ mt_route.0020.b.risk:0 "This is risky - the agent might flee or resist"
+ mt_route.0020.c:0 "Terminate quietly and write off the loss"
+
+ # 0021: Agent proves exceptionally skilled
+ mt_route.0021.t:0 "A Merchant's Gem"
+ mt_route.0021.desc:0 "Your trade factors are unanimous in their praise: [agent.GetTitledFirstName], the agent you hired last year, is extraordinarily talented. Reports flood in documenting [agent.GetHerHis] achievements:\n\n'Negotiated exclusive supply contracts with three major guilds... Discovered a new route cutting costs by 30%... Prevented a major fraud attempt that would have cost us hundreds... Smoothed over a dangerous dispute with local authorities...'\n\nYour senior advisor summarizes: 'My lord, this is someone special. Agents of this caliber are once in a generation. Other merchants will try to poach [agent.GetHerHim]. We should secure [agent.GetHerHis] loyalty now, before someone offers [agent.GetHerHim] their weight in gold to switch sides.'"
+ mt_route.0021.a:0 "Promote to senior position with substantial raise"
+ mt_route.0021.b:0 "Offer partnership shares in the business"
+ mt_route.0021.c:0 "Maintain current arrangement - don't show favoritism"
+
+ ####################################
+ # FOLLOW-UP EVENTS (0022-0025)
+ ####################################
+
+ # 0022: Follow-up for exceptional goods showcase
+ mt_route.0022.t:0 "Echoes of Excellence"
+ mt_route.0022.desc:0 "Your generosity with those exceptional goods has borne fruit beyond expectation. [noble.GetTitledFirstName] appears at your door personally, an unprecedented honor.\n\n'Your gift was magnificent - the finest quality I've seen in years. It graced my table at a feast hosting the king himself, and His Majesty commented favorably on it. I wish to establish regular trade with someone of your obvious discernment and quality. Name your terms, and let us do business together.'\n\nA royal connection through a noble patron - this is how merchant empires are built."
+ mt_route.0022.a:0 "A most fortunate outcome indeed!"
+
+ # 0023: Follow-up for contraband investigation
+ mt_route.0023.t:0 "The Investigation Concludes"
+ mt_route.0023.desc:0 "Your investigation into the contraband incident has concluded. The investigator presents his findings:\n\n'My lord, I've traced the smuggling to a corrupt warehouse supervisor. He was taking bribes from criminals to hide their contraband in our shipments. He confessed when confronted with evidence. The question is disposition - do we turn him over to authorities, or handle this privately?'\n\nHow you handle internal corruption will send a message to all your employees."
+ mt_route.0023.a:0 "Turn him over to the authorities for prosecution"
+ mt_route.0023.b:0 "Dismiss him quietly - no need for public scandal"
+
+ # 0024: Follow-up for studied market entry
+ mt_route.0024.t:0 "Study Pays Dividends"
+ mt_route.0024.desc:0 "Your careful study of the new market has revealed critical information. Your analyst reports:\n\n'My lord, I'm glad we studied before rushing in. The market has specific needs we wouldn't have anticipated - they desperately need iron tools but have little use for luxury goods. The winter season makes the pass impassable for three months yearly. And the local lord offers tax exemptions to merchants who invest in local infrastructure.'\n\nArmed with this knowledge, you can enter the market strategically and profitably."
+ mt_route.0024.a:0 "Now we can establish a profitable route there"
+
+ # 0025: Follow-up for agent leaving after denied raise
+ mt_route.0025.t:0 "Consequences of Frugality"
+ mt_route.0025.desc:0 "Your former agent, [agent.GetTitledFirstName], has joined your primary competitor. Worse, [agent.GetSheHe] took detailed knowledge of your routes, contacts, and methods with [agent.GetHerHim].\n\nReports indicate your rival is now undercutting you in markets where they previously had no presence. Your trade factors are frustrated: 'My lord, we trained [agent.GetHerHim], and now [agent.GetSheHe]'s using everything we taught [agent.GetHerHim] against us. This is what comes of being penny-wise and pound-foolish.'\n\nSometimes saving gold costs more than spending it."
+ mt_route.0025.a:0 "A costly lesson learned"
+ mt_route.0025.b:0 "This means war - I'll drive that traitor out of business"
