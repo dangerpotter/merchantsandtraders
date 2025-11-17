@@ -1,0 +1,3602 @@
+####################################
+# MERCHANTS AND TRADERS MOD
+# Trade Route Events
+####################################
+#
+# Event namespace: mt_route
+#
+# 0001-0005: Caravan Events
+# 0006-0009: Goods Events
+# 0010-0014: Route Disruption
+# 0015-0018: Opportunities
+# 0019-0021: Agent Events
+# 0022-0025: Follow-up Events
+#
+####################################
+
+namespace = mt_route
+
+####################################
+# CARAVAN EVENTS (0001-0005)
+####################################
+
+# 0001: Caravan arrives successfully
+mt_route.0001 = {
+	type = character_event
+	title = mt_route.0001.t
+	desc = mt_route.0001.desc
+	theme = stewardship
+
+	left_portrait = {
+		character = root
+		animation = happiness
+	}
+
+	trigger = {
+		OR = {
+			has_trait = trade_post_owner
+			has_trait = trading_company_head
+			has_trait = merchant_prince
+		}
+	}
+
+	mean_time_to_happen = {
+		months = 6
+
+		modifier = {
+			factor = 0.7
+			has_character_modifier = mt_efficient_routes
+		}
+	}
+
+	# Celebrate the success
+	option = {
+		name = mt_route.0001.a
+
+		add_prestige = 25
+		add_gold = 100
+		add_stress = -5
+
+		# Chance to improve route efficiency
+		random = {
+			chance = 20
+			add_character_modifier = {
+				modifier = mt_smooth_operations
+				months = 12
+			}
+		}
+
+		ai_chance = {
+			base = 70
+
+			modifier = {
+				add = 20
+				has_trait = gregarious
+			}
+		}
+	}
+
+	# Quietly accept and plan next venture
+	option = {
+		name = mt_route.0001.b
+
+		add_gold = 125
+		add_stewardship = 1
+
+		# Chance to gain diligent
+		random = {
+			chance = 10
+			add_trait = diligent
+		}
+
+		ai_chance = {
+			base = 30
+
+			modifier = {
+				add = 40
+				has_trait = diligent
+			}
+		}
+	}
+}
+
+# 0002: Caravan delayed by weather
+mt_route.0002 = {
+	type = character_event
+	title = mt_route.0002.t
+	desc = mt_route.0002.desc
+	theme = stewardship
+
+	left_portrait = {
+		character = root
+		animation = worry
+	}
+
+	trigger = {
+		OR = {
+			has_trait = wandering_merchant
+			has_trait = trade_post_owner
+			has_trait = trading_company_head
+		}
+		NOT = { has_character_modifier = mt_weather_delayed }
+	}
+
+	mean_time_to_happen = {
+		months = 10
+
+		# More common in winter
+		modifier = {
+			factor = 0.5
+			current_month >= 11
+		}
+
+		modifier = {
+			factor = 0.5
+			current_month <= 2
+		}
+	}
+
+	immediate = {
+		# Apply temporary delay
+		add_character_modifier = {
+			modifier = mt_weather_delayed
+			months = 3
+		}
+	}
+
+	# Wait it out patiently
+	option = {
+		name = mt_route.0002.a
+
+		add_stress = 10
+
+		# Chance to gain patient
+		random = {
+			chance = 15
+			add_trait = patient
+		}
+
+		ai_chance = {
+			base = 60
+
+			modifier = {
+				add = 30
+				has_trait = patient
+			}
+		}
+	}
+
+	# Try to push through anyway
+	option = {
+		name = mt_route.0002.b
+
+		trigger = {
+			gold >= 50
+		}
+
+		remove_short_term_gold = 50
+
+		random_list = {
+			60 = { # Make it through
+				desc = mt_route.0002.b.success
+				remove_character_modifier = mt_weather_delayed
+				add_gold = 100
+				add_prestige = 35
+			}
+			40 = { # Lose goods trying
+				desc = mt_route.0002.b.failure
+				add_gold = -75
+				add_stress = 25
+			}
+		}
+
+		ai_chance = {
+			base = 30
+
+			modifier = {
+				add = 40
+				has_trait = brave
+			}
+
+			modifier = {
+				add = 20
+				gold >= 200
+			}
+		}
+	}
+
+	# Hire local guides
+	option = {
+		name = mt_route.0002.c
+
+		trigger = {
+			gold >= 75
+			learning >= 10
+		}
+
+		remove_short_term_gold = 75
+		remove_character_modifier = mt_weather_delayed
+
+		# Successfully navigate with expert help
+		add_gold = 80
+		add_prestige = 25
+		add_learning = 1
+
+		ai_chance = {
+			base = 40
+
+			modifier = {
+				add = 30
+				learning >= 12
+			}
+
+			modifier = {
+				add = 20
+				gold >= 300
+			}
+		}
+	}
+}
+
+# 0003: Bandits attack caravan
+mt_route.0003 = {
+	type = character_event
+	title = mt_route.0003.t
+	desc = mt_route.0003.desc
+	theme = martial
+
+	left_portrait = {
+		character = root
+		animation = worry
+	}
+
+	right_portrait = {
+		character = scope:bandit_leader
+		animation = anger
+	}
+
+	trigger = {
+		OR = {
+			has_trait = wandering_merchant
+			has_trait = trade_post_owner
+			has_trait = trading_company_head
+		}
+		NOT = { has_character_modifier = mt_protected_operations }
+		NOT = { has_character_flag = recent_bandit_attack }
+	}
+
+	mean_time_to_happen = {
+		months = 12
+
+		# Less likely if you have good reputation
+		modifier = {
+			factor = 1.5
+			prestige >= 1000
+		}
+
+		# More likely if at war nearby
+		modifier = {
+			factor = 0.6
+			any_neighboring_realm = {
+				is_at_war = yes
+			}
+		}
+	}
+
+	immediate = {
+		add_character_flag = {
+			flag = recent_bandit_attack
+			days = 365
+		}
+
+		# Create bandit leader
+		create_character = {
+			location = root.location
+			template = bandit_character
+			save_scope_as = bandit_leader
+		}
+	}
+
+	# Pay the ransom
+	option = {
+		name = mt_route.0003.a
+
+		trigger = {
+			gold >= 100
+		}
+
+		remove_short_term_gold = 100
+		add_prestige = -25
+		add_stress = 15
+
+		# Route continues safely
+		custom_tooltip = mt_route.0003.a.tt
+
+		scope:bandit_leader = {
+			add_opinion = {
+				target = root
+				modifier = grateful_opinion
+				opinion = 20
+			}
+		}
+
+		ai_chance = {
+			base = 50
+
+			modifier = {
+				add = 30
+				has_trait = craven
+			}
+
+			modifier = {
+				add = 20
+				gold >= 500
+			}
+		}
+	}
+
+	# Fight back!
+	option = {
+		name = mt_route.0003.b
+
+		trigger = {
+			martial >= 8
+		}
+
+		duel = {
+			skill = martial
+			target = scope:bandit_leader
+
+			60 = { # Victory
+				compare_modifier = {
+					value = scope:duel_value
+					multiplier = 3
+				}
+				desc = mt_route.0003.b.success
+
+				send_interface_toast = {
+					title = mt_route.0003.b.success
+					left_icon = root
+
+					add_prestige = 150
+					add_gold = 75
+
+					# Gain reputation for being tough
+					add_character_modifier = {
+						modifier = mt_defended_caravan
+						years = 5
+					}
+
+					# Bandit leader flees or dies
+					scope:bandit_leader = {
+						death = {
+							death_reason = death_battle
+							killer = root
+						}
+					}
+				}
+			}
+
+			40 = { # Defeat
+				compare_modifier = {
+					value = scope:duel_value
+					multiplier = -3
+				}
+				desc = mt_route.0003.b.failure
+
+				send_interface_toast = {
+					title = mt_route.0003.b.failure
+					left_icon = root
+
+					add_gold = -200
+					add_prestige = -75
+					add_stress = 35
+
+					# Possible injury
+					random = {
+						chance = 30
+						add_trait = wounded
+					}
+				}
+			}
+		}
+
+		ai_chance = {
+			base = 30
+
+			modifier = {
+				add = 50
+				martial >= 12
+			}
+
+			modifier = {
+				add = 40
+				has_trait = brave
+			}
+
+			modifier = {
+				add = -50
+				has_trait = craven
+			}
+		}
+	}
+
+	# Hire guards for future protection
+	option = {
+		name = mt_route.0003.c
+
+		trigger = {
+			gold >= 150
+		}
+
+		remove_short_term_gold = 150
+
+		# Lose goods this time
+		add_gold = -100
+		add_stress = 20
+
+		# But protected in future
+		add_character_modifier = {
+			modifier = mt_protected_operations
+			years = 10
+		}
+
+		ai_chance = {
+			base = 40
+
+			modifier = {
+				add = 30
+				gold >= 500
+			}
+
+			modifier = {
+				add = 20
+				stewardship >= 12
+			}
+		}
+	}
+
+	# Try to negotiate
+	option = {
+		name = mt_route.0003.d
+
+		trigger = {
+			diplomacy >= 10
+		}
+
+		duel = {
+			skill = diplomacy
+			target = scope:bandit_leader
+
+			50 = { # Successful negotiation
+				compare_modifier = {
+					value = scope:duel_value
+					multiplier = 3
+				}
+				desc = mt_route.0003.d.success
+
+				send_interface_toast = {
+					title = mt_route.0003.d.success
+					left_icon = root
+
+					remove_short_term_gold = 50
+					add_prestige = 50
+
+					# They let you pass with minimal loss
+					scope:bandit_leader = {
+						add_opinion = {
+							target = root
+							modifier = respectful_opinion
+							opinion = 30
+						}
+					}
+				}
+			}
+
+			50 = { # Failed negotiation
+				compare_modifier = {
+					value = scope:duel_value
+					multiplier = -3
+				}
+				desc = mt_route.0003.d.failure
+
+				send_interface_toast = {
+					title = mt_route.0003.d.failure
+					left_icon = root
+
+					add_gold = -150
+					add_prestige = -50
+					add_stress = 30
+				}
+			}
+		}
+
+		ai_chance = {
+			base = 40
+
+			modifier = {
+				add = 40
+				diplomacy >= 14
+			}
+		}
+	}
+}
+
+# 0004: Caravan discovers shortcut
+mt_route.0004 = {
+	type = character_event
+	title = mt_route.0004.t
+	desc = mt_route.0004.desc
+	theme = learning
+
+	left_portrait = {
+		character = root
+		animation = happiness
+	}
+
+	trigger = {
+		OR = {
+			has_trait = trade_post_owner
+			has_trait = trading_company_head
+			has_trait = merchant_prince
+		}
+		NOT = { has_character_modifier = mt_efficient_routes }
+	}
+
+	mean_time_to_happen = {
+		months = 24
+
+		modifier = {
+			factor = 0.7
+			learning >= 12
+		}
+	}
+
+	# Use the shortcut permanently
+	option = {
+		name = mt_route.0004.a
+
+		add_character_modifier = {
+			modifier = mt_efficient_routes
+			years = 20
+		}
+
+		add_prestige = 100
+		add_gold = 50
+
+		ai_chance = {
+			base = 80
+		}
+	}
+
+	# Keep it secret, use for special deliveries
+	option = {
+		name = mt_route.0004.b
+
+		trigger = {
+			intrigue >= 10
+		}
+
+		add_character_modifier = {
+			modifier = mt_secret_routes
+			years = 15
+		}
+
+		add_gold = 75
+
+		ai_chance = {
+			base = 40
+
+			modifier = {
+				add = 40
+				intrigue >= 14
+			}
+
+			modifier = {
+				add = 30
+				has_trait = paranoid
+			}
+		}
+	}
+
+	# Sell the information to other merchants
+	option = {
+		name = mt_route.0004.c
+
+		add_gold = 200
+		add_prestige = 50
+
+		# Other merchants grateful
+		every_courtier = {
+			limit = {
+				OR = {
+					has_trait = wandering_merchant
+					has_trait = trade_post_owner
+					has_trait = trading_company_head
+				}
+			}
+			add_opinion = {
+				target = root
+				modifier = grateful_opinion
+				opinion = 15
+			}
+		}
+
+		ai_chance = {
+			base = 20
+
+			modifier = {
+				add = 30
+				has_trait = generous
+			}
+
+			modifier = {
+				add = 40
+				has_character_modifier = mt_guild_member
+			}
+		}
+	}
+}
+
+# 0005: Local lord demands toll
+mt_route.0005 = {
+	type = character_event
+	title = mt_route.0005.t
+	desc = mt_route.0005.desc
+	theme = diplomacy
+
+	left_portrait = {
+		character = root
+		animation = personality_rational
+	}
+
+	right_portrait = {
+		character = scope:toll_lord
+		animation = personality_bold
+	}
+
+	trigger = {
+		OR = {
+			has_trait = wandering_merchant
+			has_trait = trade_post_owner
+			has_trait = trading_company_head
+		}
+		any_liege_or_above = {
+			is_landed = yes
+			gold < 200
+		}
+	}
+
+	mean_time_to_happen = {
+		months = 18
+
+		# More likely if liege is poor
+		modifier = {
+			factor = 0.6
+			any_liege_or_above = {
+				gold < 100
+			}
+		}
+	}
+
+	immediate = {
+		random_liege_or_above = {
+			limit = {
+				is_landed = yes
+			}
+			save_scope_as = toll_lord
+		}
+	}
+
+	# Pay the toll
+	option = {
+		name = mt_route.0005.a
+
+		trigger = {
+			gold >= 75
+		}
+
+		remove_short_term_gold = 75
+
+		scope:toll_lord = {
+			add_gold = 75
+			add_opinion = {
+				target = root
+				modifier = grateful_opinion
+				opinion = 20
+			}
+		}
+
+		add_prestige = -15
+
+		ai_chance = {
+			base = 50
+
+			modifier = {
+				add = 30
+				gold >= 300
+			}
+
+			modifier = {
+				add = 20
+				scope:toll_lord = {
+					has_opinion = {
+						target = root
+						value >= 20
+					}
+				}
+			}
+		}
+	}
+
+	# Negotiate a lower toll
+	option = {
+		name = mt_route.0005.b
+
+		trigger = {
+			diplomacy >= 10
+		}
+
+		duel = {
+			skill = diplomacy
+			target = scope:toll_lord
+
+			60 = { # Successful negotiation
+				compare_modifier = {
+					value = scope:duel_value
+					multiplier = 3
+				}
+				desc = mt_route.0005.b.success
+
+				send_interface_toast = {
+					title = mt_route.0005.b.success
+					left_icon = root
+
+					remove_short_term_gold = 35
+
+					scope:toll_lord = {
+						add_gold = 35
+						add_opinion = {
+							target = root
+							modifier = respectful_opinion
+							opinion = 15
+						}
+					}
+
+					add_prestige = 50
+				}
+			}
+
+			40 = { # Failed negotiation - pay more
+				compare_modifier = {
+					value = scope:duel_value
+					multiplier = -3
+				}
+				desc = mt_route.0005.b.failure
+
+				send_interface_toast = {
+					title = mt_route.0005.b.failure
+					left_icon = root
+
+					remove_short_term_gold = 100
+
+					scope:toll_lord = {
+						add_gold = 100
+						add_opinion = {
+							target = root
+							modifier = annoyed_opinion
+							opinion = -10
+						}
+					}
+
+					add_prestige = -30
+					add_stress = 20
+				}
+			}
+		}
+
+		ai_chance = {
+			base = 40
+
+			modifier = {
+				add = 50
+				diplomacy >= 14
+			}
+		}
+	}
+
+	# Find an alternate route
+	option = {
+		name = mt_route.0005.c
+
+		trigger = {
+			stewardship >= 12
+		}
+
+		add_character_modifier = {
+			modifier = mt_alternate_route
+			years = 5
+		}
+
+		scope:toll_lord = {
+			add_opinion = {
+				target = root
+				modifier = annoyed_opinion
+				opinion = -25
+			}
+		}
+
+		# Takes longer but avoids toll
+		add_stress = 15
+
+		ai_chance = {
+			base = 30
+
+			modifier = {
+				add = 40
+				stewardship >= 16
+			}
+
+			modifier = {
+				add = 30
+				has_trait = stubborn
+			}
+		}
+	}
+
+	# Refuse and risk confiscation
+	option = {
+		name = mt_route.0005.d
+
+		trigger = {
+			has_trait = brave
+		}
+
+		random_list = {
+			40 = { # Get away with it
+				desc = mt_route.0005.d.success
+				add_prestige = 75
+				add_gold = 50
+
+				scope:toll_lord = {
+					add_opinion = {
+						target = root
+						modifier = angry_opinion
+						opinion = -40
+					}
+				}
+			}
+			60 = { # Caravan confiscated
+				desc = mt_route.0005.d.failure
+				add_gold = -200
+				add_prestige = -100
+				add_stress = 40
+
+				scope:toll_lord = {
+					add_gold = 200
+					add_opinion = {
+						target = root
+						modifier = rival_opinion
+						opinion = -75
+					}
+				}
+			}
+		}
+
+		ai_chance = {
+			base = 10
+
+			modifier = {
+				add = 30
+				has_trait = arrogant
+			}
+		}
+	}
+}
+
+####################################
+# GOODS EVENTS (0006-0009)
+####################################
+
+# 0006: Goods spoiled in transit
+mt_route.0006 = {
+	type = character_event
+	title = mt_route.0006.t
+	desc = mt_route.0006.desc
+	theme = stewardship
+
+	left_portrait = {
+		character = root
+		animation = sadness
+	}
+
+	trigger = {
+		OR = {
+			has_trait = wandering_merchant
+			has_trait = trade_post_owner
+		}
+		NOT = { has_character_modifier = mt_weather_delayed }
+	}
+
+	mean_time_to_happen = {
+		months = 15
+
+		# More likely in summer
+		modifier = {
+			factor = 0.6
+			current_month >= 5
+			current_month <= 8
+		}
+
+		# Less likely with good stewardship
+		modifier = {
+			factor = 1.5
+			stewardship >= 14
+		}
+	}
+
+	# Accept the loss
+	option = {
+		name = mt_route.0006.a
+
+		add_gold = -100
+		add_prestige = -25
+		add_stress = 20
+
+		# Chance to gain patient
+		random = {
+			chance = 15
+			add_trait = patient
+		}
+
+		ai_chance = {
+			base = 60
+		}
+	}
+
+	# Try to salvage what you can
+	option = {
+		name = mt_route.0006.b
+
+		trigger = {
+			stewardship >= 10
+		}
+
+		duel = {
+			skill = stewardship
+			target = root
+
+			50 = { # Salvage some value
+				desc = mt_route.0006.b.success
+				add_gold = -50
+				add_prestige = 15
+			}
+			50 = { # Total loss
+				desc = mt_route.0006.b.failure
+				add_gold = -125
+				add_stress = 30
+			}
+		}
+
+		ai_chance = {
+			base = 40
+
+			modifier = {
+				add = 40
+				stewardship >= 14
+			}
+		}
+	}
+
+	# Learn from the mistake
+	option = {
+		name = mt_route.0006.c
+
+		add_gold = -100
+		add_stewardship = 1
+		add_learning = 1
+
+		# Improve future operations
+		add_character_modifier = {
+			modifier = mt_improved_preservation
+			years = 10
+		}
+
+		ai_chance = {
+			base = 30
+
+			modifier = {
+				add = 40
+				learning >= 12
+			}
+		}
+	}
+}
+
+# 0007: Exceptional quality goods
+mt_route.0007 = {
+	type = character_event
+	title = mt_route.0007.t
+	desc = mt_route.0007.desc
+	theme = stewardship
+
+	left_portrait = {
+		character = root
+		animation = ecstasy
+	}
+
+	trigger = {
+		OR = {
+			has_trait = trade_post_owner
+			has_trait = trading_company_head
+			has_trait = merchant_prince
+		}
+	}
+
+	mean_time_to_happen = {
+		months = 18
+
+		modifier = {
+			factor = 0.7
+			has_character_modifier = mt_luxury_trade_focus
+		}
+
+		modifier = {
+			factor = 0.8
+			learning >= 12
+		}
+	}
+
+	# Sell immediately for premium price
+	option = {
+		name = mt_route.0007.a
+
+		add_gold = 250
+		add_prestige = 50
+
+		ai_chance = {
+			base = 50
+
+			modifier = {
+				add = 40
+				gold < 200
+			}
+		}
+	}
+
+	# Keep for prestigious client
+	option = {
+		name = mt_route.0007.b
+
+		trigger = {
+			any_liege_or_above = {
+				is_ruler = yes
+			}
+		}
+
+		random_liege_or_above = {
+			limit = {
+				is_ruler = yes
+			}
+			save_scope_as = prestigious_client
+		}
+
+		add_gold = 150
+		add_prestige = 100
+
+		scope:prestigious_client = {
+			add_opinion = {
+				target = root
+				modifier = grateful_opinion
+				opinion = 40
+			}
+		}
+
+		ai_chance = {
+			base = 40
+
+			modifier = {
+				add = 30
+				diplomacy >= 12
+			}
+		}
+	}
+
+	# Use as sample to attract more business
+	option = {
+		name = mt_route.0007.c
+
+		add_prestige = 75
+
+		# Future business opportunities
+		trigger_event = {
+			id = mt_route.0022
+			days = { 90 180 }
+		}
+
+		ai_chance = {
+			base = 30
+
+			modifier = {
+				add = 30
+				has_trait = ambitious
+			}
+		}
+	}
+}
+
+# 0008: Contraband discovered in shipment
+mt_route.0008 = {
+	type = character_event
+	title = mt_route.0008.t
+	desc = mt_route.0008.desc
+	theme = intrigue
+
+	left_portrait = {
+		character = root
+		animation = worry
+	}
+
+	trigger = {
+		OR = {
+			has_trait = wandering_merchant
+			has_trait = trade_post_owner
+			has_trait = trading_company_head
+		}
+		NOT = { has_character_flag = found_contraband }
+	}
+
+	mean_time_to_happen = {
+		months = 24
+	}
+
+	immediate = {
+		add_character_flag = {
+			flag = found_contraband
+			days = 730
+		}
+	}
+
+	# Report it to authorities
+	option = {
+		name = mt_route.0008.a
+
+		add_piety = 50
+		add_prestige = 50
+
+		# Gain favor with liege
+		if = {
+			limit = {
+				exists = liege
+			}
+			liege = {
+				add_opinion = {
+					target = root
+					modifier = loyal_opinion
+					opinion = 30
+				}
+			}
+		}
+
+		# Lose the shipment
+		add_gold = -50
+
+		ai_chance = {
+			base = 40
+
+			modifier = {
+				add = 50
+				has_trait = just
+			}
+
+			modifier = {
+				add = 30
+				has_trait = zealous
+			}
+		}
+	}
+
+	# Smuggle it for profit
+	option = {
+		name = mt_route.0008.b
+
+		trigger = {
+			intrigue >= 10
+		}
+
+		duel = {
+			skill = intrigue
+			target = root
+
+			60 = { # Successfully smuggle
+				desc = mt_route.0008.b.success
+				add_gold = 300
+				add_prestige = -25
+
+				# Chance to gain deceitful
+				random = {
+					chance = 25
+					add_trait = deceitful
+				}
+			}
+			40 = { # Caught!
+				desc = mt_route.0008.b.failure
+				add_gold = -200
+				add_prestige = -150
+				add_piety = -50
+				add_stress = 40
+
+				# Liege is angry
+				if = {
+					limit = {
+						exists = liege
+					}
+					liege = {
+						add_opinion = {
+							target = root
+							modifier = criminal_opinion
+							opinion = -50
+						}
+					}
+				}
+
+				add_character_modifier = {
+					modifier = mt_damaged_reputation
+					years = 5
+				}
+			}
+		}
+
+		ai_chance = {
+			base = 30
+
+			modifier = {
+				add = 50
+				has_trait = greedy
+			}
+
+			modifier = {
+				add = 40
+				intrigue >= 14
+			}
+
+			modifier = {
+				add = -50
+				has_trait = just
+			}
+		}
+	}
+
+	# Destroy it to avoid trouble
+	option = {
+		name = mt_route.0008.c
+
+		add_piety = 25
+		add_stress = -10
+
+		# Safe choice but no reward
+
+		ai_chance = {
+			base = 40
+
+			modifier = {
+				add = 30
+				has_trait = cautious
+			}
+
+			modifier = {
+				add = 20
+				has_trait = craven
+			}
+		}
+	}
+
+	# Investigate who planted it
+	option = {
+		name = mt_route.0008.d
+
+		trigger = {
+			intrigue >= 12
+		}
+
+		# Discover it was a rival merchant
+		trigger_event = {
+			id = mt_route.0023
+			days = 30
+		}
+
+		ai_chance = {
+			base = 20
+
+			modifier = {
+				add = 40
+				intrigue >= 16
+			}
+
+			modifier = {
+				add = 30
+				has_trait = paranoid
+			}
+		}
+	}
+}
+
+# 0009: Rare goods discovered
+mt_route.0009 = {
+	type = character_event
+	title = mt_route.0009.t
+	desc = mt_route.0009.desc
+	theme = learning
+
+	left_portrait = {
+		character = root
+		animation = happiness
+	}
+
+	trigger = {
+		OR = {
+			has_trait = trade_post_owner
+			has_trait = trading_company_head
+			has_trait = merchant_prince
+		}
+	}
+
+	mean_time_to_happen = {
+		months = 30
+
+		modifier = {
+			factor = 0.6
+			learning >= 14
+		}
+	}
+
+	# Add to your luxury collection
+	option = {
+		name = mt_route.0009.a
+
+		add_prestige = 100
+
+		add_character_modifier = {
+			modifier = mt_exotic_goods_trader
+			years = 15
+		}
+
+		ai_chance = {
+			base = 50
+
+			modifier = {
+				add = 30
+				has_trait = ambitious
+			}
+		}
+	}
+
+	# Sell to highest bidder
+	option = {
+		name = mt_route.0009.b
+
+		add_gold = 400
+		add_prestige = 50
+
+		ai_chance = {
+			base = 40
+
+			modifier = {
+				add = 40
+				has_trait = greedy
+			}
+
+			modifier = {
+				add = 30
+				gold < 300
+			}
+		}
+	}
+
+	# Gift to powerful noble
+	option = {
+		name = mt_route.0009.c
+
+		trigger = {
+			any_liege_or_above = {
+				is_ruler = yes
+			}
+		}
+
+		random_liege_or_above = {
+			limit = {
+				is_ruler = yes
+			}
+			save_scope_as = noble_recipient
+		}
+
+		add_prestige = 75
+
+		scope:noble_recipient = {
+			add_opinion = {
+				target = root
+				modifier = grateful_opinion
+				opinion = 50
+			}
+		}
+
+		ai_chance = {
+			base = 30
+
+			modifier = {
+				add = 40
+				diplomacy >= 14
+			}
+		}
+	}
+}
+
+####################################
+# ROUTE DISRUPTION (0010-0014)
+####################################
+
+# 0010: War breaks out along route
+mt_route.0010 = {
+	type = character_event
+	title = mt_route.0010.t
+	desc = mt_route.0010.desc
+	theme = martial
+
+	left_portrait = {
+		character = root
+		animation = worry
+	}
+
+	trigger = {
+		OR = {
+			has_trait = trade_post_owner
+			has_trait = trading_company_head
+		}
+		any_neighboring_realm = {
+			is_at_war = yes
+		}
+		NOT = { has_character_modifier = mt_war_disrupted_routes }
+	}
+
+	mean_time_to_happen = {
+		months = 6
+	}
+
+	immediate = {
+		add_character_modifier = {
+			modifier = mt_war_disrupted_routes
+			months = 12
+		}
+	}
+
+	# Suspend operations until war ends
+	option = {
+		name = mt_route.0010.a
+
+		add_character_modifier = {
+			modifier = mt_suspended_routes
+			months = 12
+		}
+
+		add_stress = 25
+
+		ai_chance = {
+			base = 60
+
+			modifier = {
+				add = 30
+				has_trait = cautious
+			}
+		}
+	}
+
+	# Bribe both sides for safe passage
+	option = {
+		name = mt_route.0010.b
+
+		trigger = {
+			gold >= 200
+			diplomacy >= 12
+		}
+
+		remove_short_term_gold = 200
+
+		# Routes continue at reduced capacity
+		add_character_modifier = {
+			modifier = mt_bribed_safe_passage
+			months = 12
+		}
+
+		add_prestige = 50
+
+		ai_chance = {
+			base = 40
+
+			modifier = {
+				add = 30
+				gold >= 500
+			}
+
+			modifier = {
+				add = 20
+				diplomacy >= 16
+			}
+		}
+	}
+
+	# Find new routes around the conflict
+	option = {
+		name = mt_route.0010.c
+
+		trigger = {
+			stewardship >= 14
+		}
+
+		# Expensive to set up new routes
+		remove_short_term_gold = 150
+
+		# But maintains business
+		remove_character_modifier = mt_war_disrupted_routes
+
+		add_character_modifier = {
+			modifier = mt_alternate_route
+			years = 3
+		}
+
+		add_stewardship = 1
+
+		ai_chance = {
+			base = 30
+
+			modifier = {
+				add = 50
+				stewardship >= 16
+			}
+		}
+	}
+}
+
+# 0011: Plague in trading city
+mt_route.0011 = {
+	type = character_event
+	title = mt_route.0011.t
+	desc = mt_route.0011.desc
+	theme = learning
+
+	left_portrait = {
+		character = root
+		animation = sadness
+	}
+
+	trigger = {
+		OR = {
+			has_trait = trade_post_owner
+			has_trait = trading_company_head
+		}
+		NOT = { has_character_modifier = mt_plague_disruption }
+	}
+
+	mean_time_to_happen = {
+		months = 36
+	}
+
+	immediate = {
+		add_character_modifier = {
+			modifier = mt_plague_disruption
+			months = 6
+		}
+	}
+
+	# Wait for plague to pass
+	option = {
+		name = mt_route.0011.a
+
+		add_stress = 30
+
+		# Lost income during plague
+		custom_tooltip = mt_route.0011.a.tt
+
+		ai_chance = {
+			base = 70
+
+			modifier = {
+				add = 20
+				has_trait = patient
+			}
+		}
+	}
+
+	# Send aid to the city
+	option = {
+		name = mt_route.0011.b
+
+		trigger = {
+			gold >= 150
+		}
+
+		remove_short_term_gold = 150
+		add_piety = 100
+		add_prestige = 75
+
+		# City remembers your generosity
+		add_character_modifier = {
+			modifier = mt_generous_merchant
+			years = 10
+		}
+
+		# Chance to contract plague yourself
+		random = {
+			chance = 15
+			add_trait = ill
+		}
+
+		ai_chance = {
+			base = 30
+
+			modifier = {
+				add = 50
+				has_trait = compassionate
+			}
+
+			modifier = {
+				add = 30
+				has_trait = zealous
+			}
+		}
+	}
+
+	# Establish new trading partners elsewhere
+	option = {
+		name = mt_route.0011.c
+
+		trigger = {
+			stewardship >= 12
+		}
+
+		remove_short_term_gold = 100
+
+		# New opportunities
+		remove_character_modifier = mt_plague_disruption
+
+		add_character_modifier = {
+			modifier = mt_expanded_network
+			years = 10
+		}
+
+		ai_chance = {
+			base = 40
+
+			modifier = {
+				add = 40
+				stewardship >= 16
+			}
+
+			modifier = {
+				add = 30
+				has_trait = ambitious
+			}
+		}
+	}
+}
+
+# 0012: Bridge collapsed - must repair or reroute
+mt_route.0012 = {
+	type = character_event
+	title = mt_route.0012.t
+	desc = mt_route.0012.desc
+	theme = stewardship
+
+	left_portrait = {
+		character = root
+		animation = anger
+	}
+
+	trigger = {
+		OR = {
+			has_trait = trade_post_owner
+			has_trait = trading_company_head
+		}
+	}
+
+	mean_time_to_happen = {
+		months = 24
+	}
+
+	# Pay to repair the bridge
+	option = {
+		name = mt_route.0012.a
+
+		trigger = {
+			gold >= 250
+		}
+
+		remove_short_term_gold = 250
+		add_prestige = 100
+
+		# Grateful locals
+		add_character_modifier = {
+			modifier = mt_infrastructure_patron
+			years = 15
+		}
+
+		# Local lord appreciates it
+		if = {
+			limit = {
+				exists = liege
+			}
+			liege = {
+				add_opinion = {
+					target = root
+					modifier = grateful_opinion
+					opinion = 40
+				}
+			}
+		}
+
+		ai_chance = {
+			base = 40
+
+			modifier = {
+				add = 40
+				gold >= 1000
+			}
+
+			modifier = {
+				add = 30
+				has_trait = generous
+			}
+		}
+	}
+
+	# Find alternate route
+	option = {
+		name = mt_route.0012.b
+
+		add_character_modifier = {
+			modifier = mt_alternate_route
+			years = 5
+		}
+
+		# Takes longer
+		add_stress = 15
+
+		ai_chance = {
+			base = 50
+
+			modifier = {
+				add = 30
+				gold < 250
+			}
+		}
+	}
+
+	# Partner with other merchants to share cost
+	option = {
+		name = mt_route.0012.c
+
+		trigger = {
+			gold >= 100
+			any_courtier = {
+				OR = {
+					has_trait = trade_post_owner
+					has_trait = trading_company_head
+				}
+			}
+		}
+
+		remove_short_term_gold = 100
+		add_prestige = 50
+
+		# Improved relations with merchant community
+		every_courtier = {
+			limit = {
+				OR = {
+					has_trait = trade_post_owner
+					has_trait = trading_company_head
+				}
+			}
+			add_opinion = {
+				target = root
+				modifier = cooperative_opinion
+				opinion = 20
+			}
+		}
+
+		ai_chance = {
+			base = 40
+
+			modifier = {
+				add = 40
+				has_character_modifier = mt_guild_member
+			}
+		}
+	}
+}
+
+# 0013: New competing merchant on same route
+mt_route.0013 = {
+	type = character_event
+	title = mt_route.0013.t
+	desc = mt_route.0013.desc
+	theme = diplomacy
+
+	left_portrait = {
+		character = root
+		animation = worry
+	}
+
+	right_portrait = {
+		character = scope:competitor
+		animation = personality_bold
+	}
+
+	trigger = {
+		OR = {
+			has_trait = trade_post_owner
+			has_trait = trading_company_head
+		}
+		any_courtier = {
+			OR = {
+				has_trait = wandering_merchant
+				has_trait = trade_post_owner
+			}
+			NOT = { this = root }
+		}
+	}
+
+	mean_time_to_happen = {
+		months = 18
+	}
+
+	immediate = {
+		random_courtier = {
+			limit = {
+				OR = {
+					has_trait = wandering_merchant
+					has_trait = trade_post_owner
+				}
+				NOT = { this = root }
+			}
+			save_scope_as = competitor
+		}
+
+		# Temporary price drop
+		add_character_modifier = {
+			modifier = mt_market_competition
+			years = 3
+		}
+	}
+
+	# Lower your prices to compete
+	option = {
+		name = mt_route.0013.a
+
+		add_character_modifier = {
+			modifier = mt_competitive_pricing
+			years = 5
+		}
+
+		# Lower profits but keep customers
+		add_prestige = -25
+
+		ai_chance = {
+			base = 40
+
+			modifier = {
+				add = 30
+				stewardship >= 12
+			}
+		}
+	}
+
+	# Form a partnership
+	option = {
+		name = mt_route.0013.b
+
+		trigger = {
+			diplomacy >= 12
+		}
+
+		scope:competitor = {
+			add_opinion = {
+				target = root
+				modifier = business_partner_opinion
+				opinion = 40
+			}
+		}
+
+		add_character_modifier = {
+			modifier = mt_merchant_partnership
+			years = 10
+		}
+
+		add_prestige = 50
+
+		ai_chance = {
+			base = 40
+
+			modifier = {
+				add = 40
+				diplomacy >= 16
+			}
+
+			modifier = {
+				add = 30
+				has_trait = gregarious
+			}
+		}
+	}
+
+	# Focus on quality over price
+	option = {
+		name = mt_route.0013.c
+
+		trigger = {
+			learning >= 10
+		}
+
+		add_character_modifier = {
+			modifier = mt_premium_goods_reputation
+			years = 10
+		}
+
+		add_prestige = 75
+
+		ai_chance = {
+			base = 40
+
+			modifier = {
+				add = 40
+				has_character_modifier = mt_luxury_trade_focus
+			}
+
+			modifier = {
+				add = 30
+				learning >= 14
+			}
+		}
+	}
+
+	# Sabotage their operations
+	option = {
+		name = mt_route.0013.d
+
+		trigger = {
+			intrigue >= 12
+			OR = {
+				has_trait = vengeful
+				has_trait = ambitious
+			}
+		}
+
+		duel = {
+			skill = intrigue
+			target = scope:competitor
+
+			50 = { # Successfully sabotage
+				desc = mt_route.0013.d.success
+
+				send_interface_toast = {
+					title = mt_route.0013.d.success
+					left_icon = root
+
+					remove_character_modifier = mt_market_competition
+
+					scope:competitor = {
+						add_prestige = -100
+						add_gold = -150
+
+						add_opinion = {
+							target = root
+							modifier = rival_opinion
+							opinion = -100
+						}
+					}
+
+					add_prestige = 50
+				}
+			}
+
+			50 = { # Get caught
+				desc = mt_route.0013.d.failure
+
+				send_interface_toast = {
+					title = mt_route.0013.d.failure
+					left_icon = root
+
+					add_prestige = -200
+					add_piety = -50
+
+					add_character_modifier = {
+						modifier = mt_damaged_reputation
+						years = 7
+					}
+
+					# All merchants disapprove
+					every_courtier = {
+						limit = {
+							OR = {
+								has_trait = wandering_merchant
+								has_trait = trade_post_owner
+								has_trait = trading_company_head
+							}
+						}
+						add_opinion = {
+							target = root
+							modifier = criminal_opinion
+							opinion = -30
+						}
+					}
+				}
+			}
+		}
+
+		ai_chance = {
+			base = 10
+
+			modifier = {
+				add = 40
+				has_trait = vengeful
+			}
+
+			modifier = {
+				add = 30
+				intrigue >= 16
+			}
+		}
+	}
+}
+
+# 0014: Piracy on sea routes
+mt_route.0014 = {
+	type = character_event
+	title = mt_route.0014.t
+	desc = mt_route.0014.desc
+	theme = martial
+
+	left_portrait = {
+		character = root
+		animation = anger
+	}
+
+	trigger = {
+		OR = {
+			has_trait = trade_post_owner
+			has_trait = trading_company_head
+			has_trait = merchant_prince
+		}
+		capital_province = {
+			is_coastal = yes
+		}
+		NOT = { has_character_modifier = mt_pirate_threat }
+	}
+
+	mean_time_to_happen = {
+		months = 20
+
+		modifier = {
+			factor = 1.5
+			has_character_modifier = mt_protected_operations
+		}
+	}
+
+	immediate = {
+		add_character_modifier = {
+			modifier = mt_pirate_threat
+			years = 2
+		}
+	}
+
+	# Hire naval escorts
+	option = {
+		name = mt_route.0014.a
+
+		trigger = {
+			gold >= 200
+		}
+
+		remove_short_term_gold = 200
+
+		add_character_modifier = {
+			modifier = mt_naval_protection
+			years = 5
+		}
+
+		ai_chance = {
+			base = 50
+
+			modifier = {
+				add = 30
+				gold >= 600
+			}
+		}
+	}
+
+	# Switch to overland routes
+	option = {
+		name = mt_route.0014.b
+
+		remove_character_modifier = mt_pirate_threat
+
+		add_character_modifier = {
+			modifier = mt_overland_routes
+			years = 5
+		}
+
+		# More expensive but safer
+		add_stress = 15
+
+		ai_chance = {
+			base = 40
+
+			modifier = {
+				add = 30
+				has_trait = cautious
+			}
+		}
+	}
+
+	# Pay tribute to pirate lords
+	option = {
+		name = mt_route.0014.c
+
+		trigger = {
+			gold >= 150
+			diplomacy >= 10
+		}
+
+		remove_short_term_gold = 150
+		add_prestige = -50
+
+		# Safe passage guaranteed
+		remove_character_modifier = mt_pirate_threat
+
+		add_character_modifier = {
+			modifier = mt_pirate_agreement
+			years = 3
+		}
+
+		ai_chance = {
+			base = 30
+
+			modifier = {
+				add = 30
+				diplomacy >= 14
+			}
+
+			modifier = {
+				factor = 0.3
+				has_trait = just
+			}
+		}
+	}
+
+	# Organize merchant fleet defense
+	option = {
+		name = mt_route.0014.d
+
+		trigger = {
+			martial >= 12
+			any_courtier = {
+				OR = {
+					has_trait = trade_post_owner
+					has_trait = trading_company_head
+				}
+			}
+		}
+
+		remove_short_term_gold = 100
+
+		# Collective defense
+		remove_character_modifier = mt_pirate_threat
+
+		add_character_modifier = {
+			modifier = mt_merchant_fleet
+			years = 10
+		}
+
+		add_prestige = 100
+
+		# Improved relations with merchants
+		every_courtier = {
+			limit = {
+				OR = {
+					has_trait = trade_post_owner
+					has_trait = trading_company_head
+				}
+			}
+			add_opinion = {
+				target = root
+				modifier = protective_opinion
+				opinion = 25
+			}
+		}
+
+		ai_chance = {
+			base = 40
+
+			modifier = {
+				add = 40
+				martial >= 16
+			}
+
+			modifier = {
+				add = 30
+				has_character_modifier = mt_guild_member
+			}
+		}
+	}
+}
+
+####################################
+# OPPORTUNITIES (0015-0018)
+####################################
+
+# 0015: Local merchant offers partnership
+mt_route.0015 = {
+	type = character_event
+	title = mt_route.0015.t
+	desc = mt_route.0015.desc
+	theme = diplomacy
+
+	left_portrait = {
+		character = root
+		animation = personality_rational
+	}
+
+	right_portrait = {
+		character = scope:partner
+		animation = personality_content
+	}
+
+	trigger = {
+		OR = {
+			has_trait = trade_post_owner
+			has_trait = trading_company_head
+		}
+		any_courtier = {
+			OR = {
+				has_trait = trade_post_owner
+				has_trait = trading_company_head
+			}
+			NOT = { this = root }
+			reverse_opinion = {
+				target = root
+				value >= 10
+			}
+		}
+		NOT = { has_character_modifier = mt_merchant_partnership }
+	}
+
+	mean_time_to_happen = {
+		months = 24
+
+		modifier = {
+			factor = 0.7
+			diplomacy >= 14
+		}
+	}
+
+	immediate = {
+		random_courtier = {
+			limit = {
+				OR = {
+					has_trait = trade_post_owner
+					has_trait = trading_company_head
+				}
+				NOT = { this = root }
+				reverse_opinion = {
+					target = root
+					value >= 10
+				}
+			}
+			save_scope_as = partner
+		}
+	}
+
+	# Accept equal partnership
+	option = {
+		name = mt_route.0015.a
+
+		add_character_modifier = {
+			modifier = mt_merchant_partnership
+			years = 15
+		}
+
+		scope:partner = {
+			add_opinion = {
+				target = root
+				modifier = business_partner_opinion
+				opinion = 50
+			}
+		}
+
+		add_prestige = 50
+
+		ai_chance = {
+			base = 60
+
+			modifier = {
+				add = 30
+				has_trait = trusting
+			}
+		}
+	}
+
+	# Negotiate better terms
+	option = {
+		name = mt_route.0015.b
+
+		trigger = {
+			diplomacy >= 14
+		}
+
+		duel = {
+			skill = diplomacy
+			target = scope:partner
+
+			60 = { # Better deal
+				desc = mt_route.0015.b.success
+
+				send_interface_toast = {
+					title = mt_route.0015.b.success
+					left_icon = root
+
+					add_character_modifier = {
+						modifier = mt_favorable_partnership
+						years = 15
+					}
+
+					scope:partner = {
+						add_opinion = {
+							target = root
+							modifier = business_partner_opinion
+							opinion = 30
+						}
+					}
+
+					add_prestige = 75
+				}
+			}
+
+			40 = { # They withdraw offer
+				desc = mt_route.0015.b.failure
+
+				send_interface_toast = {
+					title = mt_route.0015.b.failure
+					left_icon = root
+
+					scope:partner = {
+						add_opinion = {
+							target = root
+							modifier = annoyed_opinion
+							opinion = -25
+						}
+					}
+
+					add_stress = 20
+				}
+			}
+		}
+
+		ai_chance = {
+			base = 30
+
+			modifier = {
+				add = 50
+				diplomacy >= 18
+			}
+
+			modifier = {
+				add = 30
+				has_trait = greedy
+			}
+		}
+	}
+
+	# Decline politely
+	option = {
+		name = mt_route.0015.c
+
+		scope:partner = {
+			add_opinion = {
+				target = root
+				modifier = disappointed_opinion
+				opinion = -15
+			}
+		}
+
+		ai_chance = {
+			base = 20
+
+			modifier = {
+				add = 40
+				has_trait = paranoid
+			}
+
+			modifier = {
+				add = 30
+				has_character_modifier = mt_independent_reputation
+			}
+		}
+	}
+}
+
+# 0016: Ruler offers exclusive contract
+mt_route.0016 = {
+	type = character_event
+	title = mt_route.0016.t
+	desc = mt_route.0016.desc
+	theme = diplomacy
+
+	left_portrait = {
+		character = root
+		animation = personality_rational
+	}
+
+	right_portrait = {
+		character = scope:ruler
+		animation = personality_bold
+	}
+
+	trigger = {
+		OR = {
+			has_trait = trading_company_head
+			has_trait = merchant_prince
+		}
+		prestige >= 1000
+		exists = liege
+		liege = {
+			is_ruler = yes
+			has_opinion = {
+				target = root
+				value >= 30
+			}
+		}
+	}
+
+	mean_time_to_happen = {
+		months = 30
+
+		modifier = {
+			factor = 0.6
+			liege = {
+				has_opinion = {
+					target = root
+					value >= 60
+				}
+			}
+		}
+	}
+
+	immediate = {
+		liege = {
+			save_scope_as = ruler
+		}
+	}
+
+	# Accept the exclusive contract
+	option = {
+		name = mt_route.0016.a
+
+		add_character_modifier = {
+			modifier = mt_royal_contract
+			years = 20
+		}
+
+		add_prestige = 200
+		add_gold = 500
+
+		scope:ruler = {
+			add_opinion = {
+				target = root
+				modifier = loyal_opinion
+				opinion = 60
+			}
+		}
+
+		ai_chance = {
+			base = 60
+
+			modifier = {
+				add = 30
+				has_trait = content
+			}
+		}
+	}
+
+	# Negotiate for non-exclusive terms
+	option = {
+		name = mt_route.0016.b
+
+		trigger = {
+			diplomacy >= 16
+		}
+
+		duel = {
+			skill = diplomacy
+			target = scope:ruler
+
+			50 = { # Success
+				desc = mt_route.0016.b.success
+
+				send_interface_toast = {
+					title = mt_route.0016.b.success
+					left_icon = root
+
+					add_character_modifier = {
+						modifier = mt_flexible_contract
+						years = 15
+					}
+
+					add_prestige = 150
+					add_gold = 300
+
+					scope:ruler = {
+						add_opinion = {
+							target = root
+							modifier = respectful_opinion
+							opinion = 40
+						}
+					}
+				}
+			}
+
+			50 = { # Failure
+				desc = mt_route.0016.b.failure
+
+				send_interface_toast = {
+					title = mt_route.0016.b.failure
+					left_icon = root
+
+					scope:ruler = {
+						add_opinion = {
+							target = root
+							modifier = disappointed_opinion
+							opinion = -30
+						}
+					}
+
+					add_stress = 25
+				}
+			}
+		}
+
+		ai_chance = {
+			base = 30
+
+			modifier = {
+				add = 50
+				diplomacy >= 18
+			}
+
+			modifier = {
+				add = 30
+				has_trait = ambitious
+			}
+		}
+	}
+
+	# Decline to maintain independence
+	option = {
+		name = mt_route.0016.c
+
+		add_prestige = 100
+
+		scope:ruler = {
+			add_opinion = {
+				target = root
+				modifier = disappointed_opinion
+				opinion = -40
+			}
+		}
+
+		add_character_modifier = {
+			modifier = mt_independent_reputation
+			years = 10
+		}
+
+		ai_chance = {
+			base = 20
+
+			modifier = {
+				add = 50
+				has_trait = proud
+			}
+
+			modifier = {
+				add = 40
+				has_trait = merchant_prince
+			}
+		}
+	}
+}
+
+# 0017: New market opens
+mt_route.0017 = {
+	type = character_event
+	title = mt_route.0017.t
+	desc = mt_route.0017.desc
+	theme = learning
+
+	left_portrait = {
+		character = root
+		animation = happiness
+	}
+
+	trigger = {
+		OR = {
+			has_trait = trade_post_owner
+			has_trait = trading_company_head
+			has_trait = merchant_prince
+		}
+	}
+
+	mean_time_to_happen = {
+		months = 20
+
+		modifier = {
+			factor = 0.7
+			learning >= 14
+		}
+	}
+
+	# Establish trade route immediately
+	option = {
+		name = mt_route.0017.a
+
+		trigger = {
+			gold >= 150
+		}
+
+		remove_short_term_gold = 150
+
+		add_character_modifier = {
+			modifier = mt_new_market_access
+			years = 15
+		}
+
+		add_prestige = 75
+
+		ai_chance = {
+			base = 60
+
+			modifier = {
+				add = 30
+				has_trait = ambitious
+			}
+		}
+	}
+
+	# Study the market first
+	option = {
+		name = mt_route.0017.b
+
+		trigger = {
+			learning >= 12
+		}
+
+		# Better understanding leads to better results
+		trigger_event = {
+			id = mt_route.0024
+			days = { 90 180 }
+		}
+
+		ai_chance = {
+			base = 40
+
+			modifier = {
+				add = 40
+				learning >= 16
+			}
+
+			modifier = {
+				add = 30
+				has_trait = patient
+			}
+		}
+	}
+
+	# Partner with local merchants
+	option = {
+		name = mt_route.0017.c
+
+		trigger = {
+			diplomacy >= 12
+			gold >= 100
+		}
+
+		remove_short_term_gold = 100
+
+		add_character_modifier = {
+			modifier = mt_local_partnerships
+			years = 15
+		}
+
+		add_prestige = 50
+
+		ai_chance = {
+			base = 40
+
+			modifier = {
+				add = 40
+				diplomacy >= 16
+			}
+		}
+	}
+}
+
+# 0018: Festival in trading city
+mt_route.0018 = {
+	type = character_event
+	title = mt_route.0018.t
+	desc = mt_route.0018.desc
+	theme = stewardship
+
+	left_portrait = {
+		character = root
+		animation = happiness
+	}
+
+	trigger = {
+		OR = {
+			has_trait = trade_post_owner
+			has_trait = trading_company_head
+		}
+	}
+
+	mean_time_to_happen = {
+		months = 12
+	}
+
+	# Send extra goods to capitalize
+	option = {
+		name = mt_route.0018.a
+
+		trigger = {
+			gold >= 100
+		}
+
+		remove_short_term_gold = 100
+
+		random_list = {
+			70 = { # Great profits
+				desc = mt_route.0018.a.success
+				add_gold = 300
+				add_prestige = 75
+			}
+			30 = { # Oversaturated market
+				desc = mt_route.0018.a.failure
+				add_gold = 50
+				add_stress = 20
+			}
+		}
+
+		ai_chance = {
+			base = 60
+
+			modifier = {
+				add = 30
+				gold >= 300
+			}
+		}
+	}
+
+	# Attend personally to network
+	option = {
+		name = mt_route.0018.b
+
+		trigger = {
+			diplomacy >= 10
+		}
+
+		add_gold = 150
+		add_prestige = 100
+		add_stress = -15
+
+		# Make valuable contacts
+		every_courtier = {
+			limit = {
+				OR = {
+					has_trait = trade_post_owner
+					has_trait = trading_company_head
+				}
+			}
+			add_opinion = {
+				target = root
+				modifier = friend_opinion
+				opinion = 15
+			}
+		}
+
+		ai_chance = {
+			base = 40
+
+			modifier = {
+				add = 50
+				diplomacy >= 14
+			}
+
+			modifier = {
+				add = 30
+				has_trait = gregarious
+			}
+		}
+	}
+
+	# Normal business operations
+	option = {
+		name = mt_route.0018.c
+
+		add_gold = 100
+		add_prestige = 25
+
+		ai_chance = {
+			base = 30
+		}
+	}
+}
+
+####################################
+# AGENT EVENTS (0019-0021)
+####################################
+
+# 0019: Merchant agent requests raise
+mt_route.0019 = {
+	type = character_event
+	title = mt_route.0019.t
+	desc = mt_route.0019.desc
+	theme = stewardship
+
+	left_portrait = {
+		character = root
+		animation = personality_rational
+	}
+
+	right_portrait = {
+		character = scope:agent
+		animation = personality_bold
+	}
+
+	trigger = {
+		OR = {
+			has_trait = trading_company_head
+			has_trait = merchant_prince
+		}
+		any_courtier = {
+			is_adult = yes
+			NOT = { this = root }
+			stewardship >= 10
+		}
+	}
+
+	mean_time_to_happen = {
+		months = 18
+	}
+
+	immediate = {
+		random_courtier = {
+			limit = {
+				is_adult = yes
+				NOT = { this = root }
+				stewardship >= 10
+			}
+			save_scope_as = agent
+		}
+	}
+
+	# Grant the raise
+	option = {
+		name = mt_route.0019.a
+
+		trigger = {
+			gold >= 50
+		}
+
+		remove_short_term_gold = 50
+
+		add_character_modifier = {
+			modifier = mt_higher_wages
+			years = 10
+		}
+
+		scope:agent = {
+			add_opinion = {
+				target = root
+				modifier = grateful_opinion
+				opinion = 40
+			}
+		}
+
+		# Better performance
+		add_gold = 30
+
+		ai_chance = {
+			base = 60
+
+			modifier = {
+				add = 30
+				gold >= 500
+			}
+
+			modifier = {
+				add = 20
+				has_trait = generous
+			}
+		}
+	}
+
+	# Refuse the raise
+	option = {
+		name = mt_route.0019.b
+
+		scope:agent = {
+			add_opinion = {
+				target = root
+				modifier = angry_opinion
+				opinion = -30
+			}
+		}
+
+		# Risk losing them
+		random = {
+			chance = 40
+			trigger_event = {
+				id = mt_route.0025
+				days = 30
+			}
+		}
+
+		ai_chance = {
+			base = 30
+
+			modifier = {
+				add = 40
+				gold < 100
+			}
+
+			modifier = {
+				add = 30
+				has_trait = greedy
+			}
+		}
+	}
+
+	# Offer partnership instead
+	option = {
+		name = mt_route.0019.c
+
+		trigger = {
+			diplomacy >= 12
+		}
+
+		scope:agent = {
+			add_opinion = {
+				target = root
+				modifier = business_partner_opinion
+				opinion = 50
+			}
+		}
+
+		add_character_modifier = {
+			modifier = mt_agent_partnership
+			years = 15
+		}
+
+		add_prestige = 50
+
+		ai_chance = {
+			base = 40
+
+			modifier = {
+				add = 40
+				diplomacy >= 16
+			}
+
+			modifier = {
+				add = 30
+				has_trait = trusting
+			}
+		}
+	}
+}
+
+# 0020: Agent embezzles funds
+mt_route.0020 = {
+	type = character_event
+	title = mt_route.0020.t
+	desc = mt_route.0020.desc
+	theme = intrigue
+
+	left_portrait = {
+		character = root
+		animation = anger
+	}
+
+	right_portrait = {
+		character = scope:embezzler
+		animation = worry
+	}
+
+	trigger = {
+		OR = {
+			has_trait = trading_company_head
+			has_trait = merchant_prince
+		}
+		any_courtier = {
+			is_adult = yes
+			NOT = { this = root }
+			has_opinion = {
+				target = root
+				value < 0
+			}
+		}
+	}
+
+	mean_time_to_happen = {
+		months = 30
+
+		# More likely if you have enemies
+		modifier = {
+			factor = 0.6
+			any_relation = {
+				type = rival
+			}
+		}
+	}
+
+	immediate = {
+		random_courtier = {
+			limit = {
+				is_adult = yes
+				NOT = { this = root }
+				has_opinion = {
+					target = root
+					value < 0
+				}
+			}
+			save_scope_as = embezzler
+		}
+
+		# Lose money
+		add_gold = -250
+	}
+
+	# Prosecute them fully
+	option = {
+		name = mt_route.0020.a
+
+		add_prestige = 50
+
+		scope:embezzler = {
+			add_prestige = -150
+			add_stress = 50
+
+			add_opinion = {
+				target = root
+				modifier = nemesis_opinion
+				opinion = -100
+			}
+
+			# Banish them
+			if = {
+				limit = {
+					exists = liege
+				}
+				liege = {
+					remove_courtier = scope:embezzler
+				}
+			}
+		}
+
+		# Recover some funds
+		add_gold = 100
+
+		ai_chance = {
+			base = 60
+
+			modifier = {
+				add = 40
+				has_trait = just
+			}
+		}
+	}
+
+	# Forgive them
+	option = {
+		name = mt_route.0020.b
+
+		trigger = {
+			has_trait = forgiving
+		}
+
+		add_piety = 50
+		add_prestige = -50
+
+		scope:embezzler = {
+			add_opinion = {
+				target = root
+				modifier = grateful_opinion
+				opinion = 60
+			}
+		}
+
+		# They might steal again
+		random = {
+			chance = 30
+			custom_tooltip = mt_route.0020.b.risk
+		}
+
+		ai_chance = {
+			base = 20
+
+			modifier = {
+				add = 50
+				has_trait = forgiving
+			}
+
+			modifier = {
+				add = 30
+				has_trait = compassionate
+			}
+		}
+	}
+
+	# Demand repayment
+	option = {
+		name = mt_route.0020.c
+
+		scope:embezzler = {
+			if = {
+				limit = {
+					gold >= 250
+				}
+				add_gold = -250
+				root = {
+					add_gold = 250
+				}
+			}
+			else = {
+				# Can't pay, becomes indebted
+				add_character_modifier = {
+					modifier = mt_merchant_debt
+					years = 10
+				}
+
+				root = {
+					add_gold = 150
+				}
+			}
+
+			add_opinion = {
+				target = root
+				modifier = angry_opinion
+				opinion = -40
+			}
+		}
+
+		ai_chance = {
+			base = 50
+
+			modifier = {
+				add = 40
+				has_trait = greedy
+			}
+		}
+	}
+}
+
+# 0021: Agent proves exceptionally skilled
+mt_route.0021 = {
+	type = character_event
+	title = mt_route.0021.t
+	desc = mt_route.0021.desc
+	theme = learning
+
+	left_portrait = {
+		character = root
+		animation = happiness
+	}
+
+	right_portrait = {
+		character = scope:skilled_agent
+		animation = personality_honorable
+	}
+
+	trigger = {
+		OR = {
+			has_trait = trading_company_head
+			has_trait = merchant_prince
+		}
+		any_courtier = {
+			is_adult = yes
+			NOT = { this = root }
+			stewardship >= 14
+			has_opinion = {
+				target = root
+				value >= 20
+			}
+		}
+	}
+
+	mean_time_to_happen = {
+		months = 24
+
+		modifier = {
+			factor = 0.7
+			has_character_modifier = mt_mentorship_approach
+		}
+	}
+
+	immediate = {
+		random_courtier = {
+			limit = {
+				is_adult = yes
+				NOT = { this = root }
+				stewardship >= 14
+				has_opinion = {
+					target = root
+					value >= 20
+				}
+			}
+			save_scope_as = skilled_agent
+		}
+	}
+
+	# Reward and promote them
+	option = {
+		name = mt_route.0021.a
+
+		trigger = {
+			gold >= 100
+		}
+
+		remove_short_term_gold = 100
+
+		scope:skilled_agent = {
+			add_prestige = 100
+			add_gold = 100
+
+			add_opinion = {
+				target = root
+				modifier = loyal_opinion
+				opinion = 75
+			}
+		}
+
+		add_character_modifier = {
+			modifier = mt_excellent_management
+			years = 15
+		}
+
+		add_prestige = 75
+
+		ai_chance = {
+			base = 70
+
+			modifier = {
+				add = 30
+				has_trait = generous
+			}
+		}
+	}
+
+	# Offer them partnership
+	option = {
+		name = mt_route.0021.b
+
+		scope:skilled_agent = {
+			add_prestige = 150
+
+			add_opinion = {
+				target = root
+				modifier = business_partner_opinion
+				opinion = 90
+			}
+		}
+
+		add_character_modifier = {
+			modifier = mt_elite_partnership
+			years = 20
+		}
+
+		add_prestige = 100
+
+		ai_chance = {
+			base = 50
+
+			modifier = {
+				add = 40
+				has_trait = trusting
+			}
+
+			modifier = {
+				add = 30
+				diplomacy >= 14
+			}
+		}
+	}
+
+	# Keep them but don't reward specially
+	option = {
+		name = mt_route.0021.c
+
+		scope:skilled_agent = {
+			add_opinion = {
+				target = root
+				modifier = disappointed_opinion
+				opinion = -20
+			}
+		}
+
+		# Still get some benefits
+		add_gold = 150
+		add_prestige = 25
+
+		ai_chance = {
+			base = 20
+
+			modifier = {
+				add = 40
+				has_trait = greedy
+			}
+		}
+	}
+}
+
+####################################
+# FOLLOW-UP EVENTS (0022-0025)
+####################################
+
+# 0022: Follow-up for exceptional goods showcase
+mt_route.0022 = {
+	type = character_event
+	title = mt_route.0022.t
+	desc = mt_route.0022.desc
+	theme = diplomacy
+
+	left_portrait = {
+		character = root
+		animation = happiness
+	}
+
+	option = {
+		name = mt_route.0022.a
+
+		add_gold = 400
+		add_prestige = 150
+
+		add_character_modifier = {
+			modifier = mt_renowned_quality
+			years = 10
+		}
+
+		ai_chance = {
+			base = 100
+		}
+	}
+}
+
+# 0023: Follow-up for contraband investigation
+mt_route.0023 = {
+	type = character_event
+	title = mt_route.0023.t
+	desc = mt_route.0023.desc
+	theme = intrigue
+
+	left_portrait = {
+		character = root
+		animation = anger
+	}
+
+	right_portrait = {
+		character = scope:saboteur_merchant
+		animation = worry
+	}
+
+	immediate = {
+		random_courtier = {
+			limit = {
+				OR = {
+					has_trait = trade_post_owner
+					has_trait = trading_company_head
+				}
+				NOT = { this = root }
+			}
+			save_scope_as = saboteur_merchant
+		}
+	}
+
+	# Expose them publicly
+	option = {
+		name = mt_route.0023.a
+
+		scope:saboteur_merchant = {
+			add_prestige = -200
+			add_stress = 50
+
+			add_character_modifier = {
+				modifier = mt_damaged_reputation
+				years = 10
+			}
+
+			add_opinion = {
+				target = root
+				modifier = rival_opinion
+				opinion = -100
+			}
+		}
+
+		add_prestige = 150
+
+		ai_chance = {
+			base = 70
+		}
+	}
+
+	# Use it as leverage
+	option = {
+		name = mt_route.0023.b
+
+		trigger = {
+			intrigue >= 12
+		}
+
+		scope:saboteur_merchant = {
+			add_opinion = {
+				target = root
+				modifier = fearful_opinion
+				opinion = -60
+			}
+		}
+
+		# They pay you off
+		add_gold = 300
+
+		# Secret blackmail
+		add_character_modifier = {
+			modifier = mt_secret_leverage
+			years = 15
+		}
+
+		ai_chance = {
+			base = 50
+
+			modifier = {
+				add = 40
+				intrigue >= 16
+			}
+
+			modifier = {
+				add = 30
+				has_trait = greedy
+			}
+		}
+	}
+}
+
+# 0024: Follow-up for studied market entry
+mt_route.0024 = {
+	type = character_event
+	title = mt_route.0024.t
+	desc = mt_route.0024.desc
+	theme = learning
+
+	left_portrait = {
+		character = root
+		animation = happiness
+	}
+
+	option = {
+		name = mt_route.0024.a
+
+		# Better results from research
+		add_character_modifier = {
+			modifier = mt_optimized_market_entry
+			years = 20
+		}
+
+		add_gold = 200
+		add_prestige = 100
+
+		ai_chance = {
+			base = 100
+		}
+	}
+}
+
+# 0025: Follow-up for agent leaving after denied raise
+mt_route.0025 = {
+	type = character_event
+	title = mt_route.0025.t
+	desc = mt_route.0025.desc
+	theme = stewardship
+
+	left_portrait = {
+		character = root
+		animation = sadness
+	}
+
+	right_portrait = {
+		character = scope:departing_agent
+		animation = personality_bold
+	}
+
+	immediate = {
+		random_courtier = {
+			limit = {
+				has_opinion_modifier = {
+					target = root
+					modifier = angry_opinion
+				}
+			}
+			save_scope_as = departing_agent
+		}
+	}
+
+	# Let them go
+	option = {
+		name = mt_route.0025.a
+
+		scope:departing_agent = {
+			if = {
+				limit = {
+					exists = liege
+				}
+				liege = {
+					remove_courtier = scope:departing_agent
+				}
+			}
+		}
+
+		# Operations suffer temporarily
+		add_character_modifier = {
+			modifier = mt_understaffed
+			years = 2
+		}
+
+		add_stress = 20
+
+		ai_chance = {
+			base = 60
+		}
+	}
+
+	# Make counter-offer
+	option = {
+		name = mt_route.0025.b
+
+		trigger = {
+			gold >= 100
+		}
+
+		remove_short_term_gold = 100
+
+		scope:departing_agent = {
+			remove_opinion = {
+				target = root
+				modifier = angry_opinion
+			}
+
+			add_opinion = {
+				target = root
+				modifier = grateful_opinion
+				opinion = 30
+			}
+		}
+
+		add_character_modifier = {
+			modifier = mt_higher_wages
+			years = 10
+		}
+
+		ai_chance = {
+			base = 40
+
+			modifier = {
+				add = 40
+				gold >= 500
+			}
+		}
+	}
+}
