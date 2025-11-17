@@ -610,3 +610,28 @@ mt_agricultural_heartland = {
 	# Opinion
 	county_opinion_add = 10				# People well-fed
 }
+
+####################################
+# ROUTE MANAGEMENT MODIFIERS
+####################################
+
+# Trade Routes Collapsed - Character emergency closed all routes
+# Applied when: Emergency closure decision used
+# Duration: 1 year
+mt_trade_routes_collapsed = {
+	icon = "gfx/interface/icons/modifiers/corruption_modifier.dds"
+
+	# Economic penalties
+	monthly_income_mult = -0.15			# -15% monthly income (lost trade)
+	stress_gain_mult = 0.20				# +20% stress (business failure)
+
+	# Reputation damage
+	monthly_prestige_gain_mult = -0.10	# -10% prestige gain
+	diplomacy = -2						# -2 diplomacy (lost trust)
+
+	# Social impact
+	general_opinion = -5				# People question your business acumen
+
+	# Visual indicator of crisis
+	health = -0.25						# Health penalty from stress
+}
