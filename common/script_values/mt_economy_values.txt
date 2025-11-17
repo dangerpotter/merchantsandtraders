@@ -1,0 +1,685 @@
+####################################
+# Merchants and Traders - Economy Script Values
+# Version: 0.1.0
+####################################
+
+# This file implements the SUPPLY & DEMAND ECONOMY system for the Merchants and Traders mod
+#
+# ECONOMIC MODEL OVERVIEW:
+# The system simulates a dynamic market economy where prices fluctuate based on:
+# 1. BASE PRICE: Each trade good has an inherent value (luxury goods vs common goods)
+# 2. DISTANCE: Goods become more valuable the farther they travel from origin
+# 3. SCARCITY: Regions with low supply see dramatic price increases
+# 4. OVERSUPPLY: Markets flooded with goods experience price crashes
+# 5. SEASONALITY: Time of year affects agricultural and weather-dependent goods
+#
+# SUPPLY/DEMAND BALANCING:
+# - Each county tracks supply (production + imports) and demand (consumption) for each good
+# - Price multiplier = (Demand / Supply) with bounds [0.3x to 3.0x]
+# - Multiple trade routes importing the same good will saturate the market
+# - Merchants must diversify or find undersupplied markets to maximize profit
+# - Regional events (war, plague, harvest) dynamically affect supply and demand
+
+####################################
+# BASE GOODS PRICES
+####################################
+
+# Value: Base price for GRAIN (common agricultural good)
+# Scope: Any
+# Usage: value = base_price_grain
+base_price_grain = {
+	value = 50
+	# Staple food - lowest price tier
+	# High volume, low margin trade good
+}
+
+# Value: Base price for WINE (luxury agricultural good)
+# Scope: Any
+# Usage: value = base_price_wine
+base_price_wine = {
+	value = 150
+	# Regional luxury product
+	# Affected by climate and culture
+}
+
+# Value: Base price for SALT (strategic resource)
+# Scope: Any
+# Usage: value = base_price_salt
+base_price_salt = {
+	value = 120
+	# Essential for food preservation
+	# High demand in all regions
+}
+
+# Value: Base price for SPICES (exotic luxury)
+# Scope: Any
+# Usage: value = base_price_spices
+base_price_spices = {
+	value = 300
+	# Imported from distant lands
+	# High profit margins for long-distance trade
+}
+
+# Value: Base price for SILK (ultra-luxury textile)
+# Scope: Any
+# Usage: value = base_price_silk
+base_price_silk = {
+	value = 400
+	# Prized by nobility
+	# Extreme distance multiplier potential
+}
+
+# Value: Base price for IRON (industrial resource)
+# Scope: Any
+# Usage: value = base_price_iron
+base_price_iron = {
+	value = 180
+	# Essential for weapons and tools
+	# Demand increases during warfare
+}
+
+# Value: Base price for TIMBER (common industrial resource)
+# Scope: Any
+# Usage: value = base_price_timber
+base_price_timber = {
+	value = 80
+	# Building material and fuel
+	# Heavy, so distance matters greatly
+}
+
+# Value: Base price for FUR (luxury clothing)
+# Scope: Any
+# Usage: value = base_price_fur
+base_price_fur = {
+	value = 220
+	# Cold climate luxury
+	# Seasonal demand variations
+}
+
+# Value: Base price for DYE (artisan resource)
+# Scope: Any
+# Usage: value = base_price_dye
+base_price_dye = {
+	value = 180
+	# Used in textile production
+	# Different colors have different values
+}
+
+# Value: Base price for GLASS (specialized luxury)
+# Scope: Any
+# Usage: value = base_price_glass
+base_price_glass = {
+	value = 250
+	# Venetian specialty
+	# Fragile - risk premium on distance
+}
+
+# Value: Dynamic base price selector
+# Scope: County (requires trade_good parameter)
+# Usage: value = base_goods_price
+base_goods_price = {
+	value = 100  # Default fallback
+
+	# TODO: Implement parameter-based selection
+	# if = {
+	#     limit = { trade_good = grain }
+	#     value = base_price_grain
+	# }
+	# if = {
+	#     limit = { trade_good = wine }
+	#     value = base_price_wine
+	# }
+	# [Additional goods...]
+
+	# For now, return weighted average of all goods
+	# In full implementation, this would check a variable for the specific good
+}
+
+####################################
+# DISTANCE MULTIPLIER
+####################################
+
+# Value: Price multiplier per county traveled
+# Scope: County (origin and destination)
+# Usage: value = distance_multiplier
+#
+# DISTANCE CALCULATION:
+# - Each county node between origin and destination adds 1.1x to price
+# - A route passing through 5 counties: 1.1^5 = 1.61x price multiplier
+# - Long-distance trade (10+ nodes) can double or triple base value
+# - This simulates transportation costs, risk, and merchant profit expectations
+distance_multiplier = {
+	value = 1.1  # 10% increase per county
+
+	# Modifiers based on route characteristics:
+
+	# Coastal routes are cheaper (efficient sea transport)
+	# TODO: if = {
+	#     limit = { route_is_coastal = yes }
+	#     value = 1.05  # Only 5% per node
+	# }
+
+	# Mountain routes are expensive (difficult terrain)
+	# TODO: if = {
+	#     limit = { route_crosses_mountains = yes }
+	#     value = 1.15  # 15% per mountain node
+	# }
+
+	# River routes are efficient
+	# TODO: if = {
+	#     limit = { route_follows_river = yes }
+	#     value = 1.07  # 7% per river node
+	# }
+
+	# Desert routes require caravans
+	# TODO: if = {
+	#     limit = { route_crosses_desert = yes }
+	#     value = 1.12  # 12% per desert node
+	# }
+
+	# War zones increase risk premium
+	# TODO: if = {
+	#     limit = { route_through_war_zone = yes }
+	#     multiply = 1.25  # +25% danger premium
+	# }
+
+	min = 1.0   # No negative distance effects
+	max = 3.0   # Cap at 3x for extremely long routes
+}
+
+# Value: Calculate total distance multiplier for a route
+# Scope: County (requires origin and destination)
+# Usage: value = route_distance_multiplier
+route_distance_multiplier = {
+	value = 1.0
+
+	# TODO: Calculate number of counties between origin and destination
+	# This requires pathfinding through the county network
+	# For each county in the path:
+	#     multiply = distance_multiplier
+
+	# Placeholder calculation - in full implementation:
+	# route_length = count_counties_between(origin, destination)
+	# result = distance_multiplier ^ route_length
+
+	# Example for a 5-county route:
+	# multiply = 1.1  # Node 1
+	# multiply = 1.1  # Node 2
+	# multiply = 1.1  # Node 3
+	# multiply = 1.1  # Node 4
+	# multiply = 1.1  # Node 5
+	# Result: 1.61x price
+
+	min = 1.0
+	max = 3.0
+}
+
+####################################
+# SCARCITY BONUS
+####################################
+
+# Value: Price multiplier when goods are scarce
+# Scope: County
+# Usage: value = scarcity_bonus
+#
+# SCARCITY MECHANICS:
+# - Scarcity ratio = Demand / Supply (capped at 3.0)
+# - When demand exceeds supply, prices skyrocket
+# - Examples:
+#   * Supply=10, Demand=30 → 3.0x price (maximum)
+#   * Supply=10, Demand=20 → 2.0x price
+#   * Supply=10, Demand=10 → 1.0x price (balanced)
+# - This creates opportunities for merchants who spot shortages
+# - War, plague, or failed harvests create temporary scarcity spikes
+scarcity_bonus = {
+	value = 1.0  # Base - no scarcity
+
+	# TODO: Calculate supply/demand ratio for this county and good
+	# county_demand = mt_trade_good_demand_value
+	# county_supply = mt_trade_good_supply_value
+
+	# High scarcity scenarios:
+	# TODO: if = {
+	#     limit = {
+	#         mt_trade_good_supply_value < 5
+	#         mt_trade_good_demand_value > 15
+	#     }
+	#     value = 3.0  # Extreme scarcity
+	# }
+
+	# TODO: if = {
+	#     limit = {
+	#         mt_trade_good_supply_value < 10
+	#         mt_trade_good_demand_value > 20
+	#     }
+	#     value = 2.5  # High scarcity
+	# }
+
+	# TODO: if = {
+	#     limit = {
+	#         mt_trade_good_demand_value > {
+	#             value = mt_trade_good_supply_value
+	#             multiply = 1.5
+	#         }
+	#     }
+	#     value = 2.0  # Moderate scarcity
+	# }
+
+	# Scarcity modifiers from events:
+
+	# Famine increases food scarcity
+	# TODO: if = {
+	#     limit = {
+	#         has_county_modifier = famine
+	#         trade_good = grain
+	#     }
+	#     multiply = 1.5
+	# }
+
+	# War increases weapon/armor demand
+	# TODO: if = {
+	#     limit = {
+	#         holder.is_at_war = yes
+	#         trade_good = iron
+	#     }
+	#     multiply = 1.3
+	# }
+
+	# Plague reduces luxury demand but increases medicine
+	# TODO: if = {
+	#     limit = {
+	#         has_county_modifier = plague
+	#         trade_good = spices  # Medieval "medicine"
+	#     }
+	#     multiply = 1.4
+	# }
+
+	min = 1.0  # No negative scarcity
+	max = 3.0  # Maximum 3x price for extreme scarcity
+}
+
+####################################
+# OVERSUPPLY PENALTY
+####################################
+
+# Value: Price multiplier when market is flooded
+# Scope: County
+# Usage: value = oversupply_penalty
+#
+# OVERSUPPLY MECHANICS:
+# - Oversupply ratio = Supply / Demand (inverted, capped at 0.3)
+# - When supply exceeds demand, prices crash
+# - Examples:
+#   * Supply=30, Demand=10 → 0.33x price (near minimum)
+#   * Supply=20, Demand=10 → 0.5x price
+#   * Supply=10, Demand=10 → 1.0x price (balanced)
+# - Multiple merchants targeting the same market will crash prices
+# - This forces merchants to find new markets or diversify goods
+# - Oversupply can trigger market_crash_effect for severe cases
+oversupply_penalty = {
+	value = 1.0  # Base - no oversupply
+
+	# TODO: Calculate supply/demand ratio for this county and good
+	# county_demand = mt_trade_good_demand_value
+	# county_supply = mt_trade_good_supply_value
+
+	# Severe oversupply scenarios:
+	# TODO: if = {
+	#     limit = {
+	#         mt_trade_good_supply_value > 30
+	#         mt_trade_good_demand_value < 10
+	#     }
+	#     value = 0.3  # Market crash - 70% price drop
+	# }
+
+	# TODO: if = {
+	#     limit = {
+	#         mt_trade_good_supply_value > 20
+	#         mt_trade_good_demand_value < 10
+	#     }
+	#     value = 0.5  # Severe oversupply
+	# }
+
+	# TODO: if = {
+	#     limit = {
+	#         mt_trade_good_supply_value > {
+	#             value = mt_trade_good_demand_value
+	#             multiply = 1.5
+	#         }
+	#     }
+	#     value = 0.7  # Moderate oversupply
+	# }
+
+	# Oversupply modifiers from economic conditions:
+
+	# Peace reduces weapon demand
+	# TODO: if = {
+	#     limit = {
+	#         holder.is_at_war = no
+	#         trade_good = iron
+	#         years_since_war > 5
+	#     }
+	#     multiply = 0.8  # Further penalty
+	# }
+
+	# Good harvest creates grain glut
+	# TODO: if = {
+	#     limit = {
+	#         has_county_modifier = good_harvest
+	#         trade_good = grain
+	#     }
+	#     multiply = 0.7
+	# }
+
+	# Too many trade routes importing same good
+	# TODO: if = {
+	#     limit = {
+	#         count_trade_routes_importing = {
+	#             trade_good = THIS
+	#             count >= 5
+	#         }
+	#     }
+	#     multiply = 0.6  # Market saturation
+	# }
+
+	min = 0.3  # Minimum 30% of base price (total collapse floor)
+	max = 1.0  # No positive effect from oversupply
+}
+
+####################################
+# SEASONAL VARIANCE
+####################################
+
+# Value: Seasonal price modifier
+# Scope: County
+# Usage: value = seasonal_variance
+#
+# SEASONAL MECHANICS:
+# - Agricultural goods fluctuate with harvest cycles
+# - Luxury goods peak during feast seasons
+# - Furs are valuable in winter, worthless in summer
+# - Range: 0.8x to 1.2x (±20% variance)
+# - Combined with other factors, creates dynamic market timing gameplay
+seasonal_variance = {
+	value = 1.0  # Base - no seasonal effect
+
+	# TODO: Implement monthly season checks
+	# Spring (March-May): Planting season
+	# TODO: if = {
+	#     limit = {
+	#         current_month >= 3
+	#         current_month <= 5
+	#     }
+	#     # Grain prices high (last year's stores depleting)
+	#     if = {
+	#         limit = { trade_good = grain }
+	#         value = 1.15
+	#     }
+	#     # Wine from new vintage not ready
+	#     if = {
+	#         limit = { trade_good = wine }
+	#         value = 1.1
+	#     }
+	# }
+
+	# Summer (June-August): Growing season
+	# TODO: if = {
+	#     limit = {
+	#         current_month >= 6
+	#         current_month <= 8
+	#     }
+	#     # Furs worthless in heat
+	#     if = {
+	#         limit = { trade_good = fur }
+	#         value = 0.8
+	#     }
+	#     # Light textiles in demand
+	#     if = {
+	#         limit = { trade_good = silk }
+	#         value = 1.1
+	#     }
+	# }
+
+	# Autumn (September-November): Harvest season
+	# TODO: if = {
+	#     limit = {
+	#         current_month >= 9
+	#         current_month <= 11
+	#     }
+	#     # Grain abundant at harvest
+	#     if = {
+	#         limit = { trade_good = grain }
+	#         value = 0.85
+	#     }
+	#     # New wine vintage
+	#     if = {
+	#         limit = { trade_good = wine }
+	#         value = 0.9
+	#     }
+	#     # Preparation for winter increases demand
+	#     if = {
+	#         limit = { trade_good = salt }
+	#         value = 1.15
+	#     }
+	# }
+
+	# Winter (December-February): Preservation and luxury season
+	# TODO: if = {
+	#     limit = {
+	#         current_month = 12
+	#         OR = {
+	#             current_month = 1
+	#             current_month = 2
+	#         }
+	#     }
+	#     # Furs highly valuable
+	#     if = {
+	#         limit = { trade_good = fur }
+	#         value = 1.2
+	#     }
+	#     # Holiday feasting season
+	#     if = {
+	#         limit = { trade_good = spices }
+	#         value = 1.2
+	#     }
+	#     if = {
+	#         limit = { trade_good = wine }
+	#         value = 1.15
+	#     }
+	#     # Pre-spring grain scarcity
+	#     if = {
+	#         limit = { trade_good = grain }
+	#         value = 1.1
+	#     }
+	# }
+
+	# Regional climate modifiers
+	# TODO: if = {
+	#     limit = {
+	#         # Northern regions have stronger seasonal effects
+	#         OR = {
+	#             geographical_region = world_europe_north
+	#             geographical_region = world_steppe
+	#         }
+	#     }
+	#     # Amplify seasonal variance in harsh climates
+	#     subtract = 1.0
+	#     multiply = 1.3
+	#     add = 1.0
+	# }
+
+	min = 0.8   # Maximum 20% seasonal discount
+	max = 1.2   # Maximum 20% seasonal premium
+}
+
+####################################
+# COMPREHENSIVE PRICE CALCULATION
+####################################
+
+# Value: Final market price for a trade good
+# Scope: County (destination market)
+# Usage: value = final_market_price
+#
+# FORMULA: Final Price = Base Price × Distance × Scarcity/Oversupply × Season
+# Example calculation:
+#   Spices (base 300) from 7 counties away to famine-struck winter market:
+#   = 300 × (1.1^7) × 2.5 × 1.1
+#   = 300 × 1.95 × 2.75
+#   = 1,609 gold (5.36x base price!)
+#
+# This creates emergent gameplay:
+# - Merchants scout for high-scarcity markets
+# - Long-distance luxury trade is most profitable
+# - Short-distance bulk goods are reliable but low-margin
+# - Timing the seasons and watching for events is crucial
+# - Oversupplying a market destroys profit for everyone
+final_market_price = {
+	value = 100  # Fallback base price
+
+	# TODO: Full calculation chain
+	# Step 1: Get base price for the specific good
+	# value = base_goods_price
+
+	# Step 2: Apply distance multiplier
+	# multiply = route_distance_multiplier
+
+	# Step 3: Apply scarcity or oversupply
+	# if = {
+	#     limit = {
+	#         mt_trade_good_demand_value > mt_trade_good_supply_value
+	#     }
+	#     multiply = scarcity_bonus
+	# }
+	# if = {
+	#     limit = {
+	#         mt_trade_good_supply_value > mt_trade_good_demand_value
+	#     }
+	#     multiply = oversupply_penalty
+	# }
+
+	# Step 4: Apply seasonal variance
+	# multiply = seasonal_variance
+
+	# Step 5: Apply random market fluctuation (±5% daily noise)
+	# TODO: multiply = {
+	#     value = 1.0
+	#     add = {
+	#         value = random
+	#         multiply = 0.1
+	#         subtract = 0.05
+	#     }
+	# }
+
+	# Step 6: Ensure price floors and ceilings
+	min = 15    # Absolute minimum (prevents total crashes)
+	max = 2000  # Absolute maximum (prevents infinite prices)
+
+	# Round to nearest gold piece
+	round = yes
+}
+
+####################################
+# PROFIT CALCULATION
+####################################
+
+# Value: Expected profit from a trade route
+# Scope: Character (merchant)
+# Usage: value = trade_route_expected_profit
+trade_route_expected_profit = {
+	value = 0
+
+	# TODO: Calculate profit
+	# Buy price (at origin with low distance multiplier)
+	# subtract = {
+	#     value = base_goods_price
+	#     multiply = 1.1  # Small origin markup
+	#     multiply = oversupply_penalty_at_origin
+	# }
+
+	# Sell price (at destination with full multipliers)
+	# add = final_market_price
+
+	# Transportation costs
+	# subtract = {
+	#     value = route_distance_multiplier
+	#     multiply = 10  # Cost per distance unit
+	# }
+
+	# Maintenance and security costs
+	# subtract = mt_trade_route_maintenance_value
+
+	# Risk of loss (banditry, shipwreck)
+	# multiply = mt_route_security_value
+
+	min = 0  # Route closes if unprofitable
+}
+
+####################################
+# REGIONAL SUPPLY/DEMAND TRACKING
+####################################
+
+# Value: County's total supply of a good
+# Scope: County
+# Usage: value = county_total_supply
+county_total_supply = {
+	value = 0
+
+	# Local production
+	# TODO: add = mt_trade_good_supply_value
+
+	# Imports from trade routes
+	# TODO: every_trade_route_to_county = {
+	#     add = trade_route_volume
+	# }
+
+	# Stockpiled reserves
+	# TODO: add = county_stockpile_amount
+
+	min = 0
+}
+
+# Value: County's total demand for a good
+# Scope: County
+# Usage: value = county_total_demand
+county_total_demand = {
+	value = 0
+
+	# Base consumption
+	# TODO: add = mt_trade_good_demand_value
+
+	# Population-based scaling
+	# TODO: add = {
+	#     value = development_level
+	#     multiply = 2
+	# }
+
+	# Exports (demand from trade routes originating here)
+	# TODO: every_trade_route_from_county = {
+	#     add = trade_route_volume
+	# }
+
+	min = 0
+}
+
+# Value: Market saturation level
+# Scope: County
+# Usage: value = market_saturation_level
+market_saturation_level = {
+	value = 0
+
+	# Saturation = (Supply - Demand) / Demand
+	# Positive values indicate oversupply
+	# Negative values indicate scarcity
+
+	# TODO: add = county_total_supply
+	# TODO: subtract = county_total_demand
+	# TODO: divide = county_total_demand
+
+	# Clamped range:
+	# -2.0 = Extreme scarcity (demand 3x supply)
+	# 0.0 = Balanced market
+	# +2.0 = Extreme oversupply (supply 3x demand)
+
+	min = -2.0
+	max = 2.0
+}

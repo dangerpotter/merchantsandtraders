@@ -1,0 +1,612 @@
+####################################
+# Merchants and Traders - Economic Modifiers
+# Version: 0.1.0
+####################################
+
+# This file defines modifiers for the SUPPLY & DEMAND ECONOMY system
+#
+# MODIFIER CATEGORIES:
+# 1. Trade Balance Modifiers - County-level effects from supply/demand
+# 2. Merchant Wealth Modifiers - Character progression based on success
+# 3. Market State Modifiers - Temporary effects from booms/crashes
+#
+# ECONOMIC BALANCE PHILOSOPHY:
+# - Trade surplus benefits: Increased tax income, development, prestige
+# - Trade deficit penalties: Reduced prosperity, increased prices
+# - Wealth progression: Poor Trader → Merchant → Master → Prince
+# - Each tier unlocks more routes, better deals, political influence
+
+####################################
+# TRADE SURPLUS MODIFIERS
+####################################
+
+# County benefits when exports exceed imports
+# Applied when: Supply < Demand (county is net exporter)
+# Duration: 1 year (reapplied monthly if condition persists)
+
+# Minor Trade Surplus (10-25% more demand than supply)
+mt_minor_trade_surplus = {
+	icon = "gfx/interface/icons/modifiers/county_modifier_development.dds"
+
+	# Economic benefits
+	levy_size = 0.05					# +5% levies (prosperity effect)
+	tax_mult = 0.10						# +10% taxes (trade income)
+	monthly_county_control = 0.1		# Better administration
+
+	# Development benefits
+	development_growth_factor = 0.05	# +5% development growth
+
+	# Prosperity
+	county_opinion_add = 5				# People happy with trade
+}
+
+# Moderate Trade Surplus (25-50% more demand than supply)
+mt_moderate_trade_surplus = {
+	icon = "gfx/interface/icons/modifiers/county_modifier_development.dds"
+
+	# Economic benefits
+	levy_size = 0.10					# +10% levies
+	tax_mult = 0.20						# +20% taxes
+	monthly_county_control = 0.2		# Better administration
+
+	# Development benefits
+	development_growth_factor = 0.10	# +10% development growth
+	supply_limit_mult = 0.05			# +5% supply limit
+
+	# Prosperity
+	county_opinion_add = 10				# People happy with trade
+
+	# Prestige for ruler
+	monthly_prestige = 0.1				# Trade hub reputation
+}
+
+# Major Trade Surplus (50%+ more demand than supply)
+mt_major_trade_surplus = {
+	icon = "gfx/interface/icons/modifiers/county_modifier_development.dds"
+
+	# Economic benefits
+	levy_size = 0.15					# +15% levies
+	tax_mult = 0.35						# +35% taxes (major trade center)
+	monthly_county_control = 0.3		# Better administration
+
+	# Development benefits
+	development_growth_factor = 0.20	# +20% development growth
+	supply_limit_mult = 0.10			# +10% supply limit
+	fort_level = 0.25					# +0.25 fort level (wealth for defenses)
+
+	# Prosperity
+	county_opinion_add = 15				# People very happy
+
+	# Prestige for ruler
+	monthly_prestige = 0.25				# Famous trade hub
+
+	# Attracts more merchants
+	build_speed = 0.10					# +10% construction speed
+}
+
+####################################
+# TRADE DEFICIT MODIFIERS
+####################################
+
+# County penalties when imports exceed exports
+# Applied when: Supply > Demand (county is net importer)
+# Duration: 1 year (reapplied monthly if condition persists)
+
+# Minor Trade Deficit (10-25% more supply than demand)
+mt_minor_trade_deficit = {
+	icon = "gfx/interface/icons/modifiers/county_modifier_control.dds"
+
+	# Economic penalties
+	tax_mult = -0.05					# -5% taxes (money leaving county)
+
+	# Price effects
+	# (Implemented through script_values, not modifier)
+}
+
+# Moderate Trade Deficit (25-50% more supply than demand)
+mt_moderate_trade_deficit = {
+	icon = "gfx/interface/icons/modifiers/county_modifier_control.dds"
+
+	# Economic penalties
+	tax_mult = -0.10					# -10% taxes
+	levy_size = -0.05					# -5% levies (economic drain)
+
+	# Development penalties
+	development_growth_factor = -0.05	# -5% development growth
+
+	# Prosperity impact
+	county_opinion_add = -5				# People unhappy with economy
+}
+
+# Major Trade Deficit (50%+ more supply than demand)
+mt_major_trade_deficit = {
+	icon = "gfx/interface/icons/modifiers/county_modifier_control.dds"
+
+	# Economic penalties
+	tax_mult = -0.20					# -20% taxes (severe drain)
+	levy_size = -0.10					# -10% levies
+	monthly_county_control = -0.2		# Economic instability
+
+	# Development penalties
+	development_growth_factor = -0.10	# -10% development growth
+	supply_limit_mult = -0.05			# -5% supply limit
+
+	# Prosperity impact
+	county_opinion_add = -10			# People unhappy
+
+	# Prestige penalty for ruler
+	monthly_prestige = -0.1				# Reputation for poor management
+
+	# Risk
+	# (Banditry implemented through separate modifiers)
+}
+
+####################################
+# MERCHANT WEALTH MODIFIERS
+####################################
+
+# Character progression through merchant ranks
+# Based on total wealth accumulated from trading
+# Duration: Lifetime (until next tier or death)
+
+# Tier 1: Poor Trader (Starting rank: 0-500 gold net worth)
+mt_poor_trader = {
+	icon = "gfx/interface/icons/modifiers/diplomacy.dds"
+
+	# Limited capabilities
+	# Max 1 trade route
+	# No special benefits
+	# Just starting out
+
+	# Slight stewardship bonus (learning the trade)
+	stewardship = 1
+}
+
+# Tier 2: Established Merchant (500-2000 gold net worth)
+mt_established_merchant = {
+	icon = "gfx/interface/icons/modifiers/diplomacy.dds"
+
+	# Growing reputation
+	monthly_prestige = 0.1
+
+	# Business acumen
+	stewardship = 2
+
+	# Starting to make connections
+	diplomacy = 1
+
+	# Max 3 trade routes
+	# Can negotiate better deals
+}
+
+# Tier 3: Master Trader (2000-5000 gold net worth)
+mt_master_trader = {
+	icon = "gfx/interface/icons/modifiers/diplomacy.dds"
+
+	# Significant reputation
+	monthly_prestige = 0.25
+
+	# Expert businessman
+	stewardship = 3
+
+	# Strong connections
+	diplomacy = 2
+
+	# Starting to influence politics
+	general_opinion = 5
+
+	# Max 7 trade routes
+	# Access to exclusive markets
+}
+
+# Tier 4: Wealthy Magnate (5000-10000 gold net worth)
+mt_wealthy_magnate = {
+	icon = "gfx/interface/icons/modifiers/diplomacy.dds"
+
+	# Major reputation
+	monthly_prestige = 0.5
+
+	# Business genius
+	stewardship = 4
+	diplomacy = 3
+
+	# Political influence
+	general_opinion = 10
+	vassal_opinion = 5
+
+	# Economic power
+	monthly_income_mult = 0.10			# +10% all income
+
+	# Max 12 trade routes
+	# Can manipulate markets
+}
+
+# Tier 5: Merchant Prince (10000+ gold net worth)
+mt_merchant_prince = {
+	icon = "gfx/interface/icons/modifiers/diplomacy.dds"
+
+	# Legendary reputation
+	monthly_prestige = 1.0
+	monthly_piety = 0.25				# Philanthropic reputation
+
+	# Master of trade
+	stewardship = 6
+	diplomacy = 4
+
+	# Major political influence
+	general_opinion = 20
+	vassal_opinion = 10
+	liege_opinion = 15
+
+	# Economic dominance
+	monthly_income_mult = 0.25			# +25% all income
+	stress_loss_mult = 0.20				# Money solves problems
+
+	# Can influence realm policy
+	monthly_county_control = 0.5		# Everywhere they operate
+
+	# Max 20 trade routes
+	# Controls regional economy
+	# Can trigger market manipulation events
+}
+
+####################################
+# MARKET STATE MODIFIERS
+####################################
+
+# Temporary modifiers from market booms and crashes
+# Applied by market_boom_effect and market_crash_effect
+
+# Market Boom - Extreme scarcity drives prices up
+# Duration: 1 year (then natural market correction)
+mt_market_boom_modifier = {
+	icon = "gfx/interface/icons/modifiers/county_modifier_development.dds"
+
+	# Massive profits for traders
+	# (Price multipliers handled in script_values)
+
+	# Economic effects
+	tax_mult = 0.25						# +25% taxes (trade profits taxed)
+	monthly_prestige = 0.3				# Famous market
+
+	# But also risks
+	monthly_county_control = -0.2		# Criminals attracted
+
+	# Development from wealth influx
+	development_growth_factor = 0.15
+
+	# Opinion
+	county_opinion_add = 10				# Prosperity (for now)
+}
+
+# Market Crash - Oversupply collapses prices
+# Duration: 2 years (long recovery)
+mt_market_crash_modifier = {
+	icon = "gfx/interface/icons/modifiers/county_modifier_control.dds"
+
+	# Economic disaster
+	tax_mult = -0.30					# -30% taxes (economic collapse)
+	levy_size = -0.15					# -15% levies (poverty)
+	monthly_county_control = -0.5		# Instability
+
+	# Development damage
+	development_growth_factor = -0.20	# -20% growth (recession)
+
+	# Opinion disaster
+	county_opinion_add = -20			# People angry
+
+	# Prestige damage
+	monthly_prestige = -0.5				# Reputation damaged
+
+	# Recovery takes time
+	build_speed = -0.20					# -20% construction (no funds)
+}
+
+# Moderate Oversupply - 2-3 routes importing same good
+# Duration: 1 year (reapplied if condition persists)
+mt_moderate_oversupply_modifier = {
+	icon = "gfx/interface/icons/modifiers/county_modifier_control.dds"
+
+	# Mild economic effects
+	# (Price multipliers handled in script_values)
+
+	# Slight benefits from abundance
+	county_opinion_add = 3				# Cheap goods available
+
+	# But reduced trade profits
+	tax_mult = -0.05					# -5% taxes
+}
+
+# Severe Oversupply - 4-5 routes importing same good
+# Duration: 1 year (reapplied if condition persists)
+mt_severe_oversupply_modifier = {
+	icon = "gfx/interface/icons/modifiers/county_modifier_control.dds"
+
+	# Significant economic damage
+	# (Price multipliers handled in script_values)
+
+	# Market saturation
+	tax_mult = -0.15					# -15% taxes
+	development_growth_factor = -0.05	# -5% growth
+
+	# Mixed opinions
+	county_opinion_add = 5				# Goods are cheap
+	merchant_opinion = -10				# Merchants losing money
+
+	# Warning signs of crash
+	monthly_county_control = -0.1		# Instability
+}
+
+####################################
+# TRADE ROUTE QUALITY MODIFIERS
+####################################
+
+# Applied to individual trade routes based on conditions
+
+# Profitable Route - Above-average margins
+mt_profitable_route = {
+	icon = "gfx/interface/icons/modifiers/diplomacy.dds"
+
+	# Bonus income
+	# (Handled through script calculations)
+
+	# Merchant satisfaction
+	monthly_prestige = 0.05
+}
+
+# Unprofitable Route - Below-average margins
+mt_unprofitable_route = {
+	icon = "gfx/interface/icons/modifiers/county_modifier_control.dds"
+
+	# Warning: route may close
+	# (Handled through script calculations)
+
+	# Merchant stress
+	stress_gain_mult = 0.10				# +10% stress gain
+}
+
+# Dangerous Route - High banditry risk
+mt_dangerous_route = {
+	icon = "gfx/interface/icons/modifiers/county_modifier_control.dds"
+
+	# Risk premium added to prices
+	# (Handled through script calculations)
+
+	# Stress from danger
+	stress_gain_mult = 0.15				# +15% stress gain
+	health = -0.5						# Dangerous travel
+}
+
+# Secure Route - Well-protected path
+mt_secure_route = {
+	icon = "gfx/interface/icons/modifiers/county_modifier_development.dds"
+
+	# Lower costs
+	# (Handled through script calculations)
+
+	# Peace of mind
+	stress_loss_mult = 0.05				# +5% stress loss
+}
+
+####################################
+# SEASONAL TRADE MODIFIERS
+####################################
+
+# Applied seasonally to specific goods/regions
+
+# Winter Trade Bonus - Furs, salt, preserved goods
+mt_winter_trade_bonus = {
+	icon = "gfx/interface/icons/modifiers/county_modifier_development.dds"
+
+	# Seasonal profit boost
+	# (Price multipliers handled in script_values)
+
+	# Cold weather trade activity
+	monthly_prestige = 0.1
+}
+
+# Summer Trade Bonus - Silk, spices, luxury goods
+mt_summer_trade_bonus = {
+	icon = "gfx/interface/icons/modifiers/county_modifier_development.dds"
+
+	# Seasonal profit boost
+	# (Price multipliers handled in script_values)
+
+	# Peak trading season
+	monthly_prestige = 0.1
+}
+
+# Harvest Season - Agricultural goods
+mt_harvest_trade_bonus = {
+	icon = "gfx/interface/icons/modifiers/county_modifier_development.dds"
+
+	# Autumn abundance
+	# (Price multipliers handled in script_values)
+
+	# Prosperity from harvest
+	county_opinion_add = 5
+	monthly_prestige = 0.1
+}
+
+####################################
+# SPECIAL ECONOMIC EVENTS
+####################################
+
+# Trade Embargo - Political restriction on trade
+mt_trade_embargo = {
+	icon = "gfx/interface/icons/modifiers/county_modifier_control.dds"
+
+	# Severe economic damage
+	tax_mult = -0.40					# -40% taxes
+	levy_size = -0.20					# -20% levies
+	development_growth_factor = -0.25	# -25% development
+
+	# Political tension
+	county_opinion_add = -15
+	monthly_prestige = -0.3
+
+	# Trade routes may be forced to close
+	# Duration: Until diplomatic resolution
+}
+
+# Trade Treaty - Political bonus to trade
+mt_trade_treaty = {
+	icon = "gfx/interface/icons/modifiers/county_modifier_development.dds"
+
+	# Economic boom
+	tax_mult = 0.20						# +20% taxes
+	development_growth_factor = 0.15	# +15% development
+
+	# Reduced costs
+	# (Handled through script calculations)
+
+	# Political benefits
+	county_opinion_add = 10
+	monthly_prestige = 0.2
+
+	# Easier to establish routes
+	# Duration: 10 years or until treaty broken
+}
+
+# Piracy/Banditry Crisis - Security breakdown
+mt_increased_banditry_modifier = {
+	icon = "gfx/interface/icons/modifiers/county_modifier_control.dds"
+
+	# Security problems
+	monthly_county_control = -0.5		# Law and order breakdown
+	levy_size = -0.10					# -10% levies (defending caravans)
+
+	# Economic impact
+	tax_mult = -0.15					# -15% taxes (losses to bandits)
+
+	# Opinion impact
+	county_opinion_add = -10			# People want protection
+
+	# Health risk
+	health = -0.25						# Dangerous to travel
+
+	# Trade route costs increase
+	# (Handled through script calculations)
+	# Duration: Until security restored
+}
+
+# Commercial District - Special building effect
+mt_commercial_district = {
+	icon = "gfx/interface/icons/modifiers/county_modifier_development.dds"
+
+	# Enhanced trade capacity
+	tax_mult = 0.15						# +15% taxes
+	development_growth_factor = 0.10	# +10% development
+
+	# More trade routes possible
+	supply_limit_mult = 0.10			# +10% supply limit
+
+	# Attracts merchants
+	county_opinion_add = 5
+	monthly_prestige = 0.15
+
+	# Better deals available
+	# (Script effects give bonuses to routes from this county)
+	# Duration: Permanent (while building exists)
+}
+
+# Merchant Guild - Organization benefits
+mt_merchant_guild = {
+	icon = "gfx/interface/icons/modifiers/diplomacy.dds"
+
+	# Collective bargaining power
+	stewardship = 2
+	diplomacy = 1
+
+	# Economic influence
+	monthly_income_mult = 0.10			# +10% income
+
+	# Political clout
+	general_opinion = 5
+
+	# Access to guild resources
+	monthly_prestige = 0.2
+
+	# Reduced route costs (guild support)
+	# Duration: Permanent (while member)
+}
+
+####################################
+# REGIONAL SPECIALIZATION MODIFIERS
+####################################
+
+# Applied to counties that specialize in producing specific goods
+
+# Silk Road Hub - Major trading crossroads
+mt_silk_road_hub = {
+	icon = "gfx/interface/icons/modifiers/county_modifier_development.dds"
+
+	# Major economic benefits
+	tax_mult = 0.40						# +40% taxes (massive trade)
+	development_growth_factor = 0.25	# +25% development
+
+	# Cultural exchange
+	monthly_prestige = 0.5
+	monthly_piety = 0.1					# Pilgrims travel trade routes
+
+	# Prosperity
+	county_opinion_add = 20
+	supply_limit_mult = 0.20			# +20% supply
+
+	# But attracts threats
+	monthly_county_control = -0.3		# Bandits and raiders
+}
+
+# Port City - Coastal trade hub
+mt_port_city = {
+	icon = "gfx/interface/icons/modifiers/county_modifier_development.dds"
+
+	# Maritime trade benefits
+	tax_mult = 0.25						# +25% taxes
+	development_growth_factor = 0.15	# +15% development
+	levy_size = 0.10					# +10% levies (sailors)
+
+	# Prosperity
+	county_opinion_add = 10
+	monthly_prestige = 0.25
+
+	# Reduced coastal route costs
+	# (Handled through script calculations)
+}
+
+# Mining Center - Industrial resource production
+mt_mining_center = {
+	icon = "gfx/interface/icons/modifiers/county_modifier_development.dds"
+
+	# Industrial output
+	tax_mult = 0.20						# +20% taxes (iron/salt sales)
+	levy_size = 0.05					# +5% levies (iron for weapons)
+
+	# Development
+	development_growth_factor = 0.10	# +10% development
+
+	# Supply boost for iron/salt
+	# (Handled through supply calculations)
+
+	# Opinion
+	county_opinion_add = 5
+}
+
+# Agricultural Heartland - Food production
+mt_agricultural_heartland = {
+	icon = "gfx/interface/icons/modifiers/county_modifier_development.dds"
+
+	# Food surplus
+	tax_mult = 0.15						# +15% taxes (grain sales)
+	levy_size = 0.10					# +10% levies (large population)
+	supply_limit_mult = 0.15			# +15% supply
+
+	# Growth
+	development_growth_factor = 0.10	# +10% development
+
+	# Supply boost for grain/wine
+	# (Handled through supply calculations)
+
+	# Opinion
+	county_opinion_add = 10				# People well-fed
+}
