@@ -1,0 +1,2873 @@
+####################################
+# MERCHANTS AND TRADERS MOD
+# Reputation System Events
+# Version: 0.1.0
+####################################
+#
+# Event namespace: mt_reputation
+#
+# 0001-0010: Tier Up Celebrations
+# 0011-0020: Reputation Opportunities
+# 0021-0030: Reputation Challenges
+#
+####################################
+
+namespace = mt_reputation
+
+####################################
+# TIER UP CELEBRATIONS (0001-0010)
+####################################
+
+# 0001: Tier up to Local Trader (10 reputation)
+mt_reputation.0001 = {
+	type = character_event
+	title = mt_reputation.0001.t
+	desc = mt_reputation.0001.desc
+	theme = stewardship
+
+	left_portrait = {
+		character = root
+		animation = happiness
+	}
+
+	trigger = {
+		has_character_modifier = mt_reputation_local_trader
+		NOT = { has_character_flag = celebrated_local_trader }
+	}
+
+	weight_multiplier = {
+		base = 100
+	}
+
+	immediate = {
+		add_character_flag = celebrated_local_trader
+	}
+
+	# Celebrate with local merchants
+	option = {
+		name = mt_reputation.0001.a
+
+		add_prestige = 50
+		add_gold = 25
+
+		# Local merchants recognize you
+		custom_tooltip = mt_reputation.0001.a.tt
+
+		ai_chance = {
+			base = 100
+		}
+	}
+}
+
+# 0002: Tier up to Known Merchant (25 reputation)
+mt_reputation.0002 = {
+	type = character_event
+	title = mt_reputation.0002.t
+	desc = mt_reputation.0002.desc
+	theme = diplomacy
+
+	left_portrait = {
+		character = root
+		animation = personality_honorable
+	}
+
+	trigger = {
+		has_character_modifier = mt_reputation_known_merchant
+		NOT = { has_character_flag = celebrated_known_merchant }
+	}
+
+	weight_multiplier = {
+		base = 100
+	}
+
+	immediate = {
+		add_character_flag = celebrated_known_merchant
+	}
+
+	# Host a modest feast
+	option = {
+		name = mt_reputation.0002.a
+
+		add_prestige = 75
+		remove_short_term_gold = 50
+		add_diplomacy = 1
+
+		# Your name is known
+		custom_tooltip = mt_reputation.0002.a.tt
+
+		ai_chance = {
+			base = 70
+		}
+	}
+
+	# Quiet acknowledgment
+	option = {
+		name = mt_reputation.0002.b
+
+		add_prestige = 50
+		add_gold = 50
+
+		ai_chance = {
+			base = 30
+		}
+	}
+}
+
+# 0003: Tier up to Respected Trader (50 reputation)
+mt_reputation.0003 = {
+	type = character_event
+	title = mt_reputation.0003.t
+	desc = mt_reputation.0003.desc
+	theme = diplomacy
+
+	left_portrait = {
+		character = root
+		animation = personality_bold
+	}
+
+	right_portrait = {
+		character = scope:fellow_merchant
+		animation = personality_honorable
+	}
+
+	trigger = {
+		has_character_modifier = mt_reputation_respected_trader
+		NOT = { has_character_flag = celebrated_respected_trader }
+		any_courtier = {
+			OR = {
+				has_trait = trade_post_owner
+				has_trait = trading_company_head
+			}
+		}
+	}
+
+	weight_multiplier = {
+		base = 100
+	}
+
+	immediate = {
+		add_character_flag = celebrated_respected_trader
+
+		random_courtier = {
+			limit = {
+				OR = {
+					has_trait = trade_post_owner
+					has_trait = trading_company_head
+				}
+			}
+			save_scope_as = fellow_merchant
+		}
+	}
+
+	# Accept their congratulations proudly
+	option = {
+		name = mt_reputation.0003.a
+
+		add_prestige = 150
+
+		scope:fellow_merchant = {
+			add_opinion = {
+				target = root
+				modifier = respect_opinion
+				opinion = 25
+			}
+		}
+
+		# Other merchants respect you
+		every_courtier = {
+			limit = {
+				OR = {
+					has_trait = wandering_merchant
+					has_trait = trade_post_owner
+					has_trait = trading_company_head
+				}
+			}
+			add_opinion = {
+				target = root
+				modifier = respect_opinion
+				opinion = 10
+			}
+		}
+
+		custom_tooltip = mt_reputation.0003.a.tt
+
+		ai_chance = {
+			base = 60
+		}
+	}
+
+	# Stay humble
+	option = {
+		name = mt_reputation.0003.b
+
+		add_prestige = 100
+		add_piety = 50
+
+		scope:fellow_merchant = {
+			add_opinion = {
+				target = root
+				modifier = grateful_opinion
+				opinion = 20
+			}
+		}
+
+		custom_tooltip = mt_reputation.0003.a.tt
+
+		ai_chance = {
+			base = 40
+			modifier = {
+				add = 40
+				has_trait = humble
+			}
+		}
+	}
+}
+
+# 0004: Tier up to Prominent Merchant (100 reputation)
+mt_reputation.0004 = {
+	type = character_event
+	title = mt_reputation.0004.t
+	desc = mt_reputation.0004.desc
+	theme = prestige
+
+	left_portrait = {
+		character = root
+		animation = happiness
+	}
+
+	trigger = {
+		has_character_modifier = mt_reputation_prominent_merchant
+		NOT = { has_character_flag = celebrated_prominent_merchant }
+	}
+
+	weight_multiplier = {
+		base = 100
+	}
+
+	immediate = {
+		add_character_flag = celebrated_prominent_merchant
+	}
+
+	# Grand celebration
+	option = {
+		name = mt_reputation.0004.a
+
+		add_prestige = 250
+		remove_short_term_gold = 150
+
+		# Invite everyone
+		every_courtier = {
+			add_opinion = {
+				target = root
+				modifier = celebrated_together_opinion
+				opinion = 15
+			}
+		}
+
+		# Gain rising star modifier
+		add_character_modifier = {
+			modifier = mt_reputation_rising_star
+			years = 3
+		}
+
+		custom_tooltip = mt_reputation.0004.a.tt
+
+		ai_chance = {
+			base = 60
+		}
+	}
+
+	# Professional ceremony
+	option = {
+		name = mt_reputation.0004.b
+
+		add_prestige = 200
+		remove_short_term_gold = 75
+
+		# Merchant network strengthened
+		every_courtier = {
+			limit = {
+				OR = {
+					has_trait = trade_post_owner
+					has_trait = trading_company_head
+					has_trait = merchant_prince
+				}
+			}
+			add_opinion = {
+				target = root
+				modifier = guild_brother_opinion
+				opinion = 20
+			}
+		}
+
+		custom_tooltip = mt_reputation.0004.a.tt
+
+		ai_chance = {
+			base = 40
+		}
+	}
+}
+
+# 0005: Tier up to Renowned Trader (200 reputation)
+mt_reputation.0005 = {
+	type = character_event
+	title = mt_reputation.0005.t
+	desc = mt_reputation.0005.desc
+	theme = prestige
+
+	left_portrait = {
+		character = root
+		animation = personality_bold
+	}
+
+	right_portrait = {
+		character = scope:ruler
+		animation = personality_content
+	}
+
+	trigger = {
+		has_character_modifier = mt_reputation_renowned_trader
+		NOT = { has_character_flag = celebrated_renowned_trader }
+		exists = liege
+	}
+
+	weight_multiplier = {
+		base = 100
+	}
+
+	immediate = {
+		add_character_flag = celebrated_renowned_trader
+
+		liege = {
+			save_scope_as = ruler
+		}
+	}
+
+	# Accept recognition from nobility
+	option = {
+		name = mt_reputation.0005.a
+
+		add_prestige = 400
+
+		scope:ruler = {
+			add_opinion = {
+				target = root
+				modifier = impressed_opinion
+				opinion = 30
+			}
+		}
+
+		# Famous across the realm
+		add_gold = 200
+
+		custom_tooltip = mt_reputation.0005.a.tt
+
+		ai_chance = {
+			base = 70
+		}
+	}
+
+	# Politely decline noble attention
+	option = {
+		name = mt_reputation.0005.b
+
+		add_prestige = 300
+
+		# Merchants respect your independence
+		every_courtier = {
+			limit = {
+				OR = {
+					has_trait = trade_post_owner
+					has_trait = trading_company_head
+					has_trait = merchant_prince
+				}
+			}
+			add_opinion = {
+				target = root
+				modifier = respect_opinion
+				opinion = 25
+			}
+		}
+
+		add_character_modifier = {
+			modifier = mt_independent_reputation
+			years = 10
+		}
+
+		custom_tooltip = mt_reputation.0005.a.tt
+
+		ai_chance = {
+			base = 30
+			modifier = {
+				add = 40
+				has_trait = proud
+			}
+		}
+	}
+}
+
+# 0006: Tier up to Merchant Magnate (300 reputation)
+mt_reputation.0006 = {
+	type = character_event
+	title = mt_reputation.0006.t
+	desc = mt_reputation.0006.desc
+	theme = prestige
+
+	left_portrait = {
+		character = root
+		animation = ecstasy
+	}
+
+	trigger = {
+		has_character_modifier = mt_reputation_merchant_magnate
+		NOT = { has_character_flag = celebrated_merchant_magnate }
+	}
+
+	weight_multiplier = {
+		base = 100
+	}
+
+	immediate = {
+		add_character_flag = celebrated_merchant_magnate
+	}
+
+	# Magnificent celebration
+	option = {
+		name = mt_reputation.0006.a
+
+		add_prestige = 600
+		remove_short_term_gold = 300
+
+		# Everyone wants to celebrate with you
+		if = {
+			limit = { exists = liege }
+			liege = {
+				add_opinion = {
+					target = root
+					modifier = impressed_opinion
+					opinion = 40
+				}
+			}
+		}
+
+		every_courtier = {
+			add_opinion = {
+				target = root
+				modifier = celebrated_together_opinion
+				opinion = 20
+			}
+		}
+
+		# You are legendary
+		add_character_modifier = {
+			modifier = mt_legendary_merchant
+			years = 20
+		}
+
+		custom_tooltip = mt_reputation.0006.a.tt
+
+		ai_chance = {
+			base = 80
+		}
+	}
+
+	# Humble acknowledgment
+	option = {
+		name = mt_reputation.0006.b
+
+		add_prestige = 500
+		add_piety = 150
+
+		# Admired for humility
+		every_courtier = {
+			add_opinion = {
+				target = root
+				modifier = humble_opinion
+				opinion = 25
+			}
+		}
+
+		custom_tooltip = mt_reputation.0006.a.tt
+
+		ai_chance = {
+			base = 20
+			modifier = {
+				add = 60
+				has_trait = humble
+			}
+		}
+	}
+}
+
+# 0007: Tier up to Trade Master (450 reputation)
+mt_reputation.0007 = {
+	type = character_event
+	title = mt_reputation.0007.t
+	desc = mt_reputation.0007.desc
+	theme = prestige
+
+	left_portrait = {
+		character = root
+		animation = personality_honorable
+	}
+
+	trigger = {
+		has_character_modifier = mt_reputation_trade_master
+		NOT = { has_character_flag = celebrated_trade_master }
+	}
+
+	weight_multiplier = {
+		base = 100
+	}
+
+	immediate = {
+		add_character_flag = celebrated_trade_master
+	}
+
+	# Accept the title of Trade Master
+	option = {
+		name = mt_reputation.0007.a
+
+		add_prestige = 800
+		add_gold = 500
+
+		# Masters are few
+		add_character_modifier = {
+			modifier = mt_legendary_merchant
+			years = 30
+		}
+
+		# Dynasty benefits
+		add_dynasty_prestige = 200
+
+		every_dynasty_member = {
+			add_prestige = 100
+		}
+
+		custom_tooltip = mt_reputation.0007.a.tt
+
+		ai_chance = {
+			base = 100
+		}
+	}
+}
+
+# 0008: Tier up to Legend of Commerce (600 reputation)
+mt_reputation.0008 = {
+	type = character_event
+	title = mt_reputation.0008.t
+	desc = mt_reputation.0008.desc
+	theme = prestige
+
+	left_portrait = {
+		character = root
+		animation = personality_bold
+	}
+
+	trigger = {
+		has_character_modifier = mt_reputation_legend_of_commerce
+		NOT = { has_character_flag = celebrated_legend_of_commerce }
+	}
+
+	weight_multiplier = {
+		base = 100
+	}
+
+	immediate = {
+		add_character_flag = celebrated_legend_of_commerce
+	}
+
+	# Embrace legendary status
+	option = {
+		name = mt_reputation.0008.a
+
+		add_prestige = 1200
+		add_gold = 1000
+
+		# Chroniclers write about you
+		add_character_modifier = {
+			modifier = mt_reputation_chronicled
+			years = 50
+		}
+
+		# Dynasty immortalized
+		add_dynasty_prestige = 500
+
+		every_dynasty_member = {
+			add_prestige = 200
+		}
+
+		# Special opportunities unlock
+		custom_tooltip = mt_reputation.0008.a.tt
+
+		ai_chance = {
+			base = 100
+		}
+	}
+}
+
+# 0009: Tier up to Immortal Legacy (800 reputation)
+mt_reputation.0009 = {
+	type = character_event
+	title = mt_reputation.0009.t
+	desc = mt_reputation.0009.desc
+	theme = prestige
+
+	left_portrait = {
+		character = root
+		animation = ecstasy
+	}
+
+	trigger = {
+		has_character_modifier = mt_reputation_immortal_legacy
+		NOT = { has_character_flag = celebrated_immortal_legacy }
+	}
+
+	weight_multiplier = {
+		base = 100
+	}
+
+	immediate = {
+		add_character_flag = celebrated_immortal_legacy
+	}
+
+	# Eternal recognition
+	option = {
+		name = mt_reputation.0009.a
+
+		add_prestige = 2000
+		add_gold = 2000
+
+		# Immortal status
+		add_character_modifier = {
+			modifier = mt_reputation_chronicled
+		}
+
+		# Dynasty legacy
+		add_dynasty_prestige = 1000
+
+		every_dynasty_member = {
+			add_prestige = 500
+		}
+
+		# Your name will live forever
+		custom_tooltip = mt_reputation.0009.a.tt
+
+		ai_chance = {
+			base = 100
+		}
+	}
+}
+
+# 0010: Crossing major reputation milestone (100/250/500/750)
+mt_reputation.0010 = {
+	type = character_event
+	title = mt_reputation.0010.t
+	desc = mt_reputation.0010.desc
+	theme = prestige
+
+	left_portrait = {
+		character = root
+		animation = happiness
+	}
+
+	# This event is called by effects when crossing milestones
+
+	option = {
+		name = mt_reputation.0010.a
+
+		add_prestige = 300
+
+		ai_chance = {
+			base = 100
+		}
+	}
+}
+
+####################################
+# REPUTATION OPPORTUNITIES (0011-0020)
+####################################
+
+# 0011: High reputation - offered royal contract
+mt_reputation.0011 = {
+	type = character_event
+	title = mt_reputation.0011.t
+	desc = mt_reputation.0011.desc
+	theme = diplomacy
+
+	left_portrait = {
+		character = root
+		animation = personality_rational
+	}
+
+	right_portrait = {
+		character = scope:offering_ruler
+		animation = personality_honorable
+	}
+
+	trigger = {
+		reputation_above_trigger = { amount = 200 }
+		exists = liege
+		liege = {
+			is_ruler = yes
+		}
+		NOT = { has_character_flag = offered_royal_contract }
+	}
+
+	weight_multiplier = {
+		base = 1
+
+		modifier = {
+			add = 2
+			reputation_above_trigger = { amount = 300 }
+		}
+	}
+
+	immediate = {
+		add_character_flag = offered_royal_contract
+
+		liege = {
+			save_scope_as = offering_ruler
+		}
+	}
+
+	# Accept exclusive contract
+	option = {
+		name = mt_reputation.0011.a
+
+		add_character_modifier = {
+			modifier = mt_royal_contract
+			years = 15
+		}
+
+		add_prestige = 200
+		add_gold = 500
+
+		scope:offering_ruler = {
+			add_opinion = {
+				target = root
+				modifier = loyal_opinion
+				opinion = 60
+			}
+		}
+
+		ai_chance = {
+			base = 60
+		}
+	}
+
+	# Negotiate flexible terms
+	option = {
+		name = mt_reputation.0011.b
+
+		trigger = {
+			diplomacy >= 14
+		}
+
+		add_character_modifier = {
+			modifier = mt_flexible_contract
+			years = 15
+		}
+
+		add_prestige = 150
+		add_gold = 300
+
+		scope:offering_ruler = {
+			add_opinion = {
+				target = root
+				modifier = respectful_opinion
+				opinion = 40
+			}
+		}
+
+		ai_chance = {
+			base = 30
+			modifier = {
+				add = 40
+				diplomacy >= 16
+			}
+		}
+	}
+
+	# Decline politely
+	option = {
+		name = mt_reputation.0011.c
+
+		add_prestige = 100
+
+		scope:offering_ruler = {
+			add_opinion = {
+				target = root
+				modifier = disappointed_opinion
+				opinion = -20
+			}
+		}
+
+		ai_chance = {
+			base = 10
+			modifier = {
+				add = 40
+				has_trait = proud
+			}
+		}
+	}
+}
+
+# 0012: Invited to exclusive merchant council
+mt_reputation.0012 = {
+	type = character_event
+	title = mt_reputation.0012.t
+	desc = mt_reputation.0012.desc
+	theme = diplomacy
+
+	left_portrait = {
+		character = root
+		animation = personality_honorable
+	}
+
+	right_portrait = {
+		character = scope:council_head
+		animation = personality_content
+	}
+
+	trigger = {
+		reputation_above_trigger = { amount = 150 }
+		NOT = { has_character_modifier = mt_guild_member }
+		NOT = { has_character_flag = invited_to_council }
+		any_courtier = {
+			has_trait = merchant_prince
+		}
+	}
+
+	weight_multiplier = {
+		base = 1
+	}
+
+	immediate = {
+		add_character_flag = invited_to_council
+
+		random_courtier = {
+			limit = {
+				has_trait = merchant_prince
+			}
+			save_scope_as = council_head
+		}
+	}
+
+	# Join the council
+	option = {
+		name = mt_reputation.0012.a
+
+		add_character_modifier = {
+			modifier = mt_guild_member
+			years = 25
+		}
+
+		add_prestige = 250
+
+		scope:council_head = {
+			add_opinion = {
+				target = root
+				modifier = guild_brother_opinion
+				opinion = 40
+			}
+		}
+
+		# All council members welcome you
+		every_courtier = {
+			limit = {
+				OR = {
+					has_trait = trading_company_head
+					has_trait = merchant_prince
+				}
+			}
+			add_opinion = {
+				target = root
+				modifier = guild_brother_opinion
+				opinion = 30
+			}
+		}
+
+		ai_chance = {
+			base = 80
+		}
+	}
+
+	# Decline - maintain independence
+	option = {
+		name = mt_reputation.0012.b
+
+		add_prestige = 150
+
+		add_character_modifier = {
+			modifier = mt_independent_reputation
+			years = 10
+		}
+
+		scope:council_head = {
+			add_opinion = {
+				target = root
+				modifier = disappointed_opinion
+				opinion = -30
+			}
+		}
+
+		ai_chance = {
+			base = 20
+			modifier = {
+				add = 50
+				has_trait = arrogant
+			}
+		}
+	}
+}
+
+# 0013: Other merchants seek your advice
+mt_reputation.0013 = {
+	type = character_event
+	title = mt_reputation.0013.t
+	desc = mt_reputation.0013.desc
+	theme = learning
+
+	left_portrait = {
+		character = root
+		animation = personality_content
+	}
+
+	right_portrait = {
+		character = scope:seeking_merchant
+		animation = personality_rational
+	}
+
+	trigger = {
+		reputation_above_trigger = { amount = 200 }
+		any_courtier = {
+			OR = {
+				has_trait = wandering_merchant
+				has_trait = trade_post_owner
+			}
+		}
+	}
+
+	weight_multiplier = {
+		base = 1
+	}
+
+	immediate = {
+		random_courtier = {
+			limit = {
+				OR = {
+					has_trait = wandering_merchant
+					has_trait = trade_post_owner
+				}
+			}
+			save_scope_as = seeking_merchant
+		}
+	}
+
+	# Give generous advice
+	option = {
+		name = mt_reputation.0013.a
+
+		add_prestige = 100
+		add_learning = 1
+
+		scope:seeking_merchant = {
+			add_opinion = {
+				target = root
+				modifier = mentor_opinion
+				opinion = 50
+			}
+
+			add_diplomacy = 1
+			add_stewardship = 1
+		}
+
+		# Known as generous teacher
+		add_character_modifier = {
+			modifier = mt_reputation_great_teacher
+			years = 10
+		}
+
+		ai_chance = {
+			base = 60
+			modifier = {
+				add = 30
+				has_trait = patient
+			}
+		}
+	}
+
+	# Give basic advice only
+	option = {
+		name = mt_reputation.0013.b
+
+		add_prestige = 50
+		add_gold = 50
+
+		scope:seeking_merchant = {
+			add_opinion = {
+				target = root
+				modifier = grateful_opinion
+				opinion = 20
+			}
+		}
+
+		ai_chance = {
+			base = 40
+		}
+	}
+}
+
+# 0014: Written about by chroniclers
+mt_reputation.0014 = {
+	type = character_event
+	title = mt_reputation.0014.t
+	desc = mt_reputation.0014.desc
+	theme = learning
+
+	left_portrait = {
+		character = root
+		animation = happiness
+	}
+
+	trigger = {
+		reputation_above_trigger = { amount = 400 }
+		NOT = { has_character_modifier = mt_reputation_chronicled }
+	}
+
+	weight_multiplier = {
+		base = 1
+
+		modifier = {
+			add = 3
+			reputation_above_trigger = { amount = 600 }
+		}
+	}
+
+	# Accept historical recognition
+	option = {
+		name = mt_reputation.0014.a
+
+		add_prestige = 500
+
+		add_character_modifier = {
+			modifier = mt_reputation_chronicled
+			years = 50
+		}
+
+		add_dynasty_prestige = 200
+
+		# Your deeds are recorded for posterity
+		custom_tooltip = mt_reputation.0014.a.tt
+
+		ai_chance = {
+			base = 100
+		}
+	}
+}
+
+# 0015: Young merchants want you as mentor
+mt_reputation.0015 = {
+	type = character_event
+	title = mt_reputation.0015.t
+	desc = mt_reputation.0015.desc
+	theme = learning
+
+	left_portrait = {
+		character = root
+		animation = personality_content
+	}
+
+	right_portrait = {
+		character = scope:student
+		animation = personality_rational
+	}
+
+	trigger = {
+		reputation_above_trigger = { amount = 250 }
+		any_courtier = {
+			has_trait = wandering_merchant
+			age < 30
+		}
+	}
+
+	weight_multiplier = {
+		base = 1
+	}
+
+	immediate = {
+		random_courtier = {
+			limit = {
+				has_trait = wandering_merchant
+				age < 30
+			}
+			save_scope_as = student
+		}
+	}
+
+	# Take them as apprentice
+	option = {
+		name = mt_reputation.0015.a
+
+		add_prestige = 150
+		add_learning = 1
+
+		scope:student = {
+			add_opinion = {
+				target = root
+				modifier = mentor_opinion
+				opinion = 75
+			}
+
+			add_diplomacy = 2
+			add_stewardship = 2
+			add_learning = 1
+		}
+
+		add_character_modifier = {
+			modifier = mt_respected_mentor
+			years = 15
+		}
+
+		# Future benefits when they succeed
+		custom_tooltip = mt_reputation.0015.a.tt
+
+		ai_chance = {
+			base = 60
+			modifier = {
+				add = 30
+				learning >= 12
+			}
+		}
+	}
+
+	# Politely decline
+	option = {
+		name = mt_reputation.0015.b
+
+		add_gold = 100
+
+		scope:student = {
+			add_opinion = {
+				target = root
+				modifier = disappointed_opinion
+				opinion = -30
+			}
+		}
+
+		ai_chance = {
+			base = 40
+		}
+	}
+}
+
+# 0016: Offered position as trade advisor to king
+mt_reputation.0016 = {
+	type = character_event
+	title = mt_reputation.0016.t
+	desc = mt_reputation.0016.desc
+	theme = diplomacy
+
+	left_portrait = {
+		character = root
+		animation = personality_rational
+	}
+
+	right_portrait = {
+		character = scope:king
+		animation = personality_honorable
+	}
+
+	trigger = {
+		reputation_above_trigger = { amount = 350 }
+		exists = liege
+		liege = {
+			is_ruler = yes
+			highest_held_title_tier >= tier_kingdom
+		}
+		NOT = { has_character_flag = offered_trade_advisor }
+	}
+
+	weight_multiplier = {
+		base = 1
+	}
+
+	immediate = {
+		add_character_flag = offered_trade_advisor
+
+		liege = {
+			save_scope_as = king
+		}
+	}
+
+	# Accept with full duties
+	option = {
+		name = mt_reputation.0016.a
+
+		add_character_modifier = {
+			modifier = mt_royal_trade_advisor
+			years = 20
+		}
+
+		add_prestige = 400
+		add_gold = 500
+
+		scope:king = {
+			add_opinion = {
+				target = root
+				modifier = loyal_opinion
+				opinion = 70
+			}
+		}
+
+		ai_chance = {
+			base = 40
+			modifier = {
+				add = 30
+				age >= 50
+			}
+		}
+	}
+
+	# Negotiate advisory role
+	option = {
+		name = mt_reputation.0016.b
+
+		trigger = {
+			diplomacy >= 16
+		}
+
+		add_character_modifier = {
+			modifier = mt_independent_advisor
+			years = 20
+		}
+
+		add_prestige = 300
+		add_gold = 300
+
+		scope:king = {
+			add_opinion = {
+				target = root
+				modifier = respectful_opinion
+				opinion = 50
+			}
+		}
+
+		ai_chance = {
+			base = 50
+			modifier = {
+				add = 40
+				diplomacy >= 18
+			}
+		}
+	}
+
+	# Decline - too independent
+	option = {
+		name = mt_reputation.0016.c
+
+		add_prestige = 200
+
+		scope:king = {
+			add_opinion = {
+				target = root
+				modifier = disappointed_opinion
+				opinion = -40
+			}
+		}
+
+		add_character_modifier = {
+			modifier = mt_independent_reputation
+			years = 15
+		}
+
+		ai_chance = {
+			base = 10
+			modifier = {
+				add = 60
+				has_trait = arrogant
+			}
+		}
+	}
+}
+
+# 0017: Foreign merchants travel to meet you
+mt_reputation.0017 = {
+	type = character_event
+	title = mt_reputation.0017.t
+	desc = mt_reputation.0017.desc
+	theme = diplomacy
+
+	left_portrait = {
+		character = root
+		animation = personality_content
+	}
+
+	trigger = {
+		reputation_above_trigger = { amount = 450 }
+	}
+
+	weight_multiplier = {
+		base = 1
+	}
+
+	# Welcome them and share knowledge
+	option = {
+		name = mt_reputation.0017.a
+
+		add_prestige = 300
+		add_gold = 400
+
+		# New trade connections
+		add_character_modifier = {
+			modifier = mt_expanded_network
+			years = 20
+		}
+
+		ai_chance = {
+			base = 70
+		}
+	}
+
+	# Charge them for your time
+	option = {
+		name = mt_reputation.0017.b
+
+		add_gold = 800
+		add_prestige = 100
+
+		# Less respected but wealthy
+		custom_tooltip = mt_reputation.0017.b.tt
+
+		ai_chance = {
+			base = 30
+			modifier = {
+				add = 40
+				has_trait = greedy
+			}
+		}
+	}
+}
+
+# 0018: Trade cities offer honorary citizenship
+mt_reputation.0018 = {
+	type = character_event
+	title = mt_reputation.0018.t
+	desc = mt_reputation.0018.desc
+	theme = prestige
+
+	left_portrait = {
+		character = root
+		animation = happiness
+	}
+
+	trigger = {
+		reputation_above_trigger = { amount = 500 }
+		NOT = { has_character_flag = offered_honorary_citizenship }
+	}
+
+	weight_multiplier = {
+		base = 1
+	}
+
+	immediate = {
+		add_character_flag = offered_honorary_citizenship
+	}
+
+	# Accept with gratitude
+	option = {
+		name = mt_reputation.0018.a
+
+		add_prestige = 600
+		add_gold = 300
+
+		# Benefits in trade cities
+		custom_tooltip = mt_reputation.0018.a.tt
+
+		add_character_modifier = {
+			modifier = mt_premium_goods_reputation
+			years = 30
+		}
+
+		ai_chance = {
+			base = 80
+		}
+	}
+
+	# Accept humbly
+	option = {
+		name = mt_reputation.0018.b
+
+		add_prestige = 500
+		add_piety = 200
+
+		custom_tooltip = mt_reputation.0018.a.tt
+
+		ai_chance = {
+			base = 20
+			modifier = {
+				add = 60
+				has_trait = humble
+			}
+		}
+	}
+}
+
+# 0019: Rulers compete for your favor
+mt_reputation.0019 = {
+	type = character_event
+	title = mt_reputation.0019.t
+	desc = mt_reputation.0019.desc
+	theme = diplomacy
+
+	left_portrait = {
+		character = root
+		animation = personality_bold
+	}
+
+	right_portrait = {
+		character = scope:competing_ruler
+		animation = personality_content
+	}
+
+	trigger = {
+		reputation_above_trigger = { amount = 600 }
+		any_independent_ruler = {
+			NOT = { this = root }
+		}
+	}
+
+	weight_multiplier = {
+		base = 1
+	}
+
+	immediate = {
+		random_independent_ruler = {
+			limit = {
+				NOT = { this = root }
+			}
+			save_scope_as = competing_ruler
+		}
+	}
+
+	# Leverage competition for benefits
+	option = {
+		name = mt_reputation.0019.a
+
+		trigger = {
+			diplomacy >= 16
+		}
+
+		add_prestige = 700
+		add_gold = 1000
+
+		scope:competing_ruler = {
+			add_opinion = {
+				target = root
+				modifier = impressed_opinion
+				opinion = 50
+			}
+		}
+
+		if = {
+			limit = { exists = liege }
+			liege = {
+				add_opinion = {
+					target = root
+					modifier = impressed_opinion
+					opinion = 50
+				}
+			}
+		}
+
+		ai_chance = {
+			base = 60
+			modifier = {
+				add = 30
+				diplomacy >= 18
+			}
+		}
+	}
+
+	# Stay loyal to current liege
+	option = {
+		name = mt_reputation.0019.b
+
+		trigger = {
+			exists = liege
+		}
+
+		add_prestige = 500
+		add_gold = 500
+
+		liege = {
+			add_opinion = {
+				target = root
+				modifier = loyal_opinion
+				opinion = 80
+			}
+		}
+
+		scope:competing_ruler = {
+			add_opinion = {
+				target = root
+				modifier = disappointed_opinion
+				opinion = -30
+			}
+		}
+
+		ai_chance = {
+			base = 40
+		}
+	}
+}
+
+# 0020: Legacy solidified - discussed for generations
+mt_reputation.0020 = {
+	type = character_event
+	title = mt_reputation.0020.t
+	desc = mt_reputation.0020.desc
+	theme = prestige
+
+	left_portrait = {
+		character = root
+		animation = personality_honorable
+	}
+
+	trigger = {
+		reputation_above_trigger = { amount = 700 }
+		NOT = { has_character_flag = legacy_solidified }
+	}
+
+	weight_multiplier = {
+		base = 1
+	}
+
+	immediate = {
+		add_character_flag = legacy_solidified
+	}
+
+	# Embrace immortal legacy
+	option = {
+		name = mt_reputation.0020.a
+
+		add_prestige = 1500
+		add_dynasty_prestige = 1000
+
+		# Your name will live forever
+		add_character_modifier = {
+			modifier = mt_legendary_merchant
+		}
+
+		every_dynasty_member = {
+			add_prestige = 500
+		}
+
+		# Historical immortality
+		custom_tooltip = mt_reputation.0020.a.tt
+
+		ai_chance = {
+			base = 100
+		}
+	}
+}
+
+####################################
+# REPUTATION CHALLENGES (0021-0030)
+####################################
+
+# 0021: Rival questions your reputation publicly
+mt_reputation.0021 = {
+	type = character_event
+	title = mt_reputation.0021.t
+	desc = mt_reputation.0021.desc
+	theme = intrigue
+
+	left_portrait = {
+		character = root
+		animation = anger
+	}
+
+	right_portrait = {
+		character = scope:challenger
+		animation = scheme
+	}
+
+	trigger = {
+		reputation_above_trigger = { amount = 100 }
+		any_courtier = {
+			OR = {
+				has_trait = trade_post_owner
+				has_trait = trading_company_head
+			}
+			NOT = { this = root }
+		}
+	}
+
+	weight_multiplier = {
+		base = 1
+
+		modifier = {
+			add = 2
+			reputation_above_trigger = { amount = 300 }
+		}
+	}
+
+	immediate = {
+		random_courtier = {
+			limit = {
+				OR = {
+					has_trait = trade_post_owner
+					has_trait = trading_company_head
+				}
+				NOT = { this = root }
+			}
+			save_scope_as = challenger
+		}
+	}
+
+	# Defend your reputation
+	option = {
+		name = mt_reputation.0021.a
+
+		trigger = {
+			diplomacy >= 12
+		}
+
+		duel = {
+			skill = diplomacy
+			target = scope:challenger
+
+			60 = {
+				compare_modifier = {
+					value = scope:duel_value
+					multiplier = 3
+				}
+				desc = mt_reputation.0021.a.success
+
+				send_interface_toast = {
+					title = mt_reputation.0021.a.success
+					left_icon = root
+
+					add_prestige = 200
+
+					scope:challenger = {
+						add_prestige = -200
+						add_opinion = {
+							target = root
+							modifier = humiliated_opinion
+							opinion = -75
+						}
+
+						# They lose reputation
+						lose_reputation_effect = { amount = -20 }
+					}
+
+					# You gain reputation
+					gain_reputation_effect = { amount = 10 }
+				}
+			}
+
+			40 = {
+				compare_modifier = {
+					value = scope:duel_value
+					multiplier = -3
+				}
+				desc = mt_reputation.0021.a.failure
+
+				send_interface_toast = {
+					title = mt_reputation.0021.a.failure
+					left_icon = root
+
+					add_prestige = -150
+					add_stress = 40
+
+					# Lose reputation
+					lose_reputation_effect = { amount = -25 }
+				}
+			}
+		}
+
+		ai_chance = {
+			base = 60
+			modifier = {
+				add = 30
+				diplomacy >= 14
+			}
+		}
+	}
+
+	# Ignore the challenge
+	option = {
+		name = mt_reputation.0021.b
+
+		add_prestige = -50
+		lose_reputation_effect = { amount = -10 }
+
+		# Some see it as weakness
+		custom_tooltip = mt_reputation.0021.b.tt
+
+		ai_chance = {
+			base = 20
+			modifier = {
+				add = 30
+				has_trait = patient
+			}
+		}
+	}
+
+	# Counter-attack their reputation
+	option = {
+		name = mt_reputation.0021.c
+
+		trigger = {
+			intrigue >= 12
+		}
+
+		duel = {
+			skill = intrigue
+			target = scope:challenger
+
+			50 = {
+				compare_modifier = {
+					value = scope:duel_value
+					multiplier = 3
+				}
+				desc = mt_reputation.0021.c.success
+
+				send_interface_toast = {
+					title = mt_reputation.0021.c.success
+					left_icon = root
+
+					scope:challenger = {
+						add_prestige = -300
+						lose_reputation_effect = { amount = -50 }
+
+						add_character_modifier = {
+							modifier = mt_reputation_scandal
+							years = 10
+						}
+
+						add_opinion = {
+							target = root
+							modifier = nemesis_opinion
+							opinion = -100
+						}
+					}
+
+					add_prestige = 150
+					gain_reputation_effect = { amount = 15 }
+				}
+			}
+
+			50 = {
+				compare_modifier = {
+					value = scope:duel_value
+					multiplier = -3
+				}
+				desc = mt_reputation.0021.c.failure
+
+				send_interface_toast = {
+					title = mt_reputation.0021.c.failure
+					left_icon = root
+
+					add_prestige = -250
+					add_stress = 50
+
+					# Devastating reputation loss
+					lose_reputation_fraud_effect = yes
+
+					scope:challenger = {
+						add_opinion = {
+							target = root
+							modifier = triumph_opinion
+							opinion = -50
+						}
+					}
+				}
+			}
+		}
+
+		ai_chance = {
+			base = 30
+			modifier = {
+				add = 40
+				intrigue >= 14
+			}
+			modifier = {
+				add = 30
+				has_trait = vengeful
+			}
+		}
+	}
+}
+
+# 0022: Scandal threatens your good name
+mt_reputation.0022 = {
+	type = character_event
+	title = mt_reputation.0022.t
+	desc = mt_reputation.0022.desc
+	theme = intrigue
+
+	left_portrait = {
+		character = root
+		animation = worry
+	}
+
+	trigger = {
+		reputation_above_trigger = { amount = 200 }
+		NOT = { has_character_modifier = mt_reputation_scandal }
+	}
+
+	weight_multiplier = {
+		base = 1
+
+		modifier = {
+			add = 2
+			reputation_above_trigger = { amount = 400 }
+		}
+	}
+
+	# Pay to make it go away
+	option = {
+		name = mt_reputation.0022.a
+
+		trigger = {
+			gold >= 500
+		}
+
+		remove_short_term_gold = 500
+		add_prestige = -100
+
+		# Scandal contained
+		custom_tooltip = mt_reputation.0022.a.tt
+
+		ai_chance = {
+			base = 50
+			modifier = {
+				add = 30
+				gold >= 1000
+			}
+		}
+	}
+
+	# Fight the scandal publicly
+	option = {
+		name = mt_reputation.0022.b
+
+		trigger = {
+			diplomacy >= 14
+		}
+
+		random_list = {
+			60 = {
+				desc = mt_reputation.0022.b.success
+				add_prestige = 200
+				gain_reputation_effect = { amount = 20 }
+
+				# Strengthened by overcoming scandal
+				add_character_modifier = {
+					modifier = mt_reputation_honest_dealer
+					years = 15
+				}
+			}
+			40 = {
+				desc = mt_reputation.0022.b.failure
+				add_prestige = -300
+				add_stress = 50
+
+				# Scandal sticks
+				add_character_modifier = {
+					modifier = mt_reputation_scandal
+					years = 10
+				}
+
+				lose_reputation_effect = { amount = -50 }
+			}
+		}
+
+		ai_chance = {
+			base = 40
+			modifier = {
+				add = 40
+				diplomacy >= 16
+			}
+			modifier = {
+				add = 30
+				has_trait = brave
+			}
+		}
+	}
+
+	# Accept the damage
+	option = {
+		name = mt_reputation.0022.c
+
+		add_prestige = -200
+		add_stress = 30
+
+		lose_reputation_effect = { amount = -30 }
+
+		add_character_modifier = {
+			modifier = mt_reputation_rebuilding
+			years = 5
+		}
+
+		ai_chance = {
+			base = 10
+		}
+	}
+}
+
+# 0023: Must defend reputation in court
+mt_reputation.0023 = {
+	type = character_event
+	title = mt_reputation.0023.t
+	desc = mt_reputation.0023.desc
+	theme = diplomacy
+
+	left_portrait = {
+		character = root
+		animation = worry
+	}
+
+	right_portrait = {
+		character = scope:judge
+		animation = personality_rational
+	}
+
+	trigger = {
+		reputation_above_trigger = { amount = 150 }
+		exists = liege
+		liege = {
+			is_ruler = yes
+		}
+	}
+
+	weight_multiplier = {
+		base = 1
+	}
+
+	immediate = {
+		liege = {
+			save_scope_as = judge
+		}
+	}
+
+	# Present strong defense
+	option = {
+		name = mt_reputation.0023.a
+
+		trigger = {
+			diplomacy >= 12
+		}
+
+		duel = {
+			skill = diplomacy
+			target = scope:judge
+
+			70 = {
+				compare_modifier = {
+					value = scope:duel_value
+					multiplier = 3
+				}
+				desc = mt_reputation.0023.a.success
+
+				send_interface_toast = {
+					title = mt_reputation.0023.a.success
+					left_icon = root
+
+					add_prestige = 250
+					gain_reputation_effect = { amount = 25 }
+
+					scope:judge = {
+						add_opinion = {
+							target = root
+							modifier = impressed_opinion
+							opinion = 40
+						}
+					}
+				}
+			}
+
+			30 = {
+				compare_modifier = {
+					value = scope:duel_value
+					multiplier = -3
+				}
+				desc = mt_reputation.0023.a.failure
+
+				send_interface_toast = {
+					title = mt_reputation.0023.a.failure
+					left_icon = root
+
+					add_prestige = -200
+					remove_short_term_gold = 300
+
+					lose_reputation_effect = { amount = -35 }
+
+					scope:judge = {
+						add_opinion = {
+							target = root
+							modifier = disappointed_opinion
+							opinion = -40
+						}
+					}
+				}
+			}
+		}
+
+		ai_chance = {
+			base = 70
+			modifier = {
+				add = 30
+				diplomacy >= 14
+			}
+		}
+	}
+
+	# Settle out of court
+	option = {
+		name = mt_reputation.0023.b
+
+		trigger = {
+			gold >= 400
+		}
+
+		remove_short_term_gold = 400
+		add_prestige = -100
+
+		lose_reputation_effect = { amount = -15 }
+
+		ai_chance = {
+			base = 30
+			modifier = {
+				add = 40
+				gold >= 1000
+			}
+		}
+	}
+}
+
+# 0024: Jealous merchants conspire against you
+mt_reputation.0024 = {
+	type = character_event
+	title = mt_reputation.0024.t
+	desc = mt_reputation.0024.desc
+	theme = intrigue
+
+	left_portrait = {
+		character = root
+		animation = anger
+	}
+
+	right_portrait = {
+		character = scope:conspirator
+		animation = scheme
+	}
+
+	trigger = {
+		reputation_above_trigger = { amount = 300 }
+		any_courtier = {
+			OR = {
+				has_trait = trade_post_owner
+				has_trait = trading_company_head
+			}
+			NOT = { this = root }
+		}
+	}
+
+	weight_multiplier = {
+		base = 1
+
+		modifier = {
+			add = 3
+			reputation_above_trigger = { amount = 500 }
+		}
+	}
+
+	immediate = {
+		random_courtier = {
+			limit = {
+				OR = {
+					has_trait = trade_post_owner
+					has_trait = trading_company_head
+				}
+				NOT = { this = root }
+			}
+			save_scope_as = conspirator
+		}
+	}
+
+	# Uncover the conspiracy
+	option = {
+		name = mt_reputation.0024.a
+
+		trigger = {
+			intrigue >= 14
+		}
+
+		duel = {
+			skill = intrigue
+			target = scope:conspirator
+
+			60 = {
+				compare_modifier = {
+					value = scope:duel_value
+					multiplier = 3
+				}
+				desc = mt_reputation.0024.a.success
+
+				send_interface_toast = {
+					title = mt_reputation.0024.a.success
+					left_icon = root
+
+					scope:conspirator = {
+						add_prestige = -300
+						lose_reputation_fraud_effect = yes
+
+						add_opinion = {
+							target = root
+							modifier = nemesis_opinion
+							opinion = -100
+						}
+					}
+
+					add_prestige = 300
+					gain_reputation_honesty_effect = yes
+				}
+			}
+
+			40 = {
+				compare_modifier = {
+					value = scope:duel_value
+					multiplier = -3
+				}
+				desc = mt_reputation.0024.a.failure
+
+				send_interface_toast = {
+					title = mt_reputation.0024.a.failure
+					left_icon = root
+
+					add_prestige = -250
+					add_stress = 50
+					remove_short_term_gold = 500
+
+					lose_reputation_effect = { amount = -40 }
+
+					add_character_modifier = {
+						modifier = mt_sabotaged_operations
+						years = 7
+					}
+				}
+			}
+		}
+
+		ai_chance = {
+			base = 50
+			modifier = {
+				add = 40
+				intrigue >= 16
+			}
+		}
+	}
+
+	# Build stronger alliances
+	option = {
+		name = mt_reputation.0024.b
+
+		trigger = {
+			diplomacy >= 12
+		}
+
+		remove_short_term_gold = 300
+		add_prestige = 100
+
+		# Protected by allies
+		every_courtier = {
+			limit = {
+				OR = {
+					has_trait = trading_company_head
+					has_trait = merchant_prince
+				}
+				NOT = { this = scope:conspirator }
+			}
+			add_opinion = {
+				target = root
+				modifier = guild_brother_opinion
+				opinion = 30
+			}
+		}
+
+		# Conspiracy neutralized
+		custom_tooltip = mt_reputation.0024.b.tt
+
+		ai_chance = {
+			base = 40
+			modifier = {
+				add = 30
+				diplomacy >= 14
+			}
+		}
+	}
+
+	# Endure the attacks
+	option = {
+		name = mt_reputation.0024.c
+
+		add_prestige = -150
+		add_stress = 40
+		remove_short_term_gold = 200
+
+		lose_reputation_effect = { amount = -25 }
+
+		# But maintain dignity
+		add_character_modifier = {
+			modifier = mt_quiet_confidence
+			years = 5
+		}
+
+		ai_chance = {
+			base = 10
+			modifier = {
+				add = 40
+				has_trait = patient
+			}
+		}
+	}
+}
+
+# 0025: False accusations - prove innocence
+mt_reputation.0025 = {
+	type = character_event
+	title = mt_reputation.0025.t
+	desc = mt_reputation.0025.desc
+	theme = intrigue
+
+	left_portrait = {
+		character = root
+		animation = worry
+	}
+
+	right_portrait = {
+		character = scope:accuser
+		animation = anger
+	}
+
+	trigger = {
+		reputation_above_trigger = { amount = 100 }
+		any_courtier = {
+			NOT = { this = root }
+			is_adult = yes
+		}
+	}
+
+	weight_multiplier = {
+		base = 1
+	}
+
+	immediate = {
+		random_courtier = {
+			limit = {
+				NOT = { this = root }
+				is_adult = yes
+			}
+			save_scope_as = accuser
+		}
+	}
+
+	# Prove innocence thoroughly
+	option = {
+		name = mt_reputation.0025.a
+
+		trigger = {
+			OR = {
+				diplomacy >= 14
+				intrigue >= 14
+			}
+		}
+
+		random_list = {
+			70 = {
+				desc = mt_reputation.0025.a.success
+				add_prestige = 300
+				gain_reputation_honesty_effect = yes
+
+				scope:accuser = {
+					add_prestige = -250
+					add_opinion = {
+						target = root
+						modifier = humiliated_opinion
+						opinion = -80
+					}
+				}
+
+				# Stronger reputation than before
+				add_character_modifier = {
+					modifier = mt_reputation_honest_dealer
+					years = 20
+				}
+			}
+			30 = {
+				desc = mt_reputation.0025.a.failure
+				add_prestige = -200
+				add_stress = 50
+
+				lose_reputation_effect = { amount = -30 }
+			}
+		}
+
+		ai_chance = {
+			base = 70
+			modifier = {
+				add = 30
+				OR = {
+					diplomacy >= 16
+					intrigue >= 16
+				}
+			}
+		}
+	}
+
+	# Pay to settle
+	option = {
+		name = mt_reputation.0025.b
+
+		trigger = {
+			gold >= 300
+		}
+
+		remove_short_term_gold = 300
+		add_prestige = -100
+
+		lose_reputation_effect = { amount = -10 }
+
+		scope:accuser = {
+			add_opinion = {
+				target = root
+				modifier = grateful_opinion
+				opinion = 20
+			}
+		}
+
+		ai_chance = {
+			base = 30
+			modifier = {
+				add = 40
+				gold >= 1000
+			}
+		}
+	}
+}
+
+# 0026: Reputation test - maintain standards or compromise
+mt_reputation.0026 = {
+	type = character_event
+	title = mt_reputation.0026.t
+	desc = mt_reputation.0026.desc
+	theme = stewardship
+
+	left_portrait = {
+		character = root
+		animation = personality_rational
+	}
+
+	trigger = {
+		reputation_above_trigger = { amount = 200 }
+	}
+
+	weight_multiplier = {
+		base = 1
+	}
+
+	# Maintain high standards (costly)
+	option = {
+		name = mt_reputation.0026.a
+
+		remove_short_term_gold = 400
+		add_stress = 20
+
+		# Reputation strengthened
+		gain_reputation_effect = { amount = 30 }
+		add_prestige = 200
+
+		# Known for quality
+		add_character_modifier = {
+			modifier = mt_renowned_quality
+			years = 15
+		}
+
+		ai_chance = {
+			base = 50
+			modifier = {
+				add = 40
+				has_trait = just
+			}
+			modifier = {
+				add = 30
+				reputation_above_trigger = { amount = 400 }
+			}
+		}
+	}
+
+	# Compromise standards (profitable)
+	option = {
+		name = mt_reputation.0026.b
+
+		add_gold = 600
+		add_prestige = -100
+
+		# Reputation damaged
+		lose_reputation_effect = { amount = -25 }
+
+		# Risk of scandal
+		random = {
+			chance = 30
+			add_character_modifier = {
+				modifier = mt_reputation_scandal
+				years = 5
+			}
+		}
+
+		ai_chance = {
+			base = 30
+			modifier = {
+				add = 50
+				has_trait = greedy
+			}
+			modifier = {
+				factor = 0.2
+				reputation_above_trigger = { amount = 500 }
+			}
+		}
+	}
+
+	# Balance quality and profit
+	option = {
+		name = mt_reputation.0026.c
+
+		trigger = {
+			stewardship >= 14
+		}
+
+		add_gold = 200
+		add_prestige = 100
+
+		# Reputation maintained
+		gain_reputation_effect = { amount = 10 }
+
+		ai_chance = {
+			base = 40
+			modifier = {
+				add = 40
+				stewardship >= 16
+			}
+		}
+	}
+}
+
+# 0027: Former partner tells unflattering stories
+mt_reputation.0027 = {
+	type = character_event
+	title = mt_reputation.0027.t
+	desc = mt_reputation.0027.desc
+	theme = intrigue
+
+	left_portrait = {
+		character = root
+		animation = worry
+	}
+
+	right_portrait = {
+		character = scope:former_partner
+		animation = anger
+	}
+
+	trigger = {
+		reputation_above_trigger = { amount = 150 }
+		any_courtier = {
+			OR = {
+				has_trait = wandering_merchant
+				has_trait = trade_post_owner
+			}
+			NOT = { this = root }
+		}
+	}
+
+	weight_multiplier = {
+		base = 1
+	}
+
+	immediate = {
+		random_courtier = {
+			limit = {
+				OR = {
+					has_trait = wandering_merchant
+					has_trait = trade_post_owner
+				}
+				NOT = { this = root }
+			}
+			save_scope_as = former_partner
+		}
+	}
+
+	# Set the record straight
+	option = {
+		name = mt_reputation.0027.a
+
+		trigger = {
+			diplomacy >= 12
+		}
+
+		duel = {
+			skill = diplomacy
+			target = scope:former_partner
+
+			60 = {
+				compare_modifier = {
+					value = scope:duel_value
+					multiplier = 3
+				}
+				desc = mt_reputation.0027.a.success
+
+				send_interface_toast = {
+					title = mt_reputation.0027.a.success
+					left_icon = root
+
+					add_prestige = 150
+					gain_reputation_effect = { amount = 15 }
+
+					scope:former_partner = {
+						add_prestige = -150
+						add_opinion = {
+							target = root
+							modifier = defeated_opinion
+							opinion = -60
+						}
+					}
+				}
+			}
+
+			40 = {
+				compare_modifier = {
+					value = scope:duel_value
+					multiplier = -3
+				}
+				desc = mt_reputation.0027.a.failure
+
+				send_interface_toast = {
+					title = mt_reputation.0027.a.failure
+					left_icon = root
+
+					add_prestige = -150
+					add_stress = 30
+
+					lose_reputation_effect = { amount = -20 }
+				}
+			}
+		}
+
+		ai_chance = {
+			base = 60
+		}
+	}
+
+	# Ignore the gossip
+	option = {
+		name = mt_reputation.0027.b
+
+		add_prestige = -75
+		lose_reputation_effect = { amount = -10 }
+
+		# Some damage but maintain dignity
+		custom_tooltip = mt_reputation.0027.b.tt
+
+		ai_chance = {
+			base = 40
+			modifier = {
+				add = 30
+				has_trait = calm
+			}
+		}
+	}
+}
+
+# 0028: Must live up to legendary reputation - pressure
+mt_reputation.0028 = {
+	type = character_event
+	title = mt_reputation.0028.t
+	desc = mt_reputation.0028.desc
+	theme = stewardship
+
+	left_portrait = {
+		character = root
+		animation = stress
+	}
+
+	trigger = {
+		reputation_above_trigger = { amount = 500 }
+	}
+
+	weight_multiplier = {
+		base = 1
+	}
+
+	# Rise to the occasion
+	option = {
+		name = mt_reputation.0028.a
+
+		add_stress = 30
+		remove_short_term_gold = 500
+
+		# Exceed expectations
+		random_list = {
+			70 = {
+				desc = mt_reputation.0028.a.success
+				add_prestige = 400
+				gain_reputation_effect = { amount = 35 }
+
+				# Legendary performance
+				add_character_modifier = {
+					modifier = mt_renowned_quality
+					years = 20
+				}
+			}
+			30 = {
+				desc = mt_reputation.0028.a.failure
+				add_prestige = -200
+				add_stress = 40
+
+				lose_reputation_effect = { amount = -30 }
+			}
+		}
+
+		ai_chance = {
+			base = 60
+			modifier = {
+				add = 30
+				has_trait = ambitious
+			}
+		}
+	}
+
+	# Delegate to trusted people
+	option = {
+		name = mt_reputation.0028.b
+
+		trigger = {
+			stewardship >= 14
+		}
+
+		add_stress = 10
+		remove_short_term_gold = 300
+
+		# Adequate performance
+		add_prestige = 200
+		gain_reputation_effect = { amount = 10 }
+
+		ai_chance = {
+			base = 40
+			modifier = {
+				add = 40
+				stewardship >= 16
+			}
+		}
+	}
+}
+
+# 0029: Reputation prevents you from risky ventures
+mt_reputation.0029 = {
+	type = character_event
+	title = mt_reputation.0029.t
+	desc = mt_reputation.0029.desc
+	theme = stewardship
+
+	left_portrait = {
+		character = root
+		animation = personality_rational
+	}
+
+	trigger = {
+		reputation_above_trigger = { amount = 400 }
+	}
+
+	weight_multiplier = {
+		base = 1
+	}
+
+	# Play it safe - protect reputation
+	option = {
+		name = mt_reputation.0029.a
+
+		add_stress = 20
+
+		# Safe but slower growth
+		add_gold = 300
+		add_prestige = 100
+
+		custom_tooltip = mt_reputation.0029.a.tt
+
+		ai_chance = {
+			base = 60
+			modifier = {
+				add = 30
+				age >= 50
+			}
+		}
+	}
+
+	# Take the risk anyway
+	option = {
+		name = mt_reputation.0029.b
+
+		add_stress = 40
+
+		random_list = {
+			40 = {
+				desc = mt_reputation.0029.b.success
+				add_gold = 1000
+				add_prestige = 300
+
+				gain_reputation_effect = { amount = 40 }
+
+				# Daring pays off
+				custom_tooltip = mt_reputation.0029.b.success_tt
+			}
+			60 = {
+				desc = mt_reputation.0029.b.failure
+				remove_short_term_gold = 500
+				add_prestige = -250
+
+				lose_reputation_effect = { amount = -50 }
+
+				# Reputation damaged
+				add_character_modifier = {
+					modifier = mt_reputation_rebuilding
+					years = 7
+				}
+			}
+		}
+
+		ai_chance = {
+			base = 30
+			modifier = {
+				add = 50
+				has_trait = brave
+			}
+			modifier = {
+				add = 40
+				has_trait = ambitious
+			}
+			modifier = {
+				factor = 0.3
+				reputation_above_trigger = { amount = 700 }
+			}
+		}
+	}
+}
+
+# 0030: Too famous - constant attention and requests
+mt_reputation.0030 = {
+	type = character_event
+	title = mt_reputation.0030.t
+	desc = mt_reputation.0030.desc
+	theme = stewardship
+
+	left_portrait = {
+		character = root
+		animation = stress
+	}
+
+	trigger = {
+		reputation_above_trigger = { amount = 600 }
+	}
+
+	weight_multiplier = {
+		base = 1
+	}
+
+	# Embrace the attention
+	option = {
+		name = mt_reputation.0030.a
+
+		add_stress = 40
+		add_prestige = 300
+
+		# Exhausting but beneficial
+		add_gold = 500
+
+		gain_reputation_effect = { amount = 20 }
+
+		custom_tooltip = mt_reputation.0030.a.tt
+
+		ai_chance = {
+			base = 40
+			modifier = {
+				add = 40
+				has_trait = gregarious
+			}
+		}
+	}
+
+	# Retreat to privacy
+	option = {
+		name = mt_reputation.0030.b
+
+		add_stress = -40
+		add_prestige = 100
+
+		# Peaceful but lose some prominence
+		lose_reputation_effect = { amount = -15 }
+
+		add_character_modifier = {
+			modifier = mt_reduced_operations
+			years = 5
+		}
+
+		custom_tooltip = mt_reputation.0030.b.tt
+
+		ai_chance = {
+			base = 40
+			modifier = {
+				add = 50
+				age >= 55
+			}
+			modifier = {
+				add = 40
+				has_trait = shy
+			}
+		}
+	}
+
+	# Hire staff to manage requests
+	option = {
+		name = mt_reputation.0030.c
+
+		trigger = {
+			gold >= 400
+		}
+
+		remove_short_term_gold = 400
+		add_stress = 10
+
+		# Best of both worlds
+		add_prestige = 200
+		gain_reputation_effect = { amount = 10 }
+
+		add_character_modifier = {
+			modifier = mt_delegated_management
+			years = 10
+		}
+
+		custom_tooltip = mt_reputation.0030.c.tt
+
+		ai_chance = {
+			base = 50
+			modifier = {
+				add = 40
+				stewardship >= 14
+			}
+		}
+	}
+}
