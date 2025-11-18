@@ -1,0 +1,466 @@
+####################################
+# MERCHANTS AND TRADERS MOD
+# Reputation System - Scripted Triggers
+# Version: 0.1.0
+####################################
+#
+# Triggers for checking merchant reputation levels and qualifications
+#
+####################################
+
+####################################
+# REPUTATION TIER CHECKS
+####################################
+
+# Trigger: Has specific reputation tier
+# Scope: Character
+# Parameters: tier (string)
+# Usage: <character> = { has_reputation_level_trigger = { tier = "prominent_merchant" } }
+has_reputation_level_trigger = {
+	OR = {
+		# Check by modifier
+		AND = {
+			$tier$ = unknown_peddler
+			has_character_modifier = mt_reputation_unknown_peddler
+		}
+		AND = {
+			$tier$ = local_trader
+			has_character_modifier = mt_reputation_local_trader
+		}
+		AND = {
+			$tier$ = known_merchant
+			has_character_modifier = mt_reputation_known_merchant
+		}
+		AND = {
+			$tier$ = respected_trader
+			has_character_modifier = mt_reputation_respected_trader
+		}
+		AND = {
+			$tier$ = prominent_merchant
+			has_character_modifier = mt_reputation_prominent_merchant
+		}
+		AND = {
+			$tier$ = renowned_trader
+			has_character_modifier = mt_reputation_renowned_trader
+		}
+		AND = {
+			$tier$ = merchant_magnate
+			has_character_modifier = mt_reputation_merchant_magnate
+		}
+		AND = {
+			$tier$ = trade_master
+			has_character_modifier = mt_reputation_trade_master
+		}
+		AND = {
+			$tier$ = legend_of_commerce
+			has_character_modifier = mt_reputation_legend_of_commerce
+		}
+		AND = {
+			$tier$ = immortal_legacy
+			has_character_modifier = mt_reputation_immortal_legacy
+		}
+	}
+}
+
+####################################
+# REPUTATION THRESHOLD CHECKS
+####################################
+
+# Trigger: Reputation above threshold
+# Scope: Character
+# Parameters: amount (integer)
+# Usage: <character> = { reputation_above_trigger = { amount = 100 } }
+reputation_above_trigger = {
+	OR = {
+		# Check variable if it exists
+		AND = {
+			exists = var:merchant_reputation
+			var:merchant_reputation >= $amount$
+		}
+		# Otherwise check by tier modifiers
+		AND = {
+			$amount$ <= 10
+			OR = {
+				has_character_modifier = mt_reputation_local_trader
+				has_character_modifier = mt_reputation_known_merchant
+				has_character_modifier = mt_reputation_respected_trader
+				has_character_modifier = mt_reputation_prominent_merchant
+				has_character_modifier = mt_reputation_renowned_trader
+				has_character_modifier = mt_reputation_merchant_magnate
+				has_character_modifier = mt_reputation_trade_master
+				has_character_modifier = mt_reputation_legend_of_commerce
+				has_character_modifier = mt_reputation_immortal_legacy
+			}
+		}
+		AND = {
+			$amount$ <= 25
+			OR = {
+				has_character_modifier = mt_reputation_known_merchant
+				has_character_modifier = mt_reputation_respected_trader
+				has_character_modifier = mt_reputation_prominent_merchant
+				has_character_modifier = mt_reputation_renowned_trader
+				has_character_modifier = mt_reputation_merchant_magnate
+				has_character_modifier = mt_reputation_trade_master
+				has_character_modifier = mt_reputation_legend_of_commerce
+				has_character_modifier = mt_reputation_immortal_legacy
+			}
+		}
+		AND = {
+			$amount$ <= 50
+			OR = {
+				has_character_modifier = mt_reputation_respected_trader
+				has_character_modifier = mt_reputation_prominent_merchant
+				has_character_modifier = mt_reputation_renowned_trader
+				has_character_modifier = mt_reputation_merchant_magnate
+				has_character_modifier = mt_reputation_trade_master
+				has_character_modifier = mt_reputation_legend_of_commerce
+				has_character_modifier = mt_reputation_immortal_legacy
+			}
+		}
+		AND = {
+			$amount$ <= 100
+			OR = {
+				has_character_modifier = mt_reputation_prominent_merchant
+				has_character_modifier = mt_reputation_renowned_trader
+				has_character_modifier = mt_reputation_merchant_magnate
+				has_character_modifier = mt_reputation_trade_master
+				has_character_modifier = mt_reputation_legend_of_commerce
+				has_character_modifier = mt_reputation_immortal_legacy
+			}
+		}
+		AND = {
+			$amount$ <= 200
+			OR = {
+				has_character_modifier = mt_reputation_renowned_trader
+				has_character_modifier = mt_reputation_merchant_magnate
+				has_character_modifier = mt_reputation_trade_master
+				has_character_modifier = mt_reputation_legend_of_commerce
+				has_character_modifier = mt_reputation_immortal_legacy
+			}
+		}
+		AND = {
+			$amount$ <= 300
+			OR = {
+				has_character_modifier = mt_reputation_merchant_magnate
+				has_character_modifier = mt_reputation_trade_master
+				has_character_modifier = mt_reputation_legend_of_commerce
+				has_character_modifier = mt_reputation_immortal_legacy
+			}
+		}
+		AND = {
+			$amount$ <= 450
+			OR = {
+				has_character_modifier = mt_reputation_trade_master
+				has_character_modifier = mt_reputation_legend_of_commerce
+				has_character_modifier = mt_reputation_immortal_legacy
+			}
+		}
+		AND = {
+			$amount$ <= 600
+			OR = {
+				has_character_modifier = mt_reputation_legend_of_commerce
+				has_character_modifier = mt_reputation_immortal_legacy
+			}
+		}
+		AND = {
+			$amount$ <= 800
+			has_character_modifier = mt_reputation_immortal_legacy
+		}
+	}
+}
+
+# Trigger: Reputation below threshold
+# Scope: Character
+# Parameters: amount (integer)
+# Usage: <character> = { reputation_below_trigger = { amount = 50 } }
+reputation_below_trigger = {
+	OR = {
+		# Check variable if it exists
+		AND = {
+			exists = var:merchant_reputation
+			var:merchant_reputation < $amount$
+		}
+		# Otherwise check by tier modifiers
+		AND = {
+			$amount$ > 800
+			always = yes  # Everyone is below 800+ initially
+		}
+		AND = {
+			$amount$ > 600
+			NOT = { has_character_modifier = mt_reputation_immortal_legacy }
+		}
+		AND = {
+			$amount$ > 450
+			NOR = {
+				has_character_modifier = mt_reputation_immortal_legacy
+				has_character_modifier = mt_reputation_legend_of_commerce
+			}
+		}
+		AND = {
+			$amount$ > 300
+			NOR = {
+				has_character_modifier = mt_reputation_immortal_legacy
+				has_character_modifier = mt_reputation_legend_of_commerce
+				has_character_modifier = mt_reputation_trade_master
+			}
+		}
+		AND = {
+			$amount$ > 200
+			NOR = {
+				has_character_modifier = mt_reputation_immortal_legacy
+				has_character_modifier = mt_reputation_legend_of_commerce
+				has_character_modifier = mt_reputation_trade_master
+				has_character_modifier = mt_reputation_merchant_magnate
+			}
+		}
+		AND = {
+			$amount$ > 100
+			NOR = {
+				has_character_modifier = mt_reputation_immortal_legacy
+				has_character_modifier = mt_reputation_legend_of_commerce
+				has_character_modifier = mt_reputation_trade_master
+				has_character_modifier = mt_reputation_merchant_magnate
+				has_character_modifier = mt_reputation_renowned_trader
+			}
+		}
+		AND = {
+			$amount$ > 50
+			NOR = {
+				has_character_modifier = mt_reputation_immortal_legacy
+				has_character_modifier = mt_reputation_legend_of_commerce
+				has_character_modifier = mt_reputation_trade_master
+				has_character_modifier = mt_reputation_merchant_magnate
+				has_character_modifier = mt_reputation_renowned_trader
+				has_character_modifier = mt_reputation_prominent_merchant
+			}
+		}
+		AND = {
+			$amount$ > 25
+			NOR = {
+				has_character_modifier = mt_reputation_immortal_legacy
+				has_character_modifier = mt_reputation_legend_of_commerce
+				has_character_modifier = mt_reputation_trade_master
+				has_character_modifier = mt_reputation_merchant_magnate
+				has_character_modifier = mt_reputation_renowned_trader
+				has_character_modifier = mt_reputation_prominent_merchant
+				has_character_modifier = mt_reputation_respected_trader
+			}
+		}
+		AND = {
+			$amount$ > 10
+			NOR = {
+				has_character_modifier = mt_reputation_immortal_legacy
+				has_character_modifier = mt_reputation_legend_of_commerce
+				has_character_modifier = mt_reputation_trade_master
+				has_character_modifier = mt_reputation_merchant_magnate
+				has_character_modifier = mt_reputation_renowned_trader
+				has_character_modifier = mt_reputation_prominent_merchant
+				has_character_modifier = mt_reputation_respected_trader
+				has_character_modifier = mt_reputation_known_merchant
+			}
+		}
+	}
+}
+
+####################################
+# REPUTATION QUALIFICATION CHECKS
+####################################
+
+# Trigger: Has enough reputation for opportunities
+# Scope: Character
+# Usage: <character> = { reputation_qualifies_for_trigger = { opportunity = "royal_advisor" } }
+reputation_qualifies_for_trigger = {
+	OR = {
+		# Royal advisor position (requires 200+ reputation)
+		AND = {
+			$opportunity$ = royal_advisor
+			reputation_above_trigger = { amount = 200 }
+		}
+		# Merchant council (requires 150+ reputation)
+		AND = {
+			$opportunity$ = merchant_council
+			reputation_above_trigger = { amount = 150 }
+		}
+		# Exclusive deals (requires 100+ reputation)
+		AND = {
+			$opportunity$ = exclusive_deals
+			reputation_above_trigger = { amount = 100 }
+		}
+		# Mentorship requests (requires 250+ reputation)
+		AND = {
+			$opportunity$ = mentorship
+			reputation_above_trigger = { amount = 250 }
+		}
+		# Historical recognition (requires 500+ reputation)
+		AND = {
+			$opportunity$ = historical_recognition
+			reputation_above_trigger = { amount = 500 }
+		}
+		# Legendary opportunities (requires 600+ reputation)
+		AND = {
+			$opportunity$ = legendary_opportunity
+			reputation_above_trigger = { amount = 600 }
+		}
+	}
+}
+
+####################################
+# HIGH REPUTATION CHECKS
+####################################
+
+# Trigger: Has high reputation (100+)
+# Scope: Character
+# Usage: <character> = { has_high_reputation_trigger = yes }
+has_high_reputation_trigger = {
+	reputation_above_trigger = { amount = 100 }
+}
+
+# Trigger: Has very high reputation (300+)
+# Scope: Character
+# Usage: <character> = { has_very_high_reputation_trigger = yes }
+has_very_high_reputation_trigger = {
+	reputation_above_trigger = { amount = 300 }
+}
+
+# Trigger: Has legendary reputation (600+)
+# Scope: Character
+# Usage: <character> = { has_legendary_reputation_trigger = yes }
+has_legendary_reputation_trigger = {
+	reputation_above_trigger = { amount = 600 }
+}
+
+# Trigger: Has immortal reputation (800+)
+# Scope: Character
+# Usage: <character> = { has_immortal_reputation_trigger = yes }
+has_immortal_reputation_trigger = {
+	reputation_above_trigger = { amount = 800 }
+}
+
+####################################
+# LOW REPUTATION CHECKS
+####################################
+
+# Trigger: Has low reputation (below 25)
+# Scope: Character
+# Usage: <character> = { has_low_reputation_trigger = yes }
+has_low_reputation_trigger = {
+	reputation_below_trigger = { amount = 25 }
+}
+
+# Trigger: Has very low reputation (below 10)
+# Scope: Character
+# Usage: <character> = { has_very_low_reputation_trigger = yes }
+has_very_low_reputation_trigger = {
+	reputation_below_trigger = { amount = 10 }
+}
+
+####################################
+# REPUTATION STATUS CHECKS
+####################################
+
+# Trigger: Is rising in reputation
+# Scope: Character
+# Usage: <character> = { is_rising_in_reputation_trigger = yes }
+is_rising_in_reputation_trigger = {
+	has_character_modifier = mt_reputation_rising_star
+}
+
+# Trigger: Has damaged reputation
+# Scope: Character
+# Usage: <character> = { has_damaged_reputation_trigger = yes }
+has_damaged_reputation_trigger = {
+	OR = {
+		has_character_modifier = mt_reputation_scandal
+		has_character_modifier = mt_reputation_rebuilding
+		has_character_modifier = mt_damaged_reputation
+	}
+}
+
+# Trigger: Is chronicled by historians
+# Scope: Character
+# Usage: <character> = { is_chronicled_trigger = yes }
+is_chronicled_trigger = {
+	has_character_modifier = mt_reputation_chronicled
+}
+
+# Trigger: Is known as honest dealer
+# Scope: Character
+# Usage: <character> = { is_honest_dealer_trigger = yes }
+is_honest_dealer_trigger = {
+	has_character_modifier = mt_reputation_honest_dealer
+}
+
+# Trigger: Is known as charitable
+# Scope: Character
+# Usage: <character> = { is_charitable_merchant_trigger = yes }
+is_charitable_merchant_trigger = {
+	has_character_modifier = mt_reputation_charitable
+}
+
+####################################
+# MERCHANT CHECKS
+####################################
+
+# Trigger: Is a merchant with reputation system active
+# Scope: Character
+# Usage: <character> = { is_merchant_with_reputation_trigger = yes }
+is_merchant_with_reputation_trigger = {
+	OR = {
+		has_trait = wandering_merchant
+		has_trait = trade_post_owner
+		has_trait = trading_company_head
+		has_trait = merchant_prince
+	}
+	OR = {
+		exists = var:merchant_reputation
+		has_character_modifier = mt_reputation_unknown_peddler
+		has_character_modifier = mt_reputation_local_trader
+		has_character_modifier = mt_reputation_known_merchant
+		has_character_modifier = mt_reputation_respected_trader
+		has_character_modifier = mt_reputation_prominent_merchant
+		has_character_modifier = mt_reputation_renowned_trader
+		has_character_modifier = mt_reputation_merchant_magnate
+		has_character_modifier = mt_reputation_trade_master
+		has_character_modifier = mt_reputation_legend_of_commerce
+		has_character_modifier = mt_reputation_immortal_legacy
+	}
+}
+
+####################################
+# TIER COMPARISON CHECKS
+####################################
+
+# Trigger: At least respected trader tier
+# Scope: Character
+# Usage: <character> = { is_at_least_respected_trader_trigger = yes }
+is_at_least_respected_trader_trigger = {
+	reputation_above_trigger = { amount = 50 }
+}
+
+# Trigger: At least prominent merchant tier
+# Scope: Character
+# Usage: <character> = { is_at_least_prominent_merchant_trigger = yes }
+is_at_least_prominent_merchant_trigger = {
+	reputation_above_trigger = { amount = 100 }
+}
+
+# Trigger: At least renowned trader tier
+# Scope: Character
+# Usage: <character> = { is_at_least_renowned_trader_trigger = yes }
+is_at_least_renowned_trader_trigger = {
+	reputation_above_trigger = { amount = 200 }
+}
+
+# Trigger: At least merchant magnate tier
+# Scope: Character
+# Usage: <character> = { is_at_least_merchant_magnate_trigger = yes }
+is_at_least_merchant_magnate_trigger = {
+	reputation_above_trigger = { amount = 300 }
+}
+
+# Trigger: At least trade master tier
+# Scope: Character
+# Usage: <character> = { is_at_least_trade_master_trigger = yes }
+is_at_least_trade_master_trigger = {
+	reputation_above_trigger = { amount = 450 }
+}

@@ -1,0 +1,346 @@
+####################################
+# MERCHANTS AND TRADERS MOD
+# Reputation System - Character Modifiers
+# Version: 0.1.0
+####################################
+#
+# This file contains the 10 reputation tier modifiers
+# These represent a merchant's standing and fame in the trading world
+# Similar to a fame/renown system specifically for merchants
+#
+####################################
+
+####################################
+# REPUTATION TIER 1: UNKNOWN PEDDLER
+# 0-9 reputation
+####################################
+
+mt_reputation_unknown_peddler = {
+	icon = "gfx/interface/icons/modifiers/trade.dds"
+
+	# Penalties for being unknown
+	monthly_character_income_mult = -0.10
+	diplomacy = -1
+
+	# Nobody trusts an unknown peddler
+	general_opinion = -5
+}
+
+####################################
+# REPUTATION TIER 2: LOCAL TRADER
+# 10-24 reputation
+####################################
+
+mt_reputation_local_trader = {
+	icon = "gfx/interface/icons/modifiers/trade.dds"
+
+	# Slightly worse prices, no major bonuses
+	monthly_character_income_mult = -0.05
+
+	# Starting to be recognized locally
+}
+
+####################################
+# REPUTATION TIER 3: KNOWN MERCHANT
+# 25-49 reputation
+####################################
+
+mt_reputation_known_merchant = {
+	icon = "gfx/interface/icons/modifiers/trade.dds"
+
+	# Normal prices, basic recognition
+	diplomacy = 1
+
+	# People know your name
+	general_opinion = 5
+}
+
+####################################
+# REPUTATION TIER 4: RESPECTED TRADER
+# 50-99 reputation
+####################################
+
+mt_reputation_respected_trader = {
+	icon = "gfx/interface/icons/modifiers/prestige.dds"
+
+	# Better prices due to reputation
+	monthly_character_income_mult = 0.05
+	diplomacy = 2
+
+	# Other merchants respect you
+	same_opinion = 10
+	general_opinion = 5
+}
+
+####################################
+# REPUTATION TIER 5: PROMINENT MERCHANT
+# 100-199 reputation
+####################################
+
+mt_reputation_prominent_merchant = {
+	icon = "gfx/interface/icons/modifiers/prestige.dds"
+
+	# Strong price advantage
+	monthly_character_income_mult = 0.10
+	diplomacy = 3
+	monthly_prestige = 0.1
+
+	# Well-known in merchant circles
+	same_opinion = 15
+	merchant_opinion = 20
+	general_opinion = 10
+}
+
+####################################
+# REPUTATION TIER 6: RENOWNED TRADER
+# 200-299 reputation
+####################################
+
+mt_reputation_renowned_trader = {
+	icon = "gfx/interface/icons/modifiers/prestige.dds"
+
+	# Excellent prices
+	monthly_character_income_mult = 0.15
+	diplomacy = 4
+	monthly_prestige = 0.25
+
+	# Famous across regions
+	same_opinion = 20
+	merchant_opinion = 30
+	general_opinion = 15
+}
+
+####################################
+# REPUTATION TIER 7: MERCHANT MAGNATE
+# 300-449 reputation
+####################################
+
+mt_reputation_merchant_magnate = {
+	icon = "gfx/interface/icons/modifiers/prestige.dds"
+
+	# Premium pricing power
+	monthly_character_income_mult = 0.20
+	diplomacy = 5
+	monthly_prestige = 0.5
+
+	# Influential with both merchants and rulers
+	same_opinion = 25
+	merchant_opinion = 40
+	liege_opinion = 15
+	general_opinion = 20
+
+	# Gain some stewardship from experience
+	stewardship = 1
+}
+
+####################################
+# REPUTATION TIER 8: TRADE MASTER
+# 450-599 reputation
+####################################
+
+mt_reputation_trade_master = {
+	icon = "gfx/interface/icons/modifiers/prestige.dds"
+
+	# Masterful pricing
+	monthly_character_income_mult = 0.25
+	diplomacy = 6
+	stewardship = 2
+	monthly_prestige = 1.0
+
+	# Legendary status among merchants
+	same_opinion = 30
+	merchant_opinion = 50
+	liege_opinion = 25
+	general_opinion = 25
+
+	# Learning from vast experience
+	learning = 1
+}
+
+####################################
+# REPUTATION TIER 9: LEGEND OF COMMERCE
+# 600-799 reputation
+####################################
+
+mt_reputation_legend_of_commerce = {
+	icon = "gfx/interface/icons/modifiers/prestige.dds"
+
+	# Legendary pricing power
+	monthly_character_income_mult = 0.30
+	diplomacy = 7
+	stewardship = 3
+	monthly_prestige = 1.5
+
+	# Legendary reputation
+	same_opinion = 35
+	merchant_opinion = 60
+	liege_opinion = 35
+	general_opinion = 30
+	dynasty_opinion = 20
+
+	# Wisdom of experience
+	learning = 2
+
+	# Special opportunities unlock
+	# (handled via events)
+}
+
+####################################
+# REPUTATION TIER 10: IMMORTAL LEGACY
+# 800+ reputation
+####################################
+
+mt_reputation_immortal_legacy = {
+	icon = "gfx/interface/icons/modifiers/prestige.dds"
+
+	# Unmatched pricing power
+	monthly_character_income_mult = 0.40
+	diplomacy = 8
+	stewardship = 4
+	monthly_prestige = 2.0
+	monthly_piety = 0.5
+
+	# Immortal reputation - remembered forever
+	same_opinion = 50
+	merchant_opinion = 75
+	liege_opinion = 50
+	general_opinion = 40
+	dynasty_opinion = 30
+	close_relative_opinion = 25
+
+	# Master of all aspects
+	learning = 2
+	martial = 1
+
+	# Legendary status
+	# Historical recognition
+	# Dynasty benefits
+}
+
+####################################
+# TEMPORARY REPUTATION MODIFIERS
+####################################
+
+# Recent major success
+mt_reputation_rising_star = {
+	icon = "gfx/interface/icons/modifiers/prestige.dds"
+
+	monthly_prestige = 0.30
+	general_opinion = 10
+
+	# Everyone's talking about you
+	same_opinion = 15
+}
+
+# Recent scandal
+mt_reputation_scandal = {
+	icon = "gfx/interface/icons/modifiers/stress.dds"
+
+	monthly_prestige = -0.50
+	diplomacy = -2
+	general_opinion = -20
+
+	# Merchants distance themselves
+	same_opinion = -30
+	merchant_opinion = -40
+}
+
+# Rebuilding reputation after failure
+mt_reputation_rebuilding = {
+	icon = "gfx/interface/icons/modifiers/stewardship.dds"
+
+	stress_gain_mult = 0.15
+	monthly_character_income_mult = -0.10
+
+	# Working hard to prove yourself again
+}
+
+# Verified honest dealer
+mt_reputation_honest_dealer = {
+	icon = "gfx/interface/icons/modifiers/piety.dds"
+
+	monthly_character_income_mult = 0.05
+	monthly_piety = 0.20
+	diplomacy = 1
+
+	# Trust is valuable
+	general_opinion = 15
+	just_opinion = 20
+}
+
+# Known for charity
+mt_reputation_charitable = {
+	icon = "gfx/interface/icons/modifiers/piety.dds"
+
+	monthly_piety = 0.40
+	monthly_prestige = 0.25
+
+	# People love generous merchants
+	general_opinion = 20
+	compassionate_opinion = 25
+	same_opinion = 10
+}
+
+# Royal favorite
+mt_reputation_royal_favorite = {
+	icon = "gfx/interface/icons/modifiers/prestige.dds"
+
+	monthly_prestige = 0.60
+	diplomacy = 2
+
+	# The ruler's favor is powerful
+	liege_opinion = 40
+	general_opinion = 15
+
+	# But some merchants are jealous
+	same_opinion = -10
+}
+
+# Cutthroat competitor
+mt_reputation_cutthroat = {
+	icon = "gfx/interface/icons/modifiers/intrigue.dds"
+
+	monthly_character_income_mult = 0.15
+	intrigue = 2
+
+	# Feared but not loved
+	opposite_opinion = -30
+	same_opinion = -20
+	general_opinion = -10
+}
+
+# Mentor to many
+mt_reputation_great_teacher = {
+	icon = "gfx/interface/icons/modifiers/learning.dds"
+
+	learning = 2
+	monthly_prestige = 0.50
+
+	# Beloved by students
+	same_opinion = 25
+	general_opinion = 15
+}
+
+# Historical recognition - chroniclers write about you
+mt_reputation_chronicled = {
+	icon = "gfx/interface/icons/modifiers/prestige.dds"
+
+	monthly_prestige = 0.75
+	dynasty_prestige_gain = 0.10
+
+	# Your deeds are recorded for history
+	dynasty_opinion = 20
+	general_opinion = 20
+}
+
+# Trade innovator
+mt_reputation_innovator = {
+	icon = "gfx/interface/icons/modifiers/learning.dds"
+
+	monthly_character_income_mult = 0.12
+	learning = 2
+	monthly_prestige = 0.40
+
+	# Respect for innovation
+	same_opinion = 20
+}

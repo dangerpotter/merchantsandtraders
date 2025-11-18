@@ -1,0 +1,665 @@
+####################################
+# MERCHANTS AND TRADERS MOD
+# Reputation System - Scripted Effects
+# Version: 0.1.0
+####################################
+#
+# Effects for managing merchant reputation
+# Includes calculation, gain/loss, tier changes, and milestones
+#
+####################################
+
+####################################
+# CORE REPUTATION CALCULATION
+####################################
+
+# Effect: Calculate and update merchant reputation
+# Scope: Character
+# Usage: <character> = { calculate_merchant_reputation_effect = yes }
+calculate_merchant_reputation_effect = {
+	# Save current reputation value
+	# (In full implementation, this would read from character variable)
+
+	# Remove all existing reputation tier modifiers
+	if = {
+		limit = { has_character_modifier = mt_reputation_unknown_peddler }
+		remove_character_modifier = mt_reputation_unknown_peddler
+	}
+	if = {
+		limit = { has_character_modifier = mt_reputation_local_trader }
+		remove_character_modifier = mt_reputation_local_trader
+	}
+	if = {
+		limit = { has_character_modifier = mt_reputation_known_merchant }
+		remove_character_modifier = mt_reputation_known_merchant
+	}
+	if = {
+		limit = { has_character_modifier = mt_reputation_respected_trader }
+		remove_character_modifier = mt_reputation_respected_trader
+	}
+	if = {
+		limit = { has_character_modifier = mt_reputation_prominent_merchant }
+		remove_character_modifier = mt_reputation_prominent_merchant
+	}
+	if = {
+		limit = { has_character_modifier = mt_reputation_renowned_trader }
+		remove_character_modifier = mt_reputation_renowned_trader
+	}
+	if = {
+		limit = { has_character_modifier = mt_reputation_merchant_magnate }
+		remove_character_modifier = mt_reputation_merchant_magnate
+	}
+	if = {
+		limit = { has_character_modifier = mt_reputation_trade_master }
+		remove_character_modifier = mt_reputation_trade_master
+	}
+	if = {
+		limit = { has_character_modifier = mt_reputation_legend_of_commerce }
+		remove_character_modifier = mt_reputation_legend_of_commerce
+	}
+	if = {
+		limit = { has_character_modifier = mt_reputation_immortal_legacy }
+		remove_character_modifier = mt_reputation_immortal_legacy
+	}
+
+	# Apply appropriate tier modifier based on reputation
+	# (This uses character variables that would be set elsewhere)
+
+	# Tier 1: Unknown Peddler (0-9)
+	if = {
+		limit = {
+			OR = {
+				NOT = { exists = var:merchant_reputation }
+				var:merchant_reputation < 10
+			}
+		}
+		add_character_modifier = {
+			modifier = mt_reputation_unknown_peddler
+		}
+	}
+
+	# Tier 2: Local Trader (10-24)
+	else_if = {
+		limit = {
+			var:merchant_reputation >= 10
+			var:merchant_reputation < 25
+		}
+		add_character_modifier = {
+			modifier = mt_reputation_local_trader
+		}
+	}
+
+	# Tier 3: Known Merchant (25-49)
+	else_if = {
+		limit = {
+			var:merchant_reputation >= 25
+			var:merchant_reputation < 50
+		}
+		add_character_modifier = {
+			modifier = mt_reputation_known_merchant
+		}
+	}
+
+	# Tier 4: Respected Trader (50-99)
+	else_if = {
+		limit = {
+			var:merchant_reputation >= 50
+			var:merchant_reputation < 100
+		}
+		add_character_modifier = {
+			modifier = mt_reputation_respected_trader
+		}
+	}
+
+	# Tier 5: Prominent Merchant (100-199)
+	else_if = {
+		limit = {
+			var:merchant_reputation >= 100
+			var:merchant_reputation < 200
+		}
+		add_character_modifier = {
+			modifier = mt_reputation_prominent_merchant
+		}
+	}
+
+	# Tier 6: Renowned Trader (200-299)
+	else_if = {
+		limit = {
+			var:merchant_reputation >= 200
+			var:merchant_reputation < 300
+		}
+		add_character_modifier = {
+			modifier = mt_reputation_renowned_trader
+		}
+	}
+
+	# Tier 7: Merchant Magnate (300-449)
+	else_if = {
+		limit = {
+			var:merchant_reputation >= 300
+			var:merchant_reputation < 450
+		}
+		add_character_modifier = {
+			modifier = mt_reputation_merchant_magnate
+		}
+	}
+
+	# Tier 8: Trade Master (450-599)
+	else_if = {
+		limit = {
+			var:merchant_reputation >= 450
+			var:merchant_reputation < 600
+		}
+		add_character_modifier = {
+			modifier = mt_reputation_trade_master
+		}
+	}
+
+	# Tier 9: Legend of Commerce (600-799)
+	else_if = {
+		limit = {
+			var:merchant_reputation >= 600
+			var:merchant_reputation < 800
+		}
+		add_character_modifier = {
+			modifier = mt_reputation_legend_of_commerce
+		}
+	}
+
+	# Tier 10: Immortal Legacy (800+)
+	else_if = {
+		limit = {
+			var:merchant_reputation >= 800
+		}
+		add_character_modifier = {
+			modifier = mt_reputation_immortal_legacy
+		}
+	}
+}
+
+####################################
+# GAIN REPUTATION EFFECTS
+####################################
+
+# Effect: Gain reputation from successful major trade
+# Scope: Character
+# Usage: <character> = { gain_reputation_major_trade_effect = yes }
+gain_reputation_major_trade_effect = {
+	# Add +10 reputation
+	change_variable = {
+		name = merchant_reputation
+		add = 10
+	}
+
+	# Recalculate tier
+	calculate_merchant_reputation_effect = yes
+
+	# Show tooltip
+	custom_tooltip = mt_reputation_gain_major_trade_tt
+}
+
+# Effect: Gain reputation from charitable donation
+# Scope: Character
+# Usage: <character> = { gain_reputation_charity_effect = yes }
+gain_reputation_charity_effect = {
+	# Add +5 reputation
+	change_variable = {
+		name = merchant_reputation
+		add = 5
+	}
+
+	# Bonus modifier for being charitable
+	add_character_modifier = {
+		modifier = mt_reputation_charitable
+		years = 5
+	}
+
+	# Recalculate tier
+	calculate_merchant_reputation_effect = yes
+
+	custom_tooltip = mt_reputation_gain_charity_tt
+}
+
+# Effect: Gain reputation from honest dealing
+# Scope: Character
+# Usage: <character> = { gain_reputation_honesty_effect = yes }
+gain_reputation_honesty_effect = {
+	# Add +15 reputation (significant boost)
+	change_variable = {
+		name = merchant_reputation
+		add = 15
+	}
+
+	# Mark as honest dealer
+	add_character_modifier = {
+		modifier = mt_reputation_honest_dealer
+		years = 10
+	}
+
+	# Recalculate tier
+	calculate_merchant_reputation_effect = yes
+
+	custom_tooltip = mt_reputation_gain_honesty_tt
+}
+
+# Effect: Gain reputation from helping ruler financially
+# Scope: Character
+# Usage: <character> = { gain_reputation_royal_help_effect = yes }
+gain_reputation_royal_help_effect = {
+	# Add +20 reputation
+	change_variable = {
+		name = merchant_reputation
+		add = 20
+	}
+
+	# Become royal favorite
+	add_character_modifier = {
+		modifier = mt_reputation_royal_favorite
+		years = 10
+	}
+
+	# Recalculate tier
+	calculate_merchant_reputation_effect = yes
+
+	custom_tooltip = mt_reputation_gain_royal_help_tt
+}
+
+# Effect: Gain reputation from discovering new trade route
+# Scope: Character
+# Usage: <character> = { gain_reputation_new_route_effect = yes }
+gain_reputation_new_route_effect = {
+	# Add +25 reputation (major achievement)
+	change_variable = {
+		name = merchant_reputation
+		add = 25
+	}
+
+	# Mark as innovator
+	add_character_modifier = {
+		modifier = mt_reputation_innovator
+		years = 15
+	}
+
+	# Recalculate tier
+	calculate_merchant_reputation_effect = yes
+
+	custom_tooltip = mt_reputation_gain_new_route_tt
+}
+
+# Effect: Generic reputation gain with custom amount
+# Scope: Character
+# Parameters: amount (integer)
+# Usage: <character> = { gain_reputation_effect = { amount = X } }
+gain_reputation_effect = {
+	change_variable = {
+		name = merchant_reputation
+		add = $amount$
+	}
+
+	# Check for tier up
+	save_scope_value_as = {
+		name = old_reputation
+		value = var:merchant_reputation
+	}
+
+	calculate_merchant_reputation_effect = yes
+
+	# Trigger tier up event if crossed threshold
+	# (Would need event to handle this)
+
+	custom_tooltip = mt_reputation_gain_generic_tt
+}
+
+####################################
+# LOSE REPUTATION EFFECTS
+####################################
+
+# Effect: Lose reputation from failed trade
+# Scope: Character
+# Usage: <character> = { lose_reputation_failed_trade_effect = yes }
+lose_reputation_failed_trade_effect = {
+	# Lose -5 reputation
+	change_variable = {
+		name = merchant_reputation
+		add = -5
+	}
+
+	# Ensure doesn't go below 0
+	if = {
+		limit = { var:merchant_reputation < 0 }
+		set_variable = {
+			name = merchant_reputation
+			value = 0
+		}
+	}
+
+	# Recalculate tier
+	calculate_merchant_reputation_effect = yes
+
+	custom_tooltip = mt_reputation_loss_failed_trade_tt
+}
+
+# Effect: Lose reputation from bankruptcy
+# Scope: Character
+# Usage: <character> = { lose_reputation_bankruptcy_effect = yes }
+lose_reputation_bankruptcy_effect = {
+	# Lose -50 reputation (severe)
+	change_variable = {
+		name = merchant_reputation
+		add = -50
+	}
+
+	# Ensure doesn't go below 0
+	if = {
+		limit = { var:merchant_reputation < 0 }
+		set_variable = {
+			name = merchant_reputation
+			value = 0
+		}
+	}
+
+	# Add rebuilding modifier
+	add_character_modifier = {
+		modifier = mt_reputation_rebuilding
+		years = 10
+	}
+
+	# Recalculate tier
+	calculate_merchant_reputation_effect = yes
+
+	custom_tooltip = mt_reputation_loss_bankruptcy_tt
+}
+
+# Effect: Lose reputation from fraud
+# Scope: Character
+# Usage: <character> = { lose_reputation_fraud_effect = yes }
+lose_reputation_fraud_effect = {
+	# Lose -100 reputation (devastating)
+	change_variable = {
+		name = merchant_reputation
+		add = -100
+	}
+
+	# Ensure doesn't go below 0
+	if = {
+		limit = { var:merchant_reputation < 0 }
+		set_variable = {
+			name = merchant_reputation
+			value = 0
+		}
+	}
+
+	# Add scandal modifier
+	add_character_modifier = {
+		modifier = mt_reputation_scandal
+		years = 15
+	}
+
+	# Recalculate tier
+	calculate_merchant_reputation_effect = yes
+
+	custom_tooltip = mt_reputation_loss_fraud_tt
+}
+
+# Effect: Lose reputation from breaking contract
+# Scope: Character
+# Usage: <character> = { lose_reputation_broken_contract_effect = yes }
+lose_reputation_broken_contract_effect = {
+	# Lose -30 reputation
+	change_variable = {
+		name = merchant_reputation
+		add = -30
+	}
+
+	# Ensure doesn't go below 0
+	if = {
+		limit = { var:merchant_reputation < 0 }
+		set_variable = {
+			name = merchant_reputation
+			value = 0
+		}
+	}
+
+	# Recalculate tier
+	calculate_merchant_reputation_effect = yes
+
+	custom_tooltip = mt_reputation_loss_broken_contract_tt
+}
+
+# Effect: Lose reputation from defaulting on loan
+# Scope: Character
+# Usage: <character> = { lose_reputation_loan_default_effect = yes }
+lose_reputation_loan_default_effect = {
+	# Lose -40 reputation
+	change_variable = {
+		name = merchant_reputation
+		add = -40
+	}
+
+	# Ensure doesn't go below 0
+	if = {
+		limit = { var:merchant_reputation < 0 }
+		set_variable = {
+			name = merchant_reputation
+			value = 0
+		}
+	}
+
+	# Recalculate tier
+	calculate_merchant_reputation_effect = yes
+
+	custom_tooltip = mt_reputation_loss_loan_default_tt
+}
+
+# Effect: Generic reputation loss with custom amount
+# Scope: Character
+# Parameters: amount (integer, should be negative)
+# Usage: <character> = { lose_reputation_effect = { amount = X } }
+lose_reputation_effect = {
+	change_variable = {
+		name = merchant_reputation
+		add = $amount$
+	}
+
+	# Ensure doesn't go below 0
+	if = {
+		limit = { var:merchant_reputation < 0 }
+		set_variable = {
+			name = merchant_reputation
+			value = 0
+		}
+	}
+
+	calculate_merchant_reputation_effect = yes
+
+	custom_tooltip = mt_reputation_loss_generic_tt
+}
+
+####################################
+# TIER CHANGE EFFECTS
+####################################
+
+# Effect: Handle tier up - fires when crossing into new tier
+# Scope: Character
+# Parameters: new_tier (string)
+# Usage: <character> = { reputation_tier_up_effect = { new_tier = "prominent_merchant" } }
+reputation_tier_up_effect = {
+	# Add prestige for reaching new tier
+	add_prestige = 100
+
+	# Add temporary rising star modifier
+	add_character_modifier = {
+		modifier = mt_reputation_rising_star
+		years = 3
+	}
+
+	# Fire tier up event
+	# trigger_event = mt_reputation.XXXX (would be specific to tier)
+
+	custom_tooltip = mt_reputation_tier_up_tt
+}
+
+# Effect: Handle tier down - fires when dropping to lower tier
+# Scope: Character
+# Usage: <character> = { reputation_tier_down_effect = yes }
+reputation_tier_down_effect = {
+	# Lose prestige
+	add_prestige = -100
+
+	# Add stress
+	add_stress = 30
+
+	custom_tooltip = mt_reputation_tier_down_tt
+}
+
+####################################
+# MILESTONE EFFECTS
+####################################
+
+# Effect: Celebration at 100 reputation milestone
+# Scope: Character
+# Usage: <character> = { reputation_milestone_100_effect = yes }
+reputation_milestone_100_effect = {
+	add_prestige = 200
+
+	# Mark as being chronicled
+	add_character_modifier = {
+		modifier = mt_reputation_chronicled
+		years = 20
+	}
+
+	# Trigger milestone event
+	trigger_event = mt_reputation.0011
+
+	custom_tooltip = mt_reputation_milestone_100_tt
+}
+
+# Effect: Celebration at 250 reputation milestone
+# Scope: Character
+# Usage: <character> = { reputation_milestone_250_effect = yes }
+reputation_milestone_250_effect = {
+	add_prestige = 400
+	add_dynasty_prestige = 100
+
+	# Trigger milestone event
+	trigger_event = mt_reputation.0012
+
+	custom_tooltip = mt_reputation_milestone_250_tt
+}
+
+# Effect: Celebration at 500 reputation milestone
+# Scope: Character
+# Usage: <character> = { reputation_milestone_500_effect = yes }
+reputation_milestone_500_effect = {
+	add_prestige = 800
+	add_dynasty_prestige = 250
+
+	# Major benefits
+	add_gold = 500
+
+	# Trigger milestone event
+	trigger_event = mt_reputation.0013
+
+	custom_tooltip = mt_reputation_milestone_500_tt
+}
+
+# Effect: Celebration at 750 reputation milestone
+# Scope: Character
+# Usage: <character> = { reputation_milestone_750_effect = yes }
+reputation_milestone_750_effect = {
+	add_prestige = 1200
+	add_dynasty_prestige = 500
+
+	# Legendary status
+	add_gold = 1000
+
+	# All dynasty members benefit
+	every_dynasty_member = {
+		add_prestige = 100
+	}
+
+	# Trigger milestone event
+	trigger_event = mt_reputation.0014
+
+	custom_tooltip = mt_reputation_milestone_750_tt
+}
+
+####################################
+# INITIALIZATION EFFECTS
+####################################
+
+# Effect: Initialize reputation system for new merchant
+# Scope: Character
+# Usage: <character> = { initialize_merchant_reputation_effect = yes }
+initialize_merchant_reputation_effect = {
+	# Set starting reputation based on tier
+	if = {
+		limit = { has_trait = wandering_merchant }
+		set_variable = {
+			name = merchant_reputation
+			value = 0
+		}
+	}
+	else_if = {
+		limit = { has_trait = trade_post_owner }
+		set_variable = {
+			name = merchant_reputation
+			value = 25
+		}
+	}
+	else_if = {
+		limit = { has_trait = trading_company_head }
+		set_variable = {
+			name = merchant_reputation
+			value = 100
+		}
+	}
+	else_if = {
+		limit = { has_trait = merchant_prince }
+		set_variable = {
+			name = merchant_reputation
+			value = 300
+		}
+	}
+	else = {
+		set_variable = {
+			name = merchant_reputation
+			value = 0
+		}
+	}
+
+	# Apply initial tier modifier
+	calculate_merchant_reputation_effect = yes
+}
+
+####################################
+# PERIODIC EFFECTS
+####################################
+
+# Effect: Monthly reputation decay (if inactive)
+# Scope: Character
+# Usage: <character> = { reputation_decay_effect = yes }
+reputation_decay_effect = {
+	# Lose 1 reputation per year (0.083 per month)
+	# Only apply if merchant is inactive
+	if = {
+		limit = {
+			NOT = { has_character_flag = merchant_active_this_year }
+		}
+		change_variable = {
+			name = merchant_reputation
+			add = -1
+		}
+
+		# Ensure doesn't go below 0
+		if = {
+			limit = { var:merchant_reputation < 0 }
+			set_variable = {
+				name = merchant_reputation
+				value = 0
+			}
+		}
+
+		calculate_merchant_reputation_effect = yes
+	}
+}
