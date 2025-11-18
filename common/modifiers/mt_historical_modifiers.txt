@@ -1,0 +1,655 @@
+####################################
+# MERCHANTS AND TRADERS MOD
+# Historical Trade Event Modifiers
+####################################
+#
+# Character modifiers for historical trade events
+#
+####################################
+
+####################################
+# BLACK DEATH MODIFIERS
+####################################
+
+# Profited from plague trade
+mt_plague_profiteer = {
+	icon = "gfx/interface/icons/modifiers/trade.dds"
+
+	monthly_character_income_mult = 0.25
+	monthly_prestige = 0.5
+
+	general_opinion = -10  # Profiting from disaster
+	stress_gain_mult = 0.1
+}
+
+# Survived the plague
+mt_plague_survivor = {
+	icon = "gfx/interface/icons/modifiers/health.dds"
+
+	monthly_prestige = 0.75
+	general_opinion = 10
+	health = 1
+
+	# Immune to further plague
+	disease_resistance = 0.5
+}
+
+# Under quarantine
+mt_plague_quarantine = {
+	icon = "gfx/interface/icons/modifiers/stress.dds"
+
+	monthly_character_income_mult = -0.20
+	monthly_prestige = -0.25
+	stress_gain_mult = 0.15
+}
+
+# Trading in essential goods during plague
+mt_essential_goods_trader = {
+	icon = "gfx/interface/icons/modifiers/trade.dds"
+
+	monthly_character_income_mult = 0.30
+	monthly_prestige = 0.5
+	monthly_piety = 0.25
+
+	general_opinion = 5  # Helping people
+}
+
+# Paid premium wages after plague
+mt_premium_wages_paid = {
+	icon = "gfx/interface/icons/modifiers/stewardship.dds"
+
+	monthly_character_income_mult = -0.10
+	general_opinion = 15
+
+	# Workers are loyal
+	stress_loss_mult = 0.1
+}
+
+# Labor crisis
+mt_labor_crisis = {
+	icon = "gfx/interface/icons/modifiers/stress.dds"
+
+	monthly_character_income_mult = -0.20
+	monthly_prestige = -0.5
+	stress_gain_mult = 0.20
+}
+
+# Adopted innovative methods
+mt_innovative_methods = {
+	icon = "gfx/interface/icons/modifiers/learning.dds"
+
+	monthly_character_income_mult = 0.15
+	stewardship = 2
+	monthly_prestige = 0.5
+}
+
+# Post-plague expansion
+mt_post_plague_expansion = {
+	icon = "gfx/interface/icons/modifiers/trade.dds"
+
+	monthly_character_income_mult = 0.25
+	monthly_prestige = 1.0
+	diplomacy = 1
+}
+
+# Subject to quarantine measures
+mt_quarantine_subject = {
+	icon = "gfx/interface/icons/modifiers/stress.dds"
+
+	monthly_character_income_mult = -0.15
+	stress_gain_mult = 0.10
+}
+
+# Post-plague recovery period
+mt_post_plague_recovery = {
+	icon = "gfx/interface/icons/modifiers/trade.dds"
+
+	monthly_character_income_mult = 0.20
+	monthly_prestige = 0.5
+}
+
+# Economic visionary after plague
+mt_economic_visionary = {
+	icon = "gfx/interface/icons/modifiers/stewardship.dds"
+
+	stewardship = 2
+	monthly_character_income_mult = 0.20
+	monthly_prestige = 1.0
+}
+
+####################################
+# MONGOL INVASION MODIFIERS
+####################################
+
+# Refugee merchant fleeing Mongols
+mt_refugee_merchant = {
+	icon = "gfx/interface/icons/modifiers/stress.dds"
+
+	monthly_character_income_mult = -0.15
+	monthly_prestige = -0.5
+	stress_gain_mult = 0.15
+}
+
+# Under Mongol protection
+mt_mongol_protected = {
+	icon = "gfx/interface/icons/modifiers/diplomacy.dds"
+
+	monthly_character_income_mult = 0.15
+	monthly_prestige = 0.25
+}
+
+# Established relations with Mongols
+mt_mongol_relations = {
+	icon = "gfx/interface/icons/modifiers/diplomacy.dds"
+
+	diplomacy = 1
+	monthly_character_income_mult = 0.20
+	monthly_prestige = 0.75
+}
+
+# Mongol threat looming
+mt_mongol_threat = {
+	icon = "gfx/interface/icons/modifiers/stress.dds"
+
+	monthly_character_income_mult = -0.25
+	stress_gain_mult = 0.20
+}
+
+# Trading under Pax Mongolica
+mt_pax_mongolica_trader = {
+	icon = "gfx/interface/icons/modifiers/trade.dds"
+
+	monthly_character_income_mult = 0.40
+	monthly_prestige = 1.5
+	diplomacy = 2
+}
+
+# East-West trader during Mongol peace
+mt_east_west_trader = {
+	icon = "gfx/interface/icons/modifiers/trade.dds"
+
+	monthly_character_income_mult = 0.35
+	monthly_prestige = 1.0
+	learning = 1
+}
+
+# In Mongol favor
+mt_mongol_favor = {
+	icon = "gfx/interface/icons/modifiers/prestige.dds"
+
+	monthly_prestige = 0.75
+	monthly_character_income_mult = 0.25
+	diplomacy = 1
+}
+
+# Mongol informant
+mt_mongol_informant = {
+	icon = "gfx/interface/icons/modifiers/intrigue.dds"
+
+	monthly_character_income_mult = 0.20
+	intrigue = 1
+	general_opinion = -5  # Seen as spy
+}
+
+# Paying tribute to Mongols
+mt_tribute_payer = {
+	icon = "gfx/interface/icons/modifiers/stress.dds"
+
+	monthly_character_income_mult = -0.10
+	monthly_prestige = -0.25
+}
+
+# Steppe trader
+mt_steppe_trader = {
+	icon = "gfx/interface/icons/modifiers/trade.dds"
+
+	monthly_character_income_mult = 0.20
+	monthly_prestige = 0.5
+}
+
+# Khan's official merchant
+mt_khan_merchant = {
+	icon = "gfx/interface/icons/modifiers/prestige.dds"
+
+	monthly_character_income_mult = 0.35
+	monthly_prestige = 1.5
+	diplomacy = 2
+
+	general_opinion = 10
+}
+
+# Fragmented trade after Mongol collapse
+mt_fragmented_trade = {
+	icon = "gfx/interface/icons/modifiers/stress.dds"
+
+	monthly_character_income_mult = -0.15
+	stress_gain_mult = 0.10
+}
+
+####################################
+# CRUSADES MODIFIERS
+####################################
+
+# Supplying crusader armies
+mt_crusade_supplier = {
+	icon = "gfx/interface/icons/modifiers/trade.dds"
+
+	monthly_character_income_mult = 0.25
+	monthly_piety = 0.75
+	monthly_prestige = 0.5
+}
+
+# Trading in the Levant
+mt_levant_trader = {
+	icon = "gfx/interface/icons/modifiers/trade.dds"
+
+	monthly_character_income_mult = 0.20
+	monthly_prestige = 0.5
+}
+
+# Trade post in Outremer
+mt_outremer_trade_post = {
+	icon = "gfx/interface/icons/modifiers/trade.dds"
+
+	monthly_character_income_mult = 0.35
+	monthly_prestige = 1.0
+	monthly_piety = 0.5
+
+	diplomacy = 1
+}
+
+# Diplomatic trader with both sides
+mt_diplomatic_trader = {
+	icon = "gfx/interface/icons/modifiers/diplomacy.dds"
+
+	monthly_character_income_mult = 0.30
+	diplomacy = 2
+	monthly_prestige = 0.75
+}
+
+# Venetian partner
+mt_venetian_partner = {
+	icon = "gfx/interface/icons/modifiers/diplomacy.dds"
+
+	monthly_character_income_mult = 0.25
+	monthly_prestige = 0.75
+	diplomacy = 1
+}
+
+# Supplying Knights Templar
+mt_templar_supplier = {
+	icon = "gfx/interface/icons/modifiers/trade.dds"
+
+	monthly_character_income_mult = 0.25
+	monthly_piety = 1.0
+	monthly_prestige = 0.75
+}
+
+# Supplying Knights Hospitaller
+mt_hospitaller_supplier = {
+	icon = "gfx/interface/icons/modifiers/trade.dds"
+
+	monthly_character_income_mult = 0.25
+	monthly_piety = 1.0
+	monthly_prestige = 0.75
+}
+
+# Pilgrim trader
+mt_pilgrim_trader = {
+	icon = "gfx/interface/icons/modifiers/trade.dds"
+
+	monthly_character_income_mult = 0.25
+	monthly_piety = 0.75
+	monthly_prestige = 0.5
+}
+
+####################################
+# VIKING AGE MODIFIERS
+####################################
+
+# Paying Danegeld
+mt_danegeld_payer = {
+	icon = "gfx/interface/icons/modifiers/stress.dds"
+
+	monthly_character_income_mult = -0.15
+	monthly_prestige = -0.5
+	stress_loss_mult = 0.1  # At least safe
+}
+
+# Armed merchant fleet
+mt_armed_merchant_fleet = {
+	icon = "gfx/interface/icons/modifiers/martial.dds"
+
+	monthly_character_income_mult = 0.15
+	monthly_prestige = 0.75
+	martial = 1
+}
+
+# Viking protected
+mt_viking_protected = {
+	icon = "gfx/interface/icons/modifiers/diplomacy.dds"
+
+	monthly_character_income_mult = 0.20
+	monthly_prestige = 0.25
+}
+
+# Norse trader
+mt_norse_trader = {
+	icon = "gfx/interface/icons/modifiers/trade.dds"
+
+	monthly_character_income_mult = 0.25
+	monthly_prestige = 0.5
+	diplomacy = 1
+}
+
+# Slave trader (morally questionable)
+mt_slave_trader = {
+	icon = "gfx/interface/icons/modifiers/trade.dds"
+
+	monthly_character_income_mult = 0.30
+	monthly_piety = -0.75
+	stress_gain_mult = 0.15
+
+	general_opinion = -15
+}
+
+# Norse trade network
+mt_norse_trade_network = {
+	icon = "gfx/interface/icons/modifiers/trade.dds"
+
+	monthly_character_income_mult = 0.30
+	monthly_prestige = 0.75
+	diplomacy = 1
+}
+
+# Varangian trader
+mt_varangian_trader = {
+	icon = "gfx/interface/icons/modifiers/trade.dds"
+
+	monthly_character_income_mult = 0.40
+	monthly_prestige = 1.25
+	diplomacy = 1
+}
+
+# Christian Norse trade
+mt_christian_norse_trade = {
+	icon = "gfx/interface/icons/modifiers/trade.dds"
+
+	monthly_character_income_mult = 0.25
+	monthly_piety = 0.5
+	monthly_prestige = 0.75
+}
+
+# Baltic trader
+mt_baltic_trader = {
+	icon = "gfx/interface/icons/modifiers/trade.dds"
+
+	monthly_character_income_mult = 0.30
+	monthly_prestige = 0.5
+}
+
+# Northern goods trader
+mt_northern_goods_trader = {
+	icon = "gfx/interface/icons/modifiers/trade.dds"
+
+	monthly_character_income_mult = 0.25
+	monthly_prestige = 0.75
+}
+
+####################################
+# ISLAMIC GOLDEN AGE MODIFIERS
+####################################
+
+# Knowledge trader
+mt_knowledge_trader = {
+	icon = "gfx/interface/icons/modifiers/learning.dds"
+
+	monthly_character_income_mult = 0.20
+	learning = 2
+	monthly_prestige = 0.75
+}
+
+# Instrument trader
+mt_instrument_trader = {
+	icon = "gfx/interface/icons/modifiers/learning.dds"
+
+	monthly_character_income_mult = 0.25
+	learning = 1
+	monthly_prestige = 0.75
+}
+
+# Scholar patron
+mt_scholar_patron = {
+	icon = "gfx/interface/icons/modifiers/learning.dds"
+
+	monthly_piety = 0.75
+	learning = 2
+	monthly_prestige = 1.25
+
+	general_opinion = 10
+}
+
+# Caliphal merchant
+mt_caliphal_merchant = {
+	icon = "gfx/interface/icons/modifiers/prestige.dds"
+
+	monthly_character_income_mult = 0.40
+	monthly_prestige = 1.5
+	monthly_piety = 0.75
+	diplomacy = 1
+}
+
+# Advanced banking practices
+mt_advanced_banking = {
+	icon = "gfx/interface/icons/modifiers/stewardship.dds"
+
+	monthly_character_income_mult = 0.30
+	stewardship = 2
+	monthly_prestige = 0.75
+}
+
+# Spice trader
+mt_spice_trader = {
+	icon = "gfx/interface/icons/modifiers/trade.dds"
+
+	monthly_character_income_mult = 0.45
+	monthly_prestige = 1.0
+}
+
+# Islamic partnership
+mt_islamic_partnership = {
+	icon = "gfx/interface/icons/modifiers/diplomacy.dds"
+
+	monthly_character_income_mult = 0.30
+	diplomacy = 1
+	monthly_prestige = 0.75
+}
+
+####################################
+# VENETIAN/GENOESE RIVALRY MODIFIERS
+####################################
+
+# Sided with Venice
+mt_venetian_side = {
+	icon = "gfx/interface/icons/modifiers/diplomacy.dds"
+
+	monthly_character_income_mult = 0.20
+	monthly_prestige = 0.75
+}
+
+# Sided with Genoa
+mt_genoese_side = {
+	icon = "gfx/interface/icons/modifiers/diplomacy.dds"
+
+	monthly_character_income_mult = 0.20
+	monthly_prestige = 0.75
+}
+
+# Enemy of Genoa
+mt_genoese_enemy = {
+	icon = "gfx/interface/icons/modifiers/stress.dds"
+
+	monthly_character_income_mult = -0.10
+	stress_gain_mult = 0.10
+}
+
+# Enemy of Venice
+mt_venetian_enemy = {
+	icon = "gfx/interface/icons/modifiers/stress.dds"
+
+	monthly_character_income_mult = -0.10
+	stress_gain_mult = 0.10
+}
+
+# Neutral trader during rivalry
+mt_neutral_trader = {
+	icon = "gfx/interface/icons/modifiers/stress.dds"
+
+	monthly_prestige = -0.5
+	stress_gain_mult = 0.15
+
+	general_opinion = -10  # Both sides distrust
+}
+
+# Venetian victory spoils
+mt_venetian_victory_spoils = {
+	icon = "gfx/interface/icons/modifiers/trade.dds"
+
+	monthly_character_income_mult = 0.30
+	monthly_prestige = 1.5
+}
+
+# Genoese victory spoils
+mt_genoese_victory_spoils = {
+	icon = "gfx/interface/icons/modifiers/trade.dds"
+
+	monthly_character_income_mult = 0.30
+	monthly_prestige = 1.5
+}
+
+# Mediterranean peace trader
+mt_mediterranean_peace_trader = {
+	icon = "gfx/interface/icons/modifiers/trade.dds"
+
+	monthly_character_income_mult = 0.25
+	monthly_prestige = 0.75
+	diplomacy = 1
+}
+
+####################################
+# ADDITIONAL HISTORICAL MODIFIERS
+####################################
+
+# Hanseatic League member
+mt_hanseatic_member = {
+	icon = "gfx/interface/icons/modifiers/trade.dds"
+
+	monthly_character_income_mult = 0.35
+	monthly_prestige = 1.5
+	diplomacy = 2
+
+	general_opinion = 10
+}
+
+# Trading network benefits
+mt_trading_network = {
+	icon = "gfx/interface/icons/modifiers/diplomacy.dds"
+
+	monthly_character_income_mult = 0.25
+	diplomacy = 1
+	monthly_prestige = 0.5
+}
+
+# Age of Discovery investor
+mt_age_of_discovery_investor = {
+	icon = "gfx/interface/icons/modifiers/trade.dds"
+
+	monthly_character_income_mult = 0.50
+	monthly_prestige = 2.0
+	learning = 1
+}
+
+# Ottoman trade relations
+mt_ottoman_trade_relations = {
+	icon = "gfx/interface/icons/modifiers/diplomacy.dds"
+
+	monthly_character_income_mult = 0.30
+	monthly_prestige = 0.75
+	diplomacy = 1
+}
+
+# Seeking new routes after Constantinople
+mt_seeking_new_routes = {
+	icon = "gfx/interface/icons/modifiers/stress.dds"
+
+	monthly_character_income_mult = -0.15
+	stress_gain_mult = 0.15
+}
+
+# War-disrupted trade
+mt_war_disrupted_trade = {
+	icon = "gfx/interface/icons/modifiers/stress.dds"
+
+	monthly_character_income_mult = -0.20
+	stress_gain_mult = 0.10
+}
+
+# Renaissance patron
+mt_renaissance_patron = {
+	icon = "gfx/interface/icons/modifiers/prestige.dds"
+
+	monthly_prestige = 2.5
+	monthly_piety = 0.75
+	learning = 1
+
+	general_opinion = 15
+	dynasty_prestige_mult = 0.1
+}
+
+# Silk production knowledge
+mt_silk_production_knowledge = {
+	icon = "gfx/interface/icons/modifiers/learning.dds"
+
+	monthly_character_income_mult = 0.60
+	monthly_prestige = 2.0
+	intrigue = 2
+	learning = 1
+}
+
+# Chinese fleet trader
+mt_chinese_fleet_trader = {
+	icon = "gfx/interface/icons/modifiers/trade.dds"
+
+	monthly_character_income_mult = 0.45
+	monthly_prestige = 1.5
+	diplomacy = 1
+}
+
+# Saharan gold trader
+mt_saharan_gold_trader = {
+	icon = "gfx/interface/icons/modifiers/trade.dds"
+
+	monthly_character_income_mult = 0.50
+	monthly_prestige = 1.25
+	martial = 1
+}
+
+# Spice Islands monopoly
+mt_spice_islands_monopoly = {
+	icon = "gfx/interface/icons/modifiers/trade.dds"
+
+	monthly_character_income_mult = 0.80
+	monthly_prestige = 3.0
+	diplomacy = 1
+
+	general_opinion = -10  # Monopolies breed resentment
+}
+
+# Champagne Fair trader
+mt_champagne_fair_trader = {
+	icon = "gfx/interface/icons/modifiers/trade.dds"
+
+	monthly_character_income_mult = 0.30
+	monthly_prestige = 0.75
+	stewardship = 1
+}
