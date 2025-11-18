@@ -1,0 +1,237 @@
+l_english:
+
+ ####################################
+ # HISTORICAL MODIFIERS LOCALIZATION
+ ####################################
+
+ ####################################
+ # BLACK DEATH MODIFIERS
+ ####################################
+
+ mt_plague_profiteer:0 "Plague Profiteer"
+ mt_plague_profiteer_desc:0 "This character made enormous profits trading during the plague, which some view as callous opportunism."
+
+ mt_plague_survivor:0 "Plague Survivor"
+ mt_plague_survivor_desc:0 "This character survived the Black Death and is viewed with awe and respect. They may have immunity to further outbreaks."
+
+ mt_plague_quarantine:0 "Under Quarantine"
+ mt_plague_quarantine_desc:0 "This character's trade operations are restricted by plague quarantine measures."
+
+ mt_essential_goods_trader:0 "Essential Goods Trader"
+ mt_essential_goods_trader_desc:0 "This character traded in essential goods during the plague, helping people survive while also profiting."
+
+ mt_premium_wages_paid:0 "Fair Employer"
+ mt_premium_wages_paid_desc:0 "This character paid premium wages after the plague, earning worker loyalty but reducing profits."
+
+ mt_labor_crisis:0 "Labor Crisis"
+ mt_labor_crisis_desc:0 "This character faces a severe labor shortage with workers demanding higher wages."
+
+ mt_innovative_methods:0 "Innovative Methods"
+ mt_innovative_methods_desc:0 "This character has adopted labor-saving innovations to cope with worker shortages."
+
+ mt_post_plague_expansion:0 "Post-Plague Expansion"
+ mt_post_plague_expansion_desc:0 "This character is expanding operations in the economic recovery following the plague."
+
+ mt_quarantine_subject:0 "Quarantine Subject"
+ mt_quarantine_subject_desc:0 "This character is subject to quarantine measures that disrupt their trade."
+
+ mt_post_plague_recovery:0 "Post-Plague Recovery"
+ mt_post_plague_recovery_desc:0 "This character is rebuilding trade networks as markets reopen after the plague."
+
+ mt_economic_visionary:0 "Economic Visionary"
+ mt_economic_visionary_desc:0 "This character understands the transformed post-plague economy and adapts brilliantly to new trade patterns."
+
+ ####################################
+ # MONGOL INVASION MODIFIERS
+ ####################################
+
+ mt_refugee_merchant:0 "Refugee Merchant"
+ mt_refugee_merchant_desc:0 "This character fled before the Mongol advance, abandoning established business."
+
+ mt_mongol_protected:0 "Under Mongol Protection"
+ mt_mongol_protected_desc:0 "This character has gained Mongol protection through tribute or negotiation."
+
+ mt_mongol_relations:0 "Mongol Relations Established"
+ mt_mongol_relations_desc:0 "This character has successfully established diplomatic and commercial relations with the Mongols."
+
+ mt_mongol_threat:0 "Mongol Threat"
+ mt_mongol_threat_desc:0 "This character's trade routes are threatened by approaching Mongol armies."
+
+ mt_pax_mongolica_trader:0 "Pax Mongolica Trader"
+ mt_pax_mongolica_trader_desc:0 "This character thrives under the Mongol Peace, trading safely across the entire Silk Road."
+
+ mt_east_west_trader:0 "East-West Trader"
+ mt_east_west_trader_desc:0 "This character trades between Eastern and Western civilizations under Mongol protection."
+
+ mt_mongol_favor:0 "Mongol Favor"
+ mt_mongol_favor_desc:0 "This character enjoys the favor of Mongol officials and receives preferential treatment."
+
+ mt_mongol_informant:0 "Mongol Informant"
+ mt_mongol_informant_desc:0 "This character provides intelligence to the Mongols in exchange for trading privileges."
+
+ mt_tribute_payer:0 "Tribute Payer"
+ mt_tribute_payer_desc:0 "This character regularly pays tribute to Mongol authorities."
+
+ mt_steppe_trader:0 "Steppe Trader"
+ mt_steppe_trader_desc:0 "This character trades in horses, furs, and other goods from the Eurasian steppe."
+
+ mt_khan_merchant:0 "Khan's Merchant"
+ mt_khan_merchant_desc:0 "This character holds the prestigious position of official merchant to a Mongol khan."
+
+ mt_fragmented_trade:0 "Fragmented Trade Routes"
+ mt_fragmented_trade_desc:0 "This character's Silk Road trade is complicated by the fragmenting Mongol Empire."
+
+ ####################################
+ # CRUSADES MODIFIERS
+ ####################################
+
+ mt_crusade_supplier:0 "Crusade Supplier"
+ mt_crusade_supplier_desc:0 "This character supplies crusader armies with provisions, weapons, and equipment."
+
+ mt_levant_trader:0 "Levant Trader"
+ mt_levant_trader_desc:0 "This character trades in spices, silk, and luxuries from the Levant."
+
+ mt_outremer_trade_post:0 "Outremer Trade Post"
+ mt_outremer_trade_post_desc:0 "This character operates a permanent trade post in the Crusader States."
+
+ mt_diplomatic_trader:0 "Diplomatic Trader"
+ mt_diplomatic_trader_desc:0 "This character skillfully trades with both Christian and Muslim merchants in the Levant."
+
+ mt_venetian_partner:0 "Venetian Partner"
+ mt_venetian_partner_desc:0 "This character has formed a profitable partnership with Venetian merchants."
+
+ mt_templar_supplier:0 "Templar Supplier"
+ mt_templar_supplier_desc:0 "This character holds lucrative contracts supplying the Knights Templar."
+
+ mt_hospitaller_supplier:0 "Hospitaller Supplier"
+ mt_hospitaller_supplier_desc:0 "This character holds lucrative contracts supplying the Knights Hospitaller."
+
+ mt_pilgrim_trader:0 "Pilgrim Trader"
+ mt_pilgrim_trader_desc:0 "This character profits from the booming pilgrimage trade to the Holy Land."
+
+ ####################################
+ # VIKING AGE MODIFIERS
+ ####################################
+
+ mt_danegeld_payer:0 "Danegeld Payer"
+ mt_danegeld_payer_desc:0 "This character pays protection money to Viking raiders to ensure safe passage."
+
+ mt_armed_merchant_fleet:0 "Armed Merchant Fleet"
+ mt_armed_merchant_fleet_desc:0 "This character's merchant ships are armed and defended against Viking raids."
+
+ mt_viking_protected:0 "Viking Protected"
+ mt_viking_protected_desc:0 "This character has gained protection from Viking raids through trade agreements."
+
+ mt_norse_trader:0 "Norse Trader"
+ mt_norse_trader_desc:0 "This character trades furs, amber, and northern goods with Norse merchants."
+
+ mt_slave_trader:0 "Slave Trader"
+ mt_slave_trader_desc:0 "This character profits from the slave trade, viewed as morally questionable by many."
+
+ mt_norse_trade_network:0 "Norse Trade Network"
+ mt_norse_trade_network_desc:0 "This character has established permanent partnerships with Norse trading settlements."
+
+ mt_varangian_trader:0 "Varangian Trader"
+ mt_varangian_trader_desc:0 "This character trades along the Varangian route from the Baltic to Constantinople."
+
+ mt_christian_norse_trade:0 "Christian Norse Trade"
+ mt_christian_norse_trade_desc:0 "This character benefits from trading with newly Christianized Norse kingdoms."
+
+ mt_baltic_trader:0 "Baltic Trader"
+ mt_baltic_trader_desc:0 "This character trades in furs, amber, timber, and wax from the Baltic Sea region."
+
+ mt_northern_goods_trader:0 "Northern Goods Trader"
+ mt_northern_goods_trader_desc:0 "This character trades in exotic northern luxuries like white falcons and walrus ivory."
+
+ ####################################
+ # ISLAMIC GOLDEN AGE MODIFIERS
+ ####################################
+
+ mt_knowledge_trader:0 "Knowledge Trader"
+ mt_knowledge_trader_desc:0 "This character trades in books, manuscripts, and intellectual works during the Islamic Golden Age."
+
+ mt_instrument_trader:0 "Instrument Trader"
+ mt_instrument_trader_desc:0 "This character trades in scientific instruments like astrolabes and advanced glassware."
+
+ mt_scholar_patron:0 "Patron of Scholars"
+ mt_scholar_patron_desc:0 "This character sponsors scholars and translation work, gaining prestige and learning."
+
+ mt_caliphal_merchant:0 "Caliphal Merchant"
+ mt_caliphal_merchant_desc:0 "This character holds the prestigious position of official merchant to the Abbasid Caliphate."
+
+ mt_advanced_banking:0 "Advanced Banking Practices"
+ mt_advanced_banking_desc:0 "This character uses sophisticated Islamic banking methods like hawala and mudaraba."
+
+ mt_spice_trader:0 "Spice Trader"
+ mt_spice_trader_desc:0 "This character trades in valuable spices through Islamic trade networks."
+
+ mt_islamic_partnership:0 "Islamic Partnership"
+ mt_islamic_partnership_desc:0 "This character has formed a profitable partnership with Muslim merchants."
+
+ ####################################
+ # VENETIAN/GENOESE RIVALRY MODIFIERS
+ ####################################
+
+ mt_venetian_side:0 "Venetian Ally"
+ mt_venetian_side_desc:0 "This character has sided with Venice in the trade wars against Genoa."
+
+ mt_genoese_side:0 "Genoese Ally"
+ mt_genoese_side_desc:0 "This character has sided with Genoa in the trade wars against Venice."
+
+ mt_genoese_enemy:0 "Genoese Enemy"
+ mt_genoese_enemy_desc:0 "This character is viewed as an enemy by Genoese merchants."
+
+ mt_venetian_enemy:0 "Venetian Enemy"
+ mt_venetian_enemy_desc:0 "This character is viewed as an enemy by Venetian merchants."
+
+ mt_neutral_trader:0 "Neutral Trader"
+ mt_neutral_trader_desc:0 "This character attempts neutrality in the Venice-Genoa rivalry, distrusted by both sides."
+
+ mt_venetian_victory_spoils:0 "Venetian Victory Spoils"
+ mt_venetian_victory_spoils_desc:0 "This character benefits from Venice's naval victory over Genoa."
+
+ mt_genoese_victory_spoils:0 "Genoese Victory Spoils"
+ mt_genoese_victory_spoils_desc:0 "This character benefits from Genoa's naval victory over Venice."
+
+ mt_mediterranean_peace_trader:0 "Mediterranean Peace Trader"
+ mt_mediterranean_peace_trader_desc:0 "This character profits from restored peace between Venice and Genoa."
+
+ ####################################
+ # ADDITIONAL HISTORICAL MODIFIERS
+ ####################################
+
+ mt_hanseatic_member:0 "Hanseatic League Member"
+ mt_hanseatic_member_desc:0 "This character is a member of the powerful Hanseatic League trading confederation."
+
+ mt_trading_network:0 "Trading Network"
+ mt_trading_network_desc:0 "This character benefits from membership in an extensive trading network."
+
+ mt_age_of_discovery_investor:0 "Age of Discovery Investor"
+ mt_age_of_discovery_investor_desc:0 "This character has invested in Portuguese exploration and discovered new trade routes."
+
+ mt_ottoman_trade_relations:0 "Ottoman Trade Relations"
+ mt_ottoman_trade_relations_desc:0 "This character has negotiated trade rights with the Ottoman Empire after the fall of Constantinople."
+
+ mt_seeking_new_routes:0 "Seeking New Routes"
+ mt_seeking_new_routes_desc:0 "This character seeks alternative trade routes after Constantinople's fall disrupted traditional commerce."
+
+ mt_war_disrupted_trade:0 "War-Disrupted Trade"
+ mt_war_disrupted_trade_desc:0 "This character's trade operations are disrupted by ongoing warfare."
+
+ mt_renaissance_patron:0 "Renaissance Patron"
+ mt_renaissance_patron_desc:0 "This character is a great patron of Renaissance art and learning, gaining cultural immortality."
+
+ mt_silk_production_knowledge:0 "Silk Production Secrets"
+ mt_silk_production_knowledge_desc:0 "This character has acquired the closely guarded secrets of silk production."
+
+ mt_chinese_fleet_trader:0 "Chinese Fleet Trader"
+ mt_chinese_fleet_trader_desc:0 "This character traded with Zheng He's magnificent treasure fleet from China."
+
+ mt_saharan_gold_trader:0 "Trans-Saharan Gold Trader"
+ mt_saharan_gold_trader_desc:0 "This character survived the dangerous trans-Saharan journey and trades in West African gold."
+
+ mt_spice_islands_monopoly:0 "Spice Islands Monopoly"
+ mt_spice_islands_monopoly_desc:0 "This character has secured access to the legendary Spice Islands and their precious cargo."
+
+ mt_champagne_fair_trader:0 "Champagne Fair Trader"
+ mt_champagne_fair_trader_desc:0 "This character regularly attends the prestigious Champagne Fairs, Europe's premier commercial gathering."

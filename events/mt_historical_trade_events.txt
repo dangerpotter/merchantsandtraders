@@ -1,0 +1,3934 @@
+####################################
+# MERCHANTS AND TRADERS MOD
+# Historical Trade Events
+####################################
+#
+# Event namespace: mt_hist
+#
+# 0001-0008: Black Death Events
+# 0009-0015: Mongol Invasion Events
+# 0016-0023: Crusades Events
+# 0024-0030: Viking Age Events
+# 0031-0037: Islamic Golden Age Events
+# 0038-0040: Venetian/Genoese Rivalry Events
+# 0041-0050: Additional Historical Events
+#
+####################################
+
+namespace = mt_hist
+
+####################################
+# BLACK DEATH EVENTS (0001-0008)
+####################################
+
+# 0001: Plague reaches major trading city
+mt_hist.0001 = {
+	type = character_event
+	title = mt_hist.0001.t
+	desc = mt_hist.0001.desc
+	theme = stewardship
+
+	left_portrait = {
+		character = root
+		animation = fear
+	}
+
+	trigger = {
+		OR = {
+			has_trait = wandering_merchant
+			has_trait = trade_post_owner
+			has_trait = trading_company_head
+		}
+		year >= 867
+		year <= 1453
+		# More likely during actual Black Death period
+		NOT = { has_character_modifier = mt_plague_survivor }
+		NOT = { has_character_modifier = mt_plague_quarantine }
+	}
+
+	weight_multiplier = {
+		base = 1
+		modifier = {
+			add = 3
+			year >= 1346
+			year <= 1353
+		}
+		modifier = {
+			add = 2
+			capital_province = {
+				OR = {
+					geographical_region = world_europe_west_italy
+					geographical_region = world_europe_south_east
+					geographical_region = custom_middle_east
+				}
+			}
+		}
+	}
+
+	mean_time_to_happen = {
+		months = 60
+
+		modifier = {
+			factor = 0.3
+			year >= 1346
+			year <= 1353
+		}
+	}
+
+	immediate = {
+		# Record plague exposure
+		set_variable = {
+			name = mt_plague_exposed
+			value = yes
+			days = 365
+		}
+	}
+
+	# Continue trading - risky but profitable
+	option = {
+		name = mt_hist.0001.a
+
+		custom_tooltip = mt_hist.0001.a.tt
+
+		# High risk, high reward
+		random = {
+			chance = 40
+			# Contract plague
+			add_trait = ill
+			add_stress = 50
+			trigger_event = {
+				id = mt_hist.0002
+				days = { 7 14 }
+			}
+		}
+
+		random = {
+			chance = 60
+			# Survive and profit enormously
+			add_gold = 200
+			add_prestige = 50
+			add_character_modifier = {
+				modifier = mt_plague_profiteer
+				months = 36
+			}
+		}
+
+		ai_chance = {
+			base = 30
+			modifier = {
+				add = 30
+				has_trait = greedy
+			}
+			modifier = {
+				add = 20
+				has_trait = brave
+			}
+			modifier = {
+				add = -40
+				has_trait = craven
+			}
+		}
+	}
+
+	# Cease operations - safe but no income
+	option = {
+		name = mt_hist.0001.b
+
+		custom_tooltip = mt_hist.0001.b.tt
+
+		add_character_modifier = {
+			modifier = mt_plague_quarantine
+			months = 12
+		}
+
+		# Lost opportunities
+		remove_short_term_gold = 50
+		add_stress = 20
+
+		# But safe
+		add_trait = calm
+
+		ai_chance = {
+			base = 60
+			modifier = {
+				add = 30
+				has_trait = craven
+			}
+			modifier = {
+				add = 20
+				has_trait = cautious_leader
+			}
+		}
+	}
+
+	# Trade in essential goods only
+	option = {
+		name = mt_hist.0001.c
+
+		trigger = {
+			gold >= 100
+		}
+
+		custom_tooltip = mt_hist.0001.c.tt
+
+		remove_short_term_gold = 100
+
+		# Medium risk, good reward
+		random = {
+			chance = 25
+			add_trait = ill
+			add_stress = 30
+		}
+
+		random = {
+			chance = 75
+			# Profit from medicine and grain
+			add_gold = 300
+			add_prestige = 75
+			add_piety = 25
+			add_character_modifier = {
+				modifier = mt_essential_goods_trader
+				months = 24
+			}
+		}
+
+		ai_chance = {
+			base = 40
+			modifier = {
+				add = 30
+				gold >= 200
+			}
+		}
+	}
+}
+
+# 0002: Survived plague - aftermath
+mt_hist.0002 = {
+	type = character_event
+	title = mt_hist.0002.t
+	desc = mt_hist.0002.desc
+	theme = stewardship
+
+	left_portrait = {
+		character = root
+		animation = personality_bold
+	}
+
+	trigger = {
+		has_variable = mt_plague_exposed
+		is_alive = yes
+	}
+
+	is_triggered_only = yes
+
+	# Survived and recovered
+	option = {
+		name = mt_hist.0002.a
+
+		remove_trait = ill
+		add_trait = whole_of_body
+
+		add_character_modifier = {
+			modifier = mt_plague_survivor
+			years = 10
+		}
+
+		add_prestige = 100
+		add_piety = 50
+
+		custom_tooltip = mt_hist.0002.a.tt
+
+		ai_chance = {
+			base = 100
+		}
+	}
+}
+
+# 0003: Labor shortage after plague - wage crisis
+mt_hist.0003 = {
+	type = character_event
+	title = mt_hist.0003.t
+	desc = mt_hist.0003.desc
+	theme = stewardship
+
+	left_portrait = {
+		character = root
+		animation = worried
+	}
+
+	trigger = {
+		OR = {
+			has_trait = trade_post_owner
+			has_trait = trading_company_head
+			has_trait = merchant_prince
+		}
+		year >= 867
+		year <= 1453
+		NOT = { has_character_modifier = mt_labor_crisis }
+	}
+
+	weight_multiplier = {
+		base = 1
+		modifier = {
+			add = 4
+			year >= 1348
+			year <= 1360
+		}
+	}
+
+	mean_time_to_happen = {
+		months = 48
+
+		modifier = {
+			factor = 0.4
+			has_character_modifier = mt_plague_survivor
+		}
+	}
+
+	# Pay premium wages
+	option = {
+		name = mt_hist.0003.a
+
+		custom_tooltip = mt_hist.0003.a.tt
+
+		remove_short_term_gold = 150
+
+		add_character_modifier = {
+			modifier = mt_premium_wages_paid
+			months = 24
+		}
+
+		# Workers are loyal and productive
+		add_prestige = 50
+
+		trigger_event = {
+			id = mt_hist.0004
+			months = { 6 12 }
+		}
+
+		ai_chance = {
+			base = 50
+			modifier = {
+				add = 30
+				gold >= 300
+			}
+		}
+	}
+
+	# Resist wage increases
+	option = {
+		name = mt_hist.0003.b
+
+		custom_tooltip = mt_hist.0003.b.tt
+
+		add_character_modifier = {
+			modifier = mt_labor_crisis
+			months = 36
+		}
+
+		# Workers strike or flee
+		add_stress = 40
+		add_prestige = -30
+
+		ai_chance = {
+			base = 30
+			modifier = {
+				add = 40
+				gold < 100
+			}
+		}
+	}
+
+	# Invest in labor-saving methods
+	option = {
+		name = mt_hist.0003.c
+
+		trigger = {
+			gold >= 200
+			learning >= 10
+		}
+
+		custom_tooltip = mt_hist.0003.c.tt
+
+		remove_short_term_gold = 200
+
+		# Innovation pays off long term
+		add_character_modifier = {
+			modifier = mt_innovative_methods
+			years = 5
+		}
+
+		add_stewardship = 1
+		add_prestige = 75
+
+		ai_chance = {
+			base = 20
+			modifier = {
+				add = 40
+				learning >= 14
+			}
+		}
+	}
+}
+
+# 0004: Economic recovery opportunities
+mt_hist.0004 = {
+	type = character_event
+	title = mt_hist.0004.t
+	desc = mt_hist.0004.desc
+	theme = stewardship
+
+	left_portrait = {
+		character = root
+		animation = happiness
+	}
+
+	trigger = {
+		has_character_modifier = mt_premium_wages_paid
+	}
+
+	is_triggered_only = yes
+
+	# Expand operations
+	option = {
+		name = mt_hist.0004.a
+
+		custom_tooltip = mt_hist.0004.a.tt
+
+		add_gold = 250
+		add_prestige = 100
+
+		add_character_modifier = {
+			modifier = mt_post_plague_expansion
+			years = 3
+		}
+
+		ai_chance = {
+			base = 100
+		}
+	}
+}
+
+# 0005: Quarantine measures imposed
+mt_hist.0005 = {
+	type = character_event
+	title = mt_hist.0005.t
+	desc = mt_hist.0005.desc
+	theme = stewardship
+
+	left_portrait = {
+		character = root
+		animation = shock
+	}
+
+	trigger = {
+		OR = {
+			has_trait = wandering_merchant
+			has_trait = trade_post_owner
+		}
+		year >= 867
+		year <= 1453
+		NOT = { has_character_modifier = mt_quarantine_subject }
+	}
+
+	weight_multiplier = {
+		base = 1
+		modifier = {
+			add = 3
+			year >= 1346
+			year <= 1400
+		}
+	}
+
+	mean_time_to_happen = {
+		months = 72
+	}
+
+	# Comply with quarantine
+	option = {
+		name = mt_hist.0005.a
+
+		custom_tooltip = mt_hist.0005.a.tt
+
+		add_character_modifier = {
+			modifier = mt_quarantine_subject
+			months = 6
+		}
+
+		remove_short_term_gold = 30
+		add_piety = 20
+
+		ai_chance = {
+			base = 60
+		}
+	}
+
+	# Attempt to circumvent quarantine
+	option = {
+		name = mt_hist.0005.b
+
+		custom_tooltip = mt_hist.0005.b.tt
+
+		random = {
+			chance = 40
+			# Caught violating quarantine
+			add_prestige = -100
+			add_piety = -50
+			add_stress = 50
+		}
+
+		random = {
+			chance = 60
+			# Successfully evade
+			add_gold = 150
+			add_intrigue = 1
+		}
+
+		ai_chance = {
+			base = 40
+			modifier = {
+				add = 30
+				has_trait = deceitful
+			}
+		}
+	}
+}
+
+# 0006: Plague passes - markets reopening
+mt_hist.0006 = {
+	type = character_event
+	title = mt_hist.0006.t
+	desc = mt_hist.0006.desc
+	theme = stewardship
+
+	left_portrait = {
+		character = root
+		animation = happiness
+	}
+
+	trigger = {
+		OR = {
+			has_character_modifier = mt_plague_quarantine
+			has_character_modifier = mt_quarantine_subject
+		}
+	}
+
+	mean_time_to_happen = {
+		months = 12
+	}
+
+	# Rebuild trade networks
+	option = {
+		name = mt_hist.0006.a
+
+		custom_tooltip = mt_hist.0006.a.tt
+
+		remove_character_modifier = mt_plague_quarantine
+		remove_character_modifier = mt_quarantine_subject
+
+		add_character_modifier = {
+			modifier = mt_post_plague_recovery
+			months = 24
+		}
+
+		add_gold = 100
+		add_prestige = 50
+
+		ai_chance = {
+			base = 100
+		}
+	}
+}
+
+# 0007: Long-term economic impact - new trade patterns
+mt_hist.0007 = {
+	type = character_event
+	title = mt_hist.0007.t
+	desc = mt_hist.0007.desc
+	theme = stewardship
+
+	left_portrait = {
+		character = root
+		animation = thinking
+	}
+
+	trigger = {
+		OR = {
+			has_trait = trade_post_owner
+			has_trait = trading_company_head
+			has_trait = merchant_prince
+		}
+		year >= 1350
+		year <= 1500
+		OR = {
+			has_character_modifier = mt_plague_survivor
+			has_character_modifier = mt_post_plague_recovery
+		}
+	}
+
+	mean_time_to_happen = {
+		months = 36
+	}
+
+	# Adapt to new economic reality
+	option = {
+		name = mt_hist.0007.a
+
+		custom_tooltip = mt_hist.0007.a.tt
+
+		add_stewardship = 2
+		add_gold = 200
+
+		add_character_modifier = {
+			modifier = mt_economic_visionary
+			years = 5
+		}
+
+		ai_chance = {
+			base = 100
+		}
+	}
+}
+
+# 0008: Plague creates opportunity for social mobility
+mt_hist.0008 = {
+	type = character_event
+	title = mt_hist.0008.t
+	desc = mt_hist.0008.desc
+	theme = stewardship
+
+	left_portrait = {
+		character = root
+		animation = personality_bold
+	}
+
+	trigger = {
+		has_trait = wandering_merchant
+		year >= 1350
+		year <= 1450
+		NOT = { has_trait = merchant_prince }
+		has_character_modifier = mt_plague_survivor
+	}
+
+	mean_time_to_happen = {
+		months = 48
+	}
+
+	# Seize the opportunity
+	option = {
+		name = mt_hist.0008.a
+
+		custom_tooltip = mt_hist.0008.a.tt
+
+		add_gold = 300
+		add_prestige = 150
+
+		random = {
+			chance = 30
+			add_trait = merchant_prince
+			add_dynasty_prestige = 200
+		}
+
+		ai_chance = {
+			base = 100
+		}
+	}
+}
+
+####################################
+# MONGOL INVASION EVENTS (0009-0015)
+####################################
+
+# 0009: Mongol armies approaching Silk Road cities
+mt_hist.0009 = {
+	type = character_event
+	title = mt_hist.0009.t
+	desc = mt_hist.0009.desc
+	theme = stewardship
+
+	left_portrait = {
+		character = root
+		animation = fear
+	}
+
+	trigger = {
+		OR = {
+			has_trait = wandering_merchant
+			has_trait = trade_post_owner
+		}
+		year >= 1200
+		year <= 1300
+		capital_province = {
+			OR = {
+				geographical_region = world_asia_minor
+				geographical_region = world_persia
+				geographical_region = custom_central_asia
+				geographical_region = custom_middle_east
+			}
+		}
+		NOT = { has_character_modifier = mt_mongol_threat }
+	}
+
+	mean_time_to_happen = {
+		months = 24
+
+		modifier = {
+			factor = 0.5
+			year >= 1220
+			year <= 1260
+		}
+	}
+
+	# Flee westward
+	option = {
+		name = mt_hist.0009.a
+
+		custom_tooltip = mt_hist.0009.a.tt
+
+		remove_short_term_gold = 100
+		add_stress = 40
+
+		add_character_modifier = {
+			modifier = mt_refugee_merchant
+			months = 24
+		}
+
+		ai_chance = {
+			base = 40
+			modifier = {
+				add = 30
+				has_trait = craven
+			}
+		}
+	}
+
+	# Pay tribute to approaching Mongols
+	option = {
+		name = mt_hist.0009.b
+
+		trigger = {
+			gold >= 200
+		}
+
+		custom_tooltip = mt_hist.0009.b.tt
+
+		remove_short_term_gold = 200
+		add_prestige = -50
+
+		# May gain Mongol protection
+		random = {
+			chance = 60
+			add_character_modifier = {
+				modifier = mt_mongol_protected
+				months = 36
+			}
+			trigger_event = {
+				id = mt_hist.0011
+				months = { 6 12 }
+			}
+		}
+
+		ai_chance = {
+			base = 40
+			modifier = {
+				add = 30
+				gold >= 400
+			}
+		}
+	}
+
+	# Try to establish relations
+	option = {
+		name = mt_hist.0009.c
+
+		trigger = {
+			diplomacy >= 12
+		}
+
+		custom_tooltip = mt_hist.0009.c.tt
+
+		random = {
+			chance = 40
+			# Successfully establish contact
+			add_prestige = 100
+			add_gold = 150
+			add_character_modifier = {
+				modifier = mt_mongol_relations
+				months = 48
+			}
+			trigger_event = {
+				id = mt_hist.0010
+				months = { 3 6 }
+			}
+		}
+
+		random = {
+			chance = 60
+			# Mongols uninterested
+			add_stress = 30
+			add_character_modifier = {
+				modifier = mt_mongol_threat
+				months = 12
+			}
+		}
+
+		ai_chance = {
+			base = 20
+			modifier = {
+				add = 40
+				diplomacy >= 16
+			}
+		}
+	}
+}
+
+# 0010: Pax Mongolica established
+mt_hist.0010 = {
+	type = character_event
+	title = mt_hist.0010.t
+	desc = mt_hist.0010.desc
+	theme = stewardship
+
+	left_portrait = {
+		character = root
+		animation = happiness
+	}
+
+	trigger = {
+		has_character_modifier = mt_mongol_relations
+	}
+
+	is_triggered_only = yes
+
+	# Exploit the Silk Road renaissance
+	option = {
+		name = mt_hist.0010.a
+
+		custom_tooltip = mt_hist.0010.a.tt
+
+		add_character_modifier = {
+			modifier = mt_pax_mongolica_trader
+			years = 10
+		}
+
+		add_gold = 500
+		add_prestige = 200
+
+		# Marco Polo-style opportunities
+		add_character_modifier = {
+			modifier = mt_east_west_trader
+			years = 15
+		}
+
+		ai_chance = {
+			base = 100
+		}
+	}
+}
+
+# 0011: Meeting Mongol officials - negotiate safe passage
+mt_hist.0011 = {
+	type = character_event
+	title = mt_hist.0011.t
+	desc = mt_hist.0011.desc
+	theme = diplomacy
+
+	left_portrait = {
+		character = root
+		animation = personality_rational
+	}
+
+	trigger = {
+		has_character_modifier = mt_mongol_protected
+	}
+
+	is_triggered_only = yes
+
+	# Offer valuable gifts
+	option = {
+		name = mt_hist.0011.a
+
+		trigger = {
+			gold >= 150
+		}
+
+		custom_tooltip = mt_hist.0011.a.tt
+
+		remove_short_term_gold = 150
+
+		add_character_modifier = {
+			modifier = mt_mongol_favor
+			years = 5
+		}
+
+		add_prestige = 100
+
+		ai_chance = {
+			base = 60
+		}
+	}
+
+	# Offer intelligence about trade routes
+	option = {
+		name = mt_hist.0011.b
+
+		trigger = {
+			intrigue >= 10
+		}
+
+		custom_tooltip = mt_hist.0011.b.tt
+
+		add_character_modifier = {
+			modifier = mt_mongol_informant
+			years = 3
+		}
+
+		add_gold = 200
+		add_intrigue = 1
+
+		ai_chance = {
+			base = 40
+			modifier = {
+				add = 30
+				intrigue >= 14
+			}
+		}
+	}
+}
+
+# 0012: Mongol demand for tribute
+mt_hist.0012 = {
+	type = character_event
+	title = mt_hist.0012.t
+	desc = mt_hist.0012.desc
+	theme = stewardship
+
+	left_portrait = {
+		character = root
+		animation = worry
+	}
+
+	trigger = {
+		OR = {
+			has_trait = trade_post_owner
+			has_trait = trading_company_head
+		}
+		year >= 1200
+		year <= 1350
+		capital_province = {
+			OR = {
+				geographical_region = world_asia_minor
+				geographical_region = world_persia
+				geographical_region = custom_central_asia
+			}
+		}
+		OR = {
+			has_character_modifier = mt_mongol_protected
+			has_character_modifier = mt_pax_mongolica_trader
+		}
+	}
+
+	mean_time_to_happen = {
+		months = 36
+	}
+
+	# Pay tribute
+	option = {
+		name = mt_hist.0012.a
+
+		custom_tooltip = mt_hist.0012.a.tt
+
+		remove_short_term_gold = 100
+
+		add_character_modifier = {
+			modifier = mt_tribute_payer
+			months = 12
+		}
+
+		ai_chance = {
+			base = 70
+		}
+	}
+
+	# Resist and risk consequences
+	option = {
+		name = mt_hist.0012.b
+
+		custom_tooltip = mt_hist.0012.b.tt
+
+		random = {
+			chance = 60
+			# Face Mongol wrath
+			remove_character_modifier = mt_mongol_protected
+			remove_character_modifier = mt_pax_mongolica_trader
+			add_stress = 50
+			remove_short_term_gold = 200
+		}
+
+		random = {
+			chance = 40
+			# Mongols don't care enough to enforce
+			add_prestige = 50
+		}
+
+		ai_chance = {
+			base = 30
+			modifier = {
+				add = -20
+				has_trait = craven
+			}
+		}
+	}
+}
+
+# 0013: Trading with Mongol Empire - exotic goods
+mt_hist.0013 = {
+	type = character_event
+	title = mt_hist.0013.t
+	desc = mt_hist.0013.desc
+	theme = stewardship
+
+	left_portrait = {
+		character = root
+		animation = personality_greedy
+	}
+
+	trigger = {
+		OR = {
+			has_character_modifier = mt_pax_mongolica_trader
+			has_character_modifier = mt_mongol_favor
+		}
+		year >= 1220
+		year <= 1350
+	}
+
+	mean_time_to_happen = {
+		months = 24
+	}
+
+	# Import Chinese luxuries
+	option = {
+		name = mt_hist.0013.a
+
+		trigger = {
+			gold >= 200
+		}
+
+		custom_tooltip = mt_hist.0013.a.tt
+
+		remove_short_term_gold = 200
+
+		random = {
+			chance = 70
+			add_gold = 400
+			add_prestige = 100
+		}
+
+		random = {
+			chance = 30
+			# Market already saturated
+			add_stress = 20
+		}
+
+		ai_chance = {
+			base = 50
+		}
+	}
+
+	# Trade in horses and furs
+	option = {
+		name = mt_hist.0013.b
+
+		custom_tooltip = mt_hist.0013.b.tt
+
+		add_gold = 250
+		add_prestige = 50
+
+		add_character_modifier = {
+			modifier = mt_steppe_trader
+			months = 36
+		}
+
+		ai_chance = {
+			base = 50
+		}
+	}
+}
+
+# 0014: Mongol patronage - work for khans
+mt_hist.0014 = {
+	type = character_event
+	title = mt_hist.0014.t
+	desc = mt_hist.0014.desc
+	theme = diplomacy
+
+	left_portrait = {
+		character = root
+		animation = personality_bold
+	}
+
+	trigger = {
+		has_character_modifier = mt_mongol_favor
+		year >= 1220
+		year <= 1350
+		diplomacy >= 12
+	}
+
+	mean_time_to_happen = {
+		months = 48
+	}
+
+	# Accept position as official merchant
+	option = {
+		name = mt_hist.0014.a
+
+		custom_tooltip = mt_hist.0014.a.tt
+
+		add_character_modifier = {
+			modifier = mt_khan_merchant
+			years = 10
+		}
+
+		add_gold = 300
+		add_prestige = 200
+		add_dynasty_prestige = 100
+
+		ai_chance = {
+			base = 80
+		}
+	}
+
+	# Politely decline
+	option = {
+		name = mt_hist.0014.b
+
+		custom_tooltip = mt_hist.0014.b.tt
+
+		remove_character_modifier = mt_mongol_favor
+		add_stress = 30
+
+		ai_chance = {
+			base = 20
+		}
+	}
+}
+
+# 0015: Mongol Empire fragments - trade disruption
+mt_hist.0015 = {
+	type = character_event
+	title = mt_hist.0015.t
+	desc = mt_hist.0015.desc
+	theme = stewardship
+
+	left_portrait = {
+		character = root
+		animation = sadness
+	}
+
+	trigger = {
+		OR = {
+			has_character_modifier = mt_pax_mongolica_trader
+			has_character_modifier = mt_khan_merchant
+		}
+		year >= 1260
+		year <= 1350
+	}
+
+	mean_time_to_happen = {
+		months = 36
+
+		modifier = {
+			factor = 0.5
+			year >= 1294
+		}
+	}
+
+	# Adapt to fragmentation
+	option = {
+		name = mt_hist.0015.a
+
+		custom_tooltip = mt_hist.0015.a.tt
+
+		remove_character_modifier = mt_pax_mongolica_trader
+		remove_character_modifier = mt_khan_merchant
+
+		add_character_modifier = {
+			modifier = mt_fragmented_trade
+			months = 60
+		}
+
+		remove_short_term_gold = 150
+		add_stress = 30
+
+		# But gain new opportunities
+		random = {
+			chance = 40
+			add_gold = 200
+			add_stewardship = 1
+		}
+
+		ai_chance = {
+			base = 100
+		}
+	}
+}
+
+####################################
+# CRUSADES EVENTS (0016-0023)
+####################################
+
+# 0016: Crusade declared - new markets opening
+mt_hist.0016 = {
+	type = character_event
+	title = mt_hist.0016.t
+	desc = mt_hist.0016.desc
+	theme = stewardship
+
+	left_portrait = {
+		character = root
+		animation = personality_rational
+	}
+
+	trigger = {
+		OR = {
+			has_trait = wandering_merchant
+			has_trait = trade_post_owner
+		}
+		year >= 1095
+		year <= 1291
+		religion = {
+			has_doctrine = doctrine_pluralism_pluralistic
+			OR = {
+				this = religion:christianity_religion
+				this = religion:catholic
+				this = religion:orthodox
+			}
+		}
+		NOT = { has_character_modifier = mt_crusade_supplier }
+	}
+
+	weight_multiplier = {
+		base = 1
+		modifier = {
+			add = 4
+			year >= 1095
+			year <= 1099
+		}
+		modifier = {
+			add = 3
+			year >= 1147
+			year <= 1149
+		}
+		modifier = {
+			add = 3
+			year >= 1189
+			year <= 1192
+		}
+	}
+
+	mean_time_to_happen = {
+		months = 48
+	}
+
+	# Supply crusader armies
+	option = {
+		name = mt_hist.0016.a
+
+		trigger = {
+			gold >= 150
+		}
+
+		custom_tooltip = mt_hist.0016.a.tt
+
+		remove_short_term_gold = 150
+
+		add_character_modifier = {
+			modifier = mt_crusade_supplier
+			years = 3
+		}
+
+		add_gold = 400
+		add_piety = 100
+		add_prestige = 75
+
+		ai_chance = {
+			base = 60
+		}
+	}
+
+	# Trade in Eastern luxuries
+	option = {
+		name = mt_hist.0016.b
+
+		custom_tooltip = mt_hist.0016.b.tt
+
+		add_character_modifier = {
+			modifier = mt_levant_trader
+			years = 5
+		}
+
+		add_gold = 250
+		add_prestige = 50
+
+		trigger_event = {
+			id = mt_hist.0017
+			months = { 12 24 }
+		}
+
+		ai_chance = {
+			base = 40
+		}
+	}
+}
+
+# 0017: Crusader states established - trade posts possible
+mt_hist.0017 = {
+	type = character_event
+	title = mt_hist.0017.t
+	desc = mt_hist.0017.desc
+	theme = stewardship
+
+	left_portrait = {
+		character = root
+		animation = happiness
+	}
+
+	trigger = {
+		has_character_modifier = mt_levant_trader
+		year >= 1099
+		year <= 1291
+	}
+
+	is_triggered_only = yes
+
+	# Establish permanent trade post
+	option = {
+		name = mt_hist.0017.a
+
+		trigger = {
+			gold >= 300
+		}
+
+		custom_tooltip = mt_hist.0017.a.tt
+
+		remove_short_term_gold = 300
+
+		add_character_modifier = {
+			modifier = mt_outremer_trade_post
+			years = 20
+		}
+
+		add_gold = 600
+		add_prestige = 150
+		add_piety = 50
+
+		ai_chance = {
+			base = 70
+			modifier = {
+				add = 20
+				gold >= 500
+			}
+		}
+	}
+
+	# Continue as traveling merchant
+	option = {
+		name = mt_hist.0017.b
+
+		custom_tooltip = mt_hist.0017.b.tt
+
+		add_gold = 200
+		add_prestige = 50
+
+		ai_chance = {
+			base = 30
+		}
+	}
+}
+
+# 0018: Trading with both Christians and Muslims
+mt_hist.0018 = {
+	type = character_event
+	title = mt_hist.0018.t
+	desc = mt_hist.0018.desc
+	theme = diplomacy
+
+	left_portrait = {
+		character = root
+		animation = worry
+	}
+
+	trigger = {
+		OR = {
+			has_character_modifier = mt_levant_trader
+			has_character_modifier = mt_outremer_trade_post
+		}
+		year >= 1099
+		year <= 1291
+		diplomacy >= 10
+	}
+
+	mean_time_to_happen = {
+		months = 36
+	}
+
+	# Maintain diplomatic balance
+	option = {
+		name = mt_hist.0018.a
+
+		trigger = {
+			diplomacy >= 14
+		}
+
+		custom_tooltip = mt_hist.0018.a.tt
+
+		add_character_modifier = {
+			modifier = mt_diplomatic_trader
+			years = 5
+		}
+
+		add_gold = 300
+		add_diplomacy = 1
+		add_prestige = 100
+
+		ai_chance = {
+			base = 50
+			modifier = {
+				add = 30
+				diplomacy >= 16
+			}
+		}
+	}
+
+	# Focus on Christian markets
+	option = {
+		name = mt_hist.0018.b
+
+		custom_tooltip = mt_hist.0018.b.tt
+
+		add_piety = 75
+		add_gold = 200
+
+		ai_chance = {
+			base = 30
+		}
+	}
+
+	# Focus on Muslim markets
+	option = {
+		name = mt_hist.0018.c
+
+		custom_tooltip = mt_hist.0018.c.tt
+
+		add_gold = 250
+		add_piety = -25
+		add_prestige = -30
+
+		random = {
+			chance = 30
+			# Accused of trading with the enemy
+			add_stress = 40
+		}
+
+		ai_chance = {
+			base = 20
+		}
+	}
+}
+
+# 0019: Crusade fails - markets close
+mt_hist.0019 = {
+	type = character_event
+	title = mt_hist.0019.t
+	desc = mt_hist.0019.desc
+	theme = stewardship
+
+	left_portrait = {
+		character = root
+		animation = sadness
+	}
+
+	trigger = {
+		OR = {
+			has_character_modifier = mt_levant_trader
+			has_character_modifier = mt_crusade_supplier
+		}
+		year >= 1095
+		year <= 1291
+	}
+
+	mean_time_to_happen = {
+		months = 60
+
+		modifier = {
+			factor = 0.4
+			year >= 1145
+			year <= 1149
+		}
+	}
+
+	# Evacuate and cut losses
+	option = {
+		name = mt_hist.0019.a
+
+		custom_tooltip = mt_hist.0019.a.tt
+
+		remove_character_modifier = mt_levant_trader
+		remove_character_modifier = mt_crusade_supplier
+
+		remove_short_term_gold = 100
+		add_stress = 40
+
+		ai_chance = {
+			base = 100
+		}
+	}
+}
+
+# 0020: Venetian crusade profits - competition intensifies
+mt_hist.0020 = {
+	type = character_event
+	title = mt_hist.0020.t
+	desc = mt_hist.0020.desc
+	theme = stewardship
+
+	left_portrait = {
+		character = root
+		animation = anger
+	}
+
+	trigger = {
+		has_character_modifier = mt_outremer_trade_post
+		year >= 1099
+		year <= 1291
+		capital_province = {
+			OR = {
+				geographical_region = world_europe_west_italy
+				geographical_region = world_europe_south_east
+			}
+		}
+	}
+
+	mean_time_to_happen = {
+		months = 48
+
+		modifier = {
+			factor = 0.5
+			year >= 1202
+			year <= 1204
+		}
+	}
+
+	# Compete aggressively
+	option = {
+		name = mt_hist.0020.a
+
+		trigger = {
+			gold >= 250
+		}
+
+		custom_tooltip = mt_hist.0020.a.tt
+
+		remove_short_term_gold = 250
+
+		random = {
+			chance = 50
+			add_gold = 500
+			add_prestige = 100
+		}
+
+		random = {
+			chance = 50
+			# Venetians outcompete you
+			add_stress = 40
+			add_prestige = -50
+		}
+
+		ai_chance = {
+			base = 40
+		}
+	}
+
+	# Seek cooperation
+	option = {
+		name = mt_hist.0020.b
+
+		trigger = {
+			diplomacy >= 12
+		}
+
+		custom_tooltip = mt_hist.0020.b.tt
+
+		random = {
+			chance = 40
+			add_gold = 300
+			add_prestige = 75
+			add_character_modifier = {
+				modifier = mt_venetian_partner
+				years = 5
+			}
+		}
+
+		random = {
+			chance = 60
+			# Venetians refuse
+			add_stress = 20
+		}
+
+		ai_chance = {
+			base = 40
+		}
+	}
+
+	# Focus on different markets
+	option = {
+		name = mt_hist.0020.c
+
+		custom_tooltip = mt_hist.0020.c.tt
+
+		add_gold = 150
+		add_stewardship = 1
+
+		ai_chance = {
+			base = 20
+		}
+	}
+}
+
+# 0021: Military orders need supplies
+mt_hist.0021 = {
+	type = character_event
+	title = mt_hist.0021.t
+	desc = mt_hist.0021.desc
+	theme = stewardship
+
+	left_portrait = {
+		character = root
+		animation = personality_rational
+	}
+
+	trigger = {
+		OR = {
+			has_character_modifier = mt_crusade_supplier
+			has_character_modifier = mt_outremer_trade_post
+		}
+		year >= 1119
+		year <= 1291
+	}
+
+	mean_time_to_happen = {
+		months = 36
+	}
+
+	# Supply the Templars
+	option = {
+		name = mt_hist.0021.a
+
+		trigger = {
+			gold >= 200
+		}
+
+		custom_tooltip = mt_hist.0021.a.tt
+
+		remove_short_term_gold = 200
+
+		add_gold = 400
+		add_piety = 150
+		add_prestige = 100
+
+		add_character_modifier = {
+			modifier = mt_templar_supplier
+			years = 5
+		}
+
+		ai_chance = {
+			base = 50
+		}
+	}
+
+	# Supply the Hospitallers
+	option = {
+		name = mt_hist.0021.b
+
+		trigger = {
+			gold >= 200
+		}
+
+		custom_tooltip = mt_hist.0021.b.tt
+
+		remove_short_term_gold = 200
+
+		add_gold = 400
+		add_piety = 150
+		add_prestige = 100
+
+		add_character_modifier = {
+			modifier = mt_hospitaller_supplier
+			years = 5
+		}
+
+		ai_chance = {
+			base = 50
+		}
+	}
+}
+
+# 0022: Pilgrimage trade booms
+mt_hist.0022 = {
+	type = character_event
+	title = mt_hist.0022.t
+	desc = mt_hist.0022.desc
+	theme = stewardship
+
+	left_portrait = {
+		character = root
+		animation = happiness
+	}
+
+	trigger = {
+		has_character_modifier = mt_outremer_trade_post
+		year >= 1099
+		year <= 1187
+	}
+
+	mean_time_to_happen = {
+		months = 24
+	}
+
+	# Cater to pilgrims
+	option = {
+		name = mt_hist.0022.a
+
+		custom_tooltip = mt_hist.0022.a.tt
+
+		add_character_modifier = {
+			modifier = mt_pilgrim_trader
+			years = 3
+		}
+
+		add_gold = 300
+		add_piety = 100
+		add_prestige = 75
+
+		ai_chance = {
+			base = 100
+		}
+	}
+}
+
+# 0023: Crusader state collapse - evacuate assets
+mt_hist.0023 = {
+	type = character_event
+	title = mt_hist.0023.t
+	desc = mt_hist.0023.desc
+	theme = stewardship
+
+	left_portrait = {
+		character = root
+		animation = fear
+	}
+
+	trigger = {
+		has_character_modifier = mt_outremer_trade_post
+		year >= 1187
+		year <= 1291
+	}
+
+	weight_multiplier = {
+		base = 1
+		modifier = {
+			add = 5
+			year >= 1187
+			year <= 1189
+		}
+		modifier = {
+			add = 5
+			year >= 1291
+			year <= 1291
+		}
+	}
+
+	mean_time_to_happen = {
+		months = 36
+	}
+
+	# Evacuate everything
+	option = {
+		name = mt_hist.0023.a
+
+		custom_tooltip = mt_hist.0023.a.tt
+
+		remove_character_modifier = mt_outremer_trade_post
+
+		# Salvage some assets
+		add_gold = 200
+		add_stress = 50
+		add_prestige = -100
+
+		ai_chance = {
+			base = 60
+		}
+	}
+
+	# Try to maintain presence
+	option = {
+		name = mt_hist.0023.b
+
+		custom_tooltip = mt_hist.0023.b.tt
+
+		random = {
+			chance = 30
+			# Successfully maintain
+			add_gold = 400
+			add_prestige = 150
+		}
+
+		random = {
+			chance = 70
+			# Lose everything
+			remove_character_modifier = mt_outremer_trade_post
+			remove_short_term_gold = 300
+			add_stress = 80
+		}
+
+		ai_chance = {
+			base = 40
+			modifier = {
+				add = -30
+				has_trait = craven
+			}
+		}
+	}
+}
+
+####################################
+# VIKING AGE EVENTS (0024-0030)
+####################################
+
+# 0024: Viking raids threaten coastal trade
+mt_hist.0024 = {
+	type = character_event
+	title = mt_hist.0024.t
+	desc = mt_hist.0024.desc
+	theme = stewardship
+
+	left_portrait = {
+		character = root
+		animation = fear
+	}
+
+	trigger = {
+		OR = {
+			has_trait = wandering_merchant
+			has_trait = trade_post_owner
+		}
+		year >= 793
+		year <= 1066
+		capital_province = {
+			OR = {
+				geographical_region = world_europe_west
+				geographical_region = world_europe_north
+				is_coastal = yes
+			}
+		}
+		NOT = { has_character_modifier = mt_viking_threat }
+	}
+
+	mean_time_to_happen = {
+		months = 24
+
+		modifier = {
+			factor = 0.5
+			year >= 793
+			year <= 850
+		}
+	}
+
+	# Pay Danegeld
+	option = {
+		name = mt_hist.0024.a
+
+		trigger = {
+			gold >= 150
+		}
+
+		custom_tooltip = mt_hist.0024.a.tt
+
+		remove_short_term_gold = 150
+
+		add_character_modifier = {
+			modifier = mt_danegeld_payer
+			months = 12
+		}
+
+		add_prestige = -50
+		add_stress = -20
+
+		ai_chance = {
+			base = 50
+		}
+	}
+
+	# Arm merchant ships
+	option = {
+		name = mt_hist.0024.b
+
+		trigger = {
+			gold >= 200
+			martial >= 10
+		}
+
+		custom_tooltip = mt_hist.0024.b.tt
+
+		remove_short_term_gold = 200
+
+		random = {
+			chance = 60
+			# Successfully defend
+			add_character_modifier = {
+				modifier = mt_armed_merchant_fleet
+				years = 3
+			}
+			add_prestige = 100
+			add_martial = 1
+		}
+
+		random = {
+			chance = 40
+			# Vikings overwhelm defenses
+			remove_short_term_gold = 100
+			add_stress = 40
+		}
+
+		ai_chance = {
+			base = 30
+			modifier = {
+				add = 30
+				martial >= 14
+			}
+		}
+	}
+
+	# Seek Norse merchant contacts
+	option = {
+		name = mt_hist.0024.c
+
+		trigger = {
+			diplomacy >= 10
+		}
+
+		custom_tooltip = mt_hist.0024.c.tt
+
+		random = {
+			chance = 50
+			trigger_event = {
+				id = mt_hist.0025
+				months = { 3 6 }
+			}
+		}
+
+		random = {
+			chance = 50
+			add_stress = 20
+		}
+
+		ai_chance = {
+			base = 20
+		}
+	}
+}
+
+# 0025: Trading with Vikings - furs, amber, slaves
+mt_hist.0025 = {
+	type = character_event
+	title = mt_hist.0025.t
+	desc = mt_hist.0025.desc
+	theme = stewardship
+
+	left_portrait = {
+		character = root
+		animation = personality_rational
+	}
+
+	trigger = {
+		year >= 793
+		year <= 1066
+	}
+
+	is_triggered_only = yes
+
+	# Trade in furs and amber
+	option = {
+		name = mt_hist.0025.a
+
+		custom_tooltip = mt_hist.0025.a.tt
+
+		add_character_modifier = {
+			modifier = mt_norse_trader
+			years = 5
+		}
+
+		add_gold = 300
+		add_prestige = 50
+
+		# Protection from raids
+		add_character_modifier = {
+			modifier = mt_viking_protected
+			years = 3
+		}
+
+		ai_chance = {
+			base = 70
+		}
+	}
+
+	# Trade in slaves (morally questionable)
+	option = {
+		name = mt_hist.0025.b
+
+		custom_tooltip = mt_hist.0025.b.tt
+
+		add_gold = 500
+		add_piety = -100
+		add_stress = 30
+
+		add_character_modifier = {
+			modifier = mt_slave_trader
+			years = 3
+		}
+
+		ai_chance = {
+			base = 30
+			modifier = {
+				add = -50
+				has_trait = compassionate
+			}
+			modifier = {
+				add = 30
+				has_trait = greedy
+			}
+		}
+	}
+}
+
+# 0026: Norse settlements become trade partners
+mt_hist.0026 = {
+	type = character_event
+	title = mt_hist.0026.t
+	desc = mt_hist.0026.desc
+	theme = stewardship
+
+	left_portrait = {
+		character = root
+		animation = happiness
+	}
+
+	trigger = {
+		has_character_modifier = mt_norse_trader
+		year >= 850
+		year <= 1066
+	}
+
+	mean_time_to_happen = {
+		months = 36
+	}
+
+	# Establish permanent trade relations
+	option = {
+		name = mt_hist.0026.a
+
+		custom_tooltip = mt_hist.0026.a.tt
+
+		add_character_modifier = {
+			modifier = mt_norse_trade_network
+			years = 10
+		}
+
+		add_gold = 400
+		add_prestige = 100
+
+		ai_chance = {
+			base = 100
+		}
+	}
+}
+
+# 0027: Varangian Guard trade route to Constantinople
+mt_hist.0027 = {
+	type = character_event
+	title = mt_hist.0027.t
+	desc = mt_hist.0027.desc
+	theme = stewardship
+
+	left_portrait = {
+		character = root
+		animation = personality_bold
+	}
+
+	trigger = {
+		has_character_modifier = mt_norse_trader
+		year >= 988
+		year <= 1204
+		OR = {
+			capital_province = {
+				geographical_region = world_europe_north
+			}
+			capital_province = {
+				geographical_region = world_europe_east
+			}
+		}
+	}
+
+	mean_time_to_happen = {
+		months = 48
+	}
+
+	# Follow the Varangian route
+	option = {
+		name = mt_hist.0027.a
+
+		trigger = {
+			gold >= 250
+		}
+
+		custom_tooltip = mt_hist.0027.a.tt
+
+		remove_short_term_gold = 250
+
+		add_character_modifier = {
+			modifier = mt_varangian_trader
+			years = 5
+		}
+
+		add_gold = 600
+		add_prestige = 150
+
+		ai_chance = {
+			base = 80
+		}
+	}
+
+	# Too risky
+	option = {
+		name = mt_hist.0027.b
+
+		custom_tooltip = mt_hist.0027.b.tt
+
+		add_stress = 20
+
+		ai_chance = {
+			base = 20
+		}
+	}
+}
+
+# 0028: Viking conversion to Christianity - trade improves
+mt_hist.0028 = {
+	type = character_event
+	title = mt_hist.0028.t
+	desc = mt_hist.0028.desc
+	theme = stewardship
+
+	left_portrait = {
+		character = root
+		animation = happiness
+	}
+
+	trigger = {
+		has_character_modifier = mt_norse_trader
+		year >= 950
+		year <= 1100
+		religion = {
+			OR = {
+				this = religion:christianity_religion
+				this = religion:catholic
+				this = religion:orthodox
+			}
+		}
+	}
+
+	mean_time_to_happen = {
+		months = 36
+
+		modifier = {
+			factor = 0.5
+			year >= 995
+			year <= 1020
+		}
+	}
+
+	# Embrace new opportunities
+	option = {
+		name = mt_hist.0028.a
+
+		custom_tooltip = mt_hist.0028.a.tt
+
+		add_character_modifier = {
+			modifier = mt_christian_norse_trade
+			years = 5
+		}
+
+		add_gold = 300
+		add_piety = 75
+		add_prestige = 100
+
+		ai_chance = {
+			base = 100
+		}
+	}
+}
+
+# 0029: Baltic trade opportunities
+mt_hist.0029 = {
+	type = character_event
+	title = mt_hist.0029.t
+	desc = mt_hist.0029.desc
+	theme = stewardship
+
+	left_portrait = {
+		character = root
+		animation = personality_greedy
+	}
+
+	trigger = {
+		OR = {
+			has_trait = wandering_merchant
+			has_trait = trade_post_owner
+		}
+		year >= 900
+		year <= 1200
+		capital_province = {
+			OR = {
+				geographical_region = world_europe_north
+				geographical_region = world_europe_east
+			}
+		}
+	}
+
+	mean_time_to_happen = {
+		months = 48
+	}
+
+	# Establish Baltic trade routes
+	option = {
+		name = mt_hist.0029.a
+
+		trigger = {
+			gold >= 200
+		}
+
+		custom_tooltip = mt_hist.0029.a.tt
+
+		remove_short_term_gold = 200
+
+		add_character_modifier = {
+			modifier = mt_baltic_trader
+			years = 5
+		}
+
+		add_gold = 450
+		add_prestige = 75
+
+		# May lead to Hanseatic League
+		trigger_event = {
+			id = mt_hist.0041
+			months = { 24 48 }
+		}
+
+		ai_chance = {
+			base = 70
+		}
+	}
+
+	# Not worth the investment
+	option = {
+		name = mt_hist.0029.b
+
+		custom_tooltip = mt_hist.0029.b.tt
+
+		add_stress = 10
+
+		ai_chance = {
+			base = 30
+		}
+	}
+}
+
+# 0030: Norse exploration - new goods from north
+mt_hist.0030 = {
+	type = character_event
+	title = mt_hist.0030.t
+	desc = mt_hist.0030.desc
+	theme = stewardship
+
+	left_portrait = {
+		character = root
+		animation = personality_bold
+	}
+
+	trigger = {
+		has_character_modifier = mt_norse_trader
+		year >= 900
+		year <= 1100
+	}
+
+	mean_time_to_happen = {
+		months = 60
+	}
+
+	# Import exotic northern goods
+	option = {
+		name = mt_hist.0030.a
+
+		custom_tooltip = mt_hist.0030.a.tt
+
+		add_gold = 350
+		add_prestige = 100
+
+		add_character_modifier = {
+			modifier = mt_northern_goods_trader
+			years = 3
+		}
+
+		ai_chance = {
+			base = 100
+		}
+	}
+}
+
+####################################
+# ISLAMIC GOLDEN AGE (0031-0037)
+####################################
+
+# 0031: Baghdad House of Wisdom - intellectual trade
+mt_hist.0031 = {
+	type = character_event
+	title = mt_hist.0031.t
+	desc = mt_hist.0031.desc
+	theme = learning
+
+	left_portrait = {
+		character = root
+		animation = personality_rational
+	}
+
+	trigger = {
+		OR = {
+			has_trait = wandering_merchant
+			has_trait = trade_post_owner
+		}
+		year >= 750
+		year <= 1258
+		learning >= 10
+		capital_province = {
+			OR = {
+				geographical_region = custom_middle_east
+				geographical_region = world_persia
+				geographical_region = world_asia_minor
+			}
+		}
+	}
+
+	weight_multiplier = {
+		base = 1
+		modifier = {
+			add = 3
+			year >= 800
+			year <= 1100
+		}
+	}
+
+	mean_time_to_happen = {
+		months = 48
+	}
+
+	# Trade in books and manuscripts
+	option = {
+		name = mt_hist.0031.a
+
+		trigger = {
+			gold >= 150
+		}
+
+		custom_tooltip = mt_hist.0031.a.tt
+
+		remove_short_term_gold = 150
+
+		add_character_modifier = {
+			modifier = mt_knowledge_trader
+			years = 5
+		}
+
+		add_gold = 300
+		add_learning = 2
+		add_prestige = 100
+
+		ai_chance = {
+			base = 60
+			modifier = {
+				add = 30
+				learning >= 14
+			}
+		}
+	}
+
+	# Trade in scientific instruments
+	option = {
+		name = mt_hist.0031.b
+
+		trigger = {
+			gold >= 200
+			learning >= 12
+		}
+
+		custom_tooltip = mt_hist.0031.b.tt
+
+		remove_short_term_gold = 200
+
+		add_character_modifier = {
+			modifier = mt_instrument_trader
+			years = 5
+		}
+
+		add_gold = 400
+		add_learning = 1
+		add_prestige = 125
+
+		ai_chance = {
+			base = 40
+		}
+	}
+}
+
+# 0032: Sponsor scholars - trading ideas
+mt_hist.0032 = {
+	type = character_event
+	title = mt_hist.0032.t
+	desc = mt_hist.0032.desc
+	theme = learning
+
+	left_portrait = {
+		character = root
+		animation = personality_rational
+	}
+
+	trigger = {
+		has_character_modifier = mt_knowledge_trader
+		year >= 750
+		year <= 1258
+		gold >= 200
+	}
+
+	mean_time_to_happen = {
+		months = 36
+	}
+
+	# Sponsor translation work
+	option = {
+		name = mt_hist.0032.a
+
+		custom_tooltip = mt_hist.0032.a.tt
+
+		remove_short_term_gold = 200
+
+		add_piety = 100
+		add_learning = 2
+		add_prestige = 150
+
+		add_character_modifier = {
+			modifier = mt_scholar_patron
+			years = 10
+		}
+
+		ai_chance = {
+			base = 70
+		}
+	}
+
+	# Focus on profitable trade
+	option = {
+		name = mt_hist.0032.b
+
+		custom_tooltip = mt_hist.0032.b.tt
+
+		add_gold = 250
+		add_prestige = 50
+
+		ai_chance = {
+			base = 30
+		}
+	}
+}
+
+# 0033: Abbasid patronage of merchants
+mt_hist.0033 = {
+	type = character_event
+	title = mt_hist.0033.t
+	desc = mt_hist.0033.desc
+	theme = diplomacy
+
+	left_portrait = {
+		character = root
+		animation = happiness
+	}
+
+	trigger = {
+		OR = {
+			has_character_modifier = mt_knowledge_trader
+			has_character_modifier = mt_scholar_patron
+		}
+		year >= 750
+		year <= 1258
+		diplomacy >= 12
+		capital_province = {
+			OR = {
+				geographical_region = custom_middle_east
+				geographical_region = world_persia
+			}
+		}
+	}
+
+	mean_time_to_happen = {
+		months = 60
+	}
+
+	# Accept caliphal patronage
+	option = {
+		name = mt_hist.0033.a
+
+		custom_tooltip = mt_hist.0033.a.tt
+
+		add_character_modifier = {
+			modifier = mt_caliphal_merchant
+			years = 10
+		}
+
+		add_gold = 500
+		add_prestige = 200
+		add_piety = 100
+
+		ai_chance = {
+			base = 80
+		}
+	}
+
+	# Maintain independence
+	option = {
+		name = mt_hist.0033.b
+
+		custom_tooltip = mt_hist.0033.b.tt
+
+		add_prestige = 50
+		add_stress = 20
+
+		ai_chance = {
+			base = 20
+		}
+	}
+}
+
+# 0034: Advanced banking practices from Islamic finance
+mt_hist.0034 = {
+	type = character_event
+	title = mt_hist.0034.t
+	desc = mt_hist.0034.desc
+	theme = stewardship
+
+	left_portrait = {
+		character = root
+		animation = personality_rational
+	}
+
+	trigger = {
+		OR = {
+			has_trait = trade_post_owner
+			has_trait = trading_company_head
+		}
+		year >= 800
+		year <= 1400
+		stewardship >= 12
+		capital_province = {
+			OR = {
+				geographical_region = custom_middle_east
+				geographical_region = world_persia
+				geographical_region = world_europe_west_iberia
+			}
+		}
+	}
+
+	mean_time_to_happen = {
+		months = 48
+	}
+
+	# Adopt Islamic banking methods
+	option = {
+		name = mt_hist.0034.a
+
+		custom_tooltip = mt_hist.0034.a.tt
+
+		add_character_modifier = {
+			modifier = mt_advanced_banking
+			years = 15
+		}
+
+		add_gold = 400
+		add_stewardship = 2
+		add_prestige = 100
+
+		ai_chance = {
+			base = 80
+		}
+	}
+
+	# Stick to traditional methods
+	option = {
+		name = mt_hist.0034.b
+
+		custom_tooltip = mt_hist.0034.b.tt
+
+		add_stress = 10
+
+		ai_chance = {
+			base = 20
+		}
+	}
+}
+
+# 0035: Trade fairs in Cordoba, Damascus, Baghdad
+mt_hist.0035 = {
+	type = character_event
+	title = mt_hist.0035.t
+	desc = mt_hist.0035.desc
+	theme = stewardship
+
+	left_portrait = {
+		character = root
+		animation = happiness
+	}
+
+	trigger = {
+		OR = {
+			has_trait = wandering_merchant
+			has_trait = trade_post_owner
+		}
+		year >= 800
+		year <= 1258
+		capital_province = {
+			OR = {
+				geographical_region = custom_middle_east
+				geographical_region = world_persia
+				geographical_region = world_europe_west_iberia
+			}
+		}
+	}
+
+	mean_time_to_happen = {
+		months = 24
+	}
+
+	# Attend the great fair
+	option = {
+		name = mt_hist.0035.a
+
+		trigger = {
+			gold >= 100
+		}
+
+		custom_tooltip = mt_hist.0035.a.tt
+
+		remove_short_term_gold = 100
+
+		random = {
+			chance = 70
+			add_gold = 350
+			add_prestige = 100
+		}
+
+		random = {
+			chance = 30
+			# Fair was disappointing
+			add_stress = 20
+		}
+
+		ai_chance = {
+			base = 80
+		}
+	}
+
+	# Send agents instead
+	option = {
+		name = mt_hist.0035.b
+
+		trigger = {
+			gold >= 50
+		}
+
+		custom_tooltip = mt_hist.0035.b.tt
+
+		remove_short_term_gold = 50
+
+		add_gold = 150
+		add_prestige = 30
+
+		ai_chance = {
+			base = 20
+		}
+	}
+}
+
+# 0036: Spice routes through Islamic world
+mt_hist.0036 = {
+	type = character_event
+	title = mt_hist.0036.t
+	desc = mt_hist.0036.desc
+	theme = stewardship
+
+	left_portrait = {
+		character = root
+		animation = personality_greedy
+	}
+
+	trigger = {
+		OR = {
+			has_trait = wandering_merchant
+			has_trait = trade_post_owner
+		}
+		year >= 700
+		year <= 1500
+		capital_province = {
+			OR = {
+				geographical_region = custom_middle_east
+				geographical_region = world_persia
+				geographical_region = world_india
+			}
+		}
+	}
+
+	mean_time_to_happen = {
+		months = 36
+	}
+
+	# Invest heavily in spice trade
+	option = {
+		name = mt_hist.0036.a
+
+		trigger = {
+			gold >= 300
+		}
+
+		custom_tooltip = mt_hist.0036.a.tt
+
+		remove_short_term_gold = 300
+
+		add_character_modifier = {
+			modifier = mt_spice_trader
+			years = 10
+		}
+
+		add_gold = 700
+		add_prestige = 150
+
+		ai_chance = {
+			base = 70
+		}
+	}
+
+	# Modest involvement
+	option = {
+		name = mt_hist.0036.b
+
+		trigger = {
+			gold >= 100
+		}
+
+		custom_tooltip = mt_hist.0036.b.tt
+
+		remove_short_term_gold = 100
+
+		add_gold = 250
+		add_prestige = 50
+
+		ai_chance = {
+			base = 30
+		}
+	}
+}
+
+# 0037: Islamic merchants as partners or competitors
+mt_hist.0037 = {
+	type = character_event
+	title = mt_hist.0037.t
+	desc = mt_hist.0037.desc
+	theme = diplomacy
+
+	left_portrait = {
+		character = root
+		animation = personality_rational
+	}
+
+	trigger = {
+		OR = {
+			has_trait = trade_post_owner
+			has_trait = trading_company_head
+		}
+		year >= 700
+		year <= 1500
+		NOT = {
+			religion = {
+				this = religion:islam_religion
+			}
+		}
+		capital_province = {
+			OR = {
+				geographical_region = custom_middle_east
+				geographical_region = world_persia
+				geographical_region = world_europe_west_iberia
+				geographical_region = world_europe_south_east
+			}
+		}
+	}
+
+	mean_time_to_happen = {
+		months = 48
+	}
+
+	# Form partnership
+	option = {
+		name = mt_hist.0037.a
+
+		trigger = {
+			diplomacy >= 12
+		}
+
+		custom_tooltip = mt_hist.0037.a.tt
+
+		add_character_modifier = {
+			modifier = mt_islamic_partnership
+			years = 5
+		}
+
+		add_gold = 400
+		add_diplomacy = 1
+		add_prestige = 100
+
+		ai_chance = {
+			base = 60
+		}
+	}
+
+	# Compete aggressively
+	option = {
+		name = mt_hist.0037.b
+
+		custom_tooltip = mt_hist.0037.b.tt
+
+		random = {
+			chance = 50
+			add_gold = 300
+			add_prestige = 75
+		}
+
+		random = {
+			chance = 50
+			# Competition hurts both
+			add_stress = 30
+			add_prestige = -50
+		}
+
+		ai_chance = {
+			base = 40
+		}
+	}
+}
+
+####################################
+# VENETIAN/GENOESE RIVALRY (0038-0040)
+####################################
+
+# 0038: Venice-Genoa trade war begins
+mt_hist.0038 = {
+	type = character_event
+	title = mt_hist.0038.t
+	desc = mt_hist.0038.desc
+	theme = stewardship
+
+	left_portrait = {
+		character = root
+		animation = worry
+	}
+
+	trigger = {
+		OR = {
+			has_trait = trade_post_owner
+			has_trait = trading_company_head
+		}
+		year >= 1250
+		year <= 1381
+		capital_province = {
+			geographical_region = world_europe_west_italy
+		}
+		NOT = { has_character_modifier = mt_venetian_side }
+		NOT = { has_character_modifier = mt_genoese_side }
+	}
+
+	weight_multiplier = {
+		base = 1
+		modifier = {
+			add = 4
+			year >= 1293
+			year <= 1299
+		}
+		modifier = {
+			add = 4
+			year >= 1350
+			year <= 1355
+		}
+	}
+
+	mean_time_to_happen = {
+		months = 36
+	}
+
+	# Side with Venice
+	option = {
+		name = mt_hist.0038.a
+
+		custom_tooltip = mt_hist.0038.a.tt
+
+		add_character_modifier = {
+			modifier = mt_venetian_side
+			years = 5
+		}
+
+		add_gold = 250
+		add_prestige = 100
+
+		# Enmity with Genoa
+		add_character_modifier = {
+			modifier = mt_genoese_enemy
+			years = 5
+		}
+
+		trigger_event = {
+			id = mt_hist.0039
+			months = { 12 24 }
+		}
+
+		ai_chance = {
+			base = 40
+		}
+	}
+
+	# Side with Genoa
+	option = {
+		name = mt_hist.0038.b
+
+		custom_tooltip = mt_hist.0038.b.tt
+
+		add_character_modifier = {
+			modifier = mt_genoese_side
+			years = 5
+		}
+
+		add_gold = 250
+		add_prestige = 100
+
+		# Enmity with Venice
+		add_character_modifier = {
+			modifier = mt_venetian_enemy
+			years = 5
+		}
+
+		trigger_event = {
+			id = mt_hist.0039
+			months = { 12 24 }
+		}
+
+		ai_chance = {
+			base = 40
+		}
+	}
+
+	# Stay neutral
+	option = {
+		name = mt_hist.0038.c
+
+		custom_tooltip = mt_hist.0038.c.tt
+
+		add_character_modifier = {
+			modifier = mt_neutral_trader
+			years = 3
+		}
+
+		# Both sides distrust you
+		add_prestige = -50
+		add_stress = 30
+
+		ai_chance = {
+			base = 20
+		}
+	}
+}
+
+# 0039: Battle of Curzola - one side gains advantage
+mt_hist.0039 = {
+	type = character_event
+	title = mt_hist.0039.t
+	desc = mt_hist.0039.desc
+	theme = stewardship
+
+	left_portrait = {
+		character = root
+		animation = personality_bold
+	}
+
+	trigger = {
+		OR = {
+			has_character_modifier = mt_venetian_side
+			has_character_modifier = mt_genoese_side
+		}
+		year >= 1250
+		year <= 1381
+	}
+
+	is_triggered_only = yes
+
+	# Venice wins (if Venetian)
+	option = {
+		name = mt_hist.0039.a
+
+		trigger = {
+			has_character_modifier = mt_venetian_side
+		}
+
+		custom_tooltip = mt_hist.0039.a.tt
+
+		add_gold = 400
+		add_prestige = 200
+
+		add_character_modifier = {
+			modifier = mt_venetian_victory_spoils
+			years = 3
+		}
+
+		ai_chance = {
+			base = 100
+		}
+	}
+
+	# Genoa wins (if Genoese)
+	option = {
+		name = mt_hist.0039.b
+
+		trigger = {
+			has_character_modifier = mt_genoese_side
+		}
+
+		custom_tooltip = mt_hist.0039.b.tt
+
+		add_gold = 400
+		add_prestige = 200
+
+		add_character_modifier = {
+			modifier = mt_genoese_victory_spoils
+			years = 3
+		}
+
+		ai_chance = {
+			base = 100
+		}
+	}
+
+	# Your side loses
+	option = {
+		name = mt_hist.0039.c
+
+		trigger = {
+			OR = {
+				has_character_modifier = mt_venetian_side
+				has_character_modifier = mt_genoese_side
+			}
+		}
+
+		custom_tooltip = mt_hist.0039.c.tt
+
+		remove_short_term_gold = 150
+		add_stress = 40
+		add_prestige = -100
+
+		ai_chance = {
+			base = 100
+		}
+	}
+}
+
+# 0040: Peace treaty - new trade arrangements
+mt_hist.0040 = {
+	type = character_event
+	title = mt_hist.0040.t
+	desc = mt_hist.0040.desc
+	theme = diplomacy
+
+	left_portrait = {
+		character = root
+		animation = happiness
+	}
+
+	trigger = {
+		OR = {
+			has_character_modifier = mt_venetian_side
+			has_character_modifier = mt_genoese_side
+		}
+		year >= 1250
+		year <= 1381
+	}
+
+	mean_time_to_happen = {
+		months = 48
+	}
+
+	# Benefit from peace
+	option = {
+		name = mt_hist.0040.a
+
+		custom_tooltip = mt_hist.0040.a.tt
+
+		remove_character_modifier = mt_venetian_side
+		remove_character_modifier = mt_genoese_side
+		remove_character_modifier = mt_venetian_enemy
+		remove_character_modifier = mt_genoese_enemy
+
+		add_character_modifier = {
+			modifier = mt_mediterranean_peace_trader
+			years = 5
+		}
+
+		add_gold = 300
+		add_prestige = 100
+
+		ai_chance = {
+			base = 100
+		}
+	}
+}
+
+####################################
+# ADDITIONAL HISTORICAL EVENTS (0041-0050)
+####################################
+
+# 0041: Hanseatic League formation
+mt_hist.0041 = {
+	type = character_event
+	title = mt_hist.0041.t
+	desc = mt_hist.0041.desc
+	theme = stewardship
+
+	left_portrait = {
+		character = root
+		animation = happiness
+	}
+
+	trigger = {
+		has_character_modifier = mt_baltic_trader
+		year >= 1150
+		year <= 1400
+		capital_province = {
+			OR = {
+				geographical_region = world_europe_north
+				geographical_region = custom_germany
+			}
+		}
+	}
+
+	is_triggered_only = yes
+
+	# Join the Hanseatic League
+	option = {
+		name = mt_hist.0041.a
+
+		custom_tooltip = mt_hist.0041.a.tt
+
+		add_character_modifier = {
+			modifier = mt_hanseatic_member
+			years = 20
+		}
+
+		add_gold = 500
+		add_prestige = 200
+
+		# Network benefits
+		add_character_modifier = {
+			modifier = mt_trading_network
+			years = 20
+		}
+
+		ai_chance = {
+			base = 90
+		}
+	}
+
+	# Remain independent
+	option = {
+		name = mt_hist.0041.b
+
+		custom_tooltip = mt_hist.0041.b.tt
+
+		add_prestige = 50
+		add_stress = 20
+
+		# Miss out on network benefits
+		remove_short_term_gold = 100
+
+		ai_chance = {
+			base = 10
+		}
+	}
+}
+
+# 0042: Portuguese exploration opening sea routes
+mt_hist.0042 = {
+	type = character_event
+	title = mt_hist.0042.t
+	desc = mt_hist.0042.desc
+	theme = stewardship
+
+	left_portrait = {
+		character = root
+		animation = personality_bold
+	}
+
+	trigger = {
+		OR = {
+			has_trait = wandering_merchant
+			has_trait = trade_post_owner
+			has_trait = trading_company_head
+		}
+		year >= 1415
+		year <= 1500
+		capital_province = {
+			OR = {
+				geographical_region = world_europe_west_iberia
+				geographical_region = world_europe_west
+			}
+		}
+	}
+
+	weight_multiplier = {
+		base = 1
+		modifier = {
+			add = 3
+			year >= 1488
+		}
+	}
+
+	mean_time_to_happen = {
+		months = 60
+	}
+
+	# Invest in Portuguese ventures
+	option = {
+		name = mt_hist.0042.a
+
+		trigger = {
+			gold >= 400
+		}
+
+		custom_tooltip = mt_hist.0042.a.tt
+
+		remove_short_term_gold = 400
+
+		random = {
+			chance = 60
+			# Successful voyage
+			add_gold = 1000
+			add_prestige = 250
+
+			add_character_modifier = {
+				modifier = mt_age_of_discovery_investor
+				years = 10
+			}
+		}
+
+		random = {
+			chance = 40
+			# Voyage fails
+			add_stress = 50
+		}
+
+		ai_chance = {
+			base = 60
+		}
+	}
+
+	# Too risky
+	option = {
+		name = mt_hist.0042.b
+
+		custom_tooltip = mt_hist.0042.b.tt
+
+		add_stress = 30
+
+		ai_chance = {
+			base = 40
+		}
+	}
+}
+
+# 0043: Fall of Constantinople impact on trade
+mt_hist.0043 = {
+	type = character_event
+	title = mt_hist.0043.t
+	desc = mt_hist.0043.desc
+	theme = stewardship
+
+	left_portrait = {
+		character = root
+		animation = sadness
+	}
+
+	trigger = {
+		OR = {
+			has_trait = trade_post_owner
+			has_trait = trading_company_head
+		}
+		year >= 1453
+		year <= 1460
+		capital_province = {
+			OR = {
+				geographical_region = world_europe_west_italy
+				geographical_region = world_europe_south_east
+				geographical_region = world_asia_minor
+			}
+		}
+	}
+
+	weight_multiplier = {
+		base = 1
+		modifier = {
+			add = 10
+			year = 1453
+		}
+	}
+
+	mean_time_to_happen = {
+		months = 12
+	}
+
+	# Adapt to Ottoman control
+	option = {
+		name = mt_hist.0043.a
+
+		trigger = {
+			diplomacy >= 12
+			gold >= 300
+		}
+
+		custom_tooltip = mt_hist.0043.a.tt
+
+		remove_short_term_gold = 300
+
+		add_character_modifier = {
+			modifier = mt_ottoman_trade_relations
+			years = 10
+		}
+
+		add_gold = 500
+		add_prestige = 100
+
+		ai_chance = {
+			base = 50
+		}
+	}
+
+	# Seek alternative routes
+	option = {
+		name = mt_hist.0043.b
+
+		custom_tooltip = mt_hist.0043.b.tt
+
+		add_character_modifier = {
+			modifier = mt_seeking_new_routes
+			years = 5
+		}
+
+		remove_short_term_gold = 200
+		add_stress = 40
+
+		# May discover new opportunities
+		random = {
+			chance = 40
+			trigger_event = {
+				id = mt_hist.0042
+				months = { 12 36 }
+			}
+		}
+
+		ai_chance = {
+			base = 50
+		}
+	}
+}
+
+# 0044: Hundred Years War disruption
+mt_hist.0044 = {
+	type = character_event
+	title = mt_hist.0044.t
+	desc = mt_hist.0044.desc
+	theme = stewardship
+
+	left_portrait = {
+		character = root
+		animation = worry
+	}
+
+	trigger = {
+		OR = {
+			has_trait = wandering_merchant
+			has_trait = trade_post_owner
+		}
+		year >= 1337
+		year <= 1453
+		capital_province = {
+			OR = {
+				geographical_region = world_europe_west_francia
+				geographical_region = custom_england
+			}
+		}
+		NOT = { has_character_modifier = mt_war_disrupted_trade }
+	}
+
+	mean_time_to_happen = {
+		months = 24
+	}
+
+	# Supply both sides
+	option = {
+		name = mt_hist.0044.a
+
+		trigger = {
+			gold >= 200
+			intrigue >= 10
+		}
+
+		custom_tooltip = mt_hist.0044.a.tt
+
+		remove_short_term_gold = 200
+
+		random = {
+			chance = 60
+			# Successfully trade with both
+			add_gold = 500
+			add_prestige = 75
+		}
+
+		random = {
+			chance = 40
+			# Caught and accused of treason
+			add_stress = 60
+			add_prestige = -150
+			remove_short_term_gold = 200
+		}
+
+		ai_chance = {
+			base = 30
+		}
+	}
+
+	# Focus on safe markets
+	option = {
+		name = mt_hist.0044.b
+
+		custom_tooltip = mt_hist.0044.b.tt
+
+		add_character_modifier = {
+			modifier = mt_war_disrupted_trade
+			months = 24
+		}
+
+		remove_short_term_gold = 100
+		add_stress = 20
+
+		ai_chance = {
+			base = 70
+		}
+	}
+}
+
+# 0045: Italian Renaissance patronage
+mt_hist.0045 = {
+	type = character_event
+	title = mt_hist.0045.t
+	desc = mt_hist.0045.desc
+	theme = learning
+
+	left_portrait = {
+		character = root
+		animation = personality_rational
+	}
+
+	trigger = {
+		OR = {
+			has_trait = trade_post_owner
+			has_trait = trading_company_head
+			has_trait = merchant_prince
+		}
+		year >= 1350
+		year <= 1550
+		capital_province = {
+			geographical_region = world_europe_west_italy
+		}
+		gold >= 300
+	}
+
+	mean_time_to_happen = {
+		months = 48
+	}
+
+	# Become patron of the arts
+	option = {
+		name = mt_hist.0045.a
+
+		trigger = {
+			gold >= 500
+		}
+
+		custom_tooltip = mt_hist.0045.a.tt
+
+		remove_short_term_gold = 500
+
+		add_character_modifier = {
+			modifier = mt_renaissance_patron
+			years = 15
+		}
+
+		add_prestige = 300
+		add_piety = 100
+		add_dynasty_prestige = 200
+
+		ai_chance = {
+			base = 60
+			modifier = {
+				add = 30
+				gold >= 1000
+			}
+		}
+	}
+
+	# Modest support
+	option = {
+		name = mt_hist.0045.b
+
+		trigger = {
+			gold >= 200
+		}
+
+		custom_tooltip = mt_hist.0045.b.tt
+
+		remove_short_term_gold = 200
+
+		add_prestige = 100
+		add_piety = 50
+
+		ai_chance = {
+			base = 40
+		}
+	}
+}
+
+# 0046: Byzantine silk industry secrets
+mt_hist.0046 = {
+	type = character_event
+	title = mt_hist.0046.t
+	desc = mt_hist.0046.desc
+	theme = intrigue
+
+	left_portrait = {
+		character = root
+		animation = personality_rational
+	}
+
+	trigger = {
+		OR = {
+			has_trait = wandering_merchant
+			has_trait = trade_post_owner
+		}
+		year >= 550
+		year <= 1204
+		intrigue >= 12
+		capital_province = {
+			OR = {
+				geographical_region = world_europe_south_east
+				geographical_region = world_asia_minor
+			}
+		}
+	}
+
+	mean_time_to_happen = {
+		months = 120
+	}
+
+	# Attempt to smuggle silk secrets
+	option = {
+		name = mt_hist.0046.a
+
+		trigger = {
+			intrigue >= 14
+			gold >= 300
+		}
+
+		custom_tooltip = mt_hist.0046.a.tt
+
+		remove_short_term_gold = 300
+
+		random = {
+			chance = 30
+			# Successfully acquire secrets
+			add_character_modifier = {
+				modifier = mt_silk_production_knowledge
+				years = 20
+			}
+			add_gold = 1000
+			add_prestige = 250
+			add_intrigue = 2
+		}
+
+		random = {
+			chance = 70
+			# Caught or failed
+			add_stress = 50
+			add_prestige = -100
+		}
+
+		ai_chance = {
+			base = 40
+			modifier = {
+				add = 30
+				intrigue >= 16
+			}
+		}
+	}
+
+	# Trade honestly
+	option = {
+		name = mt_hist.0046.b
+
+		custom_tooltip = mt_hist.0046.b.tt
+
+		add_gold = 200
+		add_piety = 50
+
+		ai_chance = {
+			base = 60
+		}
+	}
+}
+
+# 0047: Chinese maritime expeditions under Zheng He
+mt_hist.0047 = {
+	type = character_event
+	title = mt_hist.0047.t
+	desc = mt_hist.0047.desc
+	theme = stewardship
+
+	left_portrait = {
+		character = root
+		animation = personality_bold
+	}
+
+	trigger = {
+		OR = {
+			has_trait = wandering_merchant
+			has_trait = trade_post_owner
+		}
+		year >= 1405
+		year <= 1433
+		capital_province = {
+			OR = {
+				geographical_region = world_india
+				geographical_region = custom_middle_east
+				geographical_region = custom_east_africa
+			}
+		}
+	}
+
+	mean_time_to_happen = {
+		months = 36
+	}
+
+	# Trade with the treasure fleet
+	option = {
+		name = mt_hist.0047.a
+
+		trigger = {
+			gold >= 250
+		}
+
+		custom_tooltip = mt_hist.0047.a.tt
+
+		remove_short_term_gold = 250
+
+		add_character_modifier = {
+			modifier = mt_chinese_fleet_trader
+			years = 5
+		}
+
+		add_gold = 700
+		add_prestige = 200
+
+		ai_chance = {
+			base = 80
+		}
+	}
+
+	# Too expensive
+	option = {
+		name = mt_hist.0047.b
+
+		custom_tooltip = mt_hist.0047.b.tt
+
+		add_stress = 20
+
+		ai_chance = {
+			base = 20
+		}
+	}
+}
+
+# 0048: Trans-Saharan gold trade
+mt_hist.0048 = {
+	type = character_event
+	title = mt_hist.0048.t
+	desc = mt_hist.0048.desc
+	theme = stewardship
+
+	left_portrait = {
+		character = root
+		animation = personality_greedy
+	}
+
+	trigger = {
+		OR = {
+			has_trait = wandering_merchant
+			has_trait = trade_post_owner
+		}
+		year >= 700
+		year <= 1500
+		capital_province = {
+			OR = {
+				geographical_region = custom_sahara
+				geographical_region = custom_west_africa
+				geographical_region = world_africa_north
+			}
+		}
+	}
+
+	mean_time_to_happen = {
+		months = 36
+	}
+
+	# Join trans-Saharan caravan
+	option = {
+		name = mt_hist.0048.a
+
+		trigger = {
+			gold >= 300
+			martial >= 10
+		}
+
+		custom_tooltip = mt_hist.0048.a.tt
+
+		remove_short_term_gold = 300
+
+		random = {
+			chance = 60
+			# Successful journey
+			add_gold = 800
+			add_prestige = 150
+
+			add_character_modifier = {
+				modifier = mt_saharan_gold_trader
+				years = 5
+			}
+		}
+
+		random = {
+			chance = 40
+			# Desert hardships
+			add_trait = wounded
+			add_stress = 50
+		}
+
+		ai_chance = {
+			base = 60
+		}
+	}
+
+	# Too dangerous
+	option = {
+		name = mt_hist.0048.b
+
+		custom_tooltip = mt_hist.0048.b.tt
+
+		add_stress = 20
+
+		ai_chance = {
+			base = 40
+		}
+	}
+}
+
+# 0049: Spice Islands discoveries
+mt_hist.0049 = {
+	type = character_event
+	title = mt_hist.0049.t
+	desc = mt_hist.0049.desc
+	theme = stewardship
+
+	left_portrait = {
+		character = root
+		animation = personality_bold
+	}
+
+	trigger = {
+		OR = {
+			has_trait = trade_post_owner
+			has_trait = trading_company_head
+			has_trait = merchant_prince
+		}
+		year >= 1500
+		year <= 1550
+		capital_province = {
+			OR = {
+				geographical_region = world_europe_west_iberia
+				geographical_region = world_europe_west
+			}
+		}
+		gold >= 500
+	}
+
+	mean_time_to_happen = {
+		months = 60
+	}
+
+	# Finance expedition to Spice Islands
+	option = {
+		name = mt_hist.0049.a
+
+		trigger = {
+			gold >= 600
+		}
+
+		custom_tooltip = mt_hist.0049.a.tt
+
+		remove_short_term_gold = 600
+
+		random = {
+			chance = 50
+			# Expedition succeeds
+			add_gold = 2000
+			add_prestige = 400
+
+			add_character_modifier = {
+				modifier = mt_spice_islands_monopoly
+				years = 10
+			}
+		}
+
+		random = {
+			chance = 50
+			# Expedition fails or lost
+			add_stress = 60
+		}
+
+		ai_chance = {
+			base = 60
+		}
+	}
+
+	# Too risky
+	option = {
+		name = mt_hist.0049.b
+
+		custom_tooltip = mt_hist.0049.b.tt
+
+		add_stress = 30
+
+		ai_chance = {
+			base = 40
+		}
+	}
+}
+
+# 0050: Champagne Fairs golden age
+mt_hist.0050 = {
+	type = character_event
+	title = mt_hist.0050.t
+	desc = mt_hist.0050.desc
+	theme = stewardship
+
+	left_portrait = {
+		character = root
+		animation = happiness
+	}
+
+	trigger = {
+		OR = {
+			has_trait = wandering_merchant
+			has_trait = trade_post_owner
+		}
+		year >= 1180
+		year <= 1320
+		capital_province = {
+			OR = {
+				geographical_region = world_europe_west_francia
+				geographical_region = custom_england
+				geographical_region = world_europe_west_italy
+			}
+		}
+	}
+
+	mean_time_to_happen = {
+		months = 24
+	}
+
+	# Attend Champagne Fairs
+	option = {
+		name = mt_hist.0050.a
+
+		trigger = {
+			gold >= 150
+		}
+
+		custom_tooltip = mt_hist.0050.a.tt
+
+		remove_short_term_gold = 150
+
+		add_character_modifier = {
+			modifier = mt_champagne_fair_trader
+			years = 3
+		}
+
+		add_gold = 400
+		add_prestige = 100
+
+		# Access to financial instruments
+		add_stewardship = 1
+
+		ai_chance = {
+			base = 80
+		}
+	}
+
+	# Skip this year
+	option = {
+		name = mt_hist.0050.b
+
+		custom_tooltip = mt_hist.0050.b.tt
+
+		add_stress = 10
+
+		ai_chance = {
+			base = 20
+		}
+	}
+}

@@ -1,0 +1,424 @@
+l_english:
+
+ ####################################
+ # HISTORICAL TRADE EVENTS LOCALIZATION
+ # Events: mt_hist.0001-0050
+ ####################################
+
+ ####################################
+ # BLACK DEATH EVENTS (0001-0008)
+ ####################################
+
+ # 0001: Plague reaches major trading city
+ mt_hist.0001.t:0 "The Black Death Arrives"
+ mt_hist.0001.desc:0 "Terrible news spreads through the marketplace like wildfire. The plague has reached our trading city! Merchants flee in terror, their carts abandoned in the streets. Bodies pile up faster than they can be buried, and the stench of death hangs heavy over once-bustling markets.\n\nYour factors report that trade routes passing through infected cities are seeing catastrophic losses - not just from the disease itself, but from panic and abandoned caravans. Yet paradoxically, those brave or foolish enough to continue trading stand to make enormous profits. Luxury goods no one wants anymore, but essential supplies - grain, medicine, simple tools - command prices three times normal.\n\n#bold Did You Know?#! The Black Death (1346-1353) killed an estimated 75-200 million people, fundamentally reshaping medieval European economy and society. It created labor shortages that eventually broke the feudal system."
+ mt_hist.0001.a:0 "Fortune favors the bold - continue trading!"
+ mt_hist.0001.a.tt:0 "High risk of plague, but potential for enormous profits"
+ mt_hist.0001.b:0 "Cease all operations immediately - lives over gold"
+ mt_hist.0001.b.tt:0 "Safe from plague but lose business opportunities"
+ mt_hist.0001.c:0 "Trade only in essential goods at premium prices"
+ mt_hist.0001.c.tt:0 "Moderate risk, help people while profiting"
+
+ # 0002: Survived plague
+ mt_hist.0002.t:0 "Survived the Pestilence!"
+ mt_hist.0002.desc:0 "Against all odds, you have survived the plague! The fever broke last night, and though weak and scarred, you yet live. Your physician marvels at your recovery - so many others have perished.\n\nWord of your survival spreads quickly. In these dark times, plague survivors are viewed with a mixture of awe and relief. Many believe you now have God's protection, or that you possess some inner strength that allowed you to triumph over death itself.\n\n#bold Did You Know?#! Plague survivors were highly valued in medieval society, as they seemed immune to further infection. Many went on to prosper in the labor shortages that followed."
+ mt_hist.0002.a:0 "I have been granted a second chance at life"
+ mt_hist.0002.a.tt:0 "Gain prestige as a plague survivor"
+
+ # 0003: Labor shortage after plague
+ mt_hist.0003.t:0 "The Great Labor Crisis"
+ mt_hist.0003.desc:0 "The plague has passed, leaving a transformed world in its wake. Entire villages stand empty. Fields lie fallow. And most critically for your business, workers are scarce as gold.\n\nYour surviving employees know their worth has skyrocketed. A carter who earned 3 pennies a day now demands 10. Warehouse workers want double wages. Even apprentices ask for what journeymen once earned. They know you cannot operate without them.\n\nYet some merchants whisper of 'labor-saving methods' - new techniques, better organization, tools that let one worker do what three once did.\n\n#bold Did You Know?#! The post-plague labor shortage led to the Statute of Laborers (1351) attempting to freeze wages, but market forces proved stronger than law. This crisis ultimately helped end serfdom in Western Europe."
+ mt_hist.0003.a:0 "Pay the premium wages they demand"
+ mt_hist.0003.a.tt:0 "Expensive but maintains operations and worker loyalty"
+ mt_hist.0003.b:0 "Resist these outrageous wage demands!"
+ mt_hist.0003.b.tt:0 "Workers may strike or flee, disrupting business"
+ mt_hist.0003.c:0 "Invest in labor-saving innovations"
+ mt_hist.0003.c.tt:0 "Requires learning and investment but pays off long-term"
+
+ # 0004: Economic recovery opportunities
+ mt_hist.0004.t:0 "Post-Plague Prosperity"
+ mt_hist.0004.desc:0 "Your decision to pay fair wages has borne fruit beyond expectation. Your workers are loyal, productive, and grateful. While competitors struggle with labor disputes and strikes, your operations run smoothly.\n\nBetter yet, word has spread of your fair dealing. Skilled workers from across the region seek employment with you. Customers prefer to deal with a merchant whose operations are reliable. You're expanding while others contract.\n\n#bold Did You Know?#! The post-plague period saw unprecedented social mobility. Many merchant families rose to prominence by treating workers fairly and seizing opportunities others missed."
+ mt_hist.0004.a:0 "This is our moment to expand operations!"
+ mt_hist.0004.a.tt:0 "Capitalize on competitors' weakness"
+
+ # 0005: Quarantine measures
+ mt_hist.0005.t:0 "Quarantine Imposed"
+ mt_hist.0005.desc:0 "The city authorities have imposed strict quarantine measures. All incoming merchants must wait forty days outside the city walls - 'quarantena' they call it, from the Italian for forty. No exceptions, not even for established traders like yourself.\n\nYour current caravan sits in a field outside the gates, guards watching to ensure no one enters or leaves. Every day of delay costs you money in spoilage, wages, and lost opportunities. Yet you understand the fear - the plague could be lurking in any traveler's baggage.\n\n#bold Did You Know?#! The word 'quarantine' comes from 'quarantena,' Venetian for forty days. This became the standard isolation period after Venice implemented it successfully in 1377."
+ mt_hist.0005.a:0 "Comply with the quarantine - safety first"
+ mt_hist.0005.a.tt:0 "Lose time and money but gain trust with authorities"
+ mt_hist.0005.b:0 "Attempt to circumvent these restrictions"
+ mt_hist.0005.b.tt:0 "Risky - may be caught and punished severely"
+
+ # 0006: Plague passes - markets reopening
+ mt_hist.0006.t:0 "The Pestilence Recedes"
+ mt_hist.0006.desc:0 "After months of terror and isolation, life begins to return to the cities. Market squares that stood empty now see the first tentative gatherings. Shops reopen their shutters. Church bells ring in celebration rather than mourning.\n\nFor merchants like yourself, this is a moment of tremendous opportunity. Trade networks must be rebuilt. New suppliers found to replace those who perished. Markets are hungry for goods after the long disruption.\n\n#bold Did You Know?#! Post-plague economic recovery was remarkably swift in most areas. Within a generation, trade volumes often exceeded pre-plague levels as survivors had higher per-capita wealth."
+ mt_hist.0006.a:0 "Rebuild our trade networks immediately!"
+ mt_hist.0006.a.tt:0 "First movers gain the best positions"
+
+ # 0007: Long-term economic impact
+ mt_hist.0007.t:0 "A Transformed Economy"
+ mt_hist.0007.desc:0 "Years have passed since the plague, and the world that emerges is fundamentally different from what came before. Traditional trade patterns have shifted. Some cities declined while others rose to prominence. The very relationship between merchants and nobility has changed.\n\nYou've learned to read these new patterns - where labor is scarce, where new markets have opened, which goods are in demand in this transformed world. Your competitors who cling to old ways struggle, but you adapt and prosper.\n\n#bold Did You Know?#! The Black Death's economic impact lasted for centuries. It accelerated urbanization, strengthened merchant power, and contributed to the eventual rise of capitalism by weakening feudal structures."
+ mt_hist.0007.a:0 "We must embrace this new economic reality"
+ mt_hist.0007.a.tt:0 "Adapt to transformed trade patterns"
+
+ # 0008: Plague creates social mobility opportunity
+ mt_hist.0008.t:0 "A New Social Order Emerges"
+ mt_hist.0008.desc:0 "The old certainties are crumbling. Noble families that ruled for centuries have been wiped out. Ancient guilds lost their masters. The rigid social hierarchy that kept merchants in their place has fractured.\n\nYou, a plague survivor who rebuilt your business from ashes, now stand equal to - or above - many who once looked down upon traders. Your wealth, your network, your reputation for having survived the worst and prospered give you unprecedented social standing.\n\n#bold Did You Know?#! The plague created massive social mobility. Many merchant families used this period to rise into nobility, while old noble houses fell. It was one of history's great social revolutions."
+ mt_hist.0008.a:0 "Seize this opportunity for advancement!"
+ mt_hist.0008.a.tt:0 "May achieve merchant prince status"
+
+ ####################################
+ # MONGOL INVASION EVENTS (0009-0015)
+ ####################################
+
+ # 0009: Mongol armies approaching
+ mt_hist.0009.t:0 "The Mongol Storm Approaches"
+ mt_hist.0009.desc:0 "Terror grips the Silk Road cities. Refugees pour in from the east with tales of the Mongol armies - horsemen beyond counting, siege weapons that reduce the mightiest walls to rubble in days, and a ruthlessness that spares neither merchant nor noble.\n\nYour trade routes to the east have gone silent. Those caravans that do return speak of cities burned to ashes, the Silk Road littered with bodies. The question every merchant faces: flee westward and abandon everything, pay tribute and hope for mercy, or somehow find a way to deal with these conquerors?\n\n#bold Did You Know?#! The Mongol conquests (1206-1368) initially devastated trade, but once conquest was complete, they created the 'Pax Mongolica' - the safest trade conditions the Silk Road ever knew."
+ mt_hist.0009.a:0 "Flee westward with whatever we can carry"
+ mt_hist.0009.a.tt:0 "Safe but lose established business"
+ mt_hist.0009.b:0 "Send tribute and offer submission"
+ mt_hist.0009.b.tt:0 "Expensive but may gain Mongol protection"
+ mt_hist.0009.c:0 "Attempt to establish diplomatic relations"
+ mt_hist.0009.c.tt:0 "Risky but could lead to unprecedented opportunities"
+
+ # 0010: Pax Mongolica established
+ mt_hist.0010.t:0 "The Mongol Peace"
+ mt_hist.0010.desc:0 "What seemed impossible has come to pass. Under Mongol rule, the Silk Road is safer than it has been in centuries - perhaps ever. The same warriors who devastated cities now guard the trade routes with ferocious efficiency. Banditry is punished by death. Merchants travel under Mongol protection with official tablets guaranteeing their safety.\n\nYou can now journey from the Mediterranean to China with unprecedented security. Goods, ideas, and technologies flow east and west as never before. The Mongols, it turns out, are excellent for business - if you survived their conquest.\n\n#bold Did You Know?#! The Pax Mongolica enabled Marco Polo's famous journey to China. Mongol protection made the Silk Road safer than most European highways of the period."
+ mt_hist.0010.a:0 "Exploit this unprecedented opportunity!"
+ mt_hist.0010.a.tt:0 "Access to entire Silk Road under Mongol protection"
+
+ # 0011: Meeting Mongol officials
+ mt_hist.0011.t:0 "An Audience with the Khan's Officials"
+ mt_hist.0011.desc:0 "You have been summoned to meet Mongol administrators - men who wield the Khan's authority over vast territories. They sit in what was once a local lord's palace, their simple dress contrasting with the opulent surroundings.\n\nThey speak through interpreters, assessing you with the cold calculation of men who conquered empires. They want to know: what value do you bring? The Mongols respect competence above lineage, results above tradition. Prove your worth, and doors will open that were previously unimaginable.\n\n#bold Did You Know?#! The Mongols employed a sophisticated administrative system and valued merchants highly. They often gave merchants official positions and used them as diplomats and intelligence sources."
+ mt_hist.0011.a:0 "Offer valuable gifts to curry favor"
+ mt_hist.0011.a.tt:0 "Expensive but gains official Mongol favor"
+ mt_hist.0011.b:0 "Offer intelligence about trade routes and cities"
+ mt_hist.0011.b.tt:0 "Gain position as informant and trader"
+
+ # 0012: Mongol demand for tribute
+ mt_hist.0012.t:0 "The Khan's Tax Collector"
+ mt_hist.0012.desc:0 "Mongol tax collectors have arrived with their characteristic efficiency. They have detailed records of your business - someone has been providing information. They demand tribute: a substantial sum, calculated with precision to hurt but not cripple.\n\n'The Khan protects your routes,' the collector states flatly. 'The Khan's peace makes your profits possible. The Khan must be paid.' There is no room for negotiation in his voice, only the certainty of overwhelming force backing his demands.\n\n#bold Did You Know?#! Mongol taxation was systematic and relatively predictable compared to arbitrary medieval European taxes. They often taxed at lower rates than local rulers but collected with ruthless efficiency."
+ mt_hist.0012.a:0 "Pay the tribute as demanded"
+ mt_hist.0012.a.tt:0 "Expensive but maintains good standing"
+ mt_hist.0012.b:0 "Resist and risk Mongol displeasure"
+ mt_hist.0012.b.tt:0 "May face severe consequences"
+
+ # 0013: Trading with Mongol Empire
+ mt_hist.0013.t:0 "Goods from the Ends of the Earth"
+ mt_hist.0013.desc:0 "Under Mongol protection, your caravans reach markets you once only heard about in travelers' tales. Chinese silk of astonishing quality. Porcelain that seems almost translucent. Spices from lands you cannot pronounce. And flowing westward: European woolens, Venetian glass, Damascus steel.\n\nThe Mongols facilitate this trade with a sophisticated system of way-stations, protection, and even paper credit notes that work across their empire. Never has trade between East and West been so profitable - or so well organized.\n\n#bold Did You Know?#! The Mongol Empire created history's largest contiguous land empire and connected trade networks from Korea to Hungary. They introduced paper money concepts to the West and established the first transcontinental postal system."
+ mt_hist.0013.a:0 "Import Chinese luxuries for Western markets"
+ mt_hist.0013.a.tt:0 "High investment but potentially enormous profits"
+ mt_hist.0013.b:0 "Trade in horses and northern goods"
+ mt_hist.0013.b.tt:0 "Steady profits from steppe trade"
+
+ # 0014: Mongol patronage
+ mt_hist.0014.t:0 "The Khan's Merchant"
+ mt_hist.0014.desc:0 "A remarkable honor has been offered: the position of official merchant to one of the Mongol khans. This would make you part of the Mongol administrative system, with access to resources and protection beyond anything a private merchant could achieve.\n\nYou would be expected to organize trade for the khan, acquire rare goods, and serve as his agent in commercial matters. The wealth and prestige would be considerable - but you would also be bound to Mongol service, your fortunes tied to theirs.\n\n#bold Did You Know?#! The Mongols employed many foreign merchants in official capacities, including Muslims, Christians, and Jews. These 'ortaq' (merchant partners) often became enormously wealthy and wielded significant political influence."
+ mt_hist.0014.a:0 "Accept this prestigious position"
+ mt_hist.0014.a.tt:0 "Enormous benefits but tied to Mongol fortunes"
+ mt_hist.0014.b:0 "Politely decline and maintain independence"
+ mt_hist.0014.b.tt:0 "Keep freedom but lose patronage"
+
+ # 0015: Mongol Empire fragments
+ mt_hist.0015.t:0 "The Empire Splinters"
+ mt_hist.0015.desc:0 "The great Mongol Empire is fracturing. Where once a single yarliq (decree) from the Great Khan commanded obedience from Korea to Hungary, now rival khans dispute succession and territories. The Golden Horde, the Ilkhanate, the Chagatai Khanate - each going its own way.\n\nFor merchants, this fragmentation brings challenges. The seamless Silk Road is now divided between competing khanates. Where one yarliq once guaranteed safe passage everywhere, now you need separate arrangements with each successor state. The greatest trade network ever created is breaking apart.\n\n#bold Did You Know?#! After Möngke Khan's death in 1259, the Mongol Empire split into four main khanates. Despite political fragmentation, trade continued but became more complex and expensive."
+ mt_hist.0015.a:0 "Adapt to the new reality of competing khanates"
+ mt_hist.0015.a.tt:0 "More difficult but still profitable"
+
+ ####################################
+ # CRUSADES EVENTS (0016-0023)
+ ####################################
+
+ # 0016: Crusade declared
+ mt_hist.0016.t:0 "The Cross and the Caravan"
+ mt_hist.0016.desc:0 "The Pope has called for crusade! Across Christendom, nobles take up the cross, and armies begin to assemble. The faithful see holy war; merchants see opportunity.\n\nCrusader armies need everything - weapons, armor, food, horses, tents, rope, nails, grain, salted meat. They need ships to transport them. Once in the Holy Land, they'll need steady supply lines. And if they succeed, new markets will open in the Levant for spices, silk, and Eastern luxuries.\n\nThis could make your fortune - if you have the capital to invest and the courage to supply armies marching into war.\n\n#bold Did You Know?#! The Crusades (1095-1291) were as much commercial ventures as religious ones. Italian city-states like Venice and Genoa made enormous fortunes supplying crusaders and establishing trade posts in the Levant."
+ mt_hist.0016.a:0 "Supply the crusader armies"
+ mt_hist.0016.a.tt:0 "Profitable and gains piety"
+ mt_hist.0016.b:0 "Focus on Eastern luxury trade opportunities"
+ mt_hist.0016.b.tt:0 "Access to spices and silk from the Levant"
+
+ # 0017: Crusader states established
+ mt_hist.0017.t:0 "Outremer: The Land Beyond the Sea"
+ mt_hist.0017.desc:0 "The Crusaders have succeeded beyond expectation, establishing Christian kingdoms in the Holy Land - Outremer, they call it, the land beyond the sea. Jerusalem, Antioch, Tripoli, Edessa - Christian banners fly over cities that were Muslim for four centuries.\n\nFor merchants, this creates unprecedented opportunities. Permanent trade posts in the Levant, direct access to silk road termini, the ability to trade with both Christian and Muslim merchants. The question is whether to commit resources to establishing permanent operations in these new, fragile kingdoms.\n\n#bold Did You Know?#! The Crusader States (1098-1291) became major commercial hubs despite constant warfare. Italian merchants established permanent colonies called 'fondaci' with extraterritorial privileges."
+ mt_hist.0017.a:0 "Establish a permanent trade post in Outremer"
+ mt_hist.0017.a.tt:0 "Expensive but grants long-term access to Levantine trade"
+ mt_hist.0017.b:0 "Continue as traveling merchant without fixed assets"
+ mt_hist.0017.b.tt:0 "Lower investment, less risk, modest profits"
+
+ # 0018: Trading with both sides
+ mt_hist.0018.t:0 "Walking a Dangerous Line"
+ mt_hist.0018.desc:0 "Your business success in Outremer depends on a delicate balancing act: trading with both Christian and Muslim merchants. The finest goods often come from Muslim lands - Damascus steel, spices from Egypt, silk from Syria. But Christian authorities watch suspiciously, and zealots mutter about 'trading with the infidel.'\n\nYet many of the most successful merchants maintain contacts on both sides of the conflict. Commerce, it seems, respects no holy war. The question is whether you have the diplomatic skill to navigate these treacherous waters.\n\n#bold Did You Know?#! Despite constant warfare, Christian and Muslim merchants regularly traded with each other during the Crusades. Treaties often included commercial clauses, and market days saw peaceful exchange even during military campaigns."
+ mt_hist.0018.a:0 "Maintain profitable relations with both sides"
+ mt_hist.0018.a.tt:0 "Requires high diplomacy but very profitable"
+ mt_hist.0018.b:0 "Trade only with Christian merchants"
+ mt_hist.0018.b.tt:0 "Safer but less profitable"
+ mt_hist.0018.c:0 "Focus on Muslim markets for better goods"
+ mt_hist.0018.c.tt:0 "More profitable but politically dangerous"
+
+ # 0019: Crusade fails
+ mt_hist.0019.t:0 "The Cross Falls"
+ mt_hist.0019.desc:0 "Disaster! The crusade has failed catastrophically. The Christian army has been destroyed, its leaders captured or killed. Muslim forces retake cities, and Christian merchants flee for their lives.\n\nYour trade post, your investments, your carefully built network in the Levant - all are in jeopardy. Refugees pour into ports seeking any ship westward. Those who hesitate risk being trapped when the cities fall.\n\n#bold Did You Know?#! Several crusades ended in complete failure, most notably the Second Crusade (1147-1149) and various later expeditions. Each failure disrupted Levantine trade for years."
+ mt_hist.0019.a:0 "Evacuate immediately and cut our losses"
+ mt_hist.0019.a.tt:0 "Salvage what we can and escape"
+
+ # 0020: Venetian competition
+ mt_hist.0020.t:0 "The Venetian Threat"
+ mt_hist.0020.desc:0 "Venice has turned the crusades into a commercial empire. Venetian merchants dominate shipping to the Holy Land. They've negotiated special trading privileges. Their fondaco in Acre is more impressive than the king's palace. And now they're using their crusade profits to undercut your prices and squeeze you out of markets.\n\nThe Venetians operate with the backing of their powerful republic, pooling resources that no individual merchant can match. You must find a way to compete, cooperate, or specialize in markets they haven't dominated.\n\n#bold Did You Know?#! Venice made enormous profits from the Crusades, even famously diverting the Fourth Crusade to sack Constantinople (1204) for commercial advantage. They essentially monopolized Eastern Mediterranean trade by the late 1200s."
+ mt_hist.0020.a:0 "Compete aggressively for market share"
+ mt_hist.0020.a.tt:0 "High risk - Venetians are powerful"
+ mt_hist.0020.b:0 "Seek cooperation with Venetian merchants"
+ mt_hist.0020.b.tt:0 "May gain partnership with powerful allies"
+ mt_hist.0020.c:0 "Focus on markets Venetians ignore"
+ mt_hist.0020.c.tt:0 "Safer strategy of market differentiation"
+
+ # 0021: Military orders need supplies
+ mt_hist.0021.t:0 "The Knights Templar Require Provisions"
+ mt_hist.0021.desc:0 "Representatives of the Knights Templar have approached you with a business proposition. The military orders - Templars, Hospitallers, Teutonic Knights - maintain permanent garrisons in the Holy Land and need constant supplies: weapons, armor, horses, food, building materials.\n\nThey offer steady contracts, regular payment, and the prestige of supplying the Church's holy warriors. They may pay slightly less than open market prices, but their word is gold, and their protection invaluable.\n\n#bold Did You Know?#! The Military Orders became major economic powers, running estates, banking operations, and trading networks across Europe and the Levant. The Templars essentially invented international banking."
+ mt_hist.0021.a:0 "Supply the Knights Templar"
+ mt_hist.0021.a.tt:0 "Steady contracts and high piety gains"
+ mt_hist.0021.b:0 "Supply the Knights Hospitaller"
+ mt_hist.0021.b.tt:0 "Reliable income and religious prestige"
+
+ # 0022: Pilgrimage trade booms
+ mt_hist.0022.t:0 "The Pilgrim Traffic"
+ mt_hist.0022.desc:0 "With Jerusalem in Christian hands, pilgrims flood to the Holy Land in numbers not seen for centuries. They need everything: passage on ships, lodging, food, guides, protection, and most lucratively, holy relics and souvenirs to bring home.\n\nPilgrims are often wealthy - nobles doing penance, merchants seeking blessing, clergy on holy duty. They spend freely on anything connected to sacred sites. A profitable business can be built entirely around serving pilgrims.\n\n#bold Did You Know?#! Medieval pilgrimage was big business. Pilgrims to Jerusalem might spend the equivalent of several years' income. A whole industry arose around providing 'relics' (real or dubious) and pilgrim badges."
+ mt_hist.0022.a:0 "Cater to the pilgrimage trade"
+ mt_hist.0022.a.tt:0 "Profitable and pious business"
+
+ # 0023: Crusader state collapse
+ mt_hist.0023.t:0 "The Fall of Acre"
+ mt_hist.0023.desc:0 "The end has come. Acre, the last great Christian city in the Holy Land, is under siege. Mamluk armies surround it with overwhelming force. The docks are chaos as merchants, nobles, and refugees fight for space on the last ships leaving.\n\nYou must decide now: evacuate everything you can salvage, or gamble that the city will hold and stay to protect your investments. Those who flee lose much but live. Those who stay risk losing everything - including their lives.\n\n#bold Did You Know?#! The Fall of Acre in 1291 ended the Crusader States after nearly two centuries. It was a catastrophe for Levantine trade, forcing European merchants to find new routes to Eastern goods - eventually leading to the Age of Exploration."
+ mt_hist.0023.a:0 "Evacuate immediately with whatever we can carry"
+ mt_hist.0023.a.tt:0 "Salvage some assets and escape"
+ mt_hist.0023.b:0 "Stay and defend our investments"
+ mt_hist.0023.b.tt:0 "Extremely risky but might preserve everything"
+
+ ####################################
+ # VIKING AGE EVENTS (0024-0030)
+ ####################################
+
+ # 0024: Viking raids threaten trade
+ mt_hist.0024.t:0 "From the Fury of the Northmen..."
+ mt_hist.0024.desc:0 "'From the fury of the Northmen, O Lord, deliver us!' So the monks pray, and merchants have reason to join their prayers. Viking longships strike coastal trade routes with terrifying speed and ferocity. They appear from nowhere, seize cargo, burn ships, and vanish before defenders can respond.\n\nYour coastal trade routes have become extremely dangerous. Some merchants pay Danegeld - protection money to Viking chieftains. Others arm their ships with warriors. A few whisper of actually trading with the Norse raiders, turning enemies into business partners.\n\n#bold Did You Know?#! The Viking Age (793-1066) devastated coastal trade initially, but Vikings were also merchants. They established trade networks from Baghdad to North America and founded trading cities like Dublin and York."
+ mt_hist.0024.a:0 "Pay Danegeld to ensure safe passage"
+ mt_hist.0024.a.tt:0 "Expensive but protects trade routes"
+ mt_hist.0024.b:0 "Arm our merchant ships for defense"
+ mt_hist.0024.b.tt:0 "Costly but may deter raiders"
+ mt_hist.0024.c:0 "Attempt to establish trade relations with Norse merchants"
+ mt_hist.0024.c.tt:0 "Turn raiders into trading partners"
+
+ # 0025: Trading with Vikings
+ mt_hist.0025.t:0 "The Norse Connection"
+ mt_hist.0025.desc:0 "You've made contact with Norse merchants - and discovered they're not just raiders. They bring furs of exceptional quality from the frozen north: sable, ermine, fox. They trade amber from Baltic shores, walrus ivory from mysterious northern lands, and yes, slaves from their raids.\n\nA Norse trader eyes your Mediterranean goods with interest. 'Good trade,' he says in broken Latin, his hand on his axe more from habit than threat. 'You have wine, oil, silver. We have furs, amber. Also' - he lowers his voice - 'we can make sure your ships not burned. Good for business, yes?'\n\n#bold Did You Know?#! Vikings were sophisticated traders who connected northern furs and amber with Mediterranean luxuries. They established the Varangian Route from Scandinavia to Constantinople and traded as far as Baghdad."
+ mt_hist.0025.a:0 "Trade in furs and amber"
+ mt_hist.0025.a.tt:0 "Profitable and gains Viking protection"
+ mt_hist.0025.b:0 "Trade in slaves as well"
+ mt_hist.0025.b.tt:0 "Very profitable but morally questionable and loses piety"
+
+ # 0026: Norse settlements become partners
+ mt_hist.0026.t:0 "The Danelaw Merchants"
+ mt_hist.0026.desc:0 "Time has transformed raiders into settlers. The Norse have established permanent settlements - the Danelaw in England, Normandy in Francia, kingdoms in Ireland. These former Vikings are now farmers, craftsmen, and merchants.\n\nAnd they remember your fair dealing when they were still raiders. Now they offer permanent trading partnerships, access to northern goods, and connections to the vast Norse trading network stretching from Iceland to the Rus lands.\n\n#bold Did You Know?#! Viking settlements quickly became major commercial centers. York (Jorvik) became one of Europe's largest cities. Normandy was named for 'Northmen' and within a century these Vikings had conquered England and Sicily."
+ mt_hist.0026.a:0 "Establish permanent Norse trade partnerships"
+ mt_hist.0026.a.tt:0 "Access to extensive northern trade networks"
+
+ # 0027: Varangian Guard route
+ mt_hist.0027.t:0 "The Road to Miklagard"
+ mt_hist.0027.desc:0 "Your Norse trading partners speak of a legendary route: down the Russian rivers from the Baltic to Constantinople - Miklagard, the Great City, as they call it. Swedish Rus merchants have established fortified trading posts along this route, dealing with Slavic tribes, Khazars, and ultimately the Byzantine Empire.\n\nThe Varangian Guard - Norse warriors in Byzantine service - ensure this route's safety. Following it means accessing both northern furs and Byzantine luxuries, connecting two worlds. But it's a long, dangerous journey through wild lands.\n\n#bold Did You Know?#! The Varangian Route connected Scandinavia to Constantinople via Russian rivers. Viking Rus founded cities like Novgorod and Kiev. The Byzantine Emperors employed a Varangian Guard of Norse warriors famous for their loyalty."
+ mt_hist.0027.a:0 "Follow the Varangian route to Constantinople"
+ mt_hist.0027.a.tt:0 "Expensive and dangerous but enormously profitable"
+ mt_hist.0027.b:0 "Too risky for the potential reward"
+ mt_hist.0027.b.tt:0 "Avoid the danger but miss the opportunity"
+
+ # 0028: Viking conversion to Christianity
+ mt_hist.0028.t:0 "The Northmen Accept the Cross"
+ mt_hist.0028.desc:0 "Remarkable news: the Norse kings are converting to Christianity! Denmark, Norway, even Iceland - the old gods are giving way to the Cross. What this means for you is the end of the cultural barrier that made trading with Northmen dangerous and suspect.\n\nChristian Norse merchants can now be full partners, no longer viewed as heathen raiders. Church networks open to them - and to you through them. The violent Viking Age is transforming into something new: Christian Norse kingdoms integrated into European Christendom's commercial networks.\n\n#bold Did You Know?#! Scandinavia's conversion (roughly 950-1050) was partly motivated by trade. Christian merchants could access more markets, and kings saw conversion as politically and economically advantageous."
+ mt_hist.0028.a:0 "Embrace expanded trade with Christian Norse"
+ mt_hist.0028.a.tt:0 "Access to both Norse goods and Christian markets"
+
+ # 0029: Baltic trade opportunities
+ mt_hist.0029.t:0 "The Baltic Sea Beckons"
+ mt_hist.0029.desc:0 "The Baltic Sea is becoming a major commercial zone. Furs, amber, timber, and wax flow south. Silver, wine, and manufactured goods flow north. Trading towns dot the coasts: Visby on Gotland, Lübeck, Riga, Novgorod.\n\nEstablishing yourself in Baltic trade requires investment in ships, contacts with local merchants, and knowledge of northern conditions. But those who succeed tap into resources unavailable anywhere else.\n\n#bold Did You Know?#! Baltic trade became so important that it spawned the Hanseatic League, medieval Europe's most powerful trading confederation. Baltic amber, furs, and timber were valued throughout Europe and the Islamic world."
+ mt_hist.0029.a:0 "Establish Baltic trade routes"
+ mt_hist.0029.a.tt:0 "Opens northern trade networks, may lead to Hanseatic League"
+ mt_hist.0029.b:0 "Not worth the investment"
+ mt_hist.0029.b.tt:0 "Avoid the risk and expense"
+
+ # 0030: Norse exploration brings new goods
+ mt_hist.0030.t:0 "Goods from Lands Unknown"
+ mt_hist.0030.desc:0 "Norse explorers have returned from lands beyond the known world. Iceland. Greenland. Some whisper of forests and meadows even further west. They bring exotic goods: pure white gyrfalcons prized by nobles, walrus ivory superior to elephant ivory, the pelts of polar bears.\n\nThese rare northern luxuries command extraordinary prices. A single white falcon might be worth more than a warhorse. Your Norse contacts can provide these treasures - for a price.\n\n#bold Did You Know?#! Vikings reached North America around 1000 CE, centuries before Columbus. They traded Arctic goods like walrus ivory, which became highly prized. Icelandic falcons were gifts worthy of emperors."
+ mt_hist.0030.a:0 "Import exotic northern luxuries"
+ mt_hist.0030.a.tt:0 "Rare goods command premium prices"
+
+ ####################################
+ # ISLAMIC GOLDEN AGE (0031-0037)
+ ####################################
+
+ # 0031: Baghdad House of Wisdom
+ mt_hist.0031.t:0 "The City of Peace and Learning"
+ mt_hist.0031.desc:0 "Baghdad, the City of Peace, jewel of the Abbasid Caliphate. The House of Wisdom draws scholars from across the world - Muslim, Christian, Jewish, and pagan - to translate and preserve the knowledge of Greece, Persia, India. Here, intellectual achievement is prized above birth.\n\nAs a merchant with learning, you discover a market for knowledge itself. Books are treasures worth fortunes. Scientific instruments - astrolabes, compasses, advanced glassware - command premium prices. Wealthy patrons compete for rare manuscripts.\n\n#bold Did You Know?#! The Islamic Golden Age (8th-13th centuries) preserved and advanced Greek learning, developed algebra, revolutionized medicine, and made crucial advances in astronomy, optics, and engineering. The House of Wisdom in Baghdad was like a combination of library, university, and research institute."
+ mt_hist.0031.a:0 "Trade in books and manuscripts"
+ mt_hist.0031.a.tt:0 "Knowledge is wealth - gain learning and profit"
+ mt_hist.0031.b:0 "Trade in scientific instruments"
+ mt_hist.0031.b.tt:0 "Supply scholars with tools of learning"
+
+ # 0032: Sponsor scholars
+ mt_hist.0032.t:0 "A Merchant Becomes a Patron"
+ mt_hist.0032.desc:0 "A renowned scholar approaches you with a proposition. He is translating Aristotle from Greek to Arabic, with commentary that will advance understanding of natural philosophy. But he needs a patron to support his work - scribes, materials, time to think rather than scrape for survival.\n\nIn return for your patronage, he offers dedication of the work to you, and the opportunity to purchase the first copies. Your name would be associated with advancing knowledge itself - prestige that money alone cannot buy.\n\n#bold Did You Know?#! Islamic scholars preserved and advanced ancient knowledge through massive translation movements. Wealthy merchants and rulers competed to sponsor scholars, seeing intellectual patronage as a path to immortal fame."
+ mt_hist.0032.a:0 "Sponsor the translation work"
+ mt_hist.0032.a.tt:0 "Gain prestige and learning through patronage"
+ mt_hist.0032.b:0 "Focus on commercial profit rather than scholarship"
+ mt_hist.0032.b.tt:0 "More immediately profitable but less prestigious"
+
+ # 0033: Abbasid patronage
+ mt_hist.0033.t:0 "The Caliph's Favor"
+ mt_hist.0033.desc:0 "Your reputation as both merchant and patron of learning has reached the caliphal court. The Caliph - Commander of the Faithful, Shadow of God on Earth - has expressed interest in appointing you as an official merchant, one of those who trade on behalf of the court.\n\nThis would bring enormous prestige and profit, but also bind you to the Abbasid court's fortunes. You would be expected to acquire rare goods for the Caliph, organize trade ventures, and provide counsel on commercial matters.\n\n#bold Did You Know?#! Abbasid Caliphs were sophisticated patrons of trade and learning. They employed court merchants, often non-Muslims, in positions of significant power and wealth. The Radhanites (Jewish merchants) operated under caliphal protection across continents."
+ mt_hist.0033.a:0 "Accept the honor of caliphal appointment"
+ mt_hist.0033.a.tt:0 "Enormous prestige and wealth, tied to Abbasid fortunes"
+ mt_hist.0033.b:0 "Politely maintain independence"
+ mt_hist.0033.b.tt:0 "Keep freedom but forgo caliphal benefits"
+
+ # 0034: Islamic banking practices
+ mt_hist.0034.t:0 "The Wisdom of Hawala"
+ mt_hist.0034.desc:0 "A Muslim merchant explains a sophisticated system to you: hawala, a method of transferring value without physically moving money. Through a network of trusted agents, you can arrange payment in one city and collection in another, avoiding the dangers of transporting coin.\n\nHe also explains concepts like mudaraba (profit-sharing partnerships) and Islamic prohibitions on usury - which have led to creative financial instruments that achieve similar results through profit-sharing rather than interest.\n\n#bold Did You Know?#! Islamic finance developed sophisticated banking practices centuries ahead of Europe. The hawala system (still used today) enabled safe long-distance trade. Islamic banking's prohibition on riba (usury) led to innovative profit-sharing and partnership structures."
+ mt_hist.0034.a:0 "Adopt these advanced banking methods"
+ mt_hist.0034.a.tt:0 "Gain access to sophisticated financial tools"
+ mt_hist.0034.b:0 "Stick to traditional cash transactions"
+ mt_hist.0034.b.tt:0 "Miss out on financial innovation"
+
+ # 0035: Trade fairs in Islamic cities
+ mt_hist.0035.t:0 "The Great Fair of Damascus"
+ mt_hist.0035.desc:0 "You arrive at the great fair of Damascus during the height of the trading season. The scale is breathtaking - merchants from India, China, East Africa, the Byzantine Empire, and all across the Islamic world converge here.\n\nYou see goods you've never imagined: Chinese porcelain that seems translucent as an eggshell, Indian muslins so fine they can pass through a finger ring, spices whose very names are exotic. Here, fortunes can be made in a single transaction - or lost just as quickly.\n\n#bold Did You Know?#! Islamic trade fairs were the medieval world's great commercial gatherings. Damascus, Baghdad, and Cordoba hosted fairs that drew merchants from three continents. Complex credit systems and contracts enabled large-scale international trade."
+ mt_hist.0035.a:0 "Invest heavily in fair transactions"
+ mt_hist.0035.a.tt:0 "High investment, potential for great profit"
+ mt_hist.0035.b:0 "Send agents with modest capital"
+ mt_hist.0035.b.tt:0 "Safer, smaller-scale participation"
+
+ # 0036: Spice routes through Islamic world
+ mt_hist.0036.t:0 "The Spice Road"
+ mt_hist.0036.desc:0 "All spice routes lead through the Islamic world. Pepper, cinnamon, cloves, nutmeg - these treasures flow from India and the Spice Islands through Muslim-controlled ports and trade networks. Muslim merchants have monopolized this trade for centuries through sophisticated networks and knowledge passed through generations.\n\nTo truly profit from spices, you must integrate yourself into these Islamic trade networks, form partnerships with Muslim merchants, and learn the closely guarded routes and contacts.\n\n#bold Did You Know?#! Muslim merchants controlled the spice trade for centuries, establishing networks from Indonesia to Europe. European desire to bypass these networks later drove the Age of Exploration. Spices were worth more than gold by weight."
+ mt_hist.0036.a:0 "Invest heavily in the spice trade"
+ mt_hist.0036.a.tt:0 "Expensive but spices are worth more than gold"
+ mt_hist.0036.b:0 "Modest participation in spice trading"
+ mt_hist.0036.b.tt:0 "Lower investment, good profits"
+
+ # 0037: Islamic merchants as partners or competitors
+ mt_hist.0037.t:0 "The Merchant from Cairo"
+ mt_hist.0037.desc:0 "You face a choice regarding a prominent Muslim merchant. He operates in the same markets, seeks the same goods, and has contacts you lack. You could view him as a competitor to be outmaneuvered - or as a potential partner whose knowledge and networks could benefit you both.\n\nHe has extended cautious overtures about cooperation. Muslim-Christian business partnerships are not uncommon, despite political and religious tensions. The question is whether cooperation or competition serves you better.\n\n#bold Did You Know?#! Despite Crusades and religious conflicts, Christian and Muslim merchants regularly formed partnerships throughout the medieval period. Commerce often transcended religious boundaries, with family firms operating across religious lines."
+ mt_hist.0037.a:0 "Form a profitable partnership"
+ mt_hist.0037.a.tt:0 "Access to Islamic trade networks and knowledge"
+ mt_hist.0037.b:0 "Compete for market dominance"
+ mt_hist.0037.b.tt:0 "Risky competition with experienced trader"
+
+ ####################################
+ # VENETIAN/GENOESE RIVALRY (0038-0040)
+ ####################################
+
+ # 0038: Venice-Genoa trade war
+ mt_hist.0038.t:0 "When Merchant Republics Clash"
+ mt_hist.0038.desc:0 "The Mediterranean is dividing between Venice and Genoa, two merchant republics whose rivalry dominates seaborne trade. Venice controls the routes to Egypt and Constantinople. Genoa dominates the Black Sea and western Mediterranean. And now they're at war - not just militarily, but commercially.\n\nAs an independent merchant operating in Italian waters, you're being pressured to choose sides. Venice offers access to its Egyptian spice trade. Genoa promises entry into Black Sea networks. Neutrality means both will view you with suspicion.\n\n#bold Did You Know?#! The Venetian-Genoese Wars (1256-1381) were fought primarily over trade routes and commercial privileges. These wars involved major naval battles and shaped Mediterranean commerce for centuries."
+ mt_hist.0038.a:0 "Side with Venice"
+ mt_hist.0038.a.tt:0 "Access to Venetian trade networks, enmity with Genoa"
+ mt_hist.0038.b:0 "Side with Genoa"
+ mt_hist.0038.b.tt:0 "Access to Genoese networks, enmity with Venice"
+ mt_hist.0038.c:0 "Attempt to remain neutral"
+ mt_hist.0038.c.tt:0 "Both sides will distrust you"
+
+ # 0039: Battle of Curzola
+ mt_hist.0039.t:0 "The Battle That Changed the Balance"
+ mt_hist.0039.desc:0 "News arrives of a massive naval battle off Curzola. Venetian and Genoese war galleys clashed in one of the largest naval engagements in history. Thousands fought, hundreds of ships were involved, and the outcome tilts the commercial balance of the Mediterranean.\n\nFor merchants aligned with the winning side, this means expanded opportunities and prestige. For those on the losing side, it's a disaster that may take years to recover from.\n\n#bold Did You Know?#! The Battle of Curzola (1298) was one of history's largest galley battles. Venice lost, and Marco Polo was captured - writing his famous Travels while imprisoned by Genoa. Despite the loss, Venice ultimately won the long war."
+ mt_hist.0039.a:0 "Celebrate our side's victory!"
+ mt_hist.0039.a.tt:0 "Gain spoils and expanded opportunities"
+ mt_hist.0039.b:0 "Celebrate our side's victory!"
+ mt_hist.0039.b.tt:0 "Gain spoils and expanded opportunities"
+ mt_hist.0039.c:0 "Mourn our side's defeat"
+ mt_hist.0039.c.tt:0 "Suffer losses from the defeat"
+
+ # 0040: Peace treaty - new arrangements
+ mt_hist.0040.t:0 "The Treaty of Turin"
+ mt_hist.0040.desc:0 "After years of war, Venice and Genoa have made peace. The treaty divides the Mediterranean into spheres of influence, establishes protocols for neutral ports, and creates mechanisms for resolving commercial disputes without resorting to war.\n\nFor merchants, this brings blessed relief. Trade routes reopen. Ships can sail without fear of being seized as enemy vessels. Markets stabilize. It's time to rebuild what war destroyed and profit from the peace.\n\n#bold Did You Know?#! Peace treaties between Venice and Genoa often included detailed commercial clauses, dividing markets and establishing trade protocols. These arrangements shaped Mediterranean commerce until Ottoman expansion changed everything."
+ mt_hist.0040.a:0 "Profit from the restored peace"
+ mt_hist.0040.a.tt:0 "Access to full Mediterranean trade networks"
+
+ ####################################
+ # ADDITIONAL HISTORICAL EVENTS (0041-0050)
+ ####################################
+
+ # 0041: Hanseatic League formation
+ mt_hist.0041.t:0 "The Hanseatic League Forms"
+ mt_hist.0041.desc:0 "Something unprecedented is happening in the Baltic and North Sea: merchant cities are banding together into a confederation called the Hanseatic League. Lübeck, Hamburg, Bremen, Danzig, Novgorod, and dozens of other cities are uniting to protect trade, negotiate collectively with kings, and establish common standards.\n\nAs a Baltic merchant, you're invited to join this league. Membership brings access to Hanseatic privileges across northern Europe, protection by the League's collective power, and participation in an organization that rivals kingdoms in wealth and influence.\n\n#bold Did You Know?#! The Hanseatic League (c.1200-1600s) was medieval Europe's most powerful trading organization, dominating North and Baltic Sea trade. At its height it included nearly 200 cities and fought wars against kingdoms."
+ mt_hist.0041.a:0 "Join the Hanseatic League"
+ mt_hist.0041.a.tt:0 "Access to vast northern trading network"
+ mt_hist.0041.b:0 "Maintain independence"
+ mt_hist.0041.b.tt:0 "Freedom but loss of League benefits"
+
+ # 0042: Portuguese exploration
+ mt_hist.0042.t:0 "The Portuguese Venture into Unknown Seas"
+ mt_hist.0042.desc:0 "Portugal is sending expeditions down the African coast into unknown waters. Prince Henry - they're calling him 'the Navigator' - sponsors voyage after voyage, each pushing further south. They seek the source of African gold, a route to Indian spices that bypasses Muslim middlemen, and the legendary kingdom of Prester John.\n\nThese are risky ventures. Ships disappear into the unknown. But those that return bring gold, ivory, exotic goods, and knowledge. And they whisper of even greater prizes if a route to India can be found.\n\n#bold Did You Know?#! Portuguese exploration (1415-1500s) revolutionized global trade. They rounded Africa, reached India, and broke the Muslim monopoly on spice trade. This Age of Discovery reshaped the medieval trading world completely."
+ mt_hist.0042.a:0 "Invest in Portuguese exploration ventures"
+ mt_hist.0042.a.tt:0 "High risk but potentially revolutionary profits"
+ mt_hist.0042.b:0 "Too speculative and dangerous"
+ mt_hist.0042.b.tt:0 "Avoid the risk"
+
+ # 0043: Fall of Constantinople
+ mt_hist.0043.t:0 "Constantinople Has Fallen!"
+ mt_hist.0043.desc:0 "The impossible has happened. Constantinople, the Queen of Cities, bulwark of Christendom for a thousand years, has fallen to the Ottoman Turks. The news spreads like wildfire: the walls breached, the Emperor dead, the great city now Turkish.\n\nFor merchants, this is catastrophic. Constantinople was the gateway between East and West, the final terminus of the Silk Road, the greatest trading city in Christendom. Under Ottoman control, traditional routes may be closed or heavily taxed. The entire structure of Eastern trade must be reimagined.\n\n#bold Did You Know?#! The Fall of Constantinople (1453) ended the Byzantine Empire and shocked Europe. It motivated European exploration of alternative routes to Asia, contributing to Columbus's voyage and the Age of Discovery."
+ mt_hist.0043.a:0 "Negotiate trade rights with the Ottomans"
+ mt_hist.0043.a.tt:0 "Adapt to new Ottoman control"
+ mt_hist.0043.b:0 "Seek alternative trade routes entirely"
+ mt_hist.0043.b.tt:0 "May lead to Age of Discovery opportunities"
+
+ # 0044: Hundred Years War disruption
+ mt_hist.0044.t:0 "The Endless War"
+ mt_hist.0044.desc:0 "France and England have been at war for what seems like generations. Trade routes through Francia are constantly disrupted. English wool supplies are irregular. French wine shipments are seized by one side or the other. Mercenary companies roam the countryside, as dangerous to merchants as to anyone else.\n\nYet war also creates opportunities. Both sides need supplies, weapons, provisions. There's profit in war - if you're willing to risk dealing with both sides, or being caught in the middle.\n\n#bold Did You Know?#! The Hundred Years War (1337-1453) massively disrupted European trade but also drove innovation in military supply chains and international finance. Some merchants made fortunes supplying both sides."
+ mt_hist.0044.a:0 "Supply both sides secretly"
+ mt_hist.0044.a.tt:0 "Very risky but potentially very profitable"
+ mt_hist.0044.b:0 "Focus on markets away from the war zones"
+ mt_hist.0044.b.tt:0 "Safer but less profitable"
+
+ # 0045: Italian Renaissance patronage
+ mt_hist.0045.t:0 "The New Learning"
+ mt_hist.0045.desc:0 "Something remarkable is happening in Italian cities: a cultural renaissance. Artists, scholars, and architects are creating works of unprecedented beauty and learning. The Medici in Florence, the Sforzas in Milan, the Doges of Venice - wealthy families compete to sponsor the greatest talents.\n\nAs a successful merchant, you have the opportunity to join this patronage. Commission artworks, sponsor scholars, fund beautiful buildings. Your wealth can purchase a kind of immortality - your name associated with works of genius that will outlive you by centuries.\n\n#bold Did You Know?#! The Italian Renaissance (14th-17th centuries) was largely funded by wealthy merchant families. The Medici bank's profits paid for Michelangelo, Leonardo da Vinci, and much of Florence's artistic glory."
+ mt_hist.0045.a:0 "Become a great patron of the Renaissance"
+ mt_hist.0045.a.tt:0 "Enormous prestige and cultural legacy"
+ mt_hist.0045.b:0 "Provide modest support for artists"
+ mt_hist.0045.b.tt:0 "Some cultural prestige, less expensive"
+
+ # 0046: Byzantine silk industry
+ mt_hist.0046.t:0 "The Secret of Silk"
+ mt_hist.0046.desc:0 "For centuries, China monopolized silk production, and its secret methods were one of history's most closely guarded. But Byzantine agents once smuggled silkworm eggs out of China in hollow bamboo canes, establishing a silk industry in Constantinople.\n\nNow you've heard rumors of a Byzantine silk master who might be persuaded to share production secrets - for the right price. This knowledge could be worth a fortune, but acquiring it would be dangerous and possibly treasonous to the Byzantine Empire.\n\n#bold Did You Know?#! Byzantine monks smuggled silkworm eggs from China around 552 CE, breaking China's millennium-old monopoly. This industrial espionage transformed Mediterranean textile production and global trade."
+ mt_hist.0046.a:0 "Attempt to acquire silk production secrets"
+ mt_hist.0046.a.tt:0 "Requires high intrigue, very risky but potentially revolutionary"
+ mt_hist.0046.b:0 "Too dangerous - trade honestly"
+ mt_hist.0046.b.tt:0 "Safer, modest profits"
+
+ # 0047: Zheng He's treasure fleet
+ mt_hist.0047.t:0 "The Treasure Fleet from China"
+ mt_hist.0047.desc:0 "Incredible reports arrive: a Chinese fleet has appeared in the Indian Ocean. Not a merchant convoy, but a vast armada - hundreds of ships, tens of thousands of men, led by Admiral Zheng He. These 'treasure ships' dwarf anything European, some reportedly over 400 feet long.\n\nThe fleet carries exotic Chinese goods and trades for tribute and rarities. The Chinese Emperor wants to display the Middle Kingdom's magnificence. For merchants positioned to trade with this fleet, the opportunities are extraordinary - if brief, for who knows when or if they'll return?\n\n#bold Did You Know?#! Zheng He's expeditions (1405-1433) were the largest naval voyages before the modern era. His treasure ships were the world's largest wooden ships. China then withdrew from maritime exploration, changing global history."
+ mt_hist.0047.a:0 "Trade with the Chinese treasure fleet"
+ mt_hist.0047.a.tt:0 "Access to exotic Chinese goods and prestige"
+ mt_hist.0047.b:0 "The investment required is too steep"
+ mt_hist.0047.b.tt:0 "Miss unique opportunity"
+
+ # 0048: Trans-Saharan gold trade
+ mt_hist.0048.t:0 "The Gold Road Across the Sands"
+ mt_hist.0048.desc:0 "The trans-Saharan trade routes carry West African gold northward to the Mediterranean world. Mali and Ghana control gold sources so rich that their kings are fabulously wealthy - tales speak of Mansa Musa's pilgrimage to Mecca, where he gave away so much gold that he caused inflation in Egypt.\n\nJoining a trans-Saharan caravan means months crossing the most hostile desert on earth. Death from thirst, sandstorms, bandits. But those who survive return with gold, ivory, and exotic goods worth fortunes.\n\n#bold Did You Know?#! Trans-Saharan trade in gold, salt, and slaves was enormous. Mansa Musa's 1324 pilgrimage with tons of gold reportedly depressed gold prices in the Mediterranean for years. The trade made cities like Timbuktu fabulously wealthy."
+ mt_hist.0048.a:0 "Join a trans-Saharan gold caravan"
+ mt_hist.0048.a.tt:0 "Extremely dangerous but potentially very profitable"
+ mt_hist.0048.b:0 "The desert crossing is too dangerous"
+ mt_hist.0048.b.tt:0 "Avoid the risk"
+
+ # 0049: Spice Islands discoveries
+ mt_hist.0049.t:0 "The Spice Islands of Legend"
+ mt_hist.0049.desc:0 "Explorers speak of finally reaching the Spice Islands - the Moluccas - source of cloves and nutmeg. For centuries, these spices passed through so many middlemen that no European knew their origin. Now ships are returning directly from these legendary islands.\n\nThe profits are almost unbelievable. Spices that cost pennies in the Moluccas sell for hundreds of times that price in Europe. A single successful voyage could make you wealthy beyond dreams. Of course, many ships never return.\n\n#bold Did You Know?#! The search for direct access to the Spice Islands drove European exploration. Magellan's expedition (1519-1522) finally reached them by sailing west around the world. Nutmeg was worth more than gold by weight."
+ mt_hist.0049.a:0 "Finance an expedition to the Spice Islands"
+ mt_hist.0049.a.tt:0 "Enormous investment, extraordinary potential profits"
+ mt_hist.0049.b:0 "Too risky and expensive"
+ mt_hist.0049.b.tt:0 "Avoid the enormous risk"
+
+ # 0050: Champagne Fairs
+ mt_hist.0050.t:0 "The Great Fairs of Champagne"
+ mt_hist.0050.desc:0 "The Champagne Fairs are the commercial heart of medieval Europe. Four times a year, merchants from across Christendom converge on Champagne: Italians bringing Eastern spices and silks, Flemings with fine woolens, Germans with furs and metals, English with raw wool.\n\nBut the fairs are more than just trade. They're where financial instruments are developed, where credit networks form, where merchant law evolves. Attending the Champagne Fairs means entering the most sophisticated commercial environment in Europe.\n\n#bold Did You Know?#! The Champagne Fairs (12th-14th centuries) were medieval Europe's most important commercial gatherings. They pioneered letters of credit, bills of exchange, and international commercial law. Decline came when Italian merchants developed direct sea routes."
+ mt_hist.0050.a:0 "Attend the Champagne Fairs"
+ mt_hist.0050.a.tt:0 "Access to Europe's premier market and financial innovations"
+ mt_hist.0050.b:0 "Skip this year's fairs"
+ mt_hist.0050.b.tt:0 "Save money but miss opportunities"
