@@ -1,0 +1,765 @@
+##############################################
+# MERCHANTS AND TRADERS - AI MERCHANT EFFECTS
+# Version: 0.1.0
+##############################################
+#
+# This file implements the AI merchant system that creates dynamic NPC competition.
+# AI merchants actively create routes, respond to economic conditions, and compete
+# with the player for profitable markets.
+#
+# AI MERCHANT PERSONALITIES:
+# - aggressive: Takes risks, expands quickly, creates competing routes (70% action chance)
+# - cautious: Only profitable routes, saves gold, slow growth (30% action chance)
+# - opportunistic: Exploits market crashes/booms, flexible strategy (60% action chance)
+# - balanced: Mixed approach, reliable baseline (50% action chance)
+#
+# GAMEPLAY IMPACT:
+# - AI merchants create authentic competition for trade routes
+# - Markets feel alive with multiple actors pursuing profit
+# - Player must adapt to changing conditions as AI reacts to economics
+# - Aggressive AI may reduce player profits in shared markets (rivalry system)
+#
+##############################################
+
+##############################################
+# ai_become_merchant_effect
+# Converts qualifying NPCs into AI merchants
+##############################################
+# SCOPE: Character
+# USAGE: character = { ai_become_merchant_effect = yes }
+#
+# REQUIREMENTS:
+# - Adult (age >= 16)
+# - Unlanded or low-tier ruler (count/baron max)
+# - Stewardship 10+
+# - Gold 50+
+# - Not already a merchant
+# - 5% of qualifying characters become merchants when called
+##############################################
+ai_become_merchant_effect = {
+	save_temporary_scope_as = potential_merchant
+
+	# Only 5% of qualifying characters actually become merchants
+	random = {
+		chance = 5
+
+		# Mark as AI merchant
+		set_variable = {
+			name = mt_is_ai_merchant
+			value = yes
+		}
+
+		# Assign random personality (weighted distribution)
+		random_list = {
+			25 = { # Aggressive - high risk, high reward
+				set_variable = {
+					name = mt_ai_personality
+					value = flag:aggressive
+				}
+				set_variable = {
+					name = mt_ai_risk_tolerance
+					value = 80 # High risk tolerance (0-100 scale)
+				}
+				set_variable = {
+					name = mt_ai_expansion_speed
+					value = 70 # Fast expansion
+				}
+			}
+
+			20 = { # Cautious - low risk, slow growth
+				set_variable = {
+					name = mt_ai_personality
+					value = flag:cautious
+				}
+				set_variable = {
+					name = mt_ai_risk_tolerance
+					value = 20 # Low risk tolerance
+				}
+				set_variable = {
+					name = mt_ai_expansion_speed
+					value = 30 # Slow expansion
+				}
+			}
+
+			30 = { # Opportunistic - market timing specialist
+				set_variable = {
+					name = mt_ai_personality
+					value = flag:opportunistic
+				}
+				set_variable = {
+					name = mt_ai_risk_tolerance
+					value = 60 # Medium-high risk
+				}
+				set_variable = {
+					name = mt_ai_expansion_speed
+					value = 55 # Medium expansion
+				}
+			}
+
+			25 = { # Balanced - mixed strategy
+				set_variable = {
+					name = mt_ai_personality
+					value = flag:balanced
+				}
+				set_variable = {
+					name = mt_ai_risk_tolerance
+					value = 50 # Medium risk
+				}
+				set_variable = {
+					name = mt_ai_expansion_speed
+					value = 50 # Medium expansion
+				}
+			}
+		}
+
+		# Assign preferred goods based on location and personality
+		# Aggressive/Opportunistic prefer luxury goods (high profit)
+		# Cautious/Balanced prefer staples (stable demand)
+		if = {
+			limit = {
+				OR = {
+					has_variable = mt_ai_personality
+					is_target_in_variable_list = {
+						name = mt_ai_personality
+						target = flag:aggressive
+					}
+					is_target_in_variable_list = {
+						name = mt_ai_personality
+						target = flag:opportunistic
+					}
+				}
+			}
+			# Prefer luxury goods
+			random_list = {
+				40 = {
+					set_variable = {
+						name = mt_ai_preferred_goods
+						value = flag:luxury
+					}
+				}
+				30 = {
+					set_variable = {
+						name = mt_ai_preferred_goods
+						value = flag:spices
+					}
+				}
+				20 = {
+					set_variable = {
+						name = mt_ai_preferred_goods
+						value = flag:cloth
+					}
+				}
+				10 = {
+					set_variable = {
+						name = mt_ai_preferred_goods
+						value = flag:grain
+					}
+				}
+			}
+		}
+		else = {
+			# Prefer stable goods
+			random_list = {
+				40 = {
+					set_variable = {
+						name = mt_ai_preferred_goods
+						value = flag:grain
+					}
+				}
+				30 = {
+					set_variable = {
+						name = mt_ai_preferred_goods
+						value = flag:cloth
+					}
+				}
+				20 = {
+					set_variable = {
+						name = mt_ai_preferred_goods
+						value = flag:spices
+					}
+				}
+				10 = {
+					set_variable = {
+						name = mt_ai_preferred_goods
+						value = flag:luxury
+					}
+				}
+			}
+		}
+
+		# Initialize AI merchant capital (starting funds)
+		set_variable = {
+			name = mt_ai_merchant_capital
+			value = gold
+		}
+
+		# Track when they became a merchant
+		set_variable = {
+			name = mt_ai_merchant_start_date
+			value = current_date
+		}
+
+		debug_log = "[MT AI] New AI merchant created"
+		debug_log_scopes = yes
+	}
+}
+
+##############################################
+# ai_merchant_decision_making_effect
+# Monthly AI decision logic based on personality
+##############################################
+# SCOPE: Character (AI merchant)
+# USAGE: character = { ai_merchant_decision_making_effect = yes }
+#
+# BEHAVIOR BY PERSONALITY:
+# - Aggressive: 70% chance to act, creates routes aggressively, takes risks
+# - Cautious: 30% chance to act, only creates profitable routes, hoards gold
+# - Opportunistic: 60% chance to act, exploits market conditions
+# - Balanced: 50% chance to act, mixed strategy
+##############################################
+ai_merchant_decision_making_effect = {
+	save_temporary_scope_as = ai_merchant
+
+	# Aggressive personality
+	if = {
+		limit = {
+			has_variable_list = mt_ai_personality
+			is_target_in_variable_list = {
+				name = mt_ai_personality
+				target = flag:aggressive
+			}
+		}
+
+		# 70% chance to take action each month
+		random = {
+			chance = 70
+
+			# Try to create new route if under limit
+			if = {
+				limit = {
+					OR = {
+						NOT = { exists = var:mt_active_route_count }
+						var:mt_active_route_count < 5
+					}
+					gold >= 100 # Aggressive merchants act with less capital
+				}
+				ai_create_trade_route_effect = yes
+			}
+
+			# Aggressive merchants may try to compete with player
+			if = {
+				limit = {
+					exists = var:mt_active_route_count
+					var:mt_active_route_count > 0
+				}
+				random = {
+					chance = 25
+					ai_merchant_competition_effect = yes
+				}
+			}
+		}
+	}
+
+	# Cautious personality
+	else_if = {
+		limit = {
+			has_variable_list = mt_ai_personality
+			is_target_in_variable_list = {
+				name = mt_ai_personality
+				target = flag:cautious
+			}
+		}
+
+		# Only 30% chance to act (very selective)
+		random = {
+			chance = 30
+
+			# Only create routes with high capital reserve
+			if = {
+				limit = {
+					OR = {
+						NOT = { exists = var:mt_active_route_count }
+						var:mt_active_route_count < 3 # Fewer routes than others
+					}
+					gold >= 300 # Requires more capital
+				}
+				ai_create_trade_route_effect = yes
+			}
+
+			# Cautious merchants avoid competition, focus on safe routes
+		}
+	}
+
+	# Opportunistic personality
+	else_if = {
+		limit = {
+			has_variable_list = mt_ai_personality
+			is_target_in_variable_list = {
+				name = mt_ai_personality
+				target = flag:opportunistic
+			}
+		}
+
+		# 60% chance to act
+		random = {
+			chance = 60
+
+			# Check market conditions and act accordingly
+			ai_respond_to_market_effect = yes
+
+			# Create routes when conditions are favorable
+			if = {
+				limit = {
+					OR = {
+						NOT = { exists = var:mt_active_route_count }
+						var:mt_active_route_count < 4
+					}
+					gold >= 150
+				}
+				ai_create_trade_route_effect = yes
+			}
+		}
+	}
+
+	# Balanced personality
+	else = {
+		# 50% chance to act
+		random = {
+			chance = 50
+
+			# Standard route creation
+			if = {
+				limit = {
+					OR = {
+						NOT = { exists = var:mt_active_route_count }
+						var:mt_active_route_count < 4
+					}
+					gold >= 200
+				}
+				ai_create_trade_route_effect = yes
+			}
+
+			# Sometimes respond to market
+			random = {
+				chance = 30
+				ai_respond_to_market_effect = yes
+			}
+		}
+	}
+}
+
+##############################################
+# ai_create_trade_route_effect
+# AI analyzes and establishes profitable routes
+##############################################
+# SCOPE: Character (AI merchant)
+# USAGE: character = { ai_create_trade_route_effect = yes }
+#
+# LOGIC:
+# 1. Find origin county (capital or random holding)
+# 2. Analyze nearby counties for profitable goods
+# 3. Select destination based on personality:
+#    - Aggressive: Longest routes, highest risk/reward
+#    - Cautious: Nearby safe routes, lower profit
+#    - Opportunistic/Balanced: Medium distance, good profit
+# 4. Create route if viable
+##############################################
+ai_create_trade_route_effect = {
+	save_temporary_scope_as = ai_merchant
+
+	# Find next available route slot
+	find_next_available_route_slot_effect = yes
+
+	# Only proceed if we have a slot
+	if = {
+		limit = {
+			exists = var:mt_temp_route_slot
+			var:mt_temp_route_slot >= 0
+			var:mt_temp_route_slot < 5
+		}
+
+		# Find origin county (prefer capital, fallback to random holding)
+		if = {
+			limit = { exists = capital_county }
+			capital_county = {
+				save_temporary_scope_as = origin_county
+			}
+		}
+		else_if = {
+			limit = {
+				any_held_title = {
+					tier = tier_county
+				}
+			}
+			random_held_title = {
+				limit = { tier = tier_county }
+				save_temporary_scope_as = origin_county
+			}
+		}
+
+		# If we have an origin, find a destination
+		if = {
+			limit = { exists = scope:origin_county }
+
+			# Aggressive: Pick distant county for higher profit
+			if = {
+				limit = {
+					has_variable_list = mt_ai_personality
+					is_target_in_variable_list = {
+						name = mt_ai_personality
+						target = flag:aggressive
+					}
+				}
+
+				# Find random county at medium-long distance
+				random_county = {
+					limit = {
+						NOT = { this = scope:origin_county }
+						# Basic viability checks
+						development_level >= 1
+					}
+					save_temporary_scope_as = destination_county
+				}
+			}
+
+			# Cautious: Pick nearby safe county
+			else_if = {
+				limit = {
+					has_variable_list = mt_ai_personality
+					is_target_in_variable_list = {
+						name = mt_ai_personality
+						target = flag:cautious
+					}
+				}
+
+				# Find nearby county (same region preferred)
+				scope:origin_county = {
+					random_neighboring_county = {
+						save_temporary_scope_as = destination_county
+					}
+				}
+
+				# Fallback if no neighbor
+				if = {
+					limit = { NOT = { exists = scope:destination_county } }
+					random_county = {
+						limit = {
+							NOT = { this = scope:origin_county }
+							development_level >= 1
+						}
+						save_temporary_scope_as = destination_county
+					}
+				}
+			}
+
+			# Opportunistic/Balanced: Medium distance
+			else = {
+				random_county = {
+					limit = {
+						NOT = { this = scope:origin_county }
+						development_level >= 1
+					}
+					save_temporary_scope_as = destination_county
+				}
+			}
+
+			# Create the route if we found a destination
+			if = {
+				limit = { exists = scope:destination_county }
+
+				# Determine goods type based on preference
+				if = {
+					limit = {
+						has_variable_list = mt_ai_preferred_goods
+						is_target_in_variable_list = {
+							name = mt_ai_preferred_goods
+							target = flag:luxury
+						}
+					}
+					establish_trade_route_effect = {
+						route_id = var:mt_temp_route_slot
+						origin_county = scope:origin_county
+						destination_county = scope:destination_county
+						goods_type = luxury
+					}
+				}
+				else_if = {
+					limit = {
+						has_variable_list = mt_ai_preferred_goods
+						is_target_in_variable_list = {
+							name = mt_ai_preferred_goods
+							target = flag:spices
+						}
+					}
+					establish_trade_route_effect = {
+						route_id = var:mt_temp_route_slot
+						origin_county = scope:origin_county
+						destination_county = scope:destination_county
+						goods_type = spices
+					}
+				}
+				else_if = {
+					limit = {
+						has_variable_list = mt_ai_preferred_goods
+						is_target_in_variable_list = {
+							name = mt_ai_preferred_goods
+							target = flag:cloth
+						}
+					}
+					establish_trade_route_effect = {
+						route_id = var:mt_temp_route_slot
+						origin_county = scope:origin_county
+						destination_county = scope:destination_county
+						goods_type = cloth
+					}
+				}
+				else = {
+					establish_trade_route_effect = {
+						route_id = var:mt_temp_route_slot
+						origin_county = scope:origin_county
+						destination_county = scope:destination_county
+						goods_type = grain
+					}
+				}
+
+				debug_log = "[MT AI] AI merchant created trade route"
+				debug_log_scopes = yes
+			}
+		}
+	}
+}
+
+##############################################
+# ai_respond_to_market_effect
+# AI reacts to economic conditions
+##############################################
+# SCOPE: Character (AI merchant)
+# USAGE: character = { ai_respond_to_market_effect = yes }
+#
+# MARKET CONDITIONS (simplified for now):
+# - Boom: High prosperity across realm (avg development > 15)
+# - Crash: Low prosperity (avg development < 8)
+# - Normal: Everything else
+#
+# RESPONSES:
+# - Boom: Aggressive expands, Cautious saves, Opportunistic expands
+# - Crash: Opportunistic buys low (creates routes), others reduce
+# - Normal: Standard behavior
+##############################################
+ai_respond_to_market_effect = {
+	save_temporary_scope_as = ai_merchant
+
+	# Simplified market state detection (could be enhanced with global variables)
+	# For now, check local conditions
+
+	# Check if player realm is prosperous (boom market)
+	if = {
+		limit = {
+			top_liege = {
+				any_held_title = {
+					limit = { tier = tier_county }
+					county = { development_level >= 15 }
+					count >= 3
+				}
+			}
+		}
+
+		# BOOM MARKET
+		# Aggressive and Opportunistic merchants expand
+		if = {
+			limit = {
+				OR = {
+					has_variable_list = mt_ai_personality
+					is_target_in_variable_list = {
+						name = mt_ai_personality
+						target = flag:aggressive
+					}
+					is_target_in_variable_list = {
+						name = mt_ai_personality
+						target = flag:opportunistic
+					}
+				}
+			}
+
+			# Try to create additional route
+			if = {
+				limit = {
+					OR = {
+						NOT = { exists = var:mt_active_route_count }
+						var:mt_active_route_count < 5
+					}
+					gold >= 100
+				}
+				ai_create_trade_route_effect = yes
+			}
+		}
+
+		# Cautious merchants save during boom (wait for crash to buy)
+		else_if = {
+			limit = {
+				has_variable_list = mt_ai_personality
+				is_target_in_variable_list = {
+					name = mt_ai_personality
+					target = flag:cautious
+				}
+			}
+			# Do nothing, accumulate capital
+		}
+	}
+
+	# Check for crash market (low development)
+	else_if = {
+		limit = {
+			top_liege = {
+				any_held_title = {
+					limit = { tier = tier_county }
+					county = { development_level < 8 }
+					count >= 3
+				}
+			}
+		}
+
+		# CRASH MARKET
+		# Opportunistic merchants buy low (create cheap routes)
+		if = {
+			limit = {
+				has_variable_list = mt_ai_personality
+				is_target_in_variable_list = {
+					name = mt_ai_personality
+					target = flag:opportunistic
+				}
+				gold >= 150
+			}
+
+			# Create route at discount (market crash = cheap entry)
+			ai_create_trade_route_effect = yes
+		}
+
+		# Others may close unprofitable routes
+		else = {
+			if = {
+				limit = {
+					exists = var:mt_active_route_count
+					var:mt_active_route_count > 0
+				}
+
+				# Check for unprofitable routes and close them
+				if = {
+					limit = {
+						exists = var:mt_route_0_profit
+						var:mt_route_0_profit <= 5 # Barely profitable
+					}
+					random = {
+						chance = 30
+						close_trade_route_effect = { route_id = 0 }
+					}
+				}
+			}
+		}
+	}
+}
+
+##############################################
+# ai_merchant_competition_effect
+# AI competes for markets with player
+##############################################
+# SCOPE: Character (AI merchant)
+# USAGE: character = { ai_merchant_competition_effect = yes }
+#
+# COMPETITION MECHANICS:
+# 1. Identify player trade routes in same regions
+# 2. Aggressive AI may create competing routes
+# 3. Competing routes slightly reduce player profit (market saturation)
+# 4. Create rivalry variables between AI and player
+#
+# BALANCE: Competition should add challenge without being unfair
+# - Only aggressive AI competes directly
+# - Competition reduces profit by 10-20%, not catastrophically
+# - Creates interesting strategic layer
+##############################################
+ai_merchant_competition_effect = {
+	save_temporary_scope_as = ai_merchant
+
+	# Find a player with active trade routes
+	random_player = {
+		limit = {
+			has_active_trade_routes_trigger = yes
+		}
+		save_temporary_scope_as = target_player
+
+		# Identify one of their profitable routes
+		if = {
+			limit = {
+				exists = var:mt_route_0_profit
+				var:mt_route_0_profit >= 10
+			}
+
+			# Try to create a competing route
+			# This is simplified - in full implementation, would check same regions
+			scope:ai_merchant = {
+				# Create rivalry variable
+				if = {
+					limit = {
+						NOT = { has_variable = mt_rival_merchant }
+					}
+					set_variable = {
+						name = mt_rival_merchant
+						value = scope:target_player
+					}
+				}
+
+				# Try to establish competing route
+				if = {
+					limit = {
+						OR = {
+							NOT = { exists = var:mt_active_route_count }
+							var:mt_active_route_count < 5
+						}
+						gold >= 150
+					}
+					ai_create_trade_route_effect = yes
+
+					# Mark as competing route (would reduce player profit in advanced implementation)
+					if = {
+						limit = { exists = var:mt_temp_route_slot }
+						set_variable = {
+							name = mt_route_$mt_temp_route_slot$_competing_with
+							value = scope:target_player
+						}
+					}
+				}
+			}
+
+			# Player notification (they notice the competition)
+			scope:target_player = {
+				send_interface_toast = {
+					title = mt_ai_merchant_competition_toast
+					left_icon = scope:ai_merchant
+
+					custom_tooltip = mt_ai_merchant_competition_desc
+				}
+			}
+		}
+	}
+}
+
+##############################################
+# ai_merchant_cleanup_effect
+# Clean up AI merchant data on death/removal
+##############################################
+# SCOPE: Character (AI merchant)
+# USAGE: character = { ai_merchant_cleanup_effect = yes }
+##############################################
+ai_merchant_cleanup_effect = {
+	# Remove AI merchant variables
+	remove_variable = mt_is_ai_merchant
+	remove_variable = mt_ai_personality
+	remove_variable = mt_ai_risk_tolerance
+	remove_variable = mt_ai_expansion_speed
+	remove_variable = mt_ai_preferred_goods
+	remove_variable = mt_ai_merchant_capital
+	remove_variable = mt_ai_merchant_start_date
+	remove_variable = mt_rival_merchant
+
+	debug_log = "[MT AI] AI merchant cleaned up"
+}

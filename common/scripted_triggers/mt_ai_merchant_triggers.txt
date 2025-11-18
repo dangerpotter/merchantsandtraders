@@ -1,0 +1,403 @@
+##############################################
+# MERCHANTS AND TRADERS - AI MERCHANT TRIGGERS
+# Version: 0.1.0
+##############################################
+#
+# This file contains conditional checks (triggers) for the AI merchant system.
+# Triggers return true/false and are used to validate AI merchant actions.
+#
+##############################################
+
+##############################################
+# is_ai_merchant_trigger
+# Check if character is an AI merchant
+##############################################
+# SCOPE: Character
+# USAGE: character = { is_ai_merchant_trigger = yes }
+# RETURNS: true if character is flagged as AI merchant
+##############################################
+is_ai_merchant_trigger = {
+	has_variable = mt_is_ai_merchant
+}
+
+##############################################
+# can_become_ai_merchant_trigger
+# Check if character qualifies to become AI merchant
+##############################################
+# SCOPE: Character
+# USAGE: character = { can_become_ai_merchant_trigger = yes }
+#
+# REQUIREMENTS:
+# - Adult (age >= 16)
+# - Unlanded OR low-tier ruler (count/baron only)
+# - Stewardship 10+
+# - Gold 50+
+# - Not already a merchant (AI or player)
+# - Not incapable or imprisoned
+##############################################
+can_become_ai_merchant_trigger = {
+	# Age requirement
+	age >= 16
+
+	# Tier requirement (unlanded or low-tier)
+	OR = {
+		is_landed = no
+		highest_held_title_tier <= tier_county
+	}
+
+	# Skills requirement
+	stewardship >= 10
+
+	# Wealth requirement
+	gold >= 50
+
+	# Not already a merchant
+	NOT = { has_variable = mt_is_ai_merchant }
+	# NOT = { mt_is_merchant_trigger = yes } # Uncomment when player merchant traits exist
+
+	# Capability requirements
+	is_incapable = no
+	is_imprisoned = no
+
+	# Not a special character (theocracies, holy orders, etc.)
+	is_ruler = no
+	OR = {
+		is_ruler = no
+		AND = {
+			is_ruler = yes
+			OR = {
+				has_government = feudal_government
+				has_government = clan_government
+				has_government = tribal_government
+			}
+		}
+	}
+}
+
+##############################################
+# ai_merchant_personality_trigger
+# Check AI merchant's personality type
+##############################################
+# SCOPE: Character (AI merchant)
+# USAGE: character = { ai_merchant_personality_trigger = { personality = aggressive } }
+# PARAMETERS:
+#   - personality: aggressive/cautious/opportunistic/balanced
+##############################################
+ai_merchant_personality_trigger = {
+	has_variable_list = mt_ai_personality
+	is_target_in_variable_list = {
+		name = mt_ai_personality
+		target = flag:$personality$
+	}
+}
+
+##############################################
+# ai_should_create_route_trigger
+# Decision logic for whether AI should create route
+##############################################
+# SCOPE: Character (AI merchant)
+# USAGE: character = { ai_should_create_route_trigger = yes }
+#
+# CHECKS:
+# - Has route slots available (under limit)
+# - Has sufficient capital based on personality
+# - Has valid origin county
+# - Not in crisis (imprisoned, incapable, at war)
+##############################################
+ai_should_create_route_trigger = {
+	# Is AI merchant
+	is_ai_merchant_trigger = yes
+
+	# Has available route slots
+	OR = {
+		NOT = { exists = var:mt_active_route_count }
+		var:mt_active_route_count < 5
+	}
+
+	# Has valid origin county
+	OR = {
+		exists = capital_county
+		any_held_title = {
+			tier = tier_county
+		}
+	}
+
+	# Not in crisis
+	is_imprisoned = no
+	is_incapable = no
+
+	# Has sufficient gold based on personality
+	OR = {
+		# Aggressive: Low threshold
+		AND = {
+			ai_merchant_personality_trigger = { personality = aggressive }
+			gold >= 100
+		}
+		# Cautious: High threshold
+		AND = {
+			ai_merchant_personality_trigger = { personality = cautious }
+			gold >= 300
+		}
+		# Opportunistic: Medium threshold
+		AND = {
+			ai_merchant_personality_trigger = { personality = opportunistic }
+			gold >= 150
+		}
+		# Balanced: Medium threshold
+		AND = {
+			ai_merchant_personality_trigger = { personality = balanced }
+			gold >= 200
+		}
+	}
+}
+
+##############################################
+# ai_can_compete_with_player_trigger
+# Check if AI can compete in player's market
+##############################################
+# SCOPE: Character (AI merchant)
+# USAGE: character = { ai_can_compete_with_player_trigger = yes }
+#
+# REQUIREMENTS:
+# - Is aggressive personality (only aggressive merchants compete)
+# - Has route capacity
+# - Has sufficient capital
+# - At least one player has active routes
+##############################################
+ai_can_compete_with_player_trigger = {
+	# Must be AI merchant
+	is_ai_merchant_trigger = yes
+
+	# Must be aggressive personality
+	ai_merchant_personality_trigger = { personality = aggressive }
+
+	# Has route capacity
+	OR = {
+		NOT = { exists = var:mt_active_route_count }
+		var:mt_active_route_count < 5
+	}
+
+	# Has capital
+	gold >= 150
+
+	# At least one player exists with routes
+	any_player = {
+		has_active_trade_routes_trigger = yes
+	}
+}
+
+##############################################
+# has_active_trade_routes_trigger
+# Check if character has any active trade routes
+##############################################
+# SCOPE: Character
+# USAGE: character = { has_active_trade_routes_trigger = yes }
+##############################################
+has_active_trade_routes_trigger = {
+	exists = var:mt_active_route_count
+	var:mt_active_route_count > 0
+}
+
+##############################################
+# route_passes_through_county_trigger
+# Check if a route passes through specific county
+##############################################
+# SCOPE: Character
+# USAGE: character = { route_passes_through_county_trigger = { route_id = 0 county = scope:some_county } }
+# PARAMETERS:
+#   - route_id: Route ID to check (0-4)
+#   - county: County title scope to check
+##############################################
+route_passes_through_county_trigger = {
+	# Check if any node in the route matches the county
+	OR = {
+		# Node 0 (origin)
+		AND = {
+			exists = var:mt_route_$route_id$_node_0
+			var:mt_route_$route_id$_node_0 = $county$
+		}
+		# Node 1
+		AND = {
+			exists = var:mt_route_$route_id$_node_1
+			var:mt_route_$route_id$_node_1 = $county$
+		}
+		# Node 2
+		AND = {
+			exists = var:mt_route_$route_id$_node_2
+			var:mt_route_$route_id$_node_2 = $county$
+		}
+		# Node 3
+		AND = {
+			exists = var:mt_route_$route_id$_node_3
+			var:mt_route_$route_id$_node_3 = $county$
+		}
+	}
+}
+
+##############################################
+# route_is_critical_trigger
+# Check if route needs urgent attention
+##############################################
+# SCOPE: Character
+# USAGE: character = { route_is_critical_trigger = { route_id = 0 } }
+# PARAMETERS:
+#   - route_id: Route ID to check (0-4)
+#
+# CRITICAL CONDITIONS:
+# - Health below 30% (severe danger)
+# - Profit is negative (losing money)
+##############################################
+route_is_critical_trigger = {
+	# Route exists
+	exists = var:mt_route_$route_id$_node_0
+
+	# Critical conditions
+	OR = {
+		# Health critically low
+		AND = {
+			exists = var:mt_route_$route_id$_health
+			var:mt_route_$route_id$_health < 30
+		}
+		# Losing money
+		AND = {
+			exists = var:mt_route_$route_id$_profit
+			var:mt_route_$route_id$_profit <= 0
+		}
+	}
+}
+
+##############################################
+# is_in_same_region_as_trigger
+# Check if two counties are in same trade region
+##############################################
+# SCOPE: County
+# USAGE: county = { is_in_same_region_as_trigger = { county = scope:other_county } }
+# PARAMETERS:
+#   - county: County to compare with
+#
+# NOTE: Simplified implementation - checks if counties share duchy or kingdom
+# Could be enhanced with custom trade region definitions
+##############################################
+is_in_same_region_as_trigger = {
+	OR = {
+		# Same duchy
+		duchy = {
+			$county$ = {
+				duchy = {
+					this = prev.prev
+				}
+			}
+		}
+		# Same kingdom
+		kingdom = {
+			$county$ = {
+				kingdom = {
+					this = prev.prev
+				}
+			}
+		}
+	}
+}
+
+##############################################
+# ai_merchant_should_act_this_month_trigger
+# Random chance for AI to act based on personality
+##############################################
+# SCOPE: Character (AI merchant)
+# USAGE: character = { ai_merchant_should_act_this_month_trigger = yes }
+#
+# CHANCES BY PERSONALITY:
+# - Aggressive: 70%
+# - Cautious: 30%
+# - Opportunistic: 60%
+# - Balanced: 50%
+#
+# NOTE: This is checked separately in effects, but useful as standalone trigger
+##############################################
+ai_merchant_should_act_this_month_trigger = {
+	is_ai_merchant_trigger = yes
+
+	# Check personality for action rate
+	OR = {
+		# Aggressive: High activity
+		ai_merchant_personality_trigger = { personality = aggressive }
+
+		# Cautious: Low activity (but still possible)
+		ai_merchant_personality_trigger = { personality = cautious }
+
+		# Opportunistic: Medium-high activity
+		ai_merchant_personality_trigger = { personality = opportunistic }
+
+		# Balanced: Medium activity
+		ai_merchant_personality_trigger = { personality = balanced }
+	}
+}
+
+##############################################
+# market_is_booming_trigger
+# Check if market conditions are favorable (boom)
+##############################################
+# SCOPE: Character
+# USAGE: character = { market_is_booming_trigger = yes }
+#
+# BOOM CONDITIONS (simplified):
+# - Multiple high-development counties in realm (15+)
+# - Indicates strong economy, good time to expand
+##############################################
+market_is_booming_trigger = {
+	top_liege = {
+		any_held_title = {
+			limit = { tier = tier_county }
+			county = { development_level >= 15 }
+			count >= 3
+		}
+	}
+}
+
+##############################################
+# market_is_crashing_trigger
+# Check if market conditions are poor (crash)
+##############################################
+# SCOPE: Character
+# USAGE: character = { market_is_crashing_trigger = yes }
+#
+# CRASH CONDITIONS (simplified):
+# - Multiple low-development counties in realm (< 8)
+# - Indicates weak economy, risky time
+##############################################
+market_is_crashing_trigger = {
+	top_liege = {
+		any_held_title = {
+			limit = { tier = tier_county }
+			county = { development_level < 8 }
+			count >= 3
+		}
+	}
+}
+
+##############################################
+# has_merchant_rival_trigger
+# Check if AI merchant has a rival (player or other AI)
+##############################################
+# SCOPE: Character (AI merchant)
+# USAGE: character = { has_merchant_rival_trigger = yes }
+##############################################
+has_merchant_rival_trigger = {
+	is_ai_merchant_trigger = yes
+	exists = var:mt_rival_merchant
+}
+
+##############################################
+# is_profitable_route_trigger
+# Check if specific route is profitable
+##############################################
+# SCOPE: Character
+# USAGE: character = { is_profitable_route_trigger = { route_id = 0 threshold = 10 } }
+# PARAMETERS:
+#   - route_id: Route ID to check (0-4)
+#   - threshold: Minimum profit (default 5 gold/month)
+##############################################
+is_profitable_route_trigger = {
+	exists = var:mt_route_$route_id$_profit
+	var:mt_route_$route_id$_profit >= $threshold$
+}
