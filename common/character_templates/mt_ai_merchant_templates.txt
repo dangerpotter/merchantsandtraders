@@ -1,0 +1,453 @@
+##############################################
+# MERCHANTS AND TRADERS - AI MERCHANT CHARACTER TEMPLATES
+# Version: 0.1.0
+##############################################
+#
+# This file defines character templates for AI merchant archetypes.
+# Each template creates a distinct personality that affects gameplay:
+#
+# AGGRESSIVE AI MERCHANT:
+# - High risk, high reward strategy
+# - Expands quickly, takes long routes
+# - Competes directly with player
+# - May overextend and fail, but can become very wealthy
+# - Creates dynamic tension in markets
+#
+# CAUTIOUS AI MERCHANT:
+# - Low risk, defensive strategy
+# - Slow growth, focuses on safe nearby routes
+# - Hoards gold, rarely competes
+# - Reliable but less threatening competitor
+# - Provides steady baseline competition
+#
+# OPPORTUNISTIC AI MERCHANT:
+# - Market timing specialist
+# - Exploits booms and crashes
+# - Flexible, adaptive strategy
+# - Most sophisticated AI behavior
+# - Creates interesting economic dynamics
+#
+# BALANCED AI MERCHANT:
+# - Mixed strategy, well-rounded
+# - Medium risk/reward
+# - Predictable but effective
+# - Good baseline competitor
+# - Fills out merchant ecosystem
+#
+# GAMEPLAY DESIGN:
+# These templates ensure AI merchants feel like real competitors with
+# distinct personalities, not just generic NPCs. Players will learn to
+# recognize aggressive rivals who steal markets vs cautious merchants
+# who stay in their lane. This creates strategic depth - knowing your
+# competition matters.
+#
+##############################################
+
+##############################################
+# AGGRESSIVE AI MERCHANT TEMPLATE
+# "The Ambitious Trader"
+##############################################
+# PERSONALITY:
+# - Takes risks, expands fast
+# - Competes directly with player
+# - Creates long profitable routes
+# - May hire guards aggressively
+# - Can fail spectacularly or succeed greatly
+#
+# GAMEPLAY IMPACT:
+# - Main source of player competition
+# - Forces player to adapt and defend markets
+# - Creates rivalries and conflicts
+# - Makes trade feel competitive, not passive
+##############################################
+aggressive_ai_merchant = {
+	# Age range: Young adults eager to prove themselves
+	age = {
+		min = 20
+		max = 35
+	}
+
+	# Aggressive merchant traits
+	random_traits_list = {
+		count = { min = 3 max = 5 }
+
+		# High weight competitive traits
+		ambitious = { weight = 30 }
+		greedy = { weight = 25 }
+		arrogant = { weight = 20 }
+		brave = { weight = 18 }
+		shrewd = { weight = 15 }
+		diligent = { weight = 15 }
+		impatient = { weight = 12 }
+		aggressive_attacker = { weight = 10 }
+		reckless = { weight = 8 }
+
+		# Some balance
+		patient = { weight = 5 }
+		humble = { weight = 3 }
+		content = { weight = 2 }
+	}
+
+	# Attributes: High stewardship and diplomacy for negotiation
+	diplomacy = {
+		min_template_high_skill = 10
+		max_template_high_skill = 16
+	}
+
+	stewardship = {
+		min_template_high_skill = 12
+		max_template_high_skill = 18
+	}
+
+	# Decent intrigue for competitive tactics
+	intrigue = {
+		min_template_low_skill = 7
+		max_template_low_skill = 14
+	}
+
+	# Lower martial and learning
+	martial = {
+		min_template_low_skill = 3
+		max_template_low_skill = 9
+	}
+
+	learning = {
+		min_template_low_skill = 4
+		max_template_low_skill = 10
+	}
+}
+
+##############################################
+# CAUTIOUS AI MERCHANT TEMPLATE
+# "The Safe Investor"
+##############################################
+# PERSONALITY:
+# - Risk-averse, defensive
+# - Slow growth, focuses on profitability
+# - Saves gold, avoids competition
+# - Creates safe nearby routes
+# - Reliable but unthreatening
+#
+# GAMEPLAY IMPACT:
+# - Fills market without threatening player
+# - Provides stable baseline competition
+# - May buy out struggling aggressive merchants
+# - Long-term accumulation of wealth
+##############################################
+cautious_ai_merchant = {
+	# Age range: Older, more experienced
+	age = {
+		min = 35
+		max = 55
+	}
+
+	# Cautious, risk-averse traits
+	random_traits_list = {
+		count = { min = 3 max = 5 }
+
+		# High weight cautious traits
+		patient = { weight = 30 }
+		temperate = { weight = 25 }
+		calm = { weight = 20 }
+		content = { weight = 18 }
+		humble = { weight = 15 }
+		just = { weight = 12 }
+		diligent = { weight = 12 }
+		shrewd = { weight = 10 }
+
+		# Avoid risky traits
+		ambitious = { weight = 3 }
+		greedy = { weight = 5 }
+		brave = { weight = 4 }
+		reckless = { weight = 1 }
+	}
+
+	# Attributes: Very high stewardship (careful planning)
+	stewardship = {
+		min_template_high_skill = 14
+		max_template_high_skill = 20
+	}
+
+	# Good diplomacy for safe negotiations
+	diplomacy = {
+		min_template_high_skill = 10
+		max_template_high_skill = 16
+	}
+
+	# Lower intrigue (not competitive)
+	intrigue = {
+		min_template_low_skill = 4
+		max_template_low_skill = 10
+	}
+
+	# Low martial and learning
+	martial = {
+		min_template_low_skill = 2
+		max_template_low_skill = 7
+	}
+
+	learning = {
+		min_template_low_skill = 5
+		max_template_low_skill = 11
+	}
+}
+
+##############################################
+# OPPORTUNISTIC AI MERCHANT TEMPLATE
+# "The Market Timer"
+##############################################
+# PERSONALITY:
+# - Exploits market conditions
+# - Flexible, adaptive strategy
+# - Buys low, sells high
+# - Reacts to economic booms/crashes
+# - Most sophisticated AI behavior
+#
+# GAMEPLAY IMPACT:
+# - Creates dynamic economic interactions
+# - Player must watch market conditions
+# - Can suddenly flood or abandon markets
+# - Makes economy feel alive and reactive
+# - Adds strategic timing element
+##############################################
+opportunistic_ai_merchant = {
+	# Age range: Prime working years
+	age = {
+		min = 28
+		max = 45
+	}
+
+	# Opportunistic, flexible traits
+	random_traits_list = {
+		count = { min = 3 max = 5 }
+
+		# High weight adaptive traits
+		shrewd = { weight = 30 }
+		ambitious = { weight = 20 }
+		greedy = { weight = 18 }
+		patient = { weight = 15 }
+		deceitful = { weight = 12 }
+		diligent = { weight = 12 }
+		calm = { weight = 10 }
+		brave = { weight = 8 }
+
+		# Balance of risk and caution
+		reckless = { weight = 5 }
+		content = { weight = 3 }
+	}
+
+	# Attributes: Well-rounded with high intrigue (reading markets)
+	stewardship = {
+		min_template_high_skill = 12
+		max_template_high_skill = 18
+	}
+
+	# High intrigue for spotting opportunities
+	intrigue = {
+		min_template_low_skill = 10
+		max_template_low_skill = 16
+	}
+
+	# Good diplomacy
+	diplomacy = {
+		min_template_high_skill = 9
+		max_template_high_skill = 15
+	}
+
+	# Lower martial and learning
+	martial = {
+		min_template_low_skill = 3
+		max_template_low_skill = 8
+	}
+
+	learning = {
+		min_template_low_skill = 5
+		max_template_low_skill = 12
+	}
+}
+
+##############################################
+# BALANCED AI MERCHANT TEMPLATE
+# "The Professional Trader"
+##############################################
+# PERSONALITY:
+# - Mixed strategy, well-rounded
+# - Medium risk/reward
+# - Reliable, predictable
+# - Decent at everything
+# - Standard competitor
+#
+# GAMEPLAY IMPACT:
+# - Fills out merchant ecosystem
+# - Provides consistent competition
+# - Not threatening but not ignorable
+# - Creates market depth
+# - Good baseline for player comparison
+##############################################
+balanced_ai_merchant = {
+	# Age range: Broad range of ages
+	age = {
+		min = 25
+		max = 50
+	}
+
+	# Balanced trait distribution
+	random_traits_list = {
+		count = { min = 3 max = 5 }
+
+		# Even distribution of useful traits
+		diligent = { weight = 20 }
+		shrewd = { weight = 18 }
+		patient = { weight = 15 }
+		ambitious = { weight = 15 }
+		greedy = { weight = 12 }
+		temperate = { weight = 12 }
+		calm = { weight = 10 }
+		brave = { weight = 8 }
+		humble = { weight = 8 }
+
+		# Some negative traits
+		lazy = { weight = 4 }
+		content = { weight = 5 }
+		impatient = { weight = 5 }
+	}
+
+	# Attributes: Balanced across the board
+	stewardship = {
+		min_template_high_skill = 11
+		max_template_high_skill = 17
+	}
+
+	diplomacy = {
+		min_template_high_skill = 10
+		max_template_high_skill = 16
+	}
+
+	intrigue = {
+		min_template_low_skill = 6
+		max_template_low_skill = 13
+	}
+
+	martial = {
+		min_template_low_skill = 4
+		max_template_low_skill = 10
+	}
+
+	learning = {
+		min_template_low_skill = 5
+		max_template_low_skill = 11
+	}
+}
+
+##############################################
+# SPECIALIST TEMPLATES (Future Expansion)
+##############################################
+
+##############################################
+# MARITIME SPECIALIST AI MERCHANT
+# "The Sea Trader"
+##############################################
+# Future implementation: Focuses on coastal/maritime routes
+# Prefers sea trade, builds in port cities
+# Higher profit from maritime goods (fish, salt, luxury imports)
+##############################################
+maritime_specialist_ai_merchant = {
+	age = {
+		min = 25
+		max = 45
+	}
+
+	random_traits_list = {
+		count = { min = 3 max = 5 }
+
+		brave = { weight = 25 }
+		ambitious = { weight = 20 }
+		shrewd = { weight = 18 }
+		diligent = { weight = 15 }
+		patient = { weight = 12 }
+
+		# Seafaring traits (when available)
+		# seabound = { weight = 20 }
+	}
+
+	stewardship = {
+		min_template_high_skill = 12
+		max_template_high_skill = 18
+	}
+
+	diplomacy = {
+		min_template_high_skill = 10
+		max_template_high_skill = 16
+	}
+
+	# Higher martial for pirate defense
+	martial = {
+		min_template_low_skill = 6
+		max_template_low_skill = 12
+	}
+
+	intrigue = {
+		min_template_low_skill = 5
+		max_template_low_skill = 11
+	}
+
+	learning = {
+		min_template_low_skill = 4
+		max_template_low_skill = 10
+	}
+}
+
+##############################################
+# LUXURY GOODS SPECIALIST AI MERCHANT
+# "The Silk Road Baron"
+##############################################
+# Future implementation: Focuses on luxury goods (silk, spices, gems)
+# Long-distance routes, high profit/high risk
+# Deals with wealthy courts and nobles
+##############################################
+luxury_specialist_ai_merchant = {
+	age = {
+		min = 30
+		max = 50
+	}
+
+	random_traits_list = {
+		count = { min = 3 max = 5 }
+
+		shrewd = { weight = 30 }
+		greedy = { weight = 25 }
+		ambitious = { weight = 20 }
+		diligent = { weight = 15 }
+		arrogant = { weight = 12 }
+
+		# Social traits for noble connections
+		gregarious = { weight = 10 }
+		# TODO: Add merchant-specific luxury trader trait
+	}
+
+	# Very high diplomacy for noble courts
+	diplomacy = {
+		min_template_high_skill = 13
+		max_template_high_skill = 19
+	}
+
+	stewardship = {
+		min_template_high_skill = 12
+		max_template_high_skill = 18
+	}
+
+	intrigue = {
+		min_template_low_skill = 8
+		max_template_low_skill = 14
+	}
+
+	martial = {
+		min_template_low_skill = 3
+		max_template_low_skill = 8
+	}
+
+	learning = {
+		min_template_low_skill = 6
+		max_template_low_skill = 12
+	}
+}

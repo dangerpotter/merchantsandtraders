@@ -1,0 +1,519 @@
+##############################################
+# MERCHANTS AND TRADERS - AI MERCHANT ON_ACTIONS
+# Version: 0.1.0
+##############################################
+#
+# This file contains on_action hooks that drive the AI merchant system.
+# These hooks integrate AI merchants into the game's event flow.
+#
+# KEY HOOKS:
+# - on_game_start: Initialize AI merchants at game start
+# - on_monthly_pulse: AI merchants make decisions each month
+# - on_character_creation: New characters may become AI merchants
+# - on_death: Clean up AI merchant data
+#
+# BALANCING:
+# - 10% of AI merchants act each month (staggered for performance)
+# - 0.5% of qualifying characters convert to AI merchants per month
+# - 5-10 AI merchants created globally at game start
+#
+##############################################
+
+##############################################
+# GAME START - Initialize AI merchants
+##############################################
+# Creates initial pool of AI merchants at game start
+# Distributed across major trade regions
+##############################################
+on_game_start = {
+	on_actions = {
+		mt_initialize_ai_merchants
+	}
+}
+
+mt_initialize_ai_merchants = {
+	effect = {
+		# Create 5-10 AI merchants globally at game start
+		# Distributed among courtiers and minor rulers
+
+		# Find qualifying characters and convert some to AI merchants
+		every_living_character = {
+			limit = {
+				can_become_ai_merchant_trigger = yes
+			}
+
+			# 1% chance at game start (targets ~5-10 merchants out of 500-1000 courtiers)
+			random = {
+				chance = 1
+				ai_become_merchant_effect = yes
+			}
+		}
+
+		debug_log = "[MT AI] AI merchant system initialized at game start"
+	}
+}
+
+##############################################
+# MONTHLY PULSE - AI merchant decision making
+##############################################
+# Each month, a subset of AI merchants make decisions
+# Staggered to avoid performance issues
+##############################################
+on_monthly_pulse = {
+	on_actions = {
+		mt_ai_merchant_monthly_update
+		mt_ai_merchant_recruitment
+	}
+}
+
+# Monthly AI merchant decision making
+mt_ai_merchant_monthly_update = {
+	trigger = {
+		# Only AI merchants
+		is_ai_merchant_trigger = yes
+
+		# Not in crisis
+		is_alive = yes
+		is_imprisoned = no
+	}
+
+	effect = {
+		# Only 10% of AI merchants act each month (performance optimization)
+		# This creates staggered decision-making for more organic feel
+		random = {
+			chance = 10
+
+			# Make monthly decisions
+			ai_merchant_decision_making_effect = yes
+
+			# Update existing routes
+			if = {
+				limit = { has_active_trade_routes_trigger = yes }
+				update_active_routes_effect = yes
+			}
+
+			# Track profitability
+			if = {
+				limit = { has_active_trade_routes_trigger = yes }
+				track_route_profitability_effect = yes
+			}
+		}
+	}
+}
+
+# Monthly AI merchant recruitment (new NPCs become merchants)
+mt_ai_merchant_recruitment = {
+	trigger = {
+		# Only unlanded courtiers or minor rulers
+		can_become_ai_merchant_trigger = yes
+	}
+
+	effect = {
+		# 0.5% chance per month for qualifying characters
+		# Over time this maintains AI merchant population
+		random = {
+			chance = 0.5
+			ai_become_merchant_effect = yes
+		}
+	}
+}
+
+##############################################
+# CHARACTER CREATION - New characters may become merchants
+##############################################
+# When new characters are created (birth, generation, etc.)
+# they have a small chance to become AI merchants if qualified
+##############################################
+on_birth = {
+	on_actions = {
+		mt_ai_merchant_on_character_creation
+	}
+}
+
+mt_ai_merchant_on_character_creation = {
+	trigger = {
+		# Only check when they become adult
+		age >= 16
+
+		# Must qualify
+		can_become_ai_merchant_trigger = yes
+	}
+
+	effect = {
+		# 2% chance for new adults to become merchants
+		random = {
+			chance = 2
+			ai_become_merchant_effect = yes
+		}
+	}
+}
+
+##############################################
+# CHARACTER DEATH - Clean up AI merchant data
+##############################################
+# When AI merchant dies, clean up their variables
+##############################################
+on_death = {
+	on_actions = {
+		mt_ai_merchant_on_death
+	}
+}
+
+mt_ai_merchant_on_death = {
+	trigger = {
+		# Only AI merchants
+		is_ai_merchant_trigger = yes
+	}
+
+	effect = {
+		# Close all trade routes
+		if = {
+			limit = { exists = var:mt_route_0_node_0 }
+			close_trade_route_effect = { route_id = 0 }
+		}
+		if = {
+			limit = { exists = var:mt_route_1_node_0 }
+			close_trade_route_effect = { route_id = 1 }
+		}
+		if = {
+			limit = { exists = var:mt_route_2_node_0 }
+			close_trade_route_effect = { route_id = 2 }
+		}
+		if = {
+			limit = { exists = var:mt_route_3_node_0 }
+			close_trade_route_effect = { route_id = 3 }
+		}
+		if = {
+			limit = { exists = var:mt_route_4_node_0 }
+			close_trade_route_effect = { route_id = 4 }
+		}
+
+		# Clean up AI merchant variables
+		ai_merchant_cleanup_effect = yes
+
+		debug_log = "[MT AI] AI merchant died, routes closed"
+		debug_log_scopes = yes
+	}
+}
+
+##############################################
+# WAR EVENTS - AI merchants react to war
+##############################################
+# When war affects their routes, AI merchants may adjust strategy
+##############################################
+on_war_started = {
+	on_actions = {
+		mt_ai_merchant_war_reaction
+	}
+}
+
+mt_ai_merchant_war_reaction = {
+	trigger = {
+		# Only AI merchants
+		is_ai_merchant_trigger = yes
+
+		# Has active routes
+		has_active_trade_routes_trigger = yes
+	}
+
+	effect = {
+		# Check if any routes pass through war zones
+		# This is a simplified check - full implementation would be more sophisticated
+		war = {
+			save_temporary_scope_as = active_war
+
+			# Defender's counties
+			defender = {
+				every_held_title = {
+					limit = { tier = tier_county }
+					save_temporary_scope_as = war_county
+
+					# Check if AI merchant has routes through this county
+					root = {
+						if = {
+							limit = {
+								OR = {
+									route_passes_through_county_trigger = {
+										route_id = 0
+										county = scope:war_county
+									}
+									route_passes_through_county_trigger = {
+										route_id = 1
+										county = scope:war_county
+									}
+									route_passes_through_county_trigger = {
+										route_id = 2
+										county = scope:war_county
+									}
+									route_passes_through_county_trigger = {
+										route_id = 3
+										county = scope:war_county
+									}
+									route_passes_through_county_trigger = {
+										route_id = 4
+										county = scope:war_county
+									}
+								}
+							}
+
+							# Cautious merchants may close endangered routes
+							if = {
+								limit = {
+									ai_merchant_personality_trigger = { personality = cautious }
+								}
+
+								# 40% chance to close route in war zone
+								if = {
+									limit = {
+										route_passes_through_county_trigger = {
+											route_id = 0
+											county = scope:war_county
+										}
+									}
+									random = {
+										chance = 40
+										close_trade_route_effect = { route_id = 0 }
+									}
+								}
+
+								if = {
+									limit = {
+										route_passes_through_county_trigger = {
+											route_id = 1
+											county = scope:war_county
+										}
+									}
+									random = {
+										chance = 40
+										close_trade_route_effect = { route_id = 1 }
+									}
+								}
+
+								if = {
+									limit = {
+										route_passes_through_county_trigger = {
+											route_id = 2
+											county = scope:war_county
+										}
+									}
+									random = {
+										chance = 40
+										close_trade_route_effect = { route_id = 2 }
+									}
+								}
+
+								if = {
+									limit = {
+										route_passes_through_county_trigger = {
+											route_id = 3
+											county = scope:war_county
+										}
+									}
+									random = {
+										chance = 40
+										close_trade_route_effect = { route_id = 3 }
+									}
+								}
+
+								if = {
+									limit = {
+										route_passes_through_county_trigger = {
+											route_id = 4
+											county = scope:war_county
+										}
+									}
+									random = {
+										chance = 40
+										close_trade_route_effect = { route_id = 4 }
+									}
+								}
+							}
+
+							# Aggressive merchants hire guards instead
+							else_if = {
+								limit = {
+									ai_merchant_personality_trigger = { personality = aggressive }
+									gold >= 100
+								}
+
+								# Hire guards for endangered routes
+								if = {
+									limit = {
+										route_passes_through_county_trigger = {
+											route_id = 0
+											county = scope:war_county
+										}
+									}
+									random = {
+										chance = 50
+										hire_caravan_guard_effect = {
+											route_id = 0
+											guard_count = 2
+										}
+									}
+								}
+
+								# Similar logic for other routes (simplified here)
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+}
+
+##############################################
+# SUCCESSION - AI merchants may pass routes to heirs
+##############################################
+# When AI merchant dies with heir, heir may inherit merchant status
+# (Future implementation - currently routes just close)
+##############################################
+on_death_inheritance = {
+	on_actions = {
+		mt_ai_merchant_inheritance
+	}
+}
+
+mt_ai_merchant_inheritance = {
+	trigger = {
+		# Dead character was AI merchant
+		scope:dead_character = {
+			is_ai_merchant_trigger = yes
+		}
+
+		# Has an heir
+		exists = scope:heir
+	}
+
+	effect = {
+		scope:heir = {
+			# 30% chance heir continues as merchant
+			random = {
+				chance = 30
+
+				# Inherit AI merchant status
+				ai_become_merchant_effect = yes
+
+				# TODO: Could inherit routes in future implementation
+			}
+		}
+	}
+}
+
+##############################################
+# YEARLY PULSE - Long-term AI merchant adjustments
+##############################################
+# Once per year, make strategic adjustments
+##############################################
+on_yearly_pulse = {
+	on_actions = {
+		mt_ai_merchant_yearly_review
+	}
+}
+
+mt_ai_merchant_yearly_review = {
+	trigger = {
+		# Only AI merchants
+		is_ai_merchant_trigger = yes
+
+		# Has been merchant for at least 1 year
+		exists = var:mt_ai_merchant_start_date
+	}
+
+	effect = {
+		# Review overall performance
+		if = {
+			limit = { has_active_trade_routes_trigger = yes }
+
+			# Count profitable routes
+			set_variable = {
+				name = mt_temp_profitable_routes
+				value = 0
+			}
+
+			if = {
+				limit = {
+					is_profitable_route_trigger = {
+						route_id = 0
+						threshold = 5
+					}
+				}
+				change_variable = {
+					name = mt_temp_profitable_routes
+					add = 1
+				}
+			}
+
+			if = {
+				limit = {
+					is_profitable_route_trigger = {
+						route_id = 1
+						threshold = 5
+					}
+				}
+				change_variable = {
+					name = mt_temp_profitable_routes
+					add = 1
+				}
+			}
+
+			if = {
+				limit = {
+					is_profitable_route_trigger = {
+						route_id = 2
+						threshold = 5
+					}
+				}
+				change_variable = {
+					name = mt_temp_profitable_routes
+					add = 1
+				}
+			}
+
+			if = {
+				limit = {
+					is_profitable_route_trigger = {
+						route_id = 3
+						threshold = 5
+					}
+				}
+				change_variable = {
+					name = mt_temp_profitable_routes
+					add = 1
+				}
+			}
+
+			if = {
+				limit = {
+					is_profitable_route_trigger = {
+						route_id = 4
+						threshold = 5
+					}
+				}
+				change_variable = {
+					name = mt_temp_profitable_routes
+					add = 1
+				}
+			}
+
+			# If no profitable routes, AI merchant may retire
+			if = {
+				limit = {
+					var:mt_temp_profitable_routes <= 0
+					gold < 100
+				}
+
+				# 50% chance to retire (stop being merchant)
+				random = {
+					chance = 50
+					ai_merchant_cleanup_effect = yes
+					debug_log = "[MT AI] AI merchant retired due to unprofitability"
+				}
+			}
+
+			# Clean up temp variable
+			remove_variable = mt_temp_profitable_routes
+		}
+	}
+}
