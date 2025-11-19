@@ -14,21 +14,97 @@
 # Scope: Character
 # Usage: character = { mt_initialize_merchant_effect = yes }
 mt_initialize_merchant_effect = {
-	# TODO: Add merchant trait
-	# TODO: Set initial merchant level (Adventurer)
-	# TODO: Initialize merchant variables (capital, reputation, etc.)
-	# TODO: Trigger merchant initialization events
+	# Add base merchant trait if not already present
+	if = {
+		limit = { NOT = { has_trait = mt_merchant } }
+		add_trait = mt_merchant
+	}
+
+	# Add Tier 1 wandering merchant trait if no tier trait exists
+	if = {
+		limit = {
+			NOT = { has_trait = wandering_merchant }
+			NOT = { has_trait = trade_post_owner }
+			NOT = { has_trait = trading_company_head }
+			NOT = { has_trait = merchant_prince }
+		}
+		add_trait = wandering_merchant
+	}
+
+	# Initialize core merchant variables
+	if = {
+		limit = { NOT = { has_variable = mt_active_routes } }
+		set_variable = {
+			name = mt_active_routes
+			value = 0
+		}
+	}
+
+	if = {
+		limit = { NOT = { has_variable = mt_max_trade_routes } }
+		set_variable = {
+			name = mt_max_trade_routes
+			value = 1
+		}
+	}
+
+	if = {
+		limit = { NOT = { has_variable = mt_reputation } }
+		set_variable = {
+			name = mt_reputation
+			value = 50
+		}
+	}
+
+	if = {
+		limit = { NOT = { has_variable = mt_owned_trade_posts } }
+		set_variable = {
+			name = mt_owned_trade_posts
+			value = 0
+		}
+	}
+
+	if = {
+		limit = { NOT = { has_variable = mt_hired_agents } }
+		set_variable = {
+			name = mt_hired_agents
+			value = 0
+		}
+	}
+
+	if = {
+		limit = { NOT = { has_variable = mt_hired_guards } }
+		set_variable = {
+			name = mt_hired_guards
+			value = 0
+		}
+	}
+
+	if = {
+		limit = { NOT = { has_variable = mt_legendary_trades } }
+		set_variable = {
+			name = mt_legendary_trades
+			value = 0
+		}
+	}
+
+	if = {
+		limit = { NOT = { has_variable = mt_total_trade_income } }
+		set_variable = {
+			name = mt_total_trade_income
+			value = 0
+		}
+	}
 }
 
 # Effect: Upgrade merchant level
 # Scope: Character
 # Usage: character = { mt_upgrade_merchant_level_effect = yes }
 mt_upgrade_merchant_level_effect = {
-	# TODO: Check current merchant level
-	# TODO: Remove old merchant trait
-	# TODO: Add new merchant trait
-	# TODO: Update merchant variables
-	# TODO: Trigger upgrade events and notifications
+	# Check current merchant level and perform tier-up
+	# This calls the dedicated progression effect which handles trait swaps,
+	# variable updates, and event triggers
+	merchant_tier_up_effect = yes
 }
 
 ####################################
@@ -36,34 +112,74 @@ mt_upgrade_merchant_level_effect = {
 ####################################
 
 # Effect: Create trade route between two counties
-# Scope: County (origin)
-# Usage: county = { mt_create_trade_route_effect = { target = scope:destination_county } }
+# Scope: Character (merchant owner)
+# Usage: character = { mt_create_trade_route_effect = { origin = scope:origin_county destination = scope:destination_county goods_type = flag:silk } }
 mt_create_trade_route_effect = {
-	# TODO: Validate route possibility
-	# TODO: Calculate route profitability
-	# TODO: Store route data in variables
-	# TODO: Apply ongoing route effects
-	# TODO: Trigger route creation events
+	# Find next available route ID
+	if = {
+		limit = { NOT = { has_variable = mt_active_routes } }
+		set_variable = {
+			name = mt_active_routes
+			value = 0
+		}
+	}
+
+	# Call the detailed establish_trade_route_effect with appropriate parameters
+	establish_trade_route_effect = {
+		route_id = var:mt_active_routes
+		origin_county = $origin$
+		destination_county = $destination$
+		goods_type = $goods_type$
+	}
+
+	# Increment active route count
+	change_variable = {
+		name = mt_active_routes
+		add = 1
+	}
+
+	# Grant reputation for establishing new route
+	if = {
+		limit = { has_variable = mt_reputation }
+		change_variable = {
+			name = mt_reputation
+			add = 2
+		}
+	}
 }
 
 # Effect: Destroy trade route
-# Scope: County
-# Usage: county = { mt_destroy_trade_route_effect = { target = scope:destination_county } }
+# Scope: Character
+# Usage: character = { mt_destroy_trade_route_effect = { route_id = 0 } }
 mt_destroy_trade_route_effect = {
-	# TODO: Remove route variables
-	# TODO: Remove route modifiers
-	# TODO: Refund any invested resources
-	# TODO: Trigger route destruction events
+	# Close the specified trade route using the dedicated effect
+	close_trade_route_effect = {
+		route_id = $route_id$
+	}
+
+	# Decrement active route count
+	if = {
+		limit = {
+			has_variable = mt_active_routes
+			var:mt_active_routes > 0
+		}
+		change_variable = {
+			name = mt_active_routes
+			subtract = 1
+		}
+	}
 }
 
 # Effect: Update all trade routes for a character
 # Scope: Character
 # Usage: character = { mt_update_trade_routes_effect = yes }
 mt_update_trade_routes_effect = {
-	# TODO: Iterate through all owned routes
-	# TODO: Recalculate profitability
-	# TODO: Update route modifiers
-	# TODO: Handle route maintenance costs
+	# Use the dedicated update effect which handles:
+	# - Iterating through all active routes
+	# - Recalculating route health
+	# - Updating profitability
+	# - Applying monthly maintenance
+	update_active_routes_effect = yes
 }
 
 ####################################
@@ -72,32 +188,92 @@ mt_update_trade_routes_effect = {
 
 # Effect: Add trade good to county
 # Scope: County
-# Usage: county = { mt_add_trade_good_effect = { good = trade_good_silk } }
+# Usage: county = { mt_add_trade_good_effect = { good = mt_trade_good_silk } }
 mt_add_trade_good_effect = {
-	# TODO: Add trade good flag/variable
-	# TODO: Apply trade good modifiers
-	# TODO: Update local supply
-	# TODO: Trigger trade good events
+	# Add the specified trade good as a permanent county modifier
+	add_county_modifier = {
+		modifier = $good$
+		years = -1  # Permanent until removed
+	}
+
+	# Update county production tracking
+	if = {
+		limit = { NOT = { has_variable = mt_goods_count } }
+		set_variable = {
+			name = mt_goods_count
+			value = 0
+		}
+	}
+
+	change_variable = {
+		name = mt_goods_count
+		add = 1
+	}
 }
 
 # Effect: Remove trade good from county
 # Scope: County
-# Usage: county = { mt_remove_trade_good_effect = { good = trade_good_silk } }
+# Usage: county = { mt_remove_trade_good_effect = { good = mt_trade_good_silk } }
 mt_remove_trade_good_effect = {
-	# TODO: Remove trade good flag/variable
-	# TODO: Remove trade good modifiers
-	# TODO: Update local supply
-	# TODO: Trigger removal events
+	# Remove the specified trade good modifier
+	remove_county_modifier = $good$
+
+	# Update county production tracking
+	if = {
+		limit = {
+			has_variable = mt_goods_count
+			var:mt_goods_count > 0
+		}
+		change_variable = {
+			name = mt_goods_count
+			subtract = 1
+		}
+	}
 }
 
 # Effect: Calculate trade good demand
 # Scope: County
-# Usage: county = { mt_calculate_demand_effect = { good = trade_good_silk } }
+# Usage: county = { mt_calculate_demand_effect = { good = mt_trade_good_silk } }
 mt_calculate_demand_effect = {
-	# TODO: Check local production vs consumption
-	# TODO: Factor in population and development
-	# TODO: Consider cultural preferences
-	# TODO: Store demand value in variable
+	# Base demand starts at 50
+	set_variable = {
+		name = mt_temp_demand
+		value = 50
+	}
+
+	# Factor in county development (higher development = more demand)
+	if = {
+		limit = { development_level >= 20 }
+		change_variable = {
+			name = mt_temp_demand
+			add = 30
+		}
+	}
+	else_if = {
+		limit = { development_level >= 10 }
+		change_variable = {
+			name = mt_temp_demand
+			add = 15
+		}
+	}
+
+	# Reduce demand if county produces this good locally
+	if = {
+		limit = { has_county_modifier = $good$ }
+		change_variable = {
+			name = mt_temp_demand
+			subtract = 20
+		}
+	}
+
+	# Store calculated demand value
+	set_variable = {
+		name = mt_demand_$good$
+		value = var:mt_temp_demand
+	}
+
+	# Clean up temporary variable
+	remove_variable = mt_temp_demand
 }
 
 ####################################
@@ -108,21 +284,123 @@ mt_calculate_demand_effect = {
 # Scope: Character
 # Usage: character = { mt_apply_trade_income_effect = yes }
 mt_apply_trade_income_effect = {
-	# TODO: Calculate total trade income from all sources
-	# TODO: Apply income to character's gold
-	# TODO: Trigger income notification if significant
-	# TODO: Update trade income statistics
+	# Initialize trade income if not present
+	if = {
+		limit = { NOT = { has_variable = mt_monthly_trade_income } }
+		set_variable = {
+			name = mt_monthly_trade_income
+			value = 0
+		}
+	}
+
+	# Calculate total income from all active routes
+	set_variable = {
+		name = mt_temp_total_income
+		value = 0
+	}
+
+	# Sum up profit from all routes (routes 0-99)
+	# This is a simplified version - in practice would iterate through active routes
+	if = {
+		limit = {
+			has_variable = mt_active_routes
+			var:mt_active_routes > 0
+		}
+
+		# Calculate base income per route
+		set_variable = {
+			name = mt_temp_total_income
+			value = var:mt_active_routes
+		}
+
+		# Multiply by average profit per route (estimated at 25 gold/month)
+		multiply_variable = {
+			name = mt_temp_total_income
+			value = 25
+		}
+
+		# Apply character's merchant tier bonus
+		if = {
+			limit = { has_trait = merchant_prince }
+			multiply_variable = {
+				name = mt_temp_total_income
+				value = 1.2
+			}
+		}
+		else_if = {
+			limit = { has_trait = trading_company_head }
+			multiply_variable = {
+				name = mt_temp_total_income
+				value = 1.15
+			}
+		}
+		else_if = {
+			limit = { has_trait = trade_post_owner }
+			multiply_variable = {
+				name = mt_temp_total_income
+				value = 1.1
+			}
+		}
+
+		# Apply the income
+		add_gold = var:mt_temp_total_income
+
+		# Update statistics
+		set_variable = {
+			name = mt_monthly_trade_income
+			value = var:mt_temp_total_income
+		}
+
+		change_variable = {
+			name = mt_total_trade_income
+			add = var:mt_temp_total_income
+		}
+	}
+
+	# Clean up temporary variable
+	remove_variable = mt_temp_total_income
 }
 
 # Effect: Update county trade modifiers
 # Scope: County
 # Usage: county = { mt_update_county_trade_modifiers_effect = yes }
 mt_update_county_trade_modifiers_effect = {
-	# TODO: Calculate total trade activity
-	# TODO: Apply development modifiers
-	# TODO: Apply prosperity modifiers
-	# TODO: Apply tax modifiers
-	# TODO: Update trade power variable
+	# Calculate trade activity level
+	set_variable = {
+		name = mt_trade_activity
+		value = 0
+	}
+
+	# Count trade goods produced
+	if = {
+		limit = { has_variable = mt_goods_count }
+		set_variable = {
+			name = mt_trade_activity
+			value = var:mt_goods_count
+		}
+	}
+
+	# Factor in development level
+	change_variable = {
+		name = mt_trade_activity
+		add = development_level
+	}
+
+	# Apply trade hub modifier if activity is high
+	if = {
+		limit = { var:mt_trade_activity >= 30 }
+		add_county_modifier = {
+			modifier = mt_major_trade_hub
+			years = 1
+		}
+	}
+	else_if = {
+		limit = { var:mt_trade_activity >= 15 }
+		add_county_modifier = {
+			modifier = mt_trade_hub
+			years = 1
+		}
+	}
 }
 
 ####################################
@@ -133,18 +411,65 @@ mt_update_county_trade_modifiers_effect = {
 # Scope: Character (dead)
 # Usage: character = { mt_cleanup_merchant_data_effect = yes }
 mt_cleanup_merchant_data_effect = {
-	# TODO: Transfer trade routes to heir/liege
-	# TODO: Clean up character variables
-	# TODO: Handle merchant succession
-	# TODO: Trigger cleanup events
+	# Remove all trade routes
+	if = {
+		limit = { has_variable = mt_active_routes }
+		remove_all_trade_routes_effect = yes
+	}
+
+	# Clear merchant variables
+	remove_variable = mt_active_routes
+	remove_variable = mt_max_trade_routes
+	remove_variable = mt_reputation
+	remove_variable = mt_owned_trade_posts
+	remove_variable = mt_hired_agents
+	remove_variable = mt_hired_guards
+	remove_variable = mt_legendary_trades
+	remove_variable = mt_total_trade_income
+	remove_variable = mt_monthly_trade_income
+	remove_variable = merchant_initialized
+
+	# Future: Transfer assets to heir
+	# This would be implemented in inheritance system (planned for v0.3.0)
 }
 
 # Effect: Debug - Reset all merchant data for character
 # Scope: Character
 # Usage: character = { mt_debug_reset_merchant_effect = yes }
 mt_debug_reset_merchant_effect = {
-	# TODO: Remove all merchant traits
-	# TODO: Clear all merchant variables
-	# TODO: Remove all trade routes
-	# TODO: Reset to default state
+	# Remove all merchant traits
+	remove_trait = mt_merchant
+	remove_trait = wandering_merchant
+	remove_trait = trade_post_owner
+	remove_trait = trading_company_head
+	remove_trait = merchant_prince
+
+	# Remove all trade routes
+	if = {
+		limit = { has_variable = mt_active_routes }
+		remove_all_trade_routes_effect = yes
+	}
+
+	# Clear all merchant-related variables
+	remove_variable = mt_active_routes
+	remove_variable = mt_max_trade_routes
+	remove_variable = mt_reputation
+	remove_variable = mt_owned_trade_posts
+	remove_variable = mt_hired_agents
+	remove_variable = mt_hired_guards
+	remove_variable = mt_legendary_trades
+	remove_variable = mt_total_trade_income
+	remove_variable = mt_monthly_trade_income
+	remove_variable = merchant_initialized
+	remove_variable = merchant_reputation
+	remove_variable = employee_count
+	remove_variable = active_contracts
+	remove_variable = intelligence_network_size
+
+	# Remove merchant-related modifiers
+	remove_character_modifier = mt_merchant_reputation_excellent
+	remove_character_modifier = mt_merchant_reputation_good
+	remove_character_modifier = mt_merchant_reputation_poor
+	remove_character_modifier = mt_merchant_reputation_terrible
+	remove_character_modifier = mt_professional_route_management
 }
