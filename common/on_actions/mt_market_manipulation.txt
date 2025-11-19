@@ -1,0 +1,306 @@
+# ==============================================================================
+# MERCHANTS AND TRADERS - MARKET MANIPULATION ON_ACTIONS
+# ==============================================================================
+# This file contains on_action hooks for market manipulation detection and
+# consequences
+#
+# ON_ACTIONS EXPLAINED:
+# - on_market_manipulation_detected: Triggers investigation
+# - on_cartel_betrayal: One member defects from cartel
+# - on_monopoly_challenge: Competitors unite against monopolist
+# ==============================================================================
+
+# ==============================================================================
+# MANIPULATION DETECTION
+# ==============================================================================
+# Fires when authorities detect market manipulation
+# Triggers investigation and potential punishment
+# ==============================================================================
+on_market_manipulation_detected = {
+	trigger = {
+		# Must be a merchant
+		is_any_merchant_trigger = yes
+
+		# Must have active manipulation
+		OR = {
+			has_character_modifier = mt_market_monopoly_active
+			has_character_modifier = mt_hoarding_goods
+			has_character_modifier = mt_dumping_campaign_active
+			has_character_modifier = mt_cartel_member
+		}
+	}
+
+	effect = {
+		# Add investigation flag
+		add_character_flag = {
+			flag = under_market_investigation
+			years = 2
+		}
+
+		# Notify the character
+		trigger_event = {
+			id = mt_manipulation.0060
+			days = 7
+		}
+
+		# Liege may intervene
+		if = {
+			limit = {
+				exists = liege
+				NOT = { this = liege }
+			}
+			liege = {
+				trigger_event = {
+					id = mt_manipulation.0061
+					days = 14
+				}
+			}
+		}
+
+		# Public opinion shifts
+		every_vassal = {
+			limit = { is_any_merchant_trigger = yes }
+			add_opinion = {
+				target = root
+				modifier = suspicious_of_manipulation_opinion
+				opinion = -20
+			}
+		}
+	}
+}
+
+# ==============================================================================
+# CARTEL BETRAYAL
+# ==============================================================================
+# One member defects from price-fixing cartel
+# Others face investigation while betrayer gains immunity
+# ==============================================================================
+on_cartel_betrayal = {
+	trigger = {
+		# Must be cartel member
+		has_character_modifier = mt_cartel_member
+	}
+
+	effect = {
+		# Remove cartel modifier
+		remove_character_modifier = mt_cartel_member
+
+		# All other cartel members get investigated
+		every_living_character = {
+			limit = {
+				has_character_modifier = mt_cartel_member
+				NOT = { this = root }
+			}
+
+			# Trigger investigation
+			trigger_event = {
+				id = mt_manipulation.0037
+				days = { 30 60 }
+			}
+
+			# Add negative opinion of betrayer
+			add_opinion = {
+				target = root
+				modifier = cartel_betrayer_opinion
+				opinion = -100
+			}
+		}
+
+		# Betrayer receives immunity but reputation damage
+		add_character_modifier = {
+			modifier = mt_cartel_informant
+			years = 10
+		}
+
+		# Trigger betrayal event
+		trigger_event = mt_manipulation.0036
+	}
+}
+
+# ==============================================================================
+# MONOPOLY CHALLENGE
+# ==============================================================================
+# Rival merchants unite to break monopoly
+# Triggered when monopoly becomes too oppressive
+# ==============================================================================
+on_monopoly_challenge = {
+	trigger = {
+		# Must have active monopoly
+		has_character_modifier = mt_market_monopoly_active
+	}
+
+	effect = {
+		# Find rival merchants to form coalition
+		every_living_character = {
+			limit = {
+				is_any_merchant_trigger = yes
+				NOT = { this = root }
+				opinion = {
+					target = root
+					value <= 0
+				}
+			}
+
+			# Add coalition member flag
+			add_character_flag = {
+				flag = monopoly_opposition_member
+				years = 1
+			}
+		}
+
+		# Trigger challenge event
+		trigger_event = {
+			id = mt_manipulation.0002
+			days = 14
+		}
+	}
+}
+
+# ==============================================================================
+# MONTHLY PULSE - Check for manipulation consequences
+# ==============================================================================
+on_monthly_pulse = {
+	on_actions = {
+		mt_monthly_manipulation_check
+	}
+}
+
+mt_monthly_manipulation_check = {
+	trigger = {
+		# Only check merchants with active schemes
+		is_any_merchant_trigger = yes
+		OR = {
+			has_character_modifier = mt_market_monopoly_active
+			has_character_modifier = mt_hoarding_goods
+			has_character_modifier = mt_dumping_campaign_active
+			has_character_modifier = mt_cartel_member
+			has_character_modifier = mt_short_position_active
+		}
+	}
+
+	effect = {
+		# Random chance of detection each month
+		random = {
+			chance = 5
+
+			# Increase chance if manipulation is blatant
+			modifier = {
+				add = 10
+				has_character_modifier = mt_market_monopoly_active
+			}
+			modifier = {
+				add = 5
+				has_character_modifier = mt_cartel_member
+			}
+
+			# Decrease chance if high intrigue
+			modifier = {
+				add = -3
+				intrigue >= 14
+			}
+
+			# Trigger detection
+			on_market_manipulation_detected = yes
+		}
+
+		# Monopoly maintenance stress
+		if = {
+			limit = { has_character_modifier = mt_market_monopoly_active }
+			random = {
+				chance = 10
+				trigger_event = {
+					id = mt_manipulation.0003
+					days = { 15 30 }
+				}
+			}
+		}
+
+		# Cartel stability check
+		if = {
+			limit = { has_character_modifier = mt_cartel_member }
+			random = {
+				chance = 8
+				trigger_event = {
+					id = mt_manipulation.0035
+					days = { 15 30 }
+				}
+			}
+		}
+	}
+}
+
+# ==============================================================================
+# RULER INTERVENTION
+# ==============================================================================
+# When player's ruler discovers manipulation
+# May result in sanctions, fines, or imprisonment
+# ==============================================================================
+on_ruler_intervention = {
+	trigger = {
+		has_character_flag = under_market_investigation
+		exists = liege
+		NOT = { this = liege }
+	}
+
+	effect = {
+		# Liege takes action
+		liege = {
+			trigger_event = {
+				id = mt_manipulation.0061
+				days = 3
+			}
+		}
+
+		# Possible outcomes set in event
+	}
+}
+
+# ==============================================================================
+# SCANDAL EXPOSURE
+# ==============================================================================
+# When manipulation scheme becomes public scandal
+# Massive reputation damage and social consequences
+# ==============================================================================
+on_scandal_exposure = {
+	trigger = {
+		is_any_merchant_trigger = yes
+		OR = {
+			has_character_modifier = mt_known_market_manipulator
+			has_character_modifier = mt_predatory_merchant
+		}
+	}
+
+	effect = {
+		# Public outcry
+		add_prestige = -300
+
+		# All merchants turn against you
+		every_living_character = {
+			limit = {
+				is_any_merchant_trigger = yes
+				NOT = { this = root }
+			}
+			add_opinion = {
+				target = root
+				modifier = market_manipulator_opinion
+				opinion = -50
+			}
+		}
+
+		# Liege is displeased
+		if = {
+			limit = {
+				exists = liege
+				NOT = { this = liege }
+			}
+			reverse_add_opinion = {
+				target = liege
+				modifier = disappointed_opinion
+				opinion = -30
+			}
+		}
+
+		# Trigger scandal event
+		trigger_event = mt_manipulation.0070
+	}
+}
