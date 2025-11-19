@@ -1,0 +1,900 @@
+####################################
+# MERCHANTS AND TRADERS MOD
+# Miscellaneous Merchant Modifiers
+# Version: 0.2.0
+####################################
+#
+# This file contains various merchant modifiers that don't fit into other categories:
+# - Merchant reputation and status
+# - Business operations
+# - Espionage and intelligence
+# - Crisis management
+# - Special situations
+#
+####################################
+
+####################################
+# MERCHANT REPUTATION & STATUS
+####################################
+
+mt_beloved_merchant = {
+	icon = "gfx/interface/icons/modifiers/prestige.dds"
+	monthly_prestige = 1.00
+	general_opinion = 40
+	monthly_character_income_mult = 0.15
+}
+
+mt_beloved_merchant_prince = {
+	icon = "gfx/interface/icons/modifiers/prestige.dds"
+	monthly_prestige = 1.50
+	general_opinion = 50
+	monthly_character_income_mult = 0.25
+	diplomacy = 3
+}
+
+mt_celebrated_merchant = {
+	icon = "gfx/interface/icons/modifiers/prestige.dds"
+	monthly_prestige = 0.90
+	general_opinion = 35
+	monthly_character_income_mult = 0.12
+}
+
+mt_reputation_established_merchant = {
+	icon = "gfx/interface/icons/modifiers/prestige.dds"
+	monthly_prestige = 0.70
+	general_opinion = 25
+	monthly_character_income_mult = 0.10
+}
+
+mt_honored_elder = {
+	icon = "gfx/interface/icons/modifiers/prestige.dds"
+	monthly_prestige = 0.80
+	general_opinion = 30
+	diplomacy = 2
+}
+
+mt_respected_veteran = {
+	icon = "gfx/interface/icons/modifiers/prestige.dds"
+	monthly_prestige = 0.60
+	general_opinion = 20
+	stewardship = 2
+}
+
+mt_feared_merchant = {
+	icon = "gfx/interface/icons/modifiers/intrigue.dds"
+	monthly_prestige = 0.50
+	general_opinion = -15
+	intrigue = 3
+	advantage = 10
+}
+
+mt_feared_tyrant = {
+	icon = "gfx/interface/icons/modifiers/intrigue.dds"
+	monthly_prestige = 0.40
+	general_opinion = -40
+	intrigue = 3
+	martial = 2
+}
+
+mt_fair_merchant = {
+	icon = "gfx/interface/icons/modifiers/piety.dds"
+	monthly_piety = 0.50
+	general_opinion = 25
+	monthly_prestige = 0.40
+}
+
+mt_ethical_merchant = {
+	icon = "gfx/interface/icons/modifiers/piety.dds"
+	monthly_piety = 0.60
+	general_opinion = 30
+	monthly_prestige = 0.50
+}
+
+mt_trustworthy_partner = {
+	icon = "gfx/interface/icons/modifiers/diplomacy.dds"
+	diplomacy = 2
+	general_opinion = 25
+	monthly_prestige = 0.45
+}
+
+mt_predatory_merchant = {
+	icon = "gfx/interface/icons/modifiers/intrigue.dds"
+	monthly_character_income_mult = 0.15
+	intrigue = 2
+	general_opinion = -30
+	monthly_piety = -0.40
+}
+
+####################################
+# NEGATIVE REPUTATION
+####################################
+
+mt_disgraced_merchant = {
+	icon = "gfx/interface/icons/modifiers/stress.dds"
+	monthly_prestige = -1.00
+	general_opinion = -40
+	monthly_character_income_mult = -0.25
+	stress_gain_mult = 0.35
+}
+
+mt_ruined_merchant = {
+	icon = "gfx/interface/icons/modifiers/stress.dds"
+	monthly_prestige = -1.50
+	general_opinion = -50
+	monthly_character_income_mult = -0.40
+	stress_gain_mult = 0.50
+}
+
+mt_bankrupt_merchant = {
+	icon = "gfx/interface/icons/modifiers/stress.dds"
+	monthly_character_income_mult = -0.50
+	stress_gain_mult = 0.60
+	general_opinion = -35
+	monthly_prestige = -0.80
+}
+
+mt_convicted_fraud = {
+	icon = "gfx/interface/icons/modifiers/stress.dds"
+	monthly_prestige = -1.20
+	general_opinion = -60
+	monthly_character_income_mult = -0.30
+	monthly_piety = -0.50
+}
+
+mt_exposed_fraud = {
+	icon = "gfx/interface/icons/modifiers/stress.dds"
+	monthly_prestige = -1.00
+	general_opinion = -50
+	monthly_character_income_mult = -0.25
+}
+
+mt_known_liar = {
+	icon = "gfx/interface/icons/modifiers/intrigue.dds"
+	general_opinion = -35
+	monthly_prestige = -0.60
+	diplomacy = -2
+}
+
+mt_liar_merchant = {
+	icon = "gfx/interface/icons/modifiers/intrigue.dds"
+	general_opinion = -30
+	monthly_prestige = -0.50
+	intrigue = 1
+}
+
+mt_exposed_liar = {
+	icon = "gfx/interface/icons/modifiers/stress.dds"
+	general_opinion = -45
+	monthly_prestige = -0.80
+	stress_gain_mult = 0.30
+}
+
+mt_corrupt_liar = {
+	icon = "gfx/interface/icons/modifiers/stress.dds"
+	general_opinion = -55
+	monthly_prestige = -1.00
+	monthly_piety = -0.60
+}
+
+mt_fugitive_merchant = {
+	icon = "gfx/interface/icons/modifiers/stress.dds"
+	monthly_character_income_mult = -0.30
+	stress_gain_mult = 0.40
+	general_opinion = -40
+	intrigue = 2
+}
+
+mt_under_suspicion = {
+	icon = "gfx/interface/icons/modifiers/stress.dds"
+	general_opinion = -20
+	stress_gain_mult = 0.25
+	monthly_prestige = -0.40
+}
+
+####################################
+# BUSINESS EXCELLENCE
+####################################
+
+mt_world_trader = {
+	icon = "gfx/interface/icons/modifiers/prestige.dds"
+	monthly_character_income_mult = 0.30
+	monthly_prestige = 1.20
+	diplomacy = 3
+	stewardship = 3
+	general_opinion = 30
+}
+
+mt_international_trader = {
+	icon = "gfx/interface/icons/modifiers/trade.dds"
+	monthly_character_income_mult = 0.20
+	diplomacy = 2
+	monthly_prestige = 0.70
+}
+
+mt_independent_merchant = {
+	icon = "gfx/interface/icons/modifiers/prestige.dds"
+	monthly_prestige = 0.50
+	general_opinion = 15
+	monthly_character_income_mult = 0.10
+}
+
+mt_proudly_independent = {
+	icon = "gfx/interface/icons/modifiers/prestige.dds"
+	monthly_prestige = 0.60
+	general_opinion = 20
+}
+
+mt_merchant_friendly = {
+	icon = "gfx/interface/icons/modifiers/diplomacy.dds"
+	diplomacy = 2
+	general_opinion = 20
+	monthly_prestige = 0.35
+}
+
+mt_merchant_partner = {
+	icon = "gfx/interface/icons/modifiers/diplomacy.dds"
+	monthly_character_income_mult = 0.12
+	diplomacy = 1
+	general_opinion = 15
+}
+
+mt_innovative_leader = {
+	icon = "gfx/interface/icons/modifiers/learning.dds"
+	learning = 3
+	monthly_prestige = 0.80
+	monthly_character_income_mult = 0.15
+}
+
+mt_clever_negotiator = {
+	icon = "gfx/interface/icons/modifiers/diplomacy.dds"
+	diplomacy = 3
+	monthly_character_income_mult = 0.12
+	monthly_prestige = 0.50
+}
+
+####################################
+# BUSINESS OPERATIONS
+####################################
+
+mt_efficient_service = {
+	icon = "gfx/interface/icons/modifiers/stewardship.dds"
+	stewardship = 2
+	monthly_character_income_mult = 0.10
+}
+
+mt_excellent_service = {
+	icon = "gfx/interface/icons/modifiers/stewardship.dds"
+	stewardship = 2
+	monthly_character_income_mult = 0.15
+	general_opinion = 15
+}
+
+mt_budget_service = {
+	icon = "gfx/interface/icons/modifiers/stewardship.dds"
+	monthly_character_income_mult = 0.05
+	general_opinion = -5
+}
+
+mt_exceeds_expectations = {
+	icon = "gfx/interface/icons/modifiers/prestige.dds"
+	monthly_prestige = 0.60
+	general_opinion = 25
+	monthly_character_income_mult = 0.12
+}
+
+mt_streamlined_operations = {
+	icon = "gfx/interface/icons/modifiers/stewardship.dds"
+	stewardship = 2
+	monthly_character_income_mult = 0.15
+	monthly_character_expenses = -0.10
+}
+
+mt_complete_reorganization = {
+	icon = "gfx/interface/icons/modifiers/stewardship.dds"
+	stewardship = 3
+	monthly_character_income_mult = 0.18
+	stress_gain_mult = 0.20
+}
+
+mt_professional_route_management = {
+	icon = "gfx/interface/icons/modifiers/stewardship.dds"
+	stewardship = 2
+	monthly_character_income_mult = 0.12
+}
+
+mt_strict_accounting = {
+	icon = "gfx/interface/icons/modifiers/stewardship.dds"
+	stewardship = 2
+	monthly_character_expenses = -0.08
+	general_opinion = -10
+}
+
+mt_master_accountant = {
+	icon = "gfx/interface/icons/modifiers/stewardship.dds"
+	stewardship = 3
+	monthly_character_expenses = -0.12
+	learning = 2
+}
+
+mt_diversified_inventory = {
+	icon = "gfx/interface/icons/modifiers/stewardship.dds"
+	monthly_character_income_mult = 0.12
+	stewardship = 1
+}
+
+mt_professional_boundaries = {
+	icon = "gfx/interface/icons/modifiers/diplomacy.dds"
+	diplomacy = 1
+	stress_gain_mult = -0.10
+}
+
+####################################
+# QUALITY & PRODUCTS
+####################################
+
+mt_premium_goods = {
+	icon = "gfx/interface/icons/modifiers/prestige.dds"
+	monthly_prestige = 0.50
+	monthly_character_income_mult = 0.15
+}
+
+mt_premium_pricing = {
+	icon = "gfx/interface/icons/modifiers/trade.dds"
+	monthly_character_income_mult = 0.12
+	monthly_prestige = 0.30
+}
+
+mt_superior_quality = {
+	icon = "gfx/interface/icons/modifiers/prestige.dds"
+	monthly_prestige = 0.60
+	monthly_character_income_mult = 0.18
+	general_opinion = 20
+}
+
+mt_proven_quality = {
+	icon = "gfx/interface/icons/modifiers/prestige.dds"
+	monthly_prestige = 0.45
+	general_opinion = 15
+	monthly_character_income_mult = 0.12
+}
+
+mt_quality_reputation = {
+	icon = "gfx/interface/icons/modifiers/prestige.dds"
+	monthly_prestige = 0.55
+	general_opinion = 18
+	monthly_character_income_mult = 0.14
+}
+
+mt_luxury_merchant = {
+	icon = "gfx/interface/icons/modifiers/prestige.dds"
+	monthly_prestige = 0.70
+	monthly_character_income_mult = 0.20
+	diplomacy = 2
+}
+
+####################################
+# PARTNERSHIPS & VENTURES
+####################################
+
+mt_joint_venture = {
+	icon = "gfx/interface/icons/modifiers/diplomacy.dds"
+	monthly_character_income_mult = 0.15
+	diplomacy = 2
+	monthly_character_expenses = 0.08
+}
+
+mt_successful_venture = {
+	icon = "gfx/interface/icons/modifiers/prestige.dds"
+	monthly_prestige = 0.60
+	monthly_character_income_mult = 0.18
+	general_opinion = 15
+}
+
+mt_shared_venture = {
+	icon = "gfx/interface/icons/modifiers/diplomacy.dds"
+	monthly_character_income_mult = 0.12
+	diplomacy = 1
+}
+
+mt_senior_partner = {
+	icon = "gfx/interface/icons/modifiers/prestige.dds"
+	monthly_prestige = 0.70
+	diplomacy = 2
+	monthly_character_income_mult = 0.15
+}
+
+mt_merged_company = {
+	icon = "gfx/interface/icons/modifiers/stewardship.dds"
+	monthly_character_income_mult = 0.20
+	stewardship = 2
+	stress_gain_mult = 0.15
+}
+
+mt_dynastic_merger_planned = {
+	icon = "gfx/interface/icons/modifiers/diplomacy.dds"
+	diplomacy = 2
+	monthly_prestige = 0.50
+}
+
+mt_decade_long_partnership = {
+	icon = "gfx/interface/icons/modifiers/prestige.dds"
+	monthly_prestige = 0.80
+	general_opinion = 25
+	monthly_character_income_mult = 0.15
+}
+
+####################################
+# INVESTMENTS & RETURNS
+####################################
+
+mt_successful_investor = {
+	icon = "gfx/interface/icons/modifiers/stewardship.dds"
+	stewardship = 3
+	monthly_character_income_mult = 0.18
+	monthly_prestige = 0.60
+}
+
+mt_compound_returns = {
+	icon = "gfx/interface/icons/modifiers/stewardship.dds"
+	monthly_character_income_mult = 0.20
+	stewardship = 2
+}
+
+mt_long_term_stability = {
+	icon = "gfx/interface/icons/modifiers/stewardship.dds"
+	stress_gain_mult = -0.15
+	monthly_character_income_mult = 0.10
+	stewardship = 1
+}
+
+mt_first_year_success = {
+	icon = "gfx/interface/icons/modifiers/prestige.dds"
+	monthly_prestige = 0.40
+	monthly_character_income_mult = 0.10
+}
+
+####################################
+# CRISIS & CHALLENGES
+####################################
+
+mt_crisis_manager = {
+	icon = "gfx/interface/icons/modifiers/stewardship.dds"
+	stewardship = 3
+	martial = 2
+	monthly_prestige = 0.70
+}
+
+mt_weathered_scandal = {
+	icon = "gfx/interface/icons/modifiers/prestige.dds"
+	monthly_prestige = 0.50
+	general_opinion = 10
+	stress_gain_mult = -0.10
+}
+
+mt_cleared_name = {
+	icon = "gfx/interface/icons/modifiers/prestige.dds"
+	monthly_prestige = 0.80
+	general_opinion = 30
+	stress_gain_mult = -0.20
+}
+
+mt_investigation_stalled = {
+	icon = "gfx/interface/icons/modifiers/intrigue.dds"
+	intrigue = 2
+	stress_gain_mult = -0.15
+}
+
+mt_slow_recovery = {
+	icon = "gfx/interface/icons/modifiers/stewardship.dds"
+	monthly_character_income_mult = 0.05
+	stress_gain_mult = 0.15
+}
+
+mt_vulnerable_to_takeover = {
+	icon = "gfx/interface/icons/modifiers/stress.dds"
+	monthly_character_income_mult = -0.15
+	stress_gain_mult = 0.25
+	general_opinion = -15
+}
+
+mt_losing_customers = {
+	icon = "gfx/interface/icons/modifiers/stress.dds"
+	monthly_character_income_mult = -0.20
+	stress_gain_mult = 0.20
+	general_opinion = -20
+}
+
+mt_strengthening_position = {
+	icon = "gfx/interface/icons/modifiers/stewardship.dds"
+	stewardship = 2
+	monthly_character_income_mult = 0.10
+	monthly_prestige = 0.40
+}
+
+mt_catching_up_on_deliveries = {
+	icon = "gfx/interface/icons/modifiers/stress.dds"
+	stress_gain_mult = 0.20
+	monthly_character_expenses = 0.10
+}
+
+mt_renegotiation_attempt = {
+	icon = "gfx/interface/icons/modifiers/diplomacy.dds"
+	diplomacy = 1
+	stress_gain_mult = 0.15
+}
+
+mt_gambling_crisis = {
+	icon = "gfx/interface/icons/modifiers/stress.dds"
+	monthly_character_income_mult = -0.25
+	stress_gain_mult = 0.40
+	general_opinion = -25
+}
+
+mt_gamblers_ruin = {
+	icon = "gfx/interface/icons/modifiers/stress.dds"
+	monthly_character_income_mult = -0.40
+	stress_gain_mult = 0.50
+	general_opinion = -35
+}
+
+mt_overplayed_hand = {
+	icon = "gfx/interface/icons/modifiers/stress.dds"
+	monthly_character_income_mult = -0.20
+	stress_gain_mult = 0.30
+	monthly_prestige = -0.50
+}
+
+mt_own_victim = {
+	icon = "gfx/interface/icons/modifiers/stress.dds"
+	stress_gain_mult = 0.35
+	monthly_prestige = -0.60
+}
+
+mt_vengeful_rebuilder = {
+	icon = "gfx/interface/icons/modifiers/intrigue.dds"
+	intrigue = 2
+	stewardship = 2
+	stress_gain_mult = 0.20
+	monthly_character_income_mult = 0.10
+}
+
+####################################
+# ESPIONAGE & INTELLIGENCE
+####################################
+
+mt_master_spy = {
+	icon = "gfx/interface/icons/modifiers/intrigue.dds"
+	intrigue = 4
+	monthly_prestige = 0.70
+	monthly_character_expenses = 0.15
+}
+
+mt_verified_master_spy = {
+	icon = "gfx/interface/icons/modifiers/intrigue.dds"
+	intrigue = 4
+	monthly_prestige = 0.90
+	general_opinion = -20
+}
+
+mt_spy_network = {
+	icon = "gfx/interface/icons/modifiers/intrigue.dds"
+	intrigue = 3
+	monthly_character_expenses = 0.12
+}
+
+mt_discrete_network = {
+	icon = "gfx/interface/icons/modifiers/intrigue.dds"
+	intrigue = 2
+	monthly_character_expenses = 0.08
+}
+
+mt_counter_intelligence = {
+	icon = "gfx/interface/icons/modifiers/intrigue.dds"
+	intrigue = 3
+	martial = 1
+	monthly_character_expenses = 0.10
+}
+
+mt_counter_espionage_active = {
+	icon = "gfx/interface/icons/modifiers/martial.dds"
+	martial = 2
+	intrigue = 2
+	monthly_character_expenses = 0.12
+}
+
+mt_verified_spy = {
+	icon = "gfx/interface/icons/modifiers/intrigue.dds"
+	intrigue = 3
+	monthly_prestige = 0.50
+	general_opinion = -15
+}
+
+mt_turned_spy = {
+	icon = "gfx/interface/icons/modifiers/intrigue.dds"
+	intrigue = 3
+	monthly_character_income_mult = 0.10
+	general_opinion = -25
+}
+
+mt_exposed_spymaster = {
+	icon = "gfx/interface/icons/modifiers/stress.dds"
+	monthly_prestige = -0.80
+	general_opinion = -40
+	stress_gain_mult = 0.35
+}
+
+mt_inside_information = {
+	icon = "gfx/interface/icons/modifiers/intrigue.dds"
+	intrigue = 2
+	monthly_character_income_mult = 0.10
+}
+
+mt_known_information_broker = {
+	icon = "gfx/interface/icons/modifiers/intrigue.dds"
+	intrigue = 3
+	monthly_character_income_mult = 0.15
+	general_opinion = -20
+}
+
+mt_cartel_member = {
+	icon = "gfx/interface/icons/modifiers/intrigue.dds"
+	intrigue = 2
+	monthly_character_income_mult = 0.12
+	general_opinion = -25
+}
+
+mt_cartel_informant = {
+	icon = "gfx/interface/icons/modifiers/intrigue.dds"
+	intrigue = 3
+	monthly_character_income_mult = 0.10
+	general_opinion = -30
+}
+
+mt_known_saboteur = {
+	icon = "gfx/interface/icons/modifiers/intrigue.dds"
+	intrigue = 3
+	general_opinion = -35
+	monthly_piety = -0.40
+}
+
+mt_merciful_to_spies = {
+	icon = "gfx/interface/icons/modifiers/piety.dds"
+	monthly_piety = 0.40
+	general_opinion = 15
+	diplomacy = 1
+}
+
+####################################
+# INFORMATION & RUMORS
+####################################
+
+mt_rumor_master = {
+	icon = "gfx/interface/icons/modifiers/intrigue.dds"
+	intrigue = 3
+	diplomacy = 1
+	monthly_character_income_mult = 0.12
+}
+
+mt_rumor_war = {
+	icon = "gfx/interface/icons/modifiers/intrigue.dds"
+	intrigue = 2
+	stress_gain_mult = 0.20
+	general_opinion = -15
+}
+
+mt_trade_knowledge_hub = {
+	icon = "gfx/interface/icons/modifiers/learning.dds"
+	learning = 3
+	monthly_prestige = 0.70
+	general_opinion = 20
+}
+
+####################################
+# SECURITY & PROTECTION
+####################################
+
+mt_professional_guards = {
+	icon = "gfx/interface/icons/modifiers/martial.dds"
+	martial = 2
+	advantage = 10
+	monthly_character_expenses = 0.12
+}
+
+mt_hired_protection = {
+	icon = "gfx/interface/icons/modifiers/martial.dds"
+	advantage = 5
+	monthly_character_expenses = 0.08
+}
+
+mt_protected_caravans = {
+	icon = "gfx/interface/icons/modifiers/martial.dds"
+	monthly_character_income_mult = 0.08
+	advantage = 5
+	monthly_character_expenses = 0.10
+}
+
+mt_protected_company = {
+	icon = "gfx/interface/icons/modifiers/martial.dds"
+	advantage = 10
+	general_opinion = 10
+	monthly_character_expenses = 0.12
+}
+
+mt_secure_operations = {
+	icon = "gfx/interface/icons/modifiers/martial.dds"
+	martial = 1
+	intrigue = 1
+	monthly_character_expenses = 0.08
+}
+
+mt_superior_arms = {
+	icon = "gfx/interface/icons/modifiers/martial.dds"
+	martial = 2
+	advantage = 15
+	monthly_prestige = 0.40
+}
+
+####################################
+# INFRASTRUCTURE & FACILITIES
+####################################
+
+mt_raided_warehouses = {
+	icon = "gfx/interface/icons/modifiers/stress.dds"
+	monthly_character_income_mult = -0.25
+	stress_gain_mult = 0.30
+}
+
+mt_rebuilt_warehouse = {
+	icon = "gfx/interface/icons/modifiers/stewardship.dds"
+	monthly_character_income_mult = 0.10
+	stewardship = 1
+	monthly_prestige = 0.30
+}
+
+mt_reinforced_boats = {
+	icon = "gfx/interface/icons/modifiers/martial.dds"
+	monthly_character_income_mult = 0.08
+	martial = 1
+	monthly_character_expenses = 0.10
+}
+
+####################################
+# SPECIAL SITUATIONS
+####################################
+
+mt_merchant_philanthropist = {
+	icon = "gfx/interface/icons/modifiers/piety.dds"
+	monthly_piety = 0.80
+	general_opinion = 35
+	monthly_prestige = 0.70
+	monthly_character_expenses = 0.15
+}
+
+mt_cosmopolitan_city = {
+	icon = "gfx/interface/icons/modifiers/learning.dds"
+	learning = 2
+	diplomacy = 2
+	monthly_prestige = 0.60
+	general_opinion = 15
+}
+
+mt_innovation_center = {
+	icon = "gfx/interface/icons/modifiers/learning.dds"
+	learning = 3
+	monthly_prestige = 0.80
+	monthly_character_income_mult = 0.12
+}
+
+mt_cultural_exchange = {
+	icon = "gfx/interface/icons/modifiers/learning.dds"
+	learning = 2
+	diplomacy = 2
+	monthly_prestige = 0.50
+}
+
+mt_cultural_expertise = {
+	icon = "gfx/interface/icons/modifiers/learning.dds"
+	learning = 2
+	diplomacy = 1
+	monthly_character_income_mult = 0.10
+}
+
+mt_multicultural_workforce = {
+	icon = "gfx/interface/icons/modifiers/diplomacy.dds"
+	diplomacy = 2
+	learning = 1
+	general_opinion = -5
+}
+
+mt_resettlement_program = {
+	icon = "gfx/interface/icons/modifiers/piety.dds"
+	monthly_piety = 0.50
+	general_opinion = 20
+	stewardship = 1
+}
+
+mt_merchant_settlement = {
+	icon = "gfx/interface/icons/modifiers/stewardship.dds"
+	stewardship = 2
+	monthly_prestige = 0.60
+	monthly_character_income_mult = 0.10
+}
+
+mt_merchant_restrictions = {
+	icon = "gfx/interface/icons/modifiers/stress.dds"
+	monthly_character_income_mult = -0.15
+	stress_gain_mult = 0.20
+	general_opinion = -10
+}
+
+mt_closed_borders = {
+	icon = "gfx/interface/icons/modifiers/stress.dds"
+	monthly_character_income_mult = -0.30
+	stress_gain_mult = 0.25
+}
+
+mt_alternative_route = {
+	icon = "gfx/interface/icons/modifiers/stewardship.dds"
+	stewardship = 2
+	monthly_character_income_mult = 0.08
+}
+
+mt_secret_foreign_trade = {
+	icon = "gfx/interface/icons/modifiers/intrigue.dds"
+	intrigue = 3
+	monthly_character_income_mult = 0.15
+	general_opinion = -20
+}
+
+mt_viking_threat = {
+	icon = "gfx/interface/icons/modifiers/stress.dds"
+	monthly_character_income_mult = -0.20
+	stress_gain_mult = 0.20
+	martial = 1
+}
+
+mt_strategic_retreat = {
+	icon = "gfx/interface/icons/modifiers/martial.dds"
+	martial = 2
+	monthly_character_income_mult = -0.10
+	stress_gain_mult = -0.10
+}
+
+mt_constant_innovation = {
+	icon = "gfx/interface/icons/modifiers/learning.dds"
+	learning = 3
+	monthly_prestige = 0.70
+	monthly_character_income_mult = 0.15
+}
+
+mt_corruption_fighter = {
+	icon = "gfx/interface/icons/modifiers/piety.dds"
+	monthly_piety = 0.60
+	general_opinion = 25
+	monthly_prestige = 0.50
+}
+
+mt_merchant_development_boost = {
+	icon = "gfx/interface/icons/modifiers/stewardship.dds"
+	stewardship = 2
+	monthly_character_income_mult = 0.12
+	general_opinion = 15
+}
+
+mt_expanded_empire = {
+	icon = "gfx/interface/icons/modifiers/prestige.dds"
+	monthly_prestige = 1.00
+	monthly_character_income_mult = 0.25
+	stewardship = 2
+	diplomacy = 2
+}
+
+mt_bumper_crop = {
+	icon = "gfx/interface/icons/modifiers/trade.dds"
+	monthly_character_income_mult = 0.20
+	monthly_prestige = 0.40
+}
+
+####################################
+# END OF FILE
+####################################

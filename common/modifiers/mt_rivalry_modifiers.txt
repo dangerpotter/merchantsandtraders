@@ -1,0 +1,255 @@
+####################################
+# MERCHANTS AND TRADERS MOD
+# Rivalry & Competition Modifiers
+# Version: 0.2.0
+####################################
+#
+# This file contains all modifiers related to merchant rivalries and competition:
+# - Active rivalries and conflicts
+# - Competitive advantages and disadvantages
+# - Hostile takeovers and acquisitions
+# - Espionage and sabotage
+#
+####################################
+
+####################################
+# RIVALRY STATES
+####################################
+
+mt_fierce_rivalry = {
+	icon = "gfx/interface/icons/modifiers/stress.dds"
+	stress_gain_mult = 0.30
+	intrigue = 2
+	monthly_prestige = 0.30
+}
+
+mt_sworn_enemy = {
+	icon = "gfx/interface/icons/modifiers/stress.dds"
+	stress_gain_mult = 0.40
+	martial = 2
+	intrigue = 2
+	general_opinion = -15
+}
+
+mt_watching_rival = {
+	icon = "gfx/interface/icons/modifiers/intrigue.dds"
+	intrigue = 1
+	monthly_character_expenses = 0.05
+}
+
+mt_route_feud = {
+	icon = "gfx/interface/icons/modifiers/stress.dds"
+	monthly_character_income_mult = -0.10
+	stress_gain_mult = 0.20
+	intrigue = 1
+}
+
+mt_cold_peace = {
+	icon = "gfx/interface/icons/modifiers/diplomacy.dds"
+	stress_gain_mult = -0.10
+	diplomacy = 1
+	general_opinion = 5
+}
+
+mt_avoided_conflict = {
+	icon = "gfx/interface/icons/modifiers/diplomacy.dds"
+	stress_gain_mult = -0.15
+	diplomacy = 2
+	monthly_prestige = 0.25
+}
+
+mt_above_the_fray = {
+	icon = "gfx/interface/icons/modifiers/prestige.dds"
+	monthly_prestige = 0.60
+	general_opinion = 20
+	diplomacy = 2
+}
+
+####################################
+# COMPETITION & MARKET CONFLICT
+####################################
+
+mt_competitive_merchant = {
+	icon = "gfx/interface/icons/modifiers/trade.dds"
+	monthly_character_income_mult = 0.10
+	stress_gain_mult = 0.15
+	intrigue = 1
+}
+
+mt_friendly_competition = {
+	icon = "gfx/interface/icons/modifiers/diplomacy.dds"
+	monthly_character_income_mult = 0.08
+	diplomacy = 1
+	general_opinion = 10
+}
+
+mt_honest_competitor = {
+	icon = "gfx/interface/icons/modifiers/piety.dds"
+	monthly_piety = 0.30
+	general_opinion = 15
+	monthly_prestige = 0.40
+}
+
+mt_ruthless_businessman = {
+	icon = "gfx/interface/icons/modifiers/intrigue.dds"
+	monthly_character_income_mult = 0.15
+	intrigue = 3
+	general_opinion = -20
+	monthly_piety = -0.30
+}
+
+mt_defensive_merchant = {
+	icon = "gfx/interface/icons/modifiers/martial.dds"
+	martial = 2
+	monthly_character_expenses = 0.10
+	advantage = 5
+}
+
+mt_defensive_posture = {
+	icon = "gfx/interface/icons/modifiers/martial.dds"
+	martial = 1
+	monthly_character_expenses = 0.08
+	monthly_character_income_mult = -0.05
+}
+
+####################################
+# HOSTILE ACTIONS
+####################################
+
+mt_sabotage_war = {
+	icon = "gfx/interface/icons/modifiers/intrigue.dds"
+	intrigue = 2
+	monthly_character_expenses = 0.15
+	stress_gain_mult = 0.25
+	general_opinion = -25
+}
+
+mt_petty_attacker = {
+	icon = "gfx/interface/icons/modifiers/stress.dds"
+	general_opinion = -20
+	monthly_prestige = -0.40
+	stress_gain_mult = 0.15
+}
+
+mt_trading_with_enemy = {
+	icon = "gfx/interface/icons/modifiers/intrigue.dds"
+	monthly_character_income_mult = 0.12
+	general_opinion = -15
+	monthly_piety = -0.20
+}
+
+####################################
+# ACQUISITIONS & TAKEOVERS
+####################################
+
+mt_hostile_takeover_master = {
+	icon = "gfx/interface/icons/modifiers/intrigue.dds"
+	monthly_character_income_mult = 0.20
+	intrigue = 3
+	monthly_prestige = 0.50
+	general_opinion = -30
+}
+
+mt_acquired_rival = {
+	icon = "gfx/interface/icons/modifiers/prestige.dds"
+	monthly_prestige = 0.80
+	monthly_character_income_mult = 0.15
+	general_opinion = 10
+}
+
+mt_acquired_competitor = {
+	icon = "gfx/interface/icons/modifiers/prestige.dds"
+	monthly_prestige = 0.60
+	monthly_character_income_mult = 0.12
+	stewardship = 1
+}
+
+mt_defeated_legacy = {
+	icon = "gfx/interface/icons/modifiers/prestige.dds"
+	monthly_prestige = 1.00
+	general_opinion = 15
+	monthly_character_income_mult = 0.10
+}
+
+####################################
+# ESPIONAGE & INTELLIGENCE
+####################################
+
+mt_copied_routes = {
+	icon = "gfx/interface/icons/modifiers/intrigue.dds"
+	monthly_character_income_mult = 0.10
+	intrigue = 2
+	general_opinion = -15
+}
+
+mt_stolen_trade_methods = {
+	icon = "gfx/interface/icons/modifiers/intrigue.dds"
+	monthly_character_income_mult = 0.12
+	learning = 1
+	intrigue = 2
+	general_opinion = -20
+}
+
+mt_outsmarted_rival = {
+	icon = "gfx/interface/icons/modifiers/learning.dds"
+	learning = 2
+	monthly_prestige = 0.50
+	intrigue = 1
+}
+
+mt_cold_war_espionage = {
+	icon = "gfx/interface/icons/modifiers/intrigue.dds"
+	intrigue = 2
+	monthly_character_expenses = 0.12
+	stress_gain_mult = 0.20
+}
+
+####################################
+# COALITIONS
+####################################
+
+mt_coalition_leader = {
+	icon = "gfx/interface/icons/modifiers/diplomacy.dds"
+	diplomacy = 3
+	monthly_prestige = 0.70
+	general_opinion = 20
+	monthly_character_income_mult = 0.10
+}
+
+mt_merchant_coalition_leader = {
+	icon = "gfx/interface/icons/modifiers/diplomacy.dds"
+	diplomacy = 3
+	monthly_prestige = 0.80
+	general_opinion = 25
+	monthly_character_income_mult = 0.15
+}
+
+mt_facing_coalition = {
+	icon = "gfx/interface/icons/modifiers/stress.dds"
+	stress_gain_mult = 0.35
+	monthly_character_income_mult = -0.15
+	general_opinion = -20
+}
+
+####################################
+# BLACKMAIL & LEVERAGE
+####################################
+
+mt_blackmailing_rival = {
+	icon = "gfx/interface/icons/modifiers/intrigue.dds"
+	intrigue = 3
+	monthly_character_income_mult = 0.15
+	general_opinion = -30
+	monthly_piety = -0.40
+}
+
+mt_blackmail_income = {
+	icon = "gfx/interface/icons/modifiers/intrigue.dds"
+	monthly_character_income_mult = 0.18
+	intrigue = 2
+	general_opinion = -25
+}
+
+####################################
+# END OF FILE
+####################################

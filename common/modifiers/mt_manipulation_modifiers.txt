@@ -1,0 +1,227 @@
+####################################
+# MERCHANTS AND TRADERS MOD
+# Market Manipulation Modifiers
+# Version: 0.2.0
+####################################
+#
+# This file contains all modifiers related to market manipulation:
+# - Price wars and competition
+# - Monopolies and market control
+# - Hoarding and dumping
+# - Market dominance and power
+#
+####################################
+
+####################################
+# PRICE WAR MODIFIERS
+####################################
+
+mt_price_war_victor = {
+	icon = "gfx/interface/icons/modifiers/prestige.dds"
+	monthly_character_income_mult = 0.20
+	monthly_prestige = 0.70
+	general_opinion = 10
+}
+
+mt_price_war_defeated = {
+	icon = "gfx/interface/icons/modifiers/stress.dds"
+	monthly_character_income_mult = -0.15
+	stress_gain_mult = 0.30
+	general_opinion = -15
+}
+
+mt_price_war_matching = {
+	icon = "gfx/interface/icons/modifiers/stress.dds"
+	monthly_character_income_mult = -0.10
+	stress_gain_mult = 0.20
+}
+
+mt_in_price_competition = {
+	icon = "gfx/interface/icons/modifiers/stress.dds"
+	monthly_character_income_mult = -0.08
+	stress_gain_mult = 0.15
+	intrigue = 1
+}
+
+mt_exited_price_war = {
+	icon = "gfx/interface/icons/modifiers/diplomacy.dds"
+	stress_gain_mult = -0.15
+	monthly_character_income_mult = 0.05
+}
+
+mt_price_truce = {
+	icon = "gfx/interface/icons/modifiers/diplomacy.dds"
+	stress_gain_mult = -0.10
+	general_opinion = 5
+}
+
+####################################
+# MONOPOLY & MARKET CONTROL
+####################################
+
+mt_market_monopoly_active = {
+	icon = "gfx/interface/icons/modifiers/trade.dds"
+	monthly_character_income_mult = 0.35
+	general_opinion = -30
+	monthly_piety = -0.40
+	stress_gain_mult = 0.20
+}
+
+mt_market_dominance = {
+	icon = "gfx/interface/icons/modifiers/prestige.dds"
+	monthly_character_income_mult = 0.25
+	monthly_prestige = 0.80
+	general_opinion = -20
+}
+
+mt_market_domination = {
+	icon = "gfx/interface/icons/modifiers/prestige.dds"
+	monthly_character_income_mult = 0.30
+	monthly_prestige = 1.00
+	general_opinion = -25
+	intrigue = 2
+}
+
+mt_merciful_monopolist = {
+	icon = "gfx/interface/icons/modifiers/piety.dds"
+	monthly_character_income_mult = 0.20
+	monthly_piety = 0.50
+	general_opinion = 10
+}
+
+####################################
+# MARKET MANIPULATION TACTICS
+####################################
+
+mt_dumping_campaign_active = {
+	icon = "gfx/interface/icons/modifiers/intrigue.dds"
+	monthly_character_income_mult = -0.15
+	monthly_character_expenses = 0.20
+	intrigue = 2
+	general_opinion = -20
+}
+
+mt_hoarding_goods = {
+	icon = "gfx/interface/icons/modifiers/intrigue.dds"
+	monthly_character_expenses = 0.15
+	monthly_character_income_mult = 0.15
+	intrigue = 2
+	general_opinion = -25
+}
+
+mt_short_position_active = {
+	icon = "gfx/interface/icons/modifiers/intrigue.dds"
+	monthly_character_income_mult = 0.12
+	stress_gain_mult = 0.25
+	intrigue = 2
+}
+
+mt_oversupply_modifier = {
+	icon = "gfx/interface/icons/modifiers/trade.dds"
+	monthly_character_income_mult = -0.20
+	stress_gain_mult = 0.15
+}
+
+mt_price_protection_active = {
+	icon = "gfx/interface/icons/modifiers/stewardship.dds"
+	monthly_character_expenses = 0.10
+	stewardship = 1
+}
+
+mt_price_stability_hedged = {
+	icon = "gfx/interface/icons/modifiers/stewardship.dds"
+	stress_gain_mult = -0.10
+	stewardship = 2
+}
+
+####################################
+# MANIPULATION REPUTATION
+####################################
+
+mt_market_manipulator = {
+	icon = "gfx/interface/icons/modifiers/intrigue.dds"
+	monthly_character_income_mult = 0.18
+	intrigue = 3
+	general_opinion = -30
+	monthly_piety = -0.40
+}
+
+mt_known_market_manipulator = {
+	icon = "gfx/interface/icons/modifiers/intrigue.dds"
+	monthly_character_income_mult = 0.15
+	intrigue = 2
+	general_opinion = -35
+	monthly_prestige = -0.50
+}
+
+mt_price_manipulator = {
+	icon = "gfx/interface/icons/modifiers/intrigue.dds"
+	monthly_character_income_mult = 0.12
+	intrigue = 2
+	general_opinion = -25
+}
+
+mt_price_gouger = {
+	icon = "gfx/interface/icons/modifiers/intrigue.dds"
+	monthly_character_income_mult = 0.20
+	general_opinion = -40
+	monthly_piety = -0.50
+}
+
+mt_convicted_manipulator = {
+	icon = "gfx/interface/icons/modifiers/stress.dds"
+	monthly_prestige = -1.00
+	general_opinion = -50
+	monthly_character_income_mult = -0.20
+	stress_gain_mult = 0.35
+}
+
+####################################
+# ETHICAL ALTERNATIVES
+####################################
+
+mt_market_genius = {
+	icon = "gfx/interface/icons/modifiers/learning.dds"
+	monthly_character_income_mult = 0.22
+	learning = 3
+	monthly_prestige = 0.80
+	general_opinion = 20
+}
+
+mt_ethical_market_leader = {
+	icon = "gfx/interface/icons/modifiers/piety.dds"
+	monthly_character_income_mult = 0.15
+	monthly_piety = 0.60
+	general_opinion = 30
+	monthly_prestige = 0.70
+}
+
+mt_repentant_manipulator = {
+	icon = "gfx/interface/icons/modifiers/piety.dds"
+	monthly_piety = 0.50
+	general_opinion = 10
+	monthly_prestige = 0.30
+}
+
+mt_heartless_profiteer = {
+	icon = "gfx/interface/icons/modifiers/intrigue.dds"
+	monthly_character_income_mult = 0.25
+	intrigue = 3
+	general_opinion = -45
+	monthly_piety = -0.60
+}
+
+####################################
+# RUMOR & INFORMATION
+####################################
+
+mt_rumor_manipulation_successful = {
+	icon = "gfx/interface/icons/modifiers/intrigue.dds"
+	intrigue = 2
+	monthly_character_income_mult = 0.15
+	general_opinion = -20
+}
+
+####################################
+# END OF FILE
+####################################

@@ -1,0 +1,174 @@
+####################################
+# MERCHANTS AND TRADERS MOD
+# Political & Diplomatic Modifiers
+# Version: 0.2.0
+####################################
+#
+# This file contains all modifiers related to political connections:
+# - Royal advisors and connections
+# - Noble marriages and alliances
+# - Official backing and support
+# - Merchant dynasties
+#
+####################################
+
+####################################
+# ROYAL & OFFICIAL POSITIONS
+####################################
+
+mt_royal_advisor = {
+	icon = "gfx/interface/icons/modifiers/prestige.dds"
+	monthly_prestige = 1.00
+	diplomacy = 3
+	liege_opinion = 40
+	monthly_character_income_mult = 0.15
+}
+
+mt_financial_advisor = {
+	icon = "gfx/interface/icons/modifiers/stewardship.dds"
+	stewardship = 3
+	monthly_prestige = 0.80
+	liege_opinion = 35
+	monthly_character_income_mult = 0.12
+}
+
+mt_foreign_advisor = {
+	icon = "gfx/interface/icons/modifiers/diplomacy.dds"
+	diplomacy = 3
+	monthly_prestige = 0.70
+	liege_opinion = 30
+	general_opinion = 15
+}
+
+mt_official_backing = {
+	icon = "gfx/interface/icons/modifiers/prestige.dds"
+	monthly_prestige = 0.60
+	liege_opinion = 25
+	advantage = 10
+	general_opinion = 10
+}
+
+mt_tax_exempt = {
+	icon = "gfx/interface/icons/modifiers/stewardship.dds"
+	monthly_character_expenses = -0.20
+	liege_opinion = -10
+	general_opinion = -15
+}
+
+mt_bribed_officials = {
+	icon = "gfx/interface/icons/modifiers/intrigue.dds"
+	intrigue = 2
+	monthly_character_expenses = 0.15
+	general_opinion = -20
+	monthly_piety = -0.30
+}
+
+####################################
+# NOBLE CONNECTIONS
+####################################
+
+mt_noble_marriage = {
+	icon = "gfx/interface/icons/modifiers/prestige.dds"
+	monthly_prestige = 0.90
+	diplomacy = 2
+	general_opinion = 20
+	liege_opinion = 20
+}
+
+mt_political_connections = {
+	icon = "gfx/interface/icons/modifiers/diplomacy.dds"
+	diplomacy = 2
+	monthly_prestige = 0.50
+	general_opinion = 15
+}
+
+mt_diplomatic_recipient = {
+	icon = "gfx/interface/icons/modifiers/diplomacy.dds"
+	diplomacy = 2
+	general_opinion = 20
+	monthly_prestige = 0.40
+}
+
+####################################
+# MERCHANT DYNASTIES
+####################################
+
+mt_merchant_dynasty = {
+	icon = "gfx/interface/icons/modifiers/prestige.dds"
+	monthly_prestige = 1.20
+	diplomacy = 2
+	stewardship = 2
+	general_opinion = 30
+	monthly_character_income_mult = 0.20
+}
+
+mt_merchant_dynasty_legacy = {
+	icon = "gfx/interface/icons/modifiers/prestige.dds"
+	monthly_prestige = 1.50
+	general_opinion = 40
+	diplomacy = 3
+	stewardship = 3
+	monthly_character_income_mult = 0.25
+}
+
+####################################
+# ALLIANCES & PARTNERSHIPS
+####################################
+
+mt_dynastic_business_alliance = {
+	icon = "gfx/interface/icons/modifiers/diplomacy.dds"
+	monthly_character_income_mult = 0.18
+	diplomacy = 2
+	general_opinion = 20
+	monthly_prestige = 0.60
+}
+
+mt_strategic_business_alliance = {
+	icon = "gfx/interface/icons/modifiers/diplomacy.dds"
+	monthly_character_income_mult = 0.15
+	diplomacy = 2
+	stewardship = 1
+}
+
+mt_powerful_trade_alliance = {
+	icon = "gfx/interface/icons/modifiers/prestige.dds"
+	monthly_character_income_mult = 0.20
+	monthly_prestige = 0.80
+	diplomacy = 3
+	general_opinion = 25
+}
+
+mt_merchant_protection_pact = {
+	icon = "gfx/interface/icons/modifiers/martial.dds"
+	advantage = 15
+	martial = 2
+	general_opinion = 15
+	monthly_character_expenses = 0.10
+}
+
+####################################
+# MEDIATION & DIPLOMACY
+####################################
+
+mt_merchant_mediator = {
+	icon = "gfx/interface/icons/modifiers/diplomacy.dds"
+	diplomacy = 3
+	monthly_prestige = 0.70
+	general_opinion = 25
+}
+
+####################################
+# SPECIAL HOLDINGS
+####################################
+
+mt_royal_vineyards = {
+	icon = "gfx/interface/icons/modifiers/prestige.dds"
+	monthly_character_income_mult = 0.15
+	monthly_prestige = 0.70
+	liege_opinion = 30
+	general_opinion = 15
+}
+
+####################################
+# END OF FILE
+####################################

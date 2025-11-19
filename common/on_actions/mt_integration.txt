@@ -45,6 +45,11 @@ on_monthly_pulse = {
 		mt_personality_events.10  # Merchant personality challenge
 		mt_personality_events.20  # Personality-driven opportunity
 		mt_personality_events.30  # Character development moment
+
+		# POLITICAL EVENTS (monthly checks)
+		mt_politics.0001  # Ruler demands "loan"
+		mt_politics.0005  # Court intrigue
+		mt_politics.0009  # Diplomatic opportunity
 	}
 }
 
@@ -71,6 +76,11 @@ on_yearly_pulse = {
 		# PHASE 6: Rivalry Events (yearly check)
 		mt_rivalry_events.1  # Potential new rivalry
 		mt_rivalry_events.20 # Rivalry escalation or resolution
+
+		# POLITICAL EVENTS (yearly checks)
+		mt_politics.0017  # Influence & power opportunities
+		mt_politics.0021  # Succession events
+		mt_politics.0024  # Additional political opportunities
 	}
 }
 
