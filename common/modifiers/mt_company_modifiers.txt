@@ -1,0 +1,184 @@
+##############################################
+# MERCHANTS AND TRADERS - Company Management Modifiers
+# Author: Merchants and Traders Mod Team
+# Description: Modifiers for merchant company employees and management
+##############################################
+
+##############################################
+# ROUTE MANAGER MODIFIERS
+##############################################
+
+mt_route_manager_bonus = {
+	monthly_income_mult = 0.05
+	stewardship = 2
+	icon = stewardship_positive
+}
+
+##############################################
+# ACCOUNTANT MODIFIERS (Cost Reduction)
+##############################################
+
+mt_accountant_cost_reduction_1 = {
+	build_gold_cost = -0.05
+	levy_reinforcement_rate = 0.02
+	icon = stewardship_positive
+}
+
+mt_accountant_cost_reduction_2 = {
+	build_gold_cost = -0.10
+	levy_reinforcement_rate = 0.05
+	icon = stewardship_positive
+}
+
+mt_accountant_cost_reduction_3 = {
+	build_gold_cost = -0.15
+	levy_reinforcement_rate = 0.08
+	monthly_income_mult = 0.05
+	icon = stewardship_positive
+}
+
+mt_accountant_cost_reduction_4 = {
+	build_gold_cost = -0.20
+	levy_reinforcement_rate = 0.10
+	monthly_income_mult = 0.10
+	icon = stewardship_positive
+}
+
+##############################################
+# GUARD CAPTAIN MODIFIERS (Security)
+##############################################
+
+mt_guard_captain_security_1 = {
+	hostile_raid_time = 0.10
+	levy_size = 0.05
+	icon = martial_positive
+}
+
+mt_guard_captain_security_2 = {
+	hostile_raid_time = 0.20
+	levy_size = 0.10
+	knight_effectiveness_mult = 0.05
+	icon = martial_positive
+}
+
+mt_guard_captain_security_3 = {
+	hostile_raid_time = 0.30
+	levy_size = 0.15
+	knight_effectiveness_mult = 0.10
+	icon = martial_positive
+}
+
+mt_guard_captain_security_4 = {
+	hostile_raid_time = 0.40
+	levy_size = 0.20
+	knight_effectiveness_mult = 0.15
+	army_maintenance_mult = -0.10
+	icon = martial_positive
+}
+
+##############################################
+# NEGOTIATOR MODIFIERS (Trade Benefits)
+##############################################
+
+mt_negotiator_bonus_1 = {
+	monthly_income_mult = 0.05
+	diplomacy = 1
+	icon = diplomacy_positive
+}
+
+mt_negotiator_bonus_2 = {
+	monthly_income_mult = 0.10
+	diplomacy = 2
+	icon = diplomacy_positive
+}
+
+mt_negotiator_bonus_3 = {
+	monthly_income_mult = 0.15
+	diplomacy = 3
+	monthly_prestige_gain_mult = 0.05
+	icon = diplomacy_positive
+}
+
+mt_negotiator_bonus_4 = {
+	monthly_income_mult = 0.20
+	diplomacy = 4
+	monthly_prestige_gain_mult = 0.10
+	icon = diplomacy_positive
+}
+
+##############################################
+# SPECIAL EVENT MODIFIERS
+##############################################
+
+mt_trade_secrets_stolen = {
+	monthly_prestige_gain_mult = -0.10
+	monthly_income_mult = -0.15
+	stewardship = -2
+	icon = intrigue_negative
+}
+
+mt_stolen_trade_secrets = {
+	monthly_income_mult = 0.15
+	intrigue = 2
+	monthly_prestige_gain_mult = -0.05
+	icon = intrigue_positive
+}
+
+mt_embezzlement_repayment = {
+	monthly_income = 5
+	icon = stewardship_positive
+}
+
+mt_business_partner = {
+	monthly_income_mult = 0.15
+	stewardship = 3
+	stress_gain_mult = -0.10
+	icon = stewardship_positive
+}
+
+mt_profitable_venture = {
+	monthly_income_mult = 0.20
+	monthly_prestige_gain_mult = 0.10
+	icon = stewardship_positive
+}
+
+mt_excellent_deal = {
+	monthly_income_mult = 0.10
+	diplomacy = 2
+	icon = diplomacy_positive
+}
+
+mt_restructured_company = {
+	monthly_income_mult = 0.15
+	stewardship = 2
+	stress_gain_mult = -0.05
+	icon = stewardship_positive
+}
+
+mt_expanded_guard_force = {
+	levy_size = 0.25
+	hostile_raid_time = 0.30
+	army_maintenance_mult = 0.15
+	icon = martial_positive
+}
+
+mt_culture_reform = {
+	monthly_prestige_gain_mult = 0.10
+	stress_gain_mult = -0.15
+	icon = learning_positive
+}
+
+mt_revolutionary_innovation = {
+	monthly_income_mult = 0.25
+	monthly_prestige_gain_mult = 0.20
+	stewardship = 4
+	learning = 3
+	icon = learning_positive
+}
+
+mt_company_milestone = {
+	monthly_prestige_gain_mult = 0.15
+	monthly_income_mult = 0.10
+	stress_gain_mult = -0.10
+	icon = prestige_positive
+}

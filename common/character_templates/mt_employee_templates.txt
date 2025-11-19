@@ -1,0 +1,1150 @@
+##############################################
+# MERCHANTS AND TRADERS - Employee Templates
+# Author: Merchants and Traders Mod Team
+# Description: Templates for merchant company employees
+##############################################
+
+##############################################
+# ROUTE MANAGER TEMPLATES
+##############################################
+
+# Cautious Route Manager: Safe but slow growth
+employee_route_manager_cautious_template = {
+	# Conservative approach to trade routes
+	random_traits_list = {
+		count = { min = 2 max = 3 }
+
+		# Cautious traits
+		patient = { weight = 30 }
+		cautious = { weight = 30 }
+		calm = { weight = 20 }
+		humble = { weight = 15 }
+		content = { weight = 10 }
+
+		# Negative for this archetype
+		reckless = { weight = 0 }
+		ambitious = { weight = 5 }
+	}
+
+	# Balanced attributes, high stewardship
+	diplomacy = {
+		min_template_high_skill = 8
+		max_template_high_skill = 12
+	}
+
+	stewardship = {
+		min_template_high_skill = 12
+		max_template_high_skill = 16
+	}
+
+	martial = {
+		min_template_low_skill = 4
+		max_template_low_skill = 8
+	}
+
+	intrigue = {
+		min_template_low_skill = 5
+		max_template_low_skill = 9
+	}
+
+	learning = {
+		min_template_low_skill = 6
+		max_template_low_skill = 10
+	}
+}
+
+# Aggressive Route Manager: Fast expansion, higher risk
+employee_route_manager_aggressive_template = {
+	# Expansion-focused personality
+	random_traits_list = {
+		count = { min = 2 max = 3 }
+
+		# Aggressive traits
+		ambitious = { weight = 35 }
+		brave = { weight = 25 }
+		reckless = { weight = 20 }
+		arrogant = { weight = 15 }
+		greedy = { weight = 20 }
+
+		# Negative for this archetype
+		content = { weight = 0 }
+		cautious = { weight = 0 }
+		patient = { weight = 5 }
+	}
+
+	diplomacy = {
+		min_template_high_skill = 10
+		max_template_high_skill = 14
+	}
+
+	stewardship = {
+		min_template_high_skill = 10
+		max_template_high_skill = 14
+	}
+
+	martial = {
+		min_template_low_skill = 8
+		max_template_low_skill = 12
+	}
+
+	intrigue = {
+		min_template_low_skill = 8
+		max_template_low_skill = 12
+	}
+
+	learning = {
+		min_template_low_skill = 4
+		max_template_low_skill = 8
+	}
+}
+
+# Analytical Route Manager: Data-driven, consistent returns
+employee_route_manager_analytical_template = {
+	# Methodical and precise
+	random_traits_list = {
+		count = { min = 2 max = 4 }
+
+		# Analytical traits
+		diligent = { weight = 35 }
+		shrewd = { weight = 30 }
+		patient = { weight = 20 }
+		calm = { weight = 15 }
+		temperate = { weight = 15 }
+
+		# Negative for this archetype
+		lazy = { weight = 0 }
+		reckless = { weight = 0 }
+	}
+
+	diplomacy = {
+		min_template_high_skill = 8
+		max_template_high_skill = 12
+	}
+
+	stewardship = {
+		min_template_high_skill = 14
+		max_template_high_skill = 18
+	}
+
+	martial = {
+		min_template_low_skill = 4
+		max_template_low_skill = 8
+	}
+
+	intrigue = {
+		min_template_low_skill = 6
+		max_template_low_skill = 10
+	}
+
+	learning = {
+		min_template_low_skill = 10
+		max_template_low_skill = 14
+	}
+}
+
+# Creative Route Manager: Finds unusual routes
+employee_route_manager_creative_template = {
+	# Innovative and unconventional
+	random_traits_list = {
+		count = { min = 2 max = 3 }
+
+		# Creative traits
+		curious = { weight = 30 }
+		ambitious = { weight = 20 }
+		brave = { weight = 15 }
+		gregarious = { weight = 15 }
+
+		# Some risk
+		reckless = { weight = 10 }
+	}
+
+	diplomacy = {
+		min_template_high_skill = 12
+		max_template_high_skill = 16
+	}
+
+	stewardship = {
+		min_template_high_skill = 10
+		max_template_high_skill = 14
+	}
+
+	martial = {
+		min_template_low_skill = 5
+		max_template_low_skill = 9
+	}
+
+	intrigue = {
+		min_template_low_skill = 8
+		max_template_low_skill = 12
+	}
+
+	learning = {
+		min_template_low_skill = 10
+		max_template_low_skill = 14
+	}
+}
+
+# Lazy Route Manager: Poor performance, embezzlement risk
+employee_route_manager_lazy_template = {
+	# Unreliable and unmotivated
+	random_traits_list = {
+		count = { min = 2 max = 4 }
+
+		# Negative traits
+		lazy = { weight = 40 }
+		content = { weight = 25 }
+		gluttonous = { weight = 20 }
+		greedy = { weight = 20 }
+		craven = { weight = 15 }
+
+		# Rarely positive
+		diligent = { weight = 0 }
+		ambitious = { weight = 0 }
+	}
+
+	# Lower attributes across the board
+	diplomacy = {
+		min_template_low_skill = 4
+		max_template_low_skill = 8
+	}
+
+	stewardship = {
+		min_template_low_skill = 5
+		max_template_low_skill = 9
+	}
+
+	martial = {
+		min_template_low_skill = 3
+		max_template_low_skill = 7
+	}
+
+	intrigue = {
+		min_template_low_skill = 6
+		max_template_low_skill = 10
+	}
+
+	learning = {
+		min_template_low_skill = 4
+		max_template_low_skill = 8
+	}
+}
+
+##############################################
+# ACCOUNTANT TEMPLATES
+##############################################
+
+# Meticulous Accountant: Catches everything, expensive
+employee_accountant_meticulous_template = {
+	# Perfectionist approach
+	random_traits_list = {
+		count = { min = 3 max = 4 }
+
+		# Meticulous traits
+		diligent = { weight = 40 }
+		patient = { weight = 30 }
+		just = { weight = 25 }
+		temperate = { weight = 20 }
+		calm = { weight = 15 }
+
+		# Never corrupt
+		greedy = { weight = 0 }
+		deceitful = { weight = 0 }
+	}
+
+	diplomacy = {
+		min_template_low_skill = 6
+		max_template_low_skill = 10
+	}
+
+	stewardship = {
+		min_template_high_skill = 16
+		max_template_high_skill = 20
+	}
+
+	martial = {
+		min_template_low_skill = 3
+		max_template_low_skill = 7
+	}
+
+	intrigue = {
+		min_template_low_skill = 8
+		max_template_low_skill = 12
+	}
+
+	learning = {
+		min_template_low_skill = 12
+		max_template_low_skill = 16
+	}
+}
+
+# Corrupt Accountant: Steals but hides it well
+employee_accountant_corrupt_template = {
+	# Skilled but dishonest
+	random_traits_list = {
+		count = { min = 2 max = 4 }
+
+		# Corrupt traits
+		greedy = { weight = 40 }
+		deceitful = { weight = 35 }
+		ambitious = { weight = 20 }
+		arrogant = { weight = 15 }
+		callous = { weight = 15 }
+
+		# Never honest
+		just = { weight = 0 }
+		honest = { weight = 0 }
+	}
+
+	diplomacy = {
+		min_template_low_skill = 8
+		max_template_low_skill = 12
+	}
+
+	stewardship = {
+		min_template_high_skill = 14
+		max_template_high_skill = 18
+	}
+
+	martial = {
+		min_template_low_skill = 3
+		max_template_low_skill = 7
+	}
+
+	intrigue = {
+		min_template_high_skill = 12
+		max_template_high_skill = 16
+	}
+
+	learning = {
+		min_template_low_skill = 8
+		max_template_low_skill = 12
+	}
+}
+
+# Competent Accountant: Good baseline performance
+employee_accountant_competent_template = {
+	# Solid and reliable
+	random_traits_list = {
+		count = { min = 2 max = 3 }
+
+		# Competent traits
+		diligent = { weight = 25 }
+		patient = { weight = 20 }
+		calm = { weight = 15 }
+		temperate = { weight = 15 }
+		humble = { weight = 10 }
+
+		# Balanced
+		lazy = { weight = 5 }
+		greedy = { weight = 10 }
+	}
+
+	diplomacy = {
+		min_template_low_skill = 6
+		max_template_low_skill = 10
+	}
+
+	stewardship = {
+		min_template_high_skill = 12
+		max_template_high_skill = 16
+	}
+
+	martial = {
+		min_template_low_skill = 4
+		max_template_low_skill = 8
+	}
+
+	intrigue = {
+		min_template_low_skill = 6
+		max_template_low_skill = 10
+	}
+
+	learning = {
+		min_template_low_skill = 8
+		max_template_low_skill = 12
+	}
+}
+
+# Innovative Accountant: Finds tax advantages
+employee_accountant_innovative_template = {
+	# Creative financial solutions
+	random_traits_list = {
+		count = { min = 2 max = 3 }
+
+		# Innovative traits
+		shrewd = { weight = 35 }
+		ambitious = { weight = 25 }
+		diligent = { weight = 20 }
+		gregarious = { weight = 15 }
+
+		# Some moral flexibility
+		greedy = { weight = 15 }
+	}
+
+	diplomacy = {
+		min_template_low_skill = 8
+		max_template_low_skill = 12
+	}
+
+	stewardship = {
+		min_template_high_skill = 14
+		max_template_high_skill = 18
+	}
+
+	martial = {
+		min_template_low_skill = 3
+		max_template_low_skill = 7
+	}
+
+	intrigue = {
+		min_template_low_skill = 10
+		max_template_low_skill = 14
+	}
+
+	learning = {
+		min_template_low_skill = 12
+		max_template_low_skill = 16
+	}
+}
+
+# Overwhelmed Accountant: Makes mistakes
+employee_accountant_overwhelmed_template = {
+	# Struggling to keep up
+	random_traits_list = {
+		count = { min = 2 max = 4 }
+
+		# Overwhelmed traits
+		stressed = { weight = 35 }
+		impatient = { weight = 25 }
+		shy = { weight = 20 }
+		craven = { weight = 15 }
+
+		# Tries hard but fails
+		diligent = { weight = 15 }
+		lazy = { weight = 10 }
+	}
+
+	diplomacy = {
+		min_template_low_skill = 4
+		max_template_low_skill = 8
+	}
+
+	stewardship = {
+		min_template_low_skill = 8
+		max_template_low_skill = 12
+	}
+
+	martial = {
+		min_template_low_skill = 3
+		max_template_low_skill = 7
+	}
+
+	intrigue = {
+		min_template_low_skill = 4
+		max_template_low_skill = 8
+	}
+
+	learning = {
+		min_template_low_skill = 6
+		max_template_low_skill = 10
+	}
+}
+
+##############################################
+# GUARD CAPTAIN TEMPLATES
+##############################################
+
+# Veteran Guard Captain: Expensive, highly effective
+employee_guard_captain_veteran_template = {
+	# Battle-hardened professional
+	random_traits_list = {
+		count = { min = 2 max = 4 }
+
+		# Veteran traits
+		brave = { weight = 40 }
+		diligent = { weight = 30 }
+		patient = { weight = 25 }
+		just = { weight = 20 }
+		temperate = { weight = 15 }
+
+		# Never a coward
+		craven = { weight = 0 }
+	}
+
+	diplomacy = {
+		min_template_low_skill = 8
+		max_template_low_skill = 12
+	}
+
+	stewardship = {
+		min_template_low_skill = 6
+		max_template_low_skill = 10
+	}
+
+	martial = {
+		min_template_high_skill = 16
+		max_template_high_skill = 20
+	}
+
+	intrigue = {
+		min_template_low_skill = 8
+		max_template_low_skill = 12
+	}
+
+	learning = {
+		min_template_low_skill = 6
+		max_template_low_skill = 10
+	}
+}
+
+# Young Guard Captain: Cheap, enthusiastic, learning
+employee_guard_captain_young_template = {
+	# Eager but inexperienced
+	random_traits_list = {
+		count = { min = 2 max = 3 }
+
+		# Youthful traits
+		brave = { weight = 30 }
+		ambitious = { weight = 25 }
+		gregarious = { weight = 20 }
+		diligent = { weight = 20 }
+
+		# Some inexperience
+		reckless = { weight = 15 }
+		arrogant = { weight = 10 }
+	}
+
+	diplomacy = {
+		min_template_low_skill = 6
+		max_template_low_skill = 10
+	}
+
+	stewardship = {
+		min_template_low_skill = 4
+		max_template_low_skill = 8
+	}
+
+	martial = {
+		min_template_high_skill = 10
+		max_template_high_skill = 14
+	}
+
+	intrigue = {
+		min_template_low_skill = 5
+		max_template_low_skill = 9
+	}
+
+	learning = {
+		min_template_low_skill = 6
+		max_template_low_skill = 10
+	}
+}
+
+# Brutal Guard Captain: Effective but hated
+employee_guard_captain_brutal_template = {
+	# Ruthless and feared
+	random_traits_list = {
+		count = { min = 2 max = 4 }
+
+		# Brutal traits
+		callous = { weight = 35 }
+		wrathful = { weight = 30 }
+		brave = { weight = 25 }
+		ambitious = { weight = 20 }
+		sadistic = { weight = 15 }
+
+		# Never compassionate
+		compassionate = { weight = 0 }
+		forgiving = { weight = 0 }
+	}
+
+	diplomacy = {
+		min_template_low_skill = 4
+		max_template_low_skill = 8
+	}
+
+	stewardship = {
+		min_template_low_skill = 5
+		max_template_low_skill = 9
+	}
+
+	martial = {
+		min_template_high_skill = 14
+		max_template_high_skill = 18
+	}
+
+	intrigue = {
+		min_template_low_skill = 8
+		max_template_low_skill = 12
+	}
+
+	learning = {
+		min_template_low_skill = 4
+		max_template_low_skill = 8
+	}
+}
+
+# Strategic Guard Captain: Efficient route protection
+employee_guard_captain_strategic_template = {
+	# Intelligent and tactical
+	random_traits_list = {
+		count = { min = 2 max = 3 }
+
+		# Strategic traits
+		shrewd = { weight = 35 }
+		patient = { weight = 30 }
+		brave = { weight = 25 }
+		calm = { weight = 20 }
+		diligent = { weight = 20 }
+	}
+
+	diplomacy = {
+		min_template_low_skill = 8
+		max_template_low_skill = 12
+	}
+
+	stewardship = {
+		min_template_low_skill = 8
+		max_template_low_skill = 12
+	}
+
+	martial = {
+		min_template_high_skill = 14
+		max_template_high_skill = 18
+	}
+
+	intrigue = {
+		min_template_low_skill = 10
+		max_template_low_skill = 14
+	}
+
+	learning = {
+		min_template_low_skill = 10
+		max_template_low_skill = 14
+	}
+}
+
+# Cowardly Guard Captain: Runs from fights
+employee_guard_captain_cowardly_template = {
+	# Ineffective and unreliable
+	random_traits_list = {
+		count = { min = 2 max = 4 }
+
+		# Cowardly traits
+		craven = { weight = 40 }
+		paranoid = { weight = 30 }
+		shy = { weight = 25 }
+		lazy = { weight = 20 }
+		content = { weight = 15 }
+
+		# Never brave
+		brave = { weight = 0 }
+	}
+
+	diplomacy = {
+		min_template_low_skill = 5
+		max_template_low_skill = 9
+	}
+
+	stewardship = {
+		min_template_low_skill = 6
+		max_template_low_skill = 10
+	}
+
+	martial = {
+		min_template_low_skill = 6
+		max_template_low_skill = 10
+	}
+
+	intrigue = {
+		min_template_low_skill = 8
+		max_template_low_skill = 12
+	}
+
+	learning = {
+		min_template_low_skill = 5
+		max_template_low_skill = 9
+	}
+}
+
+##############################################
+# SCOUT TEMPLATES
+##############################################
+
+# Lucky Scout: Finds amazing opportunities
+employee_scout_lucky_template = {
+	# Naturally fortunate
+	random_traits_list = {
+		count = { min = 2 max = 3 }
+
+		# Lucky traits
+		gregarious = { weight = 30 }
+		brave = { weight = 25 }
+		diligent = { weight = 20 }
+		ambitious = { weight = 20 }
+		curious = { weight = 25 }
+	}
+
+	diplomacy = {
+		min_template_low_skill = 10
+		max_template_low_skill = 14
+	}
+
+	stewardship = {
+		min_template_low_skill = 8
+		max_template_low_skill = 12
+	}
+
+	martial = {
+		min_template_low_skill = 8
+		max_template_low_skill = 12
+	}
+
+	intrigue = {
+		min_template_high_skill = 12
+		max_template_high_skill = 16
+	}
+
+	learning = {
+		min_template_low_skill = 10
+		max_template_low_skill = 14
+	}
+}
+
+# Connected Scout: Network of informants
+employee_scout_connected_template = {
+	# Well-connected in many circles
+	random_traits_list = {
+		count = { min = 2 max = 3 }
+
+		# Social traits
+		gregarious = { weight = 40 }
+		shrewd = { weight = 30 }
+		ambitious = { weight = 25 }
+		diligent = { weight = 20 }
+
+		# Never isolated
+		shy = { weight = 0 }
+	}
+
+	diplomacy = {
+		min_template_high_skill = 14
+		max_template_high_skill = 18
+	}
+
+	stewardship = {
+		min_template_low_skill = 8
+		max_template_low_skill = 12
+	}
+
+	martial = {
+		min_template_low_skill = 5
+		max_template_low_skill = 9
+	}
+
+	intrigue = {
+		min_template_high_skill = 12
+		max_template_high_skill = 16
+	}
+
+	learning = {
+		min_template_low_skill = 8
+		max_template_low_skill = 12
+	}
+}
+
+# Cautious Scout: Only reports sure things
+employee_scout_cautious_template = {
+	# Conservative and reliable
+	random_traits_list = {
+		count = { min = 2 max = 3 }
+
+		# Cautious traits
+		patient = { weight = 35 }
+		cautious = { weight = 30 }
+		diligent = { weight = 25 }
+		humble = { weight = 20 }
+		calm = { weight = 15 }
+
+		# Never reckless
+		reckless = { weight = 0 }
+	}
+
+	diplomacy = {
+		min_template_low_skill = 8
+		max_template_low_skill = 12
+	}
+
+	stewardship = {
+		min_template_low_skill = 10
+		max_template_low_skill = 14
+	}
+
+	martial = {
+		min_template_low_skill = 6
+		max_template_low_skill = 10
+	}
+
+	intrigue = {
+		min_template_high_skill = 12
+		max_template_high_skill = 16
+	}
+
+	learning = {
+		min_template_low_skill = 10
+		max_template_low_skill = 14
+	}
+}
+
+# Reckless Scout: High risk, high reward leads
+employee_scout_reckless_template = {
+	# Danger-seeking adventurer
+	random_traits_list = {
+		count = { min = 2 max = 4 }
+
+		# Reckless traits
+		reckless = { weight = 40 }
+		brave = { weight = 35 }
+		ambitious = { weight = 30 }
+		arrogant = { weight = 20 }
+		greedy = { weight = 20 }
+
+		# Never cautious
+		cautious = { weight = 0 }
+		patient = { weight = 0 }
+	}
+
+	diplomacy = {
+		min_template_low_skill = 8
+		max_template_low_skill = 12
+	}
+
+	stewardship = {
+		min_template_low_skill = 6
+		max_template_low_skill = 10
+	}
+
+	martial = {
+		min_template_low_skill = 10
+		max_template_low_skill = 14
+	}
+
+	intrigue = {
+		min_template_high_skill = 10
+		max_template_high_skill = 14
+	}
+
+	learning = {
+		min_template_low_skill = 5
+		max_template_low_skill = 9
+	}
+}
+
+# False Scout: Reports bad information
+employee_scout_false_template = {
+	# Incompetent or deceptive
+	random_traits_list = {
+		count = { min = 2 max = 4 }
+
+		# Unreliable traits
+		deceitful = { weight = 35 }
+		lazy = { weight = 30 }
+		arrogant = { weight = 25 }
+		greedy = { weight = 20 }
+
+		# Poor judgment
+		dull = { weight = 20 }
+	}
+
+	diplomacy = {
+		min_template_low_skill = 6
+		max_template_low_skill = 10
+	}
+
+	stewardship = {
+		min_template_low_skill = 4
+		max_template_low_skill = 8
+	}
+
+	martial = {
+		min_template_low_skill = 5
+		max_template_low_skill = 9
+	}
+
+	intrigue = {
+		min_template_low_skill = 8
+		max_template_low_skill = 12
+	}
+
+	learning = {
+		min_template_low_skill = 4
+		max_template_low_skill = 8
+	}
+}
+
+##############################################
+# NEGOTIATOR TEMPLATES
+##############################################
+
+# Silver-Tongued Negotiator: Amazing deals, loved
+employee_negotiator_silver_tongued_template = {
+	# Charismatic and persuasive
+	random_traits_list = {
+		count = { min = 2 max = 4 }
+
+		# Charismatic traits
+		gregarious = { weight = 40 }
+		shrewd = { weight = 30 }
+		patient = { weight = 25 }
+		humble = { weight = 20 }
+		diligent = { weight = 20 }
+
+		# Never rude
+		arrogant = { weight = 0 }
+		callous = { weight = 0 }
+	}
+
+	diplomacy = {
+		min_template_high_skill = 16
+		max_template_high_skill = 20
+	}
+
+	stewardship = {
+		min_template_low_skill = 10
+		max_template_low_skill = 14
+	}
+
+	martial = {
+		min_template_low_skill = 4
+		max_template_low_skill = 8
+	}
+
+	intrigue = {
+		min_template_low_skill = 10
+		max_template_low_skill = 14
+	}
+
+	learning = {
+		min_template_low_skill = 8
+		max_template_low_skill = 12
+	}
+}
+
+# Ruthless Negotiator: Good deals, feared and hated
+employee_negotiator_ruthless_template = {
+	# Intimidating and aggressive
+	random_traits_list = {
+		count = { min = 2 max = 4 }
+
+		# Ruthless traits
+		callous = { weight = 35 }
+		ambitious = { weight = 30 }
+		shrewd = { weight = 25 }
+		arrogant = { weight = 20 }
+		wrathful = { weight = 15 }
+
+		# Never kind
+		compassionate = { weight = 0 }
+		humble = { weight = 0 }
+	}
+
+	diplomacy = {
+		min_template_high_skill = 12
+		max_template_high_skill = 16
+	}
+
+	stewardship = {
+		min_template_low_skill = 10
+		max_template_low_skill = 14
+	}
+
+	martial = {
+		min_template_low_skill = 8
+		max_template_low_skill = 12
+	}
+
+	intrigue = {
+		min_template_low_skill = 12
+		max_template_low_skill = 16
+	}
+
+	learning = {
+		min_template_low_skill = 6
+		max_template_low_skill = 10
+	}
+}
+
+# Fair Negotiator: Balanced, builds relationships
+employee_negotiator_fair_template = {
+	# Balanced and professional
+	random_traits_list = {
+		count = { min = 2 max = 3 }
+
+		# Fair traits
+		just = { weight = 35 }
+		patient = { weight = 30 }
+		gregarious = { weight = 25 }
+		diligent = { weight = 20 }
+		calm = { weight = 15 }
+	}
+
+	diplomacy = {
+		min_template_high_skill = 14
+		max_template_high_skill = 18
+	}
+
+	stewardship = {
+		min_template_low_skill = 10
+		max_template_low_skill = 14
+	}
+
+	martial = {
+		min_template_low_skill = 5
+		max_template_low_skill = 9
+	}
+
+	intrigue = {
+		min_template_low_skill = 8
+		max_template_low_skill = 12
+	}
+
+	learning = {
+		min_template_low_skill = 8
+		max_template_low_skill = 12
+	}
+}
+
+# Timid Negotiator: Accepts poor terms
+employee_negotiator_timid_template = {
+	# Weak-willed and submissive
+	random_traits_list = {
+		count = { min = 2 max = 4 }
+
+		# Timid traits
+		shy = { weight = 40 }
+		craven = { weight = 30 }
+		humble = { weight = 25 }
+		content = { weight = 20 }
+		compassionate = { weight = 15 }
+
+		# Never assertive
+		brave = { weight = 0 }
+		arrogant = { weight = 0 }
+	}
+
+	diplomacy = {
+		min_template_low_skill = 8
+		max_template_low_skill = 12
+	}
+
+	stewardship = {
+		min_template_low_skill = 6
+		max_template_low_skill = 10
+	}
+
+	martial = {
+		min_template_low_skill = 3
+		max_template_low_skill = 7
+	}
+
+	intrigue = {
+		min_template_low_skill = 4
+		max_template_low_skill = 8
+	}
+
+	learning = {
+		min_template_low_skill = 6
+		max_template_low_skill = 10
+	}
+}
+
+# Corrupt Negotiator: Takes bribes, bad deals
+employee_negotiator_corrupt_template = {
+	# Self-serving and dishonest
+	random_traits_list = {
+		count = { min = 2 max = 4 }
+
+		# Corrupt traits
+		greedy = { weight = 40 }
+		deceitful = { weight = 35 }
+		ambitious = { weight = 25 }
+		arrogant = { weight = 20 }
+		callous = { weight = 15 }
+
+		# Never honest
+		just = { weight = 0 }
+		honest = { weight = 0 }
+	}
+
+	diplomacy = {
+		min_template_high_skill = 10
+		max_template_high_skill = 14
+	}
+
+	stewardship = {
+		min_template_low_skill = 8
+		max_template_low_skill = 12
+	}
+
+	martial = {
+		min_template_low_skill = 4
+		max_template_low_skill = 8
+	}
+
+	intrigue = {
+		min_template_high_skill = 12
+		max_template_high_skill = 16
+	}
+
+	learning = {
+		min_template_low_skill = 6
+		max_template_low_skill = 10
+	}
+}
+
+##############################################
+# GENERIC EMPLOYEE TEMPLATE
+# Used when no specific archetype is selected
+##############################################
+
+employee_generic_template = {
+	random_traits_list = {
+		count = { min = 2 max = 3 }
+
+		diligent = { weight = 15 }
+		lazy = { weight = 10 }
+		greedy = { weight = 15 }
+		ambitious = { weight = 15 }
+		patient = { weight = 10 }
+		calm = { weight = 10 }
+		shrewd = { weight = 12 }
+		brave = { weight = 10 }
+		gregarious = { weight = 12 }
+		shy = { weight = 8 }
+	}
+
+	diplomacy = {
+		min_template_low_skill = 6
+		max_template_low_skill = 14
+	}
+
+	stewardship = {
+		min_template_low_skill = 6
+		max_template_low_skill = 14
+	}
+
+	martial = {
+		min_template_low_skill = 4
+		max_template_low_skill = 12
+	}
+
+	intrigue = {
+		min_template_low_skill = 4
+		max_template_low_skill = 12
+	}
+
+	learning = {
+		min_template_low_skill = 4
+		max_template_low_skill = 12
+	}
+}

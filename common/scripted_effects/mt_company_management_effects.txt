@@ -1,0 +1,918 @@
+####################################
+# Merchants and Traders - Company Management Effects
+# Version: 1.0.0
+####################################
+#
+# This file contains scripted effects for managing merchant company employees
+# Employees can be hired, assigned tasks, evaluated, and managed for loyalty
+#
+####################################
+
+####################################
+# EMPLOYEE HIRING EFFECTS
+####################################
+
+# Effect: Hire an employee for the merchant company
+# Scope: Character (merchant/company owner)
+# Usage: character = { hire_employee_effect = { role = route_manager quality = expert } }
+hire_employee_effect = {
+	# Save parameters
+	save_temporary_scope_value_as = {
+		name = employee_role
+		value = $role$
+	}
+	save_temporary_scope_value_as = {
+		name = employee_quality
+		value = $quality$
+	}
+
+	# Create the employee character
+	create_character = {
+		template = employee_$role$_template
+		gender_female_chance = 50
+		age = { 20 40 }
+		culture = root.culture
+		faith = root.faith
+
+		save_scope_as = new_employee
+
+		after_creation = {
+			# Set employee variables based on quality level
+			if = {
+				limit = { scope:employee_quality = flag:novice }
+				set_variable = {
+					name = employee_quality
+					value = 1
+				}
+				set_variable = {
+					name = employee_salary
+					value = 2
+				}
+				set_variable = {
+					name = employee_performance
+					value = { 40 60 }
+				}
+			}
+			else_if = {
+				limit = { scope:employee_quality = flag:experienced }
+				set_variable = {
+					name = employee_quality
+					value = 2
+				}
+				set_variable = {
+					name = employee_salary
+					value = 5
+				}
+				set_variable = {
+					name = employee_performance
+					value = { 60 75 }
+				}
+			}
+			else_if = {
+				limit = { scope:employee_quality = flag:expert }
+				set_variable = {
+					name = employee_quality
+					value = 3
+				}
+				set_variable = {
+					name = employee_salary
+					value = 7
+				}
+				set_variable = {
+					name = employee_performance
+					value = { 75 90 }
+				}
+			}
+			else_if = {
+				limit = { scope:employee_quality = flag:master }
+				set_variable = {
+					name = employee_quality
+					value = 4
+				}
+				set_variable = {
+					name = employee_salary
+					value = 10
+				}
+				set_variable = {
+					name = employee_performance
+					value = { 85 100 }
+				}
+			}
+
+			# Set initial loyalty based on hiring circumstances
+			set_variable = {
+				name = employee_loyalty
+				value = { 50 70 }
+			}
+
+			# Set employee role
+			set_variable = {
+				name = employee_role
+				value = scope:employee_role
+			}
+
+			# Set employer relationship
+			set_variable = {
+				name = employer
+				value = root
+			}
+
+			# Track employment start date
+			set_variable = {
+				name = employment_start_date
+				value = current_date
+			}
+
+			# Add employee to employer's employee list
+			root = {
+				if = {
+					limit = { scope:employee_role = flag:route_manager }
+					change_variable = {
+						name = route_manager_count
+						add = 1
+					}
+				}
+				else_if = {
+					limit = { scope:employee_role = flag:accountant }
+					change_variable = {
+						name = accountant_count
+						add = 1
+					}
+				}
+				else_if = {
+					limit = { scope:employee_role = flag:guard_captain }
+					change_variable = {
+						name = guard_captain_count
+						add = 1
+					}
+				}
+				else_if = {
+					limit = { scope:employee_role = flag:scout }
+					change_variable = {
+						name = scout_count
+						add = 1
+					}
+				}
+				else_if = {
+					limit = { scope:employee_role = flag:negotiator }
+					change_variable = {
+						name = negotiator_count
+						add = 1
+					}
+				}
+			}
+		}
+	}
+
+	# Pay hiring fee and first month salary
+	add_gold = -50
+
+	# Trigger hiring event
+	trigger_event = {
+		id = mt_company_management_events.1
+		days = 3
+	}
+}
+
+####################################
+# EMPLOYEE TASK ASSIGNMENT EFFECTS
+####################################
+
+# Effect: Assign employee to their specialized task
+# Scope: Character (employee)
+# Usage: employee = { assign_employee_task_effect = yes }
+assign_employee_task_effect = {
+	save_scope_as = employee
+
+	# Get the employer
+	var:employer = {
+		save_scope_as = employer
+
+		# Apply task benefits based on role
+		if = {
+			limit = {
+				scope:employee = {
+					has_variable = employee_role
+					var:employee_role = flag:route_manager
+				}
+			}
+			# Route Manager: Automates route management
+			add_character_modifier = {
+				modifier = mt_route_manager_bonus
+				years = 1
+				multiplier = scope:employee.var:employee_quality
+			}
+		}
+		else_if = {
+			limit = {
+				scope:employee = {
+					has_variable = employee_role
+					var:employee_role = flag:accountant
+				}
+			}
+			# Accountant: Reduces costs and catches fraud
+			if = {
+				limit = { scope:employee.var:employee_quality >= 1 }
+				add_character_modifier = {
+					modifier = mt_accountant_cost_reduction_1
+					years = 1
+				}
+			}
+			if = {
+				limit = { scope:employee.var:employee_quality >= 2 }
+				add_character_modifier = {
+					modifier = mt_accountant_cost_reduction_2
+					years = 1
+				}
+			}
+			if = {
+				limit = { scope:employee.var:employee_quality >= 3 }
+				add_character_modifier = {
+					modifier = mt_accountant_cost_reduction_3
+					years = 1
+				}
+			}
+			if = {
+				limit = { scope:employee.var:employee_quality >= 4 }
+				add_character_modifier = {
+					modifier = mt_accountant_cost_reduction_4
+					years = 1
+				}
+			}
+		}
+		else_if = {
+			limit = {
+				scope:employee = {
+					has_variable = employee_role
+					var:employee_role = flag:guard_captain
+				}
+			}
+			# Guard Captain: Improves route security
+			if = {
+				limit = { scope:employee.var:employee_quality = 1 }
+				add_character_modifier = {
+					modifier = mt_guard_captain_security_1
+					years = 1
+				}
+			}
+			else_if = {
+				limit = { scope:employee.var:employee_quality = 2 }
+				add_character_modifier = {
+					modifier = mt_guard_captain_security_2
+					years = 1
+				}
+			}
+			else_if = {
+				limit = { scope:employee.var:employee_quality = 3 }
+				add_character_modifier = {
+					modifier = mt_guard_captain_security_3
+					years = 1
+				}
+			}
+			else_if = {
+				limit = { scope:employee.var:employee_quality >= 4 }
+				add_character_modifier = {
+					modifier = mt_guard_captain_security_4
+					years = 1
+				}
+			}
+		}
+		else_if = {
+			limit = {
+				scope:employee = {
+					has_variable = employee_role
+					var:employee_role = flag:scout
+				}
+			}
+			# Scout: Discovers opportunities (handled via events)
+			set_variable = {
+				name = has_active_scout
+				value = yes
+			}
+		}
+		else_if = {
+			limit = {
+				scope:employee = {
+					has_variable = employee_role
+					var:employee_role = flag:negotiator
+				}
+			}
+			# Negotiator: Better prices and deals
+			if = {
+				limit = { scope:employee.var:employee_quality = 1 }
+				add_character_modifier = {
+					modifier = mt_negotiator_bonus_1
+					years = 1
+				}
+			}
+			else_if = {
+				limit = { scope:employee.var:employee_quality = 2 }
+				add_character_modifier = {
+					modifier = mt_negotiator_bonus_2
+					years = 1
+				}
+			}
+			else_if = {
+				limit = { scope:employee.var:employee_quality = 3 }
+				add_character_modifier = {
+					modifier = mt_negotiator_bonus_3
+					years = 1
+				}
+			}
+			else_if = {
+				limit = { scope:employee.var:employee_quality >= 4 }
+				add_character_modifier = {
+					modifier = mt_negotiator_bonus_4
+					years = 1
+				}
+			}
+		}
+	}
+}
+
+####################################
+# EMPLOYEE PERFORMANCE REVIEW EFFECTS
+####################################
+
+# Effect: Quarterly employee performance review
+# Scope: Character (employer)
+# Usage: character = { employee_performance_review_effect = yes }
+employee_performance_review_effect = {
+	save_scope_as = employer
+
+	# Review each employee type
+	every_courtier = {
+		limit = {
+			has_variable = employer
+			var:employer = scope:employer
+			has_variable = employee_role
+		}
+
+		save_temporary_scope_as = reviewed_employee
+
+		# Calculate performance rating
+		random = {
+			chance = var:employee_performance
+
+			# High performer
+			modifier = {
+				add = 10
+				var:employee_loyalty >= 80
+			}
+			modifier = {
+				add = 15
+				has_trait = diligent
+			}
+			modifier = {
+				add = -20
+				has_trait = lazy
+			}
+			modifier = {
+				add = -15
+				var:employee_loyalty < 30
+			}
+
+			# Success - high performance
+			scope:employer = {
+				trigger_event = {
+					id = mt_company_management_events.6
+					days = { 1 5 }
+				}
+			}
+
+			scope:reviewed_employee = {
+				# Increase loyalty for recognition
+				change_variable = {
+					name = employee_loyalty
+					add = 5
+				}
+
+				# Improve performance
+				change_variable = {
+					name = employee_performance
+					add = { 2 5 }
+				}
+			}
+		}
+
+		random = {
+			chance = { 100 - var:employee_performance }
+
+			# Failure - poor performance
+			modifier = {
+				add = 20
+				var:employee_loyalty < 30
+			}
+			modifier = {
+				add = 15
+				has_trait = lazy
+			}
+
+			scope:employer = {
+				trigger_event = {
+					id = mt_company_management_events.11
+					days = { 1 5 }
+				}
+			}
+
+			scope:reviewed_employee = {
+				# Decrease loyalty for criticism
+				change_variable = {
+					name = employee_loyalty
+					add = -10
+				}
+
+				# Warning received
+				set_variable = {
+					name = received_warning
+					value = yes
+					days = 90
+				}
+			}
+		}
+	}
+}
+
+####################################
+# EMPLOYEE LOYALTY MANAGEMENT EFFECTS
+####################################
+
+# Effect: Manage employee loyalty
+# Scope: Character (employee)
+# Usage: employee = { manage_employee_loyalty_effect = { action = pay_raise } }
+manage_employee_loyalty_effect = {
+	save_scope_as = employee
+
+	# Pay raise
+	if = {
+		limit = { $action$ = flag:pay_raise }
+		change_variable = {
+			name = employee_loyalty
+			add = 10
+		}
+		change_variable = {
+			name = employee_salary
+			add = 2
+		}
+	}
+
+	# Bonus
+	else_if = {
+		limit = { $action$ = flag:bonus }
+		change_variable = {
+			name = employee_loyalty
+			add = 15
+		}
+		var:employer = {
+			add_gold = -25
+		}
+	}
+
+	# Harsh treatment
+	else_if = {
+		limit = { $action$ = flag:harsh_treatment }
+		change_variable = {
+			name = employee_loyalty
+			add = -20
+		}
+		change_variable = {
+			name = employee_performance
+			add = -10
+		}
+	}
+
+	# Praise
+	else_if = {
+		limit = { $action$ = flag:praise }
+		change_variable = {
+			name = employee_loyalty
+			add = 5
+		}
+		change_variable = {
+			name = employee_performance
+			add = 5
+		}
+	}
+
+	# Check for critical loyalty thresholds
+	if = {
+		limit = { var:employee_loyalty < 20 }
+		# Trigger defection event
+		var:employer = {
+			trigger_event = {
+				id = mt_company_management_events.30
+				days = { 10 30 }
+			}
+		}
+	}
+	else_if = {
+		limit = { var:employee_loyalty < 30 }
+		# Trigger embezzlement risk event
+		random = {
+			chance = 30
+			var:employer = {
+				trigger_event = {
+					id = mt_company_management_events.21
+					days = { 5 15 }
+				}
+			}
+		}
+	}
+}
+
+####################################
+# EMBEZZLEMENT DETECTION EFFECTS
+####################################
+
+# Effect: Detect employee embezzlement
+# Scope: Character (employer)
+# Usage: character = { embezzlement_detection_effect = { employee = scope:suspect } }
+embezzlement_detection_effect = {
+	save_scope_as = employer
+	save_temporary_scope_as = suspect
+
+	# Base detection chance
+	random = {
+		chance = 40
+
+		# Accountants improve detection
+		modifier = {
+			add = 20
+			any_courtier = {
+				has_variable = employee_role
+				var:employee_role = flag:accountant
+				var:employee_loyalty >= 60
+			}
+		}
+
+		# High stewardship helps
+		modifier = {
+			add = stewardship
+			stewardship >= 15
+		}
+
+		# Diligent trait helps
+		modifier = {
+			add = 15
+			has_trait = diligent
+		}
+
+		# Embezzlement detected!
+		trigger_event = {
+			id = mt_company_management_events.22
+			days = 1
+		}
+
+		$employee$ = {
+			set_variable = {
+				name = embezzlement_detected
+				value = yes
+			}
+		}
+	}
+
+	# Not detected - wealth slowly drains
+	random = {
+		chance = 60
+
+		add_gold = -10
+
+		$employee$ = {
+			add_gold = 10
+			change_variable = {
+				name = embezzlement_total
+				add = 10
+			}
+		}
+	}
+}
+
+####################################
+# EMPLOYEE DEFECTION EFFECTS
+####################################
+
+# Effect: Employee defects to competitor
+# Scope: Character (employee)
+# Usage: employee = { employee_defection_effect = yes }
+employee_defection_effect = {
+	save_scope_as = defecting_employee
+
+	var:employer = {
+		save_scope_as = former_employer
+
+		# Remove employee bonuses
+		if = {
+			limit = {
+				scope:defecting_employee = {
+					var:employee_role = flag:route_manager
+				}
+			}
+			remove_character_modifier = mt_route_manager_bonus
+			change_variable = {
+				name = route_manager_count
+				add = -1
+			}
+		}
+		else_if = {
+			limit = {
+				scope:defecting_employee = {
+					var:employee_role = flag:accountant
+				}
+			}
+			remove_character_modifier = mt_accountant_cost_reduction_1
+			remove_character_modifier = mt_accountant_cost_reduction_2
+			remove_character_modifier = mt_accountant_cost_reduction_3
+			remove_character_modifier = mt_accountant_cost_reduction_4
+			change_variable = {
+				name = accountant_count
+				add = -1
+			}
+		}
+		else_if = {
+			limit = {
+				scope:defecting_employee = {
+					var:employee_role = flag:guard_captain
+				}
+			}
+			remove_character_modifier = mt_guard_captain_security_1
+			remove_character_modifier = mt_guard_captain_security_2
+			remove_character_modifier = mt_guard_captain_security_3
+			remove_character_modifier = mt_guard_captain_security_4
+			change_variable = {
+				name = guard_captain_count
+				add = -1
+			}
+		}
+		else_if = {
+			limit = {
+				scope:defecting_employee = {
+					var:employee_role = flag:scout
+				}
+			}
+			remove_variable = has_active_scout
+			change_variable = {
+				name = scout_count
+				add = -1
+			}
+		}
+		else_if = {
+			limit = {
+				scope:defecting_employee = {
+					var:employee_role = flag:negotiator
+				}
+			}
+			remove_character_modifier = mt_negotiator_bonus_1
+			remove_character_modifier = mt_negotiator_bonus_2
+			remove_character_modifier = mt_negotiator_bonus_3
+			remove_character_modifier = mt_negotiator_bonus_4
+			change_variable = {
+				name = negotiator_count
+				add = -1
+			}
+		}
+
+		# Trade secrets stolen penalty
+		add_character_modifier = {
+			modifier = mt_trade_secrets_stolen
+			years = 3
+		}
+
+		# Find rival merchant to join
+		random_courtier = {
+			limit = {
+				has_trait = mt_merchant
+				NOT = { this = scope:former_employer }
+			}
+			alternative_limit = {
+				any_neighboring_top_liege_realm_owner = {
+					any_courtier = {
+						has_trait = mt_merchant
+					}
+				}
+			}
+
+			save_scope_as = new_employer
+
+			# Give bonuses to rival
+			scope:defecting_employee = {
+				set_variable = {
+					name = employer
+					value = scope:new_employer
+				}
+
+				assign_employee_task_effect = yes
+			}
+		}
+	}
+
+	# Clear old employer reference
+	remove_variable = employer
+}
+
+####################################
+# EMPLOYEE FIRING EFFECTS
+####################################
+
+# Effect: Fire an employee
+# Scope: Character (employer)
+# Usage: character = { fire_employee_effect = { employee = scope:target severance = yes } }
+fire_employee_effect = {
+	save_scope_as = employer
+
+	$employee$ = {
+		save_temporary_scope_as = fired_employee
+
+		# Pay severance if specified
+		if = {
+			limit = { $severance$ = yes }
+			scope:employer = {
+				add_gold = {
+					subtract = scope:fired_employee.var:employee_salary
+					multiply = 3
+				}
+			}
+
+			# Less chance of sabotage with severance
+			random = {
+				chance = 10
+				scope:employer = {
+					trigger_event = {
+						id = mt_company_management_events.35
+						days = { 5 20 }
+					}
+				}
+			}
+		}
+		else = {
+			# Higher sabotage chance without severance
+			random = {
+				chance = 40
+				scope:employer = {
+					trigger_event = {
+						id = mt_company_management_events.35
+						days = { 5 20 }
+					}
+				}
+			}
+		}
+
+		# Update employee counts
+		scope:employer = {
+			if = {
+				limit = {
+					scope:fired_employee = {
+						var:employee_role = flag:route_manager
+					}
+				}
+				remove_character_modifier = mt_route_manager_bonus
+				change_variable = {
+					name = route_manager_count
+					add = -1
+				}
+			}
+			else_if = {
+				limit = {
+					scope:fired_employee = {
+						var:employee_role = flag:accountant
+					}
+				}
+				remove_character_modifier = mt_accountant_cost_reduction_1
+				remove_character_modifier = mt_accountant_cost_reduction_2
+				remove_character_modifier = mt_accountant_cost_reduction_3
+				remove_character_modifier = mt_accountant_cost_reduction_4
+				change_variable = {
+					name = accountant_count
+					add = -1
+				}
+			}
+			else_if = {
+				limit = {
+					scope:fired_employee = {
+						var:employee_role = flag:guard_captain
+					}
+				}
+				remove_character_modifier = mt_guard_captain_security_1
+				remove_character_modifier = mt_guard_captain_security_2
+				remove_character_modifier = mt_guard_captain_security_3
+				remove_character_modifier = mt_guard_captain_security_4
+				change_variable = {
+					name = guard_captain_count
+					add = -1
+				}
+			}
+			else_if = {
+				limit = {
+					scope:fired_employee = {
+						var:employee_role = flag:scout
+					}
+				}
+				remove_variable = has_active_scout
+				change_variable = {
+					name = scout_count
+					add = -1
+				}
+			}
+			else_if = {
+				limit = {
+					scope:fired_employee = {
+						var:employee_role = flag:negotiator
+					}
+				}
+				remove_character_modifier = mt_negotiator_bonus_1
+				remove_character_modifier = mt_negotiator_bonus_2
+				remove_character_modifier = mt_negotiator_bonus_3
+				remove_character_modifier = mt_negotiator_bonus_4
+				change_variable = {
+					name = negotiator_count
+					add = -1
+				}
+			}
+		}
+
+		# Affect morale of remaining employees
+		scope:employer = {
+			every_courtier = {
+				limit = {
+					has_variable = employer
+					var:employer = scope:employer
+					NOT = { this = scope:fired_employee }
+				}
+
+				change_variable = {
+					name = employee_loyalty
+					add = -5
+				}
+			}
+		}
+
+		# Remove employee from court
+		remove_variable = employer
+		remove_variable = employee_role
+		remove_variable = employee_quality
+		remove_variable = employee_loyalty
+		remove_variable = employee_performance
+		remove_variable = employee_salary
+	}
+}
+
+####################################
+# EMPLOYEE PROMOTION EFFECTS
+####################################
+
+# Effect: Promote an employee to next quality level
+# Scope: Character (employee)
+# Usage: employee = { promote_employee_effect = yes }
+promote_employee_effect = {
+	save_scope_as = promoted_employee
+
+	# Increase quality level (max 4)
+	if = {
+		limit = { var:employee_quality < 4 }
+		change_variable = {
+			name = employee_quality
+			add = 1
+		}
+
+		# Increase salary
+		change_variable = {
+			name = employee_salary
+			add = 2
+		}
+
+		# Massive loyalty boost
+		change_variable = {
+			name = employee_loyalty
+			add = 25
+		}
+
+		# Improve performance potential
+		change_variable = {
+			name = employee_performance
+			add = 10
+		}
+
+		# Update employer's modifiers
+		var:employer = {
+			# Re-assign tasks to get upgraded bonuses
+			scope:promoted_employee = {
+				assign_employee_task_effect = yes
+			}
+		}
+
+		# Other employees expect promotions too
+		var:employer = {
+			every_courtier = {
+				limit = {
+					has_variable = employer
+					var:employer = scope:promoted_employee.var:employer
+					NOT = { this = scope:promoted_employee }
+				}
+
+				change_variable = {
+					name = employee_loyalty
+					add = -3
+				}
+			}
+		}
+	}
+}

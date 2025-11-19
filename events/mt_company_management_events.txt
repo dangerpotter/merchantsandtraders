@@ -1,0 +1,3048 @@
+####################################
+# MERCHANTS AND TRADERS MOD
+# Company Management Events
+####################################
+#
+# Event namespace: mt_company_management_events
+#
+# 0001-0005: Hiring events
+# 0006-0015: Performance events
+# 0016-0025: Loyalty issues events
+# 0026-0033: Delegation events
+# 0034-0040: Company culture events
+# 0041-0050: Management action events
+#
+####################################
+
+namespace = mt_company_management_events
+
+####################################
+# HIRING EVENTS (0001-0005)
+####################################
+
+# 0001: Select employee role and quality to hire
+mt_company_management_events.1 = {
+	type = character_event
+	title = mt_company_management_events.1.t
+	desc = mt_company_management_events.1.desc
+	theme = stewardship
+
+	left_portrait = {
+		character = root
+		animation = personality_rational
+	}
+
+	# Hire Route Manager
+	option = {
+		name = mt_company_management_events.1.a
+
+		trigger_event = {
+			id = mt_company_management_events.2
+		}
+
+		set_variable = {
+			name = hiring_role
+			value = flag:route_manager
+		}
+	}
+
+	# Hire Accountant
+	option = {
+		name = mt_company_management_events.1.b
+
+		trigger_event = {
+			id = mt_company_management_events.2
+		}
+
+		set_variable = {
+			name = hiring_role
+			value = flag:accountant
+		}
+	}
+
+	# Hire Guard Captain
+	option = {
+		name = mt_company_management_events.1.c
+
+		trigger_event = {
+			id = mt_company_management_events.2
+		}
+
+		set_variable = {
+			name = hiring_role
+			value = flag:guard_captain
+		}
+	}
+
+	# Hire Scout
+	option = {
+		name = mt_company_management_events.1.d
+
+		trigger_event = {
+			id = mt_company_management_events.2
+		}
+
+		set_variable = {
+			name = hiring_role
+			value = flag:scout
+		}
+	}
+
+	# Hire Negotiator
+	option = {
+		name = mt_company_management_events.1.e
+
+		trigger_event = {
+			id = mt_company_management_events.2
+		}
+
+		set_variable = {
+			name = hiring_role
+			value = flag:negotiator
+		}
+	}
+
+	# Cancel
+	option = {
+		name = mt_company_management_events.1.f
+
+		add_gold = 50
+	}
+}
+
+# 0002: Impressive candidate applies - expensive but skilled
+mt_company_management_events.2 = {
+	type = character_event
+	title = mt_company_management_events.2.t
+	desc = mt_company_management_events.2.desc
+	theme = stewardship
+
+	left_portrait = {
+		character = root
+		animation = personality_bold
+	}
+
+	# Hire Master quality (expensive)
+	option = {
+		name = mt_company_management_events.2.a
+
+		trigger = {
+			gold >= 100
+		}
+
+		hire_employee_effect = {
+			role = root.var:hiring_role
+			quality = flag:master
+		}
+
+		remove_variable = hiring_role
+
+		stress_impact = {
+			greedy = minor_stress_impact_gain
+		}
+	}
+
+	# Hire Expert quality (good value)
+	option = {
+		name = mt_company_management_events.2.b
+
+		hire_employee_effect = {
+			role = root.var:hiring_role
+			quality = flag:expert
+		}
+
+		remove_variable = hiring_role
+	}
+
+	# Hire Experienced quality (budget option)
+	option = {
+		name = mt_company_management_events.2.c
+
+		hire_employee_effect = {
+			role = root.var:hiring_role
+			quality = flag:experienced
+		}
+
+		remove_variable = hiring_role
+
+		stress_impact = {
+			ambitious = minor_stress_impact_gain
+		}
+	}
+
+	# Hire Novice quality (cheap but risky)
+	option = {
+		name = mt_company_management_events.2.d
+
+		hire_employee_effect = {
+			role = root.var:hiring_role
+			quality = flag:novice
+		}
+
+		remove_variable = hiring_role
+
+		stress_impact = {
+			diligent = minor_stress_impact_gain
+		}
+	}
+}
+
+# 0003: Young applicant - cheap but unproven
+mt_company_management_events.3 = {
+	type = character_event
+	title = mt_company_management_events.3.t
+	desc = mt_company_management_events.3.desc
+	theme = stewardship
+
+	trigger = {
+		has_trait = mt_merchant
+		gold >= 60
+	}
+
+	left_portrait = {
+		character = root
+		animation = personality_rational
+	}
+
+	# Give them a chance
+	option = {
+		name = mt_company_management_events.3.a
+
+		hire_employee_effect = {
+			role = flag:route_manager
+			quality = flag:novice
+		}
+
+		add_prestige = 50
+
+		stress_impact = {
+			compassionate = minor_stress_impact_loss
+		}
+	}
+
+	# Too risky
+	option = {
+		name = mt_company_management_events.3.b
+
+		add_prestige = -25
+
+		stress_impact = {
+			callous = minor_stress_impact_loss
+		}
+	}
+}
+
+# 0004: Competitor's employee wants to defect - trade secrets included
+mt_company_management_events.4 = {
+	type = character_event
+	title = mt_company_management_events.4.t
+	desc = mt_company_management_events.4.desc
+	theme = intrigue
+
+	trigger = {
+		has_trait = mt_merchant
+		gold >= 100
+
+		any_courtier = {
+			has_trait = mt_merchant
+			NOT = { this = root }
+		}
+	}
+
+	left_portrait = {
+		character = root
+		animation = scheme
+	}
+
+	# Hire them - get trade secrets
+	option = {
+		name = mt_company_management_events.4.a
+
+		hire_employee_effect = {
+			role = flag:scout
+			quality = flag:expert
+		}
+
+		add_character_modifier = {
+			modifier = mt_stolen_trade_secrets
+			years = 5
+		}
+
+		random_courtier = {
+			limit = {
+				has_trait = mt_merchant
+				NOT = { this = root }
+			}
+
+			add_opinion = {
+				target = root
+				modifier = angry_opinion
+				opinion = -50
+			}
+		}
+
+		stress_impact = {
+			just = medium_stress_impact_gain
+			honest = medium_stress_impact_gain
+		}
+	}
+
+	# Refuse - maintain honor
+	option = {
+		name = mt_company_management_events.4.b
+
+		add_prestige = 100
+		add_piety = 50
+
+		stress_impact = {
+			ambitious = minor_stress_impact_gain
+			greedy = minor_stress_impact_gain
+		}
+	}
+}
+
+# 0005: Family member asks for job - nepotism dilemma
+mt_company_management_events.5 = {
+	type = character_event
+	title = mt_company_management_events.5.t
+	desc = mt_company_management_events.5.desc
+	theme = family
+
+	trigger = {
+		has_trait = mt_merchant
+		gold >= 60
+
+		any_close_family_member = {
+			is_adult = yes
+			is_imprisoned = no
+		}
+	}
+
+	left_portrait = {
+		character = root
+		animation = personality_rational
+	}
+
+	right_portrait = {
+		character = scope:family_applicant
+		animation = personality_content
+	}
+
+	immediate = {
+		random_close_family_member = {
+			limit = {
+				is_adult = yes
+				is_imprisoned = no
+			}
+			save_scope_as = family_applicant
+		}
+	}
+
+	# Hire them
+	option = {
+		name = mt_company_management_events.5.a
+
+		hire_employee_effect = {
+			role = flag:accountant
+			quality = flag:experienced
+		}
+
+		scope:family_applicant = {
+			add_opinion = {
+				target = root
+				modifier = grateful_opinion
+				opinion = 30
+			}
+		}
+
+		stress_impact = {
+			just = minor_stress_impact_gain
+		}
+	}
+
+	# Politely refuse
+	option = {
+		name = mt_company_management_events.5.b
+
+		scope:family_applicant = {
+			add_opinion = {
+				target = root
+				modifier = disappointed_opinion
+				opinion = -20
+			}
+		}
+
+		add_prestige = 25
+
+		stress_impact = {
+			compassionate = minor_stress_impact_gain
+			family_first = medium_stress_impact_gain
+		}
+	}
+}
+
+####################################
+# PERFORMANCE EVENTS (0006-0015)
+####################################
+
+# 0006: Route manager exceeds expectations - major profits
+mt_company_management_events.6 = {
+	type = character_event
+	title = mt_company_management_events.6.t
+	desc = mt_company_management_events.6.desc
+	theme = stewardship
+
+	left_portrait = {
+		character = root
+		animation = happiness
+	}
+
+	immediate = {
+		random_courtier = {
+			limit = {
+				has_variable = employer
+				var:employer = root
+				var:employee_role = flag:route_manager
+			}
+			save_scope_as = excellent_manager
+		}
+	}
+
+	# Reward them generously
+	option = {
+		name = mt_company_management_events.6.a
+
+		add_gold = 100
+
+		scope:excellent_manager = {
+			change_variable = {
+				name = employee_loyalty
+				add = 20
+			}
+		}
+
+		add_gold = -50
+
+		stress_impact = {
+			generous = minor_stress_impact_loss
+		}
+	}
+
+	# Thank them
+	option = {
+		name = mt_company_management_events.6.b
+
+		add_gold = 100
+
+		scope:excellent_manager = {
+			change_variable = {
+				name = employee_loyalty
+				add = 10
+			}
+		}
+	}
+
+	# Take credit yourself
+	option = {
+		name = mt_company_management_events.6.c
+
+		add_gold = 100
+		add_prestige = 50
+
+		scope:excellent_manager = {
+			change_variable = {
+				name = employee_loyalty
+				add = -15
+			}
+		}
+
+		stress_impact = {
+			just = medium_stress_impact_gain
+			honest = medium_stress_impact_gain
+		}
+	}
+}
+
+# 0007: Accountant saves fortune with tax strategy
+mt_company_management_events.7 = {
+	type = character_event
+	title = mt_company_management_events.7.t
+	desc = mt_company_management_events.7.desc
+	theme = stewardship
+
+	left_portrait = {
+		character = root
+		animation = happiness
+	}
+
+	immediate = {
+		random_courtier = {
+			limit = {
+				has_variable = employer
+				var:employer = root
+				var:employee_role = flag:accountant
+			}
+			save_scope_as = brilliant_accountant
+		}
+	}
+
+	# Legal tax savings
+	option = {
+		name = mt_company_management_events.7.a
+
+		add_gold = 150
+
+		scope:brilliant_accountant = {
+			change_variable = {
+				name = employee_loyalty
+				add = 15
+			}
+		}
+	}
+
+	# Questionable but legal
+	option = {
+		name = mt_company_management_events.7.b
+
+		add_gold = 250
+		add_piety = -25
+
+		scope:brilliant_accountant = {
+			change_variable = {
+				name = employee_loyalty
+				add = 10
+			}
+		}
+
+		stress_impact = {
+			just = minor_stress_impact_gain
+			honest = minor_stress_impact_gain
+		}
+	}
+
+	# Too risky, don't do it
+	option = {
+		name = mt_company_management_events.7.c
+
+		add_piety = 50
+
+		scope:brilliant_accountant = {
+			change_variable = {
+				name = employee_loyalty
+				add = -5
+			}
+		}
+
+		stress_impact = {
+			greedy = minor_stress_impact_gain
+		}
+	}
+}
+
+# 0008: Guard captain thwarts bandit attack
+mt_company_management_events.8 = {
+	type = character_event
+	title = mt_company_management_events.8.t
+	desc = mt_company_management_events.8.desc
+	theme = martial
+
+	left_portrait = {
+		character = root
+		animation = personality_bold
+	}
+
+	right_portrait = {
+		character = scope:heroic_captain
+		animation = war
+	}
+
+	immediate = {
+		random_courtier = {
+			limit = {
+				has_variable = employer
+				var:employer = root
+				var:employee_role = flag:guard_captain
+			}
+			save_scope_as = heroic_captain
+		}
+	}
+
+	# Large bonus
+	option = {
+		name = mt_company_management_events.8.a
+
+		add_gold = -75
+
+		scope:heroic_captain = {
+			change_variable = {
+				name = employee_loyalty
+				add = 25
+			}
+			change_variable = {
+				name = employee_performance
+				add = 10
+			}
+		}
+
+		stress_impact = {
+			generous = minor_stress_impact_loss
+		}
+	}
+
+	# Modest reward
+	option = {
+		name = mt_company_management_events.8.b
+
+		add_gold = -25
+
+		scope:heroic_captain = {
+			change_variable = {
+				name = employee_loyalty
+				add = 15
+			}
+		}
+	}
+
+	# Just words
+	option = {
+		name = mt_company_management_events.8.c
+
+		scope:heroic_captain = {
+			change_variable = {
+				name = employee_loyalty
+				add = 5
+			}
+		}
+
+		stress_impact = {
+			generous = minor_stress_impact_gain
+		}
+	}
+}
+
+# 0009: Scout discovers gold mine of opportunity
+mt_company_management_events.9 = {
+	type = character_event
+	title = mt_company_management_events.9.t
+	desc = mt_company_management_events.9.desc
+	theme = stewardship
+
+	left_portrait = {
+		character = root
+		animation = happiness
+	}
+
+	immediate = {
+		random_courtier = {
+			limit = {
+				has_variable = employer
+				var:employer = root
+				var:employee_role = flag:scout
+			}
+			save_scope_as = clever_scout
+		}
+	}
+
+	# Exploit the opportunity fully
+	option = {
+		name = mt_company_management_events.9.a
+
+		add_gold = 200
+
+		scope:clever_scout = {
+			change_variable = {
+				name = employee_loyalty
+				add = 15
+			}
+		}
+
+		add_character_modifier = {
+			modifier = mt_profitable_venture
+			years = 3
+		}
+	}
+
+	# Share the opportunity with partners
+	option = {
+		name = mt_company_management_events.9.b
+
+		add_gold = 100
+		add_prestige = 100
+
+		scope:clever_scout = {
+			change_variable = {
+				name = employee_loyalty
+				add = 10
+			}
+		}
+
+		stress_impact = {
+			greedy = minor_stress_impact_gain
+		}
+	}
+}
+
+# 0010: Negotiator gets amazing deal
+mt_company_management_events.10 = {
+	type = character_event
+	title = mt_company_management_events.10.t
+	desc = mt_company_management_events.10.desc
+	theme = diplomacy
+
+	left_portrait = {
+		character = root
+		animation = happiness
+	}
+
+	immediate = {
+		random_courtier = {
+			limit = {
+				has_variable = employer
+				var:employer = root
+				var:employee_role = flag:negotiator
+			}
+			save_scope_as = skilled_negotiator
+		}
+	}
+
+	# Celebrate the success
+	option = {
+		name = mt_company_management_events.10.a
+
+		add_gold = 150
+
+		scope:skilled_negotiator = {
+			change_variable = {
+				name = employee_loyalty
+				add = 20
+			}
+			change_variable = {
+				name = employee_performance
+				add = 10
+			}
+		}
+
+		add_character_modifier = {
+			modifier = mt_excellent_deal
+			years = 2
+		}
+	}
+}
+
+# 0011: Manager makes costly mistake
+mt_company_management_events.11 = {
+	type = character_event
+	title = mt_company_management_events.11.t
+	desc = mt_company_management_events.11.desc
+	theme = stewardship
+
+	left_portrait = {
+		character = root
+		animation = rage
+	}
+
+	right_portrait = {
+		character = scope:incompetent_manager
+		animation = worry
+	}
+
+	immediate = {
+		random_courtier = {
+			limit = {
+				has_variable = employer
+				var:employer = root
+				var:employee_role = flag:route_manager
+			}
+			save_scope_as = incompetent_manager
+		}
+	}
+
+	# Fire them immediately
+	option = {
+		name = mt_company_management_events.11.a
+
+		add_gold = -100
+
+		fire_employee_effect = {
+			employee = scope:incompetent_manager
+			severance = no
+		}
+
+		stress_impact = {
+			wrathful = minor_stress_impact_loss
+			compassionate = medium_stress_impact_gain
+		}
+	}
+
+	# Give them a warning
+	option = {
+		name = mt_company_management_events.11.b
+
+		add_gold = -100
+
+		scope:incompetent_manager = {
+			change_variable = {
+				name = employee_loyalty
+				add = -15
+			}
+			set_variable = {
+				name = on_thin_ice
+				value = yes
+				days = 180
+			}
+		}
+
+		stress_impact = {
+			forgiving = minor_stress_impact_loss
+		}
+	}
+
+	# Everyone makes mistakes
+	option = {
+		name = mt_company_management_events.11.c
+
+		add_gold = -100
+
+		scope:incompetent_manager = {
+			change_variable = {
+				name = employee_loyalty
+				add = 10
+			}
+		}
+
+		stress_impact = {
+			just = minor_stress_impact_gain
+		}
+	}
+}
+
+# 0012: Accountant misses major fraud
+mt_company_management_events.12 = {
+	type = character_event
+	title = mt_company_management_events.12.t
+	desc = mt_company_management_events.12.desc
+	theme = intrigue
+
+	left_portrait = {
+		character = root
+		animation = rage
+	}
+
+	immediate = {
+		random_courtier = {
+			limit = {
+				has_variable = employer
+				var:employer = root
+				var:employee_role = flag:accountant
+			}
+			save_scope_as = negligent_accountant
+		}
+	}
+
+	# Fire them
+	option = {
+		name = mt_company_management_events.12.a
+
+		add_gold = -200
+
+		fire_employee_effect = {
+			employee = scope:negligent_accountant
+			severance = no
+		}
+	}
+
+	# Demote/punish them
+	option = {
+		name = mt_company_management_events.12.b
+
+		add_gold = -200
+
+		scope:negligent_accountant = {
+			change_variable = {
+				name = employee_loyalty
+				add = -25
+			}
+			change_variable = {
+				name = employee_performance
+				add = -15
+			}
+		}
+	}
+}
+
+# 0013: Guard captain fails during attack
+mt_company_management_events.13 = {
+	type = character_event
+	title = mt_company_management_events.13.t
+	desc = mt_company_management_events.13.desc
+	theme = martial
+
+	left_portrait = {
+		character = root
+		animation = rage
+	}
+
+	right_portrait = {
+		character = scope:failed_captain
+		animation = shame
+	}
+
+	immediate = {
+		random_courtier = {
+			limit = {
+				has_variable = employer
+				var:employer = root
+				var:employee_role = flag:guard_captain
+			}
+			save_scope_as = failed_captain
+		}
+	}
+
+	# Fire them
+	option = {
+		name = mt_company_management_events.13.a
+
+		add_gold = -150
+
+		fire_employee_effect = {
+			employee = scope:failed_captain
+			severance = no
+		}
+
+		stress_impact = {
+			wrathful = minor_stress_impact_loss
+		}
+	}
+
+	# Give second chance
+	option = {
+		name = mt_company_management_events.13.b
+
+		add_gold = -150
+
+		scope:failed_captain = {
+			change_variable = {
+				name = employee_loyalty
+				add = 15
+			}
+			set_variable = {
+				name = redemption_needed
+				value = yes
+				days = 180
+			}
+		}
+
+		stress_impact = {
+			forgiving = minor_stress_impact_loss
+		}
+	}
+}
+
+# 0014: Scout's lead was terrible
+mt_company_management_events.14 = {
+	type = character_event
+	title = mt_company_management_events.14.t
+	desc = mt_company_management_events.14.desc
+	theme = stewardship
+
+	left_portrait = {
+		character = root
+		animation = disappointment
+	}
+
+	immediate = {
+		random_courtier = {
+			limit = {
+				has_variable = employer
+				var:employer = root
+				var:employee_role = flag:scout
+			}
+			save_scope_as = bad_scout
+		}
+	}
+
+	# Fire them
+	option = {
+		name = mt_company_management_events.14.a
+
+		add_gold = -80
+
+		fire_employee_effect = {
+			employee = scope:bad_scout
+			severance = no
+		}
+	}
+
+	# Reprimand them
+	option = {
+		name = mt_company_management_events.14.b
+
+		add_gold = -80
+
+		scope:bad_scout = {
+			change_variable = {
+				name = employee_loyalty
+				add = -10
+			}
+		}
+	}
+
+	# Laugh it off
+	option = {
+		name = mt_company_management_events.14.c
+
+		add_gold = -80
+
+		scope:bad_scout = {
+			change_variable = {
+				name = employee_loyalty
+				add = 5
+			}
+		}
+
+		stress_impact = {
+			calm = minor_stress_impact_loss
+		}
+	}
+}
+
+# 0015: Negotiator got swindled
+mt_company_management_events.15 = {
+	type = character_event
+	title = mt_company_management_events.15.t
+	desc = mt_company_management_events.15.desc
+	theme = diplomacy
+
+	left_portrait = {
+		character = root
+		animation = rage
+	}
+
+	right_portrait = {
+		character = scope:fooled_negotiator
+		animation = worry
+	}
+
+	immediate = {
+		random_courtier = {
+			limit = {
+				has_variable = employer
+				var:employer = root
+				var:employee_role = flag:negotiator
+			}
+			save_scope_as = fooled_negotiator
+		}
+	}
+
+	# Fire them
+	option = {
+		name = mt_company_management_events.15.a
+
+		add_gold = -120
+
+		fire_employee_effect = {
+			employee = scope:fooled_negotiator
+			severance = no
+		}
+
+		stress_impact = {
+			wrathful = minor_stress_impact_loss
+		}
+	}
+
+	# Final warning
+	option = {
+		name = mt_company_management_events.15.b
+
+		add_gold = -120
+
+		scope:fooled_negotiator = {
+			change_variable = {
+				name = employee_loyalty
+				add = -15
+			}
+			change_variable = {
+				name = employee_performance
+				add = -10
+			}
+		}
+	}
+}
+
+####################################
+# LOYALTY ISSUES EVENTS (0016-0025)
+####################################
+
+# 0016: Employee asks for raise - deserve it or not?
+mt_company_management_events.16 = {
+	type = character_event
+	title = mt_company_management_events.16.t
+	desc = mt_company_management_events.16.desc
+	theme = stewardship
+
+	trigger = {
+		has_trait = mt_merchant
+
+		any_courtier = {
+			has_variable = employer
+			var:employer = root
+			has_variable = employee_loyalty
+			var:employee_loyalty >= 60
+		}
+	}
+
+	left_portrait = {
+		character = root
+		animation = personality_rational
+	}
+
+	right_portrait = {
+		character = scope:requesting_employee
+		animation = personality_bold
+	}
+
+	immediate = {
+		random_courtier = {
+			limit = {
+				has_variable = employer
+				var:employer = root
+				has_variable = employee_loyalty
+				var:employee_loyalty >= 60
+			}
+			save_scope_as = requesting_employee
+		}
+	}
+
+	# Grant the raise
+	option = {
+		name = mt_company_management_events.16.a
+
+		scope:requesting_employee = {
+			manage_employee_loyalty_effect = {
+				action = flag:pay_raise
+			}
+		}
+
+		stress_impact = {
+			generous = minor_stress_impact_loss
+			greedy = medium_stress_impact_gain
+		}
+	}
+
+	# Refuse
+	option = {
+		name = mt_company_management_events.16.b
+
+		scope:requesting_employee = {
+			change_variable = {
+				name = employee_loyalty
+				add = -15
+			}
+		}
+
+		stress_impact = {
+			just = minor_stress_impact_gain
+		}
+	}
+
+	# Counter with smaller raise
+	option = {
+		name = mt_company_management_events.16.c
+
+		scope:requesting_employee = {
+			change_variable = {
+				name = employee_loyalty
+				add = 5
+			}
+			change_variable = {
+				name = employee_salary
+				add = 1
+			}
+		}
+	}
+}
+
+# 0017: Employee upset about working conditions
+mt_company_management_events.17 = {
+	type = character_event
+	title = mt_company_management_events.17.t
+	desc = mt_company_management_events.17.desc
+	theme = stewardship
+
+	trigger = {
+		has_trait = mt_merchant
+
+		any_courtier = {
+			has_variable = employer
+			var:employer = root
+		}
+	}
+
+	left_portrait = {
+		character = root
+		animation = personality_rational
+	}
+
+	right_portrait = {
+		character = scope:unhappy_employee
+		animation = anger
+	}
+
+	immediate = {
+		random_courtier = {
+			limit = {
+				has_variable = employer
+				var:employer = root
+			}
+			save_scope_as = unhappy_employee
+		}
+	}
+
+	# Improve conditions
+	option = {
+		name = mt_company_management_events.17.a
+
+		add_gold = -50
+
+		scope:unhappy_employee = {
+			change_variable = {
+				name = employee_loyalty
+				add = 20
+			}
+		}
+
+		every_courtier = {
+			limit = {
+				has_variable = employer
+				var:employer = root
+				NOT = { this = scope:unhappy_employee }
+			}
+			change_variable = {
+				name = employee_loyalty
+				add = 5
+			}
+		}
+
+		stress_impact = {
+			compassionate = minor_stress_impact_loss
+		}
+	}
+
+	# Tell them to deal with it
+	option = {
+		name = mt_company_management_events.17.b
+
+		scope:unhappy_employee = {
+			change_variable = {
+				name = employee_loyalty
+				add = -20
+			}
+		}
+
+		stress_impact = {
+			callous = minor_stress_impact_loss
+			compassionate = medium_stress_impact_gain
+		}
+	}
+}
+
+# 0018: Employee requests time off - personal crisis
+mt_company_management_events.18 = {
+	type = character_event
+	title = mt_company_management_events.18.t
+	desc = mt_company_management_events.18.desc
+	theme = family
+
+	trigger = {
+		has_trait = mt_merchant
+
+		any_courtier = {
+			has_variable = employer
+			var:employer = root
+		}
+	}
+
+	left_portrait = {
+		character = root
+		animation = personality_compassionate
+	}
+
+	right_portrait = {
+		character = scope:distressed_employee
+		animation = sadness
+	}
+
+	immediate = {
+		random_courtier = {
+			limit = {
+				has_variable = employer
+				var:employer = root
+			}
+			save_scope_as = distressed_employee
+		}
+	}
+
+	# Grant time off with pay
+	option = {
+		name = mt_company_management_events.18.a
+
+		scope:distressed_employee = {
+			change_variable = {
+				name = employee_loyalty
+				add = 30
+			}
+		}
+
+		stress_impact = {
+			compassionate = major_stress_impact_loss
+			generous = minor_stress_impact_loss
+		}
+	}
+
+	# Grant unpaid leave
+	option = {
+		name = mt_company_management_events.18.b
+
+		scope:distressed_employee = {
+			change_variable = {
+				name = employee_loyalty
+				add = 10
+			}
+		}
+	}
+
+	# Deny the request
+	option = {
+		name = mt_company_management_events.18.c
+
+		scope:distressed_employee = {
+			change_variable = {
+				name = employee_loyalty
+				add = -30
+			}
+		}
+
+		stress_impact = {
+			compassionate = major_stress_impact_gain
+			callous = minor_stress_impact_loss
+		}
+	}
+}
+
+# 0019: Employee considering other offers - counter-offer?
+mt_company_management_events.19 = {
+	type = character_event
+	title = mt_company_management_events.19.t
+	desc = mt_company_management_events.19.desc
+	theme = stewardship
+
+	trigger = {
+		has_trait = mt_merchant
+
+		any_courtier = {
+			has_variable = employer
+			var:employer = root
+			has_variable = employee_loyalty
+			var:employee_loyalty < 50
+		}
+	}
+
+	left_portrait = {
+		character = root
+		animation = worry
+	}
+
+	right_portrait = {
+		character = scope:wavering_employee
+		animation = personality_rational
+	}
+
+	immediate = {
+		random_courtier = {
+			limit = {
+				has_variable = employer
+				var:employer = root
+				has_variable = employee_loyalty
+				var:employee_loyalty < 50
+			}
+			save_scope_as = wavering_employee
+		}
+	}
+
+	# Make generous counter-offer
+	option = {
+		name = mt_company_management_events.19.a
+
+		add_gold = -100
+
+		scope:wavering_employee = {
+			change_variable = {
+				name = employee_loyalty
+				add = 40
+			}
+			change_variable = {
+				name = employee_salary
+				add = 3
+			}
+		}
+
+		stress_impact = {
+			greedy = medium_stress_impact_gain
+		}
+	}
+
+	# Let them go
+	option = {
+		name = mt_company_management_events.19.b
+
+		fire_employee_effect = {
+			employee = scope:wavering_employee
+			severance = yes
+		}
+
+		stress_impact = {
+			ambitious = minor_stress_impact_gain
+		}
+	}
+}
+
+# 0020: Employee caught stealing - small amount
+mt_company_management_events.20 = {
+	type = character_event
+	title = mt_company_management_events.20.t
+	desc = mt_company_management_events.20.desc
+	theme = intrigue
+
+	trigger = {
+		has_trait = mt_merchant
+
+		any_courtier = {
+			has_variable = employer
+			var:employer = root
+			has_variable = employee_loyalty
+			var:employee_loyalty < 40
+		}
+	}
+
+	left_portrait = {
+		character = root
+		animation = rage
+	}
+
+	right_portrait = {
+		character = scope:thieving_employee
+		animation = shame
+	}
+
+	immediate = {
+		random_courtier = {
+			limit = {
+				has_variable = employer
+				var:employer = root
+				has_variable = employee_loyalty
+				var:employee_loyalty < 40
+			}
+			save_scope_as = thieving_employee
+		}
+	}
+
+	# Fire and prosecute
+	option = {
+		name = mt_company_management_events.20.a
+
+		fire_employee_effect = {
+			employee = scope:thieving_employee
+			severance = no
+		}
+
+		add_prestige = 50
+
+		every_courtier = {
+			limit = {
+				has_variable = employer
+				var:employer = root
+			}
+			change_variable = {
+				name = employee_loyalty
+				add = -10
+			}
+		}
+
+		stress_impact = {
+			just = minor_stress_impact_loss
+		}
+	}
+
+	# Fire quietly
+	option = {
+		name = mt_company_management_events.20.b
+
+		fire_employee_effect = {
+			employee = scope:thieving_employee
+			severance = no
+		}
+
+		every_courtier = {
+			limit = {
+				has_variable = employer
+				var:employer = root
+			}
+			change_variable = {
+				name = employee_loyalty
+				add = -5
+			}
+		}
+	}
+
+	# Give second chance
+	option = {
+		name = mt_company_management_events.20.c
+
+		scope:thieving_employee = {
+			change_variable = {
+				name = employee_loyalty
+				add = 20
+			}
+			set_variable = {
+				name = on_probation
+				value = yes
+				days = 365
+			}
+		}
+
+		stress_impact = {
+			forgiving = minor_stress_impact_loss
+			just = medium_stress_impact_gain
+		}
+	}
+}
+
+# 0021: Employee confesses to major embezzlement
+mt_company_management_events.21 = {
+	type = character_event
+	title = mt_company_management_events.21.t
+	desc = mt_company_management_events.21.desc
+	theme = intrigue
+
+	left_portrait = {
+		character = root
+		animation = rage
+	}
+
+	right_portrait = {
+		character = scope:embezzler
+		animation = shame
+	}
+
+	immediate = {
+		random_courtier = {
+			limit = {
+				has_variable = employer
+				var:employer = root
+				has_variable = employee_loyalty
+				var:employee_loyalty < 30
+			}
+			save_scope_as = embezzler
+		}
+	}
+
+	# Prosecute fully
+	option = {
+		name = mt_company_management_events.21.a
+
+		add_gold = -300
+
+		fire_employee_effect = {
+			employee = scope:embezzler
+			severance = no
+		}
+
+		add_prestige = 100
+
+		stress_impact = {
+			just = major_stress_impact_loss
+			wrathful = minor_stress_impact_loss
+		}
+	}
+
+	# Accept repayment plan
+	option = {
+		name = mt_company_management_events.21.b
+
+		add_gold = -150
+
+		fire_employee_effect = {
+			employee = scope:embezzler
+			severance = no
+		}
+
+		add_character_modifier = {
+			modifier = mt_embezzlement_repayment
+			years = 5
+		}
+
+		stress_impact = {
+			greedy = minor_stress_impact_loss
+		}
+	}
+}
+
+# 0022: Employee blackmailing you - pay or report?
+mt_company_management_events.22 = {
+	type = character_event
+	title = mt_company_management_events.22.t
+	desc = mt_company_management_events.22.desc
+	theme = intrigue
+
+	trigger = {
+		has_trait = mt_merchant
+
+		any_courtier = {
+			has_variable = employer
+			var:employer = root
+			has_variable = employee_loyalty
+			var:employee_loyalty < 20
+		}
+	}
+
+	left_portrait = {
+		character = root
+		animation = rage
+	}
+
+	right_portrait = {
+		character = scope:blackmailer
+		animation = schadenfreude
+	}
+
+	immediate = {
+		random_courtier = {
+			limit = {
+				has_variable = employer
+				var:employer = root
+				has_variable = employee_loyalty
+				var:employee_loyalty < 20
+			}
+			save_scope_as = blackmailer
+		}
+	}
+
+	# Pay the blackmail
+	option = {
+		name = mt_company_management_events.22.a
+
+		add_gold = -200
+
+		scope:blackmailer = {
+			change_variable = {
+				name = employee_loyalty
+				add = 10
+			}
+			add_gold = 200
+		}
+
+		stress_impact = {
+			brave = medium_stress_impact_gain
+			just = medium_stress_impact_gain
+		}
+	}
+
+	# Refuse and fire them
+	option = {
+		name = mt_company_management_events.22.b
+
+		fire_employee_effect = {
+			employee = scope:blackmailer
+			severance = no
+		}
+
+		add_prestige = -100
+
+		stress_impact = {
+			brave = minor_stress_impact_loss
+		}
+	}
+
+	# Counter-threaten
+	option = {
+		name = mt_company_management_events.22.c
+
+		trigger = {
+			intrigue >= 12
+		}
+
+		scope:blackmailer = {
+			change_variable = {
+				name = employee_loyalty
+				add = -30
+			}
+		}
+
+		stress_impact = {
+			honest = medium_stress_impact_gain
+		}
+	}
+}
+
+# 0023: Employee wants equity/partnership
+mt_company_management_events.23 = {
+	type = character_event
+	title = mt_company_management_events.23.t
+	desc = mt_company_management_events.23.desc
+	theme = stewardship
+
+	trigger = {
+		has_trait = mt_merchant
+
+		any_courtier = {
+			has_variable = employer
+			var:employer = root
+			has_variable = employee_loyalty
+			var:employee_loyalty >= 80
+			has_variable = employee_quality
+			var:employee_quality >= 3
+		}
+	}
+
+	left_portrait = {
+		character = root
+		animation = personality_rational
+	}
+
+	right_portrait = {
+		character = scope:ambitious_employee
+		animation = personality_bold
+	}
+
+	immediate = {
+		random_courtier = {
+			limit = {
+				has_variable = employer
+				var:employer = root
+				has_variable = employee_loyalty
+				var:employee_loyalty >= 80
+				has_variable = employee_quality
+				var:employee_quality >= 3
+			}
+			save_scope_as = ambitious_employee
+		}
+	}
+
+	# Grant partnership
+	option = {
+		name = mt_company_management_events.23.a
+
+		scope:ambitious_employee = {
+			change_variable = {
+				name = employee_loyalty
+				value = 100
+			}
+			set_variable = {
+				name = is_partner
+				value = yes
+			}
+		}
+
+		add_character_modifier = {
+			modifier = mt_business_partner
+			years = 10
+		}
+
+		stress_impact = {
+			trusting = minor_stress_impact_loss
+			paranoid = medium_stress_impact_gain
+		}
+	}
+
+	# Refuse
+	option = {
+		name = mt_company_management_events.23.b
+
+		scope:ambitious_employee = {
+			change_variable = {
+				name = employee_loyalty
+				add = -40
+			}
+		}
+
+		stress_impact = {
+			greedy = minor_stress_impact_loss
+		}
+	}
+}
+
+# 0024: Employee threatening to quit
+mt_company_management_events.24 = {
+	type = character_event
+	title = mt_company_management_events.24.t
+	desc = mt_company_management_events.24.desc
+	theme = stewardship
+
+	trigger = {
+		has_trait = mt_merchant
+
+		any_courtier = {
+			has_variable = employer
+			var:employer = root
+			has_variable = employee_loyalty
+			var:employee_loyalty < 30
+		}
+	}
+
+	left_portrait = {
+		character = root
+		animation = worry
+	}
+
+	right_portrait = {
+		character = scope:threatening_employee
+		animation = anger
+	}
+
+	immediate = {
+		random_courtier = {
+			limit = {
+				has_variable = employer
+				var:employer = root
+				has_variable = employee_loyalty
+				var:employee_loyalty < 30
+			}
+			save_scope_as = threatening_employee
+		}
+	}
+
+	# Try to keep them
+	option = {
+		name = mt_company_management_events.24.a
+
+		add_gold = -75
+
+		scope:threatening_employee = {
+			change_variable = {
+				name = employee_loyalty
+				add = 25
+			}
+		}
+	}
+
+	# Let them quit
+	option = {
+		name = mt_company_management_events.24.b
+
+		fire_employee_effect = {
+			employee = scope:threatening_employee
+			severance = yes
+		}
+	}
+}
+
+# 0025: Employee deeply loyal - will do anything for you
+mt_company_management_events.25 = {
+	type = character_event
+	title = mt_company_management_events.25.t
+	desc = mt_company_management_events.25.desc
+	theme = stewardship
+
+	trigger = {
+		has_trait = mt_merchant
+
+		any_courtier = {
+			has_variable = employer
+			var:employer = root
+			has_variable = employee_loyalty
+			var:employee_loyalty >= 90
+		}
+	}
+
+	left_portrait = {
+		character = root
+		animation = happiness
+	}
+
+	right_portrait = {
+		character = scope:devoted_employee
+		animation = personality_honorable
+	}
+
+	immediate = {
+		random_courtier = {
+			limit = {
+				has_variable = employer
+				var:employer = root
+				has_variable = employee_loyalty
+				var:employee_loyalty >= 90
+			}
+			save_scope_as = devoted_employee
+		}
+	}
+
+	# Reward their loyalty
+	option = {
+		name = mt_company_management_events.25.a
+
+		add_gold = -100
+
+		scope:devoted_employee = {
+			promote_employee_effect = yes
+		}
+
+		stress_impact = {
+			generous = major_stress_impact_loss
+		}
+	}
+
+	# Thank them sincerely
+	option = {
+		name = mt_company_management_events.25.b
+
+		scope:devoted_employee = {
+			change_variable = {
+				name = employee_performance
+				add = 15
+			}
+		}
+
+		add_prestige = 50
+	}
+}
+
+####################################
+# DELEGATION EVENTS (0026-0033)
+####################################
+
+# 0026: Manager handles crisis without your input - good or overreach?
+mt_company_management_events.26 = {
+	type = character_event
+	title = mt_company_management_events.26.t
+	desc = mt_company_management_events.26.desc
+	theme = stewardship
+
+	trigger = {
+		has_trait = mt_merchant
+
+		any_courtier = {
+			has_variable = employer
+			var:employer = root
+			var:employee_role = flag:route_manager
+			has_variable = employee_quality
+			var:employee_quality >= 3
+		}
+	}
+
+	left_portrait = {
+		character = root
+		animation = personality_rational
+	}
+
+	right_portrait = {
+		character = scope:proactive_manager
+		animation = personality_bold
+	}
+
+	immediate = {
+		random_courtier = {
+			limit = {
+				has_variable = employer
+				var:employer = root
+				var:employee_role = flag:route_manager
+				has_variable = employee_quality
+				var:employee_quality >= 3
+			}
+			save_scope_as = proactive_manager
+		}
+	}
+
+	# Praise initiative
+	option = {
+		name = mt_company_management_events.26.a
+
+		add_gold = 80
+
+		scope:proactive_manager = {
+			change_variable = {
+				name = employee_loyalty
+				add = 15
+			}
+			change_variable = {
+				name = employee_performance
+				add = 10
+			}
+		}
+
+		stress_impact = {
+			trusting = minor_stress_impact_loss
+		}
+	}
+
+	# Reprimand overreach
+	option = {
+		name = mt_company_management_events.26.b
+
+		add_gold = 80
+
+		scope:proactive_manager = {
+			change_variable = {
+				name = employee_loyalty
+				add = -20
+			}
+		}
+
+		stress_impact = {
+			paranoid = minor_stress_impact_loss
+		}
+	}
+}
+
+# 0027: Accountant recommends major restructuring
+mt_company_management_events.27 = {
+	type = character_event
+	title = mt_company_management_events.27.t
+	desc = mt_company_management_events.27.desc
+	theme = stewardship
+
+	trigger = {
+		has_trait = mt_merchant
+
+		any_courtier = {
+			has_variable = employer
+			var:employer = root
+			var:employee_role = flag:accountant
+			has_variable = employee_quality
+			var:employee_quality >= 3
+		}
+	}
+
+	left_portrait = {
+		character = root
+		animation = personality_rational
+	}
+
+	right_portrait = {
+		character = scope:strategic_accountant
+		animation = personality_rational
+	}
+
+	immediate = {
+		random_courtier = {
+			limit = {
+				has_variable = employer
+				var:employer = root
+				var:employee_role = flag:accountant
+				has_variable = employee_quality
+				var:employee_quality >= 3
+			}
+			save_scope_as = strategic_accountant
+		}
+	}
+
+	# Implement changes
+	option = {
+		name = mt_company_management_events.27.a
+
+		add_gold = -100
+
+		add_character_modifier = {
+			modifier = mt_restructured_company
+			years = 5
+		}
+
+		scope:strategic_accountant = {
+			change_variable = {
+				name = employee_loyalty
+				add = 20
+			}
+		}
+	}
+
+	# Reject proposal
+	option = {
+		name = mt_company_management_events.27.b
+
+		scope:strategic_accountant = {
+			change_variable = {
+				name = employee_loyalty
+				add = -10
+			}
+		}
+	}
+}
+
+# 0028: Captain wants to hire more guards - needed?
+mt_company_management_events.28 = {
+	type = character_event
+	title = mt_company_management_events.28.t
+	desc = mt_company_management_events.28.desc
+	theme = martial
+
+	trigger = {
+		has_trait = mt_merchant
+
+		any_courtier = {
+			has_variable = employer
+			var:employer = root
+			var:employee_role = flag:guard_captain
+		}
+	}
+
+	left_portrait = {
+		character = root
+		animation = personality_rational
+	}
+
+	right_portrait = {
+		character = scope:concerned_captain
+		animation = war
+	}
+
+	immediate = {
+		random_courtier = {
+			limit = {
+				has_variable = employer
+				var:employer = root
+				var:employee_role = flag:guard_captain
+			}
+			save_scope_as = concerned_captain
+		}
+	}
+
+	# Approve expansion
+	option = {
+		name = mt_company_management_events.28.a
+
+		add_gold = -150
+
+		add_character_modifier = {
+			modifier = mt_expanded_guard_force
+			years = 3
+		}
+
+		scope:concerned_captain = {
+			change_variable = {
+				name = employee_loyalty
+				add = 15
+			}
+		}
+	}
+
+	# Deny request
+	option = {
+		name = mt_company_management_events.28.b
+
+		scope:concerned_captain = {
+			change_variable = {
+				name = employee_loyalty
+				add = -10
+			}
+		}
+
+		stress_impact = {
+			greedy = minor_stress_impact_loss
+		}
+	}
+}
+
+# 0029: Scout suggests risky but profitable venture
+mt_company_management_events.29 = {
+	type = character_event
+	title = mt_company_management_events.29.t
+	desc = mt_company_management_events.29.desc
+	theme = stewardship
+
+	trigger = {
+		has_trait = mt_merchant
+
+		any_courtier = {
+			has_variable = employer
+			var:employer = root
+			var:employee_role = flag:scout
+		}
+	}
+
+	left_portrait = {
+		character = root
+		animation = personality_rational
+	}
+
+	right_portrait = {
+		character = scope:daring_scout
+		animation = personality_bold
+	}
+
+	immediate = {
+		random_courtier = {
+			limit = {
+				has_variable = employer
+				var:employer = root
+				var:employee_role = flag:scout
+			}
+			save_scope_as = daring_scout
+		}
+	}
+
+	# Take the risk
+	option = {
+		name = mt_company_management_events.29.a
+
+		add_gold = -100
+
+		random = {
+			chance = 60
+
+			# Success
+			add_gold = 300
+
+			scope:daring_scout = {
+				change_variable = {
+					name = employee_loyalty
+					add = 20
+				}
+			}
+		}
+
+		random = {
+			chance = 40
+
+			# Failure
+			add_prestige = -50
+
+			scope:daring_scout = {
+				change_variable = {
+					name = employee_loyalty
+					add = -10
+				}
+			}
+		}
+
+		stress_impact = {
+			brave = minor_stress_impact_loss
+		}
+	}
+
+	# Play it safe
+	option = {
+		name = mt_company_management_events.29.b
+
+		scope:daring_scout = {
+			change_variable = {
+				name = employee_loyalty
+				add = -5
+			}
+		}
+
+		stress_impact = {
+			cautious = minor_stress_impact_loss
+		}
+	}
+}
+
+# 0030: Negotiator made deal without approval
+mt_company_management_events.30 = {
+	type = character_event
+	title = mt_company_management_events.30.t
+	desc = mt_company_management_events.30.desc
+	theme = diplomacy
+
+	trigger = {
+		has_trait = mt_merchant
+
+		any_courtier = {
+			has_variable = employer
+			var:employer = root
+			var:employee_role = flag:negotiator
+		}
+	}
+
+	left_portrait = {
+		character = root
+		animation = personality_rational
+	}
+
+	right_portrait = {
+		character = scope:independent_negotiator
+		animation = personality_bold
+	}
+
+	immediate = {
+		random_courtier = {
+			limit = {
+				has_variable = employer
+				var:employer = root
+				var:employee_role = flag:negotiator
+			}
+			save_scope_as = independent_negotiator
+		}
+	}
+
+	# It's a good deal
+	option = {
+		name = mt_company_management_events.30.a
+
+		add_gold = 120
+
+		scope:independent_negotiator = {
+			change_variable = {
+				name = employee_loyalty
+				add = 15
+			}
+		}
+
+		stress_impact = {
+			trusting = minor_stress_impact_loss
+		}
+	}
+
+	# Reprimand them
+	option = {
+		name = mt_company_management_events.30.b
+
+		add_gold = 120
+
+		scope:independent_negotiator = {
+			change_variable = {
+				name = employee_loyalty
+				add = -15
+			}
+		}
+
+		stress_impact = {
+			paranoid = minor_stress_impact_loss
+		}
+	}
+}
+
+# 0031: Employee conflicts - two staff members feuding
+mt_company_management_events.31 = {
+	type = character_event
+	title = mt_company_management_events.31.t
+	desc = mt_company_management_events.31.desc
+	theme = stewardship
+
+	trigger = {
+		has_trait = mt_merchant
+
+		any_courtier = {
+			count >= 2
+			has_variable = employer
+			var:employer = root
+		}
+	}
+
+	left_portrait = {
+		character = root
+		animation = worry
+	}
+
+	immediate = {
+		random_courtier = {
+			limit = {
+				has_variable = employer
+				var:employer = root
+			}
+			save_scope_as = feuding_employee_1
+		}
+
+		random_courtier = {
+			limit = {
+				has_variable = employer
+				var:employer = root
+				NOT = { this = scope:feuding_employee_1 }
+			}
+			save_scope_as = feuding_employee_2
+		}
+	}
+
+	# Mediate the conflict
+	option = {
+		name = mt_company_management_events.31.a
+
+		scope:feuding_employee_1 = {
+			change_variable = {
+				name = employee_loyalty
+				add = 10
+			}
+		}
+
+		scope:feuding_employee_2 = {
+			change_variable = {
+				name = employee_loyalty
+				add = 10
+			}
+		}
+
+		stress_impact = {
+			patient = minor_stress_impact_loss
+		}
+	}
+
+	# Fire both
+	option = {
+		name = mt_company_management_events.31.b
+
+		fire_employee_effect = {
+			employee = scope:feuding_employee_1
+			severance = yes
+		}
+
+		fire_employee_effect = {
+			employee = scope:feuding_employee_2
+			severance = yes
+		}
+
+		stress_impact = {
+			wrathful = minor_stress_impact_loss
+		}
+	}
+
+	# Ignore it
+	option = {
+		name = mt_company_management_events.31.c
+
+		every_courtier = {
+			limit = {
+				has_variable = employer
+				var:employer = root
+			}
+			change_variable = {
+				name = employee_loyalty
+				add = -5
+			}
+		}
+	}
+}
+
+# 0032: Team working brilliantly together
+mt_company_management_events.32 = {
+	type = character_event
+	title = mt_company_management_events.32.t
+	desc = mt_company_management_events.32.desc
+	theme = stewardship
+
+	trigger = {
+		has_trait = mt_merchant
+
+		any_courtier = {
+			count >= 3
+			has_variable = employer
+			var:employer = root
+			has_variable = employee_loyalty
+			var:employee_loyalty >= 70
+		}
+	}
+
+	left_portrait = {
+		character = root
+		animation = happiness
+	}
+
+	# Celebrate success
+	option = {
+		name = mt_company_management_events.32.a
+
+		add_gold = 200
+		add_prestige = 100
+
+		every_courtier = {
+			limit = {
+				has_variable = employer
+				var:employer = root
+			}
+			change_variable = {
+				name = employee_loyalty
+				add = 10
+			}
+			change_variable = {
+				name = employee_performance
+				add = 10
+			}
+		}
+	}
+}
+
+# 0033: Morale crisis - entire staff unhappy
+mt_company_management_events.33 = {
+	type = character_event
+	title = mt_company_management_events.33.t
+	desc = mt_company_management_events.33.desc
+	theme = stewardship
+
+	trigger = {
+		has_trait = mt_merchant
+
+		any_courtier = {
+			count >= 3
+			has_variable = employer
+			var:employer = root
+			has_variable = employee_loyalty
+			var:employee_loyalty < 40
+		}
+	}
+
+	left_portrait = {
+		character = root
+		animation = worry
+	}
+
+	# Address concerns
+	option = {
+		name = mt_company_management_events.33.a
+
+		add_gold = -150
+
+		every_courtier = {
+			limit = {
+				has_variable = employer
+				var:employer = root
+			}
+			change_variable = {
+				name = employee_loyalty
+				add = 20
+			}
+		}
+
+		stress_impact = {
+			compassionate = minor_stress_impact_loss
+		}
+	}
+
+	# Demand they shape up
+	option = {
+		name = mt_company_management_events.33.b
+
+		every_courtier = {
+			limit = {
+				has_variable = employer
+				var:employer = root
+			}
+			change_variable = {
+				name = employee_loyalty
+				add = -10
+			}
+		}
+
+		stress_impact = {
+			callous = minor_stress_impact_loss
+		}
+	}
+}
+
+####################################
+# COMPANY CULTURE EVENTS (0034-0040)
+####################################
+
+# 0034: Toxic workplace - people quitting
+mt_company_management_events.34 = {
+	type = character_event
+	title = mt_company_management_events.34.t
+	desc = mt_company_management_events.34.desc
+	theme = stewardship
+
+	trigger = {
+		has_trait = mt_merchant
+
+		any_courtier = {
+			count >= 2
+			has_variable = employer
+			var:employer = root
+			has_variable = employee_loyalty
+			var:employee_loyalty < 30
+		}
+	}
+
+	left_portrait = {
+		character = root
+		animation = worry
+	}
+
+	# Major culture overhaul
+	option = {
+		name = mt_company_management_events.34.a
+
+		add_gold = -200
+		add_prestige = -100
+
+		every_courtier = {
+			limit = {
+				has_variable = employer
+				var:employer = root
+			}
+			change_variable = {
+				name = employee_loyalty
+				add = 30
+			}
+		}
+
+		add_character_modifier = {
+			modifier = mt_culture_reform
+			years = 5
+		}
+	}
+
+	# Clean house - fire everyone
+	option = {
+		name = mt_company_management_events.34.b
+
+		every_courtier = {
+			limit = {
+				has_variable = employer
+				var:employer = root
+			}
+			save_temporary_scope_as = fired_employee
+
+			root = {
+				fire_employee_effect = {
+					employee = scope:fired_employee
+					severance = yes
+				}
+			}
+		}
+
+		stress_impact = {
+			wrathful = minor_stress_impact_loss
+			compassionate = major_stress_impact_gain
+		}
+	}
+}
+
+# 0035: Positive culture - attracting top talent
+mt_company_management_events.35 = {
+	type = character_event
+	title = mt_company_management_events.35.t
+	desc = mt_company_management_events.35.desc
+	theme = stewardship
+
+	trigger = {
+		has_trait = mt_merchant
+
+		any_courtier = {
+			count >= 3
+			has_variable = employer
+			var:employer = root
+			has_variable = employee_loyalty
+			var:employee_loyalty >= 80
+		}
+	}
+
+	left_portrait = {
+		character = root
+		animation = happiness
+	}
+
+	# Hire the top talent
+	option = {
+		name = mt_company_management_events.35.a
+
+		hire_employee_effect = {
+			role = flag:route_manager
+			quality = flag:master
+		}
+
+		add_prestige = 100
+	}
+
+	# Keep team small
+	option = {
+		name = mt_company_management_events.35.b
+
+		add_prestige = 50
+
+		every_courtier = {
+			limit = {
+				has_variable = employer
+				var:employer = root
+			}
+			change_variable = {
+				name = employee_loyalty
+				add = 5
+			}
+		}
+	}
+}
+
+# 0036: Company party - team building opportunity
+mt_company_management_events.36 = {
+	type = character_event
+	title = mt_company_management_events.36.t
+	desc = mt_company_management_events.36.desc
+	theme = stewardship
+
+	trigger = {
+		has_trait = mt_merchant
+
+		any_courtier = {
+			has_variable = employer
+			var:employer = root
+		}
+	}
+
+	left_portrait = {
+		character = root
+		animation = happiness
+	}
+
+	# Throw lavish party
+	option = {
+		name = mt_company_management_events.36.a
+
+		add_gold = -100
+
+		every_courtier = {
+			limit = {
+				has_variable = employer
+				var:employer = root
+			}
+			change_variable = {
+				name = employee_loyalty
+				add = 15
+			}
+		}
+
+		stress_impact = {
+			gregarious = major_stress_impact_loss
+		}
+	}
+
+	# Simple gathering
+	option = {
+		name = mt_company_management_events.36.b
+
+		add_gold = -25
+
+		every_courtier = {
+			limit = {
+				has_variable = employer
+				var:employer = root
+			}
+			change_variable = {
+				name = employee_loyalty
+				add = 5
+			}
+		}
+	}
+
+	# Skip it
+	option = {
+		name = mt_company_management_events.36.c
+
+		every_courtier = {
+			limit = {
+				has_variable = employer
+				var:employer = root
+			}
+			change_variable = {
+				name = employee_loyalty
+				add = -5
+			}
+		}
+
+		stress_impact = {
+			shy = minor_stress_impact_loss
+		}
+	}
+}
+
+# 0037: Scandal in ranks - PR nightmare
+mt_company_management_events.37 = {
+	type = character_event
+	title = mt_company_management_events.37.t
+	desc = mt_company_management_events.37.desc
+	theme = intrigue
+
+	trigger = {
+		has_trait = mt_merchant
+
+		any_courtier = {
+			has_variable = employer
+			var:employer = root
+		}
+	}
+
+	left_portrait = {
+		character = root
+		animation = worry
+	}
+
+	immediate = {
+		random_courtier = {
+			limit = {
+				has_variable = employer
+				var:employer = root
+			}
+			save_scope_as = scandalous_employee
+		}
+	}
+
+	# Fire immediately
+	option = {
+		name = mt_company_management_events.37.a
+
+		fire_employee_effect = {
+			employee = scope:scandalous_employee
+			severance = no
+		}
+
+		add_prestige = -50
+	}
+
+	# Support them
+	option = {
+		name = mt_company_management_events.37.b
+
+		add_prestige = -150
+
+		scope:scandalous_employee = {
+			change_variable = {
+				name = employee_loyalty
+				add = 40
+			}
+		}
+
+		every_courtier = {
+			limit = {
+				has_variable = employer
+				var:employer = root
+				NOT = { this = scope:scandalous_employee }
+			}
+			change_variable = {
+				name = employee_loyalty
+				add = 10
+			}
+		}
+	}
+}
+
+# 0038: Employee charity project - support or forbid?
+mt_company_management_events.38 = {
+	type = character_event
+	title = mt_company_management_events.38.t
+	desc = mt_company_management_events.38.desc
+	theme = stewardship
+
+	trigger = {
+		has_trait = mt_merchant
+
+		any_courtier = {
+			has_variable = employer
+			var:employer = root
+		}
+	}
+
+	left_portrait = {
+		character = root
+		animation = personality_rational
+	}
+
+	immediate = {
+		random_courtier = {
+			limit = {
+				has_variable = employer
+				var:employer = root
+			}
+			save_scope_as = charitable_employee
+		}
+	}
+
+	# Support and fund it
+	option = {
+		name = mt_company_management_events.38.a
+
+		add_gold = -75
+		add_piety = 100
+		add_prestige = 75
+
+		scope:charitable_employee = {
+			change_variable = {
+				name = employee_loyalty
+				add = 20
+			}
+		}
+
+		stress_impact = {
+			compassionate = minor_stress_impact_loss
+		}
+	}
+
+	# Allow but don't fund
+	option = {
+		name = mt_company_management_events.38.b
+
+		add_piety = 25
+
+		scope:charitable_employee = {
+			change_variable = {
+				name = employee_loyalty
+				add = 5
+			}
+		}
+	}
+
+	# Forbid it
+	option = {
+		name = mt_company_management_events.38.c
+
+		scope:charitable_employee = {
+			change_variable = {
+				name = employee_loyalty
+				add = -15
+			}
+		}
+
+		stress_impact = {
+			compassionate = medium_stress_impact_gain
+		}
+	}
+}
+
+# 0039: Innovation from staff - revolutionary idea
+mt_company_management_events.39 = {
+	type = character_event
+	title = mt_company_management_events.39.t
+	desc = mt_company_management_events.39.desc
+	theme = learning
+
+	trigger = {
+		has_trait = mt_merchant
+
+		any_courtier = {
+			has_variable = employer
+			var:employer = root
+			has_variable = employee_quality
+			var:employee_quality >= 3
+		}
+	}
+
+	left_portrait = {
+		character = root
+		animation = personality_rational
+	}
+
+	right_portrait = {
+		character = scope:innovative_employee
+		animation = personality_bold
+	}
+
+	immediate = {
+		random_courtier = {
+			limit = {
+				has_variable = employer
+				var:employer = root
+				has_variable = employee_quality
+				var:employee_quality >= 3
+			}
+			save_scope_as = innovative_employee
+		}
+	}
+
+	# Invest in the idea
+	option = {
+		name = mt_company_management_events.39.a
+
+		add_gold = -150
+
+		add_character_modifier = {
+			modifier = mt_revolutionary_innovation
+			years = 10
+		}
+
+		scope:innovative_employee = {
+			change_variable = {
+				name = employee_loyalty
+				add = 30
+			}
+			promote_employee_effect = yes
+		}
+
+		add_prestige = 200
+	}
+
+	# Reject it
+	option = {
+		name = mt_company_management_events.39.b
+
+		scope:innovative_employee = {
+			change_variable = {
+				name = employee_loyalty
+				add = -25
+			}
+		}
+	}
+}
+
+# 0040: Company milestone - celebrate success together
+mt_company_management_events.40 = {
+	type = character_event
+	title = mt_company_management_events.40.t
+	desc = mt_company_management_events.40.desc
+	theme = stewardship
+
+	trigger = {
+		has_trait = mt_merchant
+		gold >= 1000
+
+		any_courtier = {
+			count >= 5
+			has_variable = employer
+			var:employer = root
+		}
+	}
+
+	left_portrait = {
+		character = root
+		animation = happiness
+	}
+
+	# Celebrate grandly
+	option = {
+		name = mt_company_management_events.40.a
+
+		add_gold = -200
+		add_prestige = 200
+
+		every_courtier = {
+			limit = {
+				has_variable = employer
+				var:employer = root
+			}
+			change_variable = {
+				name = employee_loyalty
+				add = 20
+			}
+			change_variable = {
+				name = employee_performance
+				add = 10
+			}
+		}
+
+		add_character_modifier = {
+			modifier = mt_company_milestone
+			years = 10
+		}
+	}
+
+	# Modest celebration
+	option = {
+		name = mt_company_management_events.40.b
+
+		add_gold = -50
+		add_prestige = 100
+
+		every_courtier = {
+			limit = {
+				has_variable = employer
+				var:employer = root
+			}
+			change_variable = {
+				name = employee_loyalty
+				add = 10
+			}
+		}
+	}
+}
+
+####################################
+# MANAGEMENT ACTION EVENTS (0041-0050)
+####################################
+
+# These events are triggered by decisions
+
+# 0041-0045: Reserved for decision-triggered events
+# (Promotion selection, firing selection, bonus selection, investigation results, review summary, training completion)
