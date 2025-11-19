@@ -1,0 +1,3901 @@
+# Trade Espionage System - Events
+# 40 events covering spy recruitment, missions, counter-espionage, and information marketplace
+
+namespace = mt_espionage
+
+###############################################
+# SPY RECRUITMENT EVENTS (0001-0005)
+###############################################
+
+# 0001 - Disgruntled employee offers to spy
+mt_espionage.0001 = {
+	type = character_event
+	title = mt_espionage.0001.t
+	desc = mt_espionage.0001.desc
+	theme = intrigue
+
+	left_portrait = {
+		character = root
+		animation = worry
+	}
+
+	trigger = {
+		is_adult = yes
+		NOT = { has_variable = recently_offered_spy }
+		any_known_character = {
+			is_adult = yes
+			NOT = { this = root }
+			is_alive = yes
+		}
+	}
+
+	immediate = {
+		set_variable = {
+			name = recently_offered_spy
+			days = 180
+		}
+		random_known_character = {
+			limit = {
+				is_adult = yes
+				NOT = { this = root }
+			}
+			save_scope_as = rival_merchant
+		}
+	}
+
+	# Accept the offer - risky but cheap
+	option = {
+		name = mt_espionage.0001.a
+
+		# Low quality spy but loyal employee knows things
+		set_variable = {
+			name = spy_quality
+			value = 1
+		}
+		set_variable = {
+			name = spy_loyalty
+			value = 75
+		}
+		set_variable = {
+			name = has_active_spy
+			value = yes
+		}
+
+		add_gold = -30
+
+		# Small intrigue boost
+		add_intrigue_skill = 1
+
+		# But risk the employee is actually a plant
+		random = {
+			chance = 20
+			set_variable = {
+				name = spy_is_double_agent
+				value = yes
+			}
+			custom_tooltip = mt_espionage.0001.a.risk
+		}
+
+		ai_chance = {
+			base = 40
+			modifier = {
+				factor = 2
+				intrigue >= 12
+			}
+			modifier = {
+				factor = 0.5
+				has_trait = trusting
+			}
+		}
+	}
+
+	# Report to the rival - gain honor
+	option = {
+		name = mt_espionage.0001.b
+		trait = honest
+
+		add_prestige = 50
+
+		scope:rival_merchant = {
+			add_opinion = {
+				target = root
+				modifier = warned_of_spy_opinion
+				opinion = 40
+			}
+		}
+
+		stress_impact = {
+			deceitful = minor_stress_impact_gain
+			schemer = minor_stress_impact_gain
+		}
+
+		ai_chance = {
+			base = 30
+			modifier = {
+				factor = 3
+				has_trait = honest
+			}
+			modifier = {
+				factor = 2
+				has_trait = just
+			}
+		}
+	}
+
+	# Refuse - stay out of it
+	option = {
+		name = mt_espionage.0001.c
+
+		add_prestige = 10
+
+		stress_impact = {
+			ambitious = minor_stress_impact_gain
+		}
+
+		ai_chance = {
+			base = 30
+			modifier = {
+				factor = 2
+				has_trait = content
+			}
+		}
+	}
+}
+
+# 0002 - Professional spy seeks employment
+mt_espionage.0002 = {
+	type = character_event
+	title = mt_espionage.0002.t
+	desc = mt_espionage.0002.desc
+	theme = intrigue
+
+	left_portrait = {
+		character = root
+		animation = scheme
+	}
+
+	trigger = {
+		is_adult = yes
+		gold >= 100
+		NOT = { has_variable = professional_spy_offered }
+	}
+
+	immediate = {
+		set_variable = {
+			name = professional_spy_offered
+			days = 365
+		}
+	}
+
+	# Hire the professional - expensive but skilled
+	option = {
+		name = mt_espionage.0002.a
+
+		remove_short_term_gold = 100
+
+		# Expert quality spy
+		set_variable = {
+			name = spy_quality
+			value = 3
+		}
+		set_variable = {
+			name = spy_loyalty
+			value = 60
+		}
+		set_variable = {
+			name = spy_success_chance
+			value = 85
+		}
+		set_variable = {
+			name = has_active_spy
+			value = yes
+		}
+
+		add_prestige = 25
+
+		custom_tooltip = mt_espionage.0002.a.effect
+
+		ai_chance = {
+			base = 60
+			modifier = {
+				factor = 2
+				gold >= 300
+			}
+			modifier = {
+				factor = 2
+				intrigue >= 15
+			}
+			modifier = {
+				factor = 0.3
+				gold < 150
+			}
+		}
+	}
+
+	# Negotiate lower price - medium quality
+	option = {
+		name = mt_espionage.0002.b
+		skill = diplomacy
+		duel = {
+			skill = diplomacy
+			value = 14
+		}
+
+		remove_short_term_gold = 60
+
+		# Competent spy at discount
+		if = {
+			limit = { scope:duel_won = yes }
+			set_variable = {
+				name = spy_quality
+				value = 2
+			}
+			set_variable = {
+				name = spy_loyalty
+				value = 55
+			}
+			custom_tooltip = mt_espionage.0002.b.success
+		}
+		else = {
+			# Amateur spy, insulted by negotiation
+			set_variable = {
+				name = spy_quality
+				value = 1
+			}
+			set_variable = {
+				name = spy_loyalty
+				value = 40
+			}
+			custom_tooltip = mt_espionage.0002.b.failure
+		}
+
+		set_variable = {
+			name = has_active_spy
+			value = yes
+		}
+
+		ai_chance = {
+			base = 30
+			modifier = {
+				factor = 3
+				diplomacy >= 14
+			}
+			modifier = {
+				factor = 2
+				gold < 150
+			}
+		}
+	}
+
+	# Decline - too expensive
+	option = {
+		name = mt_espionage.0002.c
+
+		add_prestige = 5
+
+		ai_chance = {
+			base = 10
+			modifier = {
+				factor = 5
+				gold < 100
+			}
+		}
+	}
+}
+
+# 0003 - Family member volunteers to spy
+mt_espionage.0003 = {
+	type = character_event
+	title = mt_espionage.0003.t
+	desc = mt_espionage.0003.desc
+	theme = family
+
+	left_portrait = {
+		character = root
+		animation = personality_rational
+	}
+
+	right_portrait = {
+		character = scope:family_volunteer
+		animation = personality_bold
+	}
+
+	trigger = {
+		is_adult = yes
+		any_close_family_member = {
+			is_adult = yes
+			is_alive = yes
+		}
+		NOT = { has_variable = family_spy_offered }
+	}
+
+	immediate = {
+		set_variable = {
+			name = family_spy_offered
+			days = 365
+		}
+		random_close_family_member = {
+			limit = {
+				is_adult = yes
+				is_alive = yes
+			}
+			save_scope_as = family_volunteer
+		}
+	}
+
+	# Accept - loyal but amateur
+	option = {
+		name = mt_espionage.0003.a
+
+		# Amateur quality but very loyal
+		set_variable = {
+			name = spy_quality
+			value = 1
+		}
+		set_variable = {
+			name = spy_loyalty
+			value = 95
+		}
+		set_variable = {
+			name = has_active_spy
+			value = yes
+		}
+
+		add_gold = -25
+
+		# Improve family relations
+		add_opinion = {
+			target = scope:family_volunteer
+			modifier = trusted_with_espionage_opinion
+			opinion = 30
+		}
+
+		reverse_add_opinion = {
+			target = scope:family_volunteer
+			modifier = trust_me_with_spying_opinion
+			opinion = 20
+		}
+
+		custom_tooltip = mt_espionage.0003.a.effect
+
+		ai_chance = {
+			base = 60
+			modifier = {
+				factor = 2
+				has_trait = trusting
+			}
+			modifier = {
+				factor = 1.5
+				opinion = {
+					target = scope:family_volunteer
+					value >= 40
+				}
+			}
+		}
+	}
+
+	# Accept but with training - costs more but better
+	option = {
+		name = mt_espionage.0003.b
+
+		remove_short_term_gold = 75
+
+		# Better quality after training
+		set_variable = {
+			name = spy_quality
+			value = 2
+		}
+		set_variable = {
+			name = spy_loyalty
+			value = 90
+		}
+		set_variable = {
+			name = has_active_spy
+			value = yes
+		}
+
+		add_opinion = {
+			target = scope:family_volunteer
+			modifier = invested_in_me_opinion
+			opinion = 40
+		}
+
+		custom_tooltip = mt_espionage.0003.b.effect
+
+		ai_chance = {
+			base = 30
+			modifier = {
+				factor = 3
+				gold >= 200
+			}
+		}
+	}
+
+	# Decline - too dangerous for family
+	option = {
+		name = mt_espionage.0003.c
+		trait = compassionate
+
+		add_opinion = {
+			target = scope:family_volunteer
+			modifier = protecting_you_opinion
+			opinion = 10
+		}
+
+		reverse_add_opinion = {
+			target = scope:family_volunteer
+			modifier = disappointed_in_me_opinion
+			opinion = -15
+		}
+
+		stress_impact = {
+			ambitious = minor_stress_impact_gain
+		}
+
+		ai_chance = {
+			base = 10
+			modifier = {
+				factor = 3
+				has_trait = compassionate
+			}
+		}
+	}
+}
+
+# 0004 - Rival's employee approaches you
+mt_espionage.0004 = {
+	type = character_event
+	title = mt_espionage.0004.t
+	desc = mt_espionage.0004.desc
+	theme = intrigue
+
+	left_portrait = {
+		character = root
+		animation = worry
+	}
+
+	right_portrait = {
+		character = scope:rival_target
+		animation = anger
+	}
+
+	trigger = {
+		is_adult = yes
+		gold >= 50
+		any_relation = {
+			type = rival
+			is_alive = yes
+		}
+		NOT = { has_variable = rival_employee_offer }
+	}
+
+	immediate = {
+		set_variable = {
+			name = rival_employee_offer
+			days = 180
+		}
+		random_relation = {
+			type = rival
+			save_scope_as = rival_target
+		}
+	}
+
+	# Accept - perfect inside access
+	option = {
+		name = mt_espionage.0004.a
+
+		remove_short_term_gold = 50
+
+		# Good chance this is genuine
+		random_list = {
+			70 = {
+				# Legitimate offer - competent insider
+				set_variable = {
+					name = spy_quality
+					value = 2
+				}
+				set_variable = {
+					name = spy_loyalty
+					value = 70
+				}
+				set_variable = {
+					name = has_active_spy
+					value = yes
+				}
+				set_variable = {
+					name = spy_has_inside_access
+					value = scope:rival_target
+				}
+
+				custom_tooltip = mt_espionage.0004.a.success
+			}
+			30 = {
+				# Trap! Double agent
+				set_variable = {
+					name = spy_quality
+					value = 1
+				}
+				set_variable = {
+					name = spy_loyalty
+					value = 20
+				}
+				set_variable = {
+					name = spy_is_double_agent
+					value = yes
+				}
+				set_variable = {
+					name = has_active_spy
+					value = yes
+				}
+
+				scope:rival_target = {
+					add_opinion = {
+						target = root
+						modifier = fell_for_trap_opinion
+						opinion = -30
+					}
+				}
+
+				custom_tooltip = mt_espionage.0004.a.trap
+			}
+		}
+
+		ai_chance = {
+			base = 50
+			modifier = {
+				factor = 2
+				intrigue >= 14
+			}
+			modifier = {
+				factor = 0.5
+				has_trait = trusting
+			}
+			modifier = {
+				factor = 2
+				has_trait = paranoid
+			}
+		}
+	}
+
+	# Test their loyalty first - costs less but delays
+	option = {
+		name = mt_espionage.0004.b
+		trait = paranoid
+
+		remove_short_term_gold = 25
+
+		# Run background check
+		random = {
+			chance = 60
+			modifier = {
+				add = 20
+				intrigue >= 15
+			}
+
+			# Discovered it's a trap!
+			add_prestige = 100
+			custom_tooltip = mt_espionage.0004.b.discovered
+
+			scope:rival_target = {
+				add_opinion = {
+					target = root
+					modifier = foiled_my_plan_opinion
+					opinion = -50
+				}
+			}
+		}
+
+		# If not discovered, proceed cautiously
+		if = {
+			limit = {
+				NOT = { has_variable = discovered_trap }
+			}
+			trigger_event = {
+				id = mt_espionage.0004
+				days = 30
+			}
+		}
+
+		stress_impact = {
+			trusting = minor_stress_impact_gain
+		}
+
+		ai_chance = {
+			base = 30
+			modifier = {
+				factor = 3
+				has_trait = paranoid
+			}
+			modifier = {
+				factor = 2
+				intrigue >= 16
+			}
+		}
+	}
+
+	# Decline - too suspicious
+	option = {
+		name = mt_espionage.0004.c
+
+		add_prestige = 20
+
+		# Maybe inform your rival
+		random = {
+			chance = 30
+			scope:rival_target = {
+				add_opinion = {
+					target = root
+					modifier = honorable_conduct_opinion
+					opinion = 20
+				}
+			}
+			custom_tooltip = mt_espionage.0004.c.inform
+		}
+
+		ai_chance = {
+			base = 20
+			modifier = {
+				factor = 3
+				has_trait = honest
+			}
+		}
+	}
+}
+
+# 0005 - Retired thief wants honest work as a spy
+mt_espionage.0005 = {
+	type = character_event
+	title = mt_espionage.0005.t
+	desc = mt_espionage.0005.desc
+	theme = intrigue
+
+	left_portrait = {
+		character = root
+		animation = personality_rational
+	}
+
+	trigger = {
+		is_adult = yes
+		gold >= 40
+		NOT = { has_variable = thief_spy_offer }
+	}
+
+	immediate = {
+		set_variable = {
+			name = thief_spy_offer
+			days = 365
+		}
+	}
+
+	# Hire the thief - unconventional skills
+	option = {
+		name = mt_espionage.0005.a
+
+		remove_short_term_gold = 40
+
+		# Competent at covert work
+		set_variable = {
+			name = spy_quality
+			value = 2
+		}
+		set_variable = {
+			name = spy_loyalty
+			value = 65
+		}
+		set_variable = {
+			name = spy_success_chance
+			value = 60
+		}
+		set_variable = {
+			name = has_active_spy
+			value = yes
+		}
+		set_variable = {
+			name = spy_has_special_skills
+			value = flag:thievery
+		}
+
+		# Bonus: can steal physical items
+		custom_tooltip = mt_espionage.0005.a.effect
+
+		# But some reputation risk
+		random = {
+			chance = 30
+			add_character_modifier = {
+				modifier = mt_employs_criminals
+				years = 2
+			}
+		}
+
+		ai_chance = {
+			base = 50
+			modifier = {
+				factor = 2
+				intrigue >= 14
+			}
+			modifier = {
+				factor = 0.5
+				has_trait = just
+			}
+			modifier = {
+				factor = 1.5
+				has_trait = cynical
+			}
+		}
+	}
+
+	# Hire but report to authorities later - gain honor
+	option = {
+		name = mt_espionage.0005.b
+		trait = just
+
+		remove_short_term_gold = 40
+
+		# Use them then turn them in
+		set_variable = {
+			name = spy_quality
+			value = 2
+		}
+		set_variable = {
+			name = spy_loyalty
+			value = 50
+		}
+		set_variable = {
+			name = has_active_spy
+			value = yes
+		}
+		set_variable = {
+			name = plan_to_report_spy
+			value = yes
+		}
+
+		add_prestige = 30
+
+		custom_tooltip = mt_espionage.0005.b.effect
+
+		stress_impact = {
+			deceitful = minor_stress_impact_gain
+			compassionate = minor_stress_impact_gain
+		}
+
+		ai_chance = {
+			base = 20
+			modifier = {
+				factor = 3
+				has_trait = just
+			}
+		}
+	}
+
+	# Refuse - don't trust criminals
+	option = {
+		name = mt_espionage.0005.c
+		trait = honest
+
+		add_prestige = 40
+
+		stress_impact = {
+			ambitious = minor_stress_impact_gain
+		}
+
+		ai_chance = {
+			base = 30
+			modifier = {
+				factor = 3
+				has_trait = honest
+			}
+			modifier = {
+				factor = 2
+				has_trait = just
+			}
+		}
+	}
+
+	# Report them immediately
+	option = {
+		name = mt_espionage.0005.d
+		trait = zealous
+
+		add_prestige = 75
+		add_piety = 50
+
+		custom_tooltip = mt_espionage.0005.d.effect
+
+		ai_chance = {
+			base = 10
+			modifier = {
+				factor = 5
+				has_trait = zealous
+			}
+		}
+	}
+}
+
+###############################################
+# MISSION OUTCOMES EVENTS (0006-0020)
+###############################################
+
+# 0006 - Spy successfully infiltrates rival
+mt_espionage.0006 = {
+	type = character_event
+	title = mt_espionage.0006.t
+	desc = mt_espionage.0006.desc
+	theme = intrigue
+
+	left_portrait = {
+		character = root
+		animation = happiness
+	}
+
+	right_portrait = {
+		character = scope:spy_target
+		animation = worry
+	}
+
+	trigger = {
+		has_variable = spy_mission_active
+		has_variable = spy_target
+	}
+
+	immediate = {
+		var:spy_target = {
+			save_scope_as = spy_target
+		}
+	}
+
+	# Excellent! Use this advantage
+	option = {
+		name = mt_espionage.0006.a
+
+		add_prestige = 100
+
+		# Gain ongoing intelligence
+		add_character_modifier = {
+			modifier = mt_infiltrated_rival
+			years = 2
+		}
+
+		# Can now act on information
+		set_variable = {
+			name = has_infiltrator
+			value = scope:spy_target
+		}
+
+		custom_tooltip = mt_espionage.0006.a.effect
+
+		ai_chance = {
+			base = 100
+		}
+	}
+}
+
+# 0007 - Spy returns with valuable route information
+mt_espionage.0007 = {
+	type = character_event
+	title = mt_espionage.0007.t
+	desc = mt_espionage.0007.desc
+	theme = intrigue
+
+	left_portrait = {
+		character = root
+		animation = personality_rational
+	}
+
+	trigger = {
+		has_variable = spy_mission_active
+		has_variable = spy_target
+	}
+
+	immediate = {
+		var:spy_target = {
+			save_scope_as = spy_target
+		}
+	}
+
+	# Use the route information
+	option = {
+		name = mt_espionage.0007.a
+
+		# Gain gold from using stolen routes
+		add_gold = {
+			integer_range = {
+				min = 150
+				max = 350
+			}
+		}
+
+		add_prestige = 50
+
+		# Learn profitable routes
+		add_character_modifier = {
+			modifier = mt_stolen_route_knowledge
+			years = 3
+		}
+
+		set_variable = {
+			name = has_stolen_secrets
+			value = yes
+		}
+
+		custom_tooltip = mt_espionage.0007.a.effect
+
+		ai_chance = {
+			base = 80
+		}
+	}
+
+	# Sell the information instead
+	option = {
+		name = mt_espionage.0007.b
+
+		add_gold = {
+			integer_range = {
+				min = 200
+				max = 400
+			}
+		}
+
+		# But target might find out
+		random = {
+			chance = 40
+			scope:spy_target = {
+				add_opinion = {
+					target = root
+					modifier = sold_my_secrets_opinion
+					opinion = -60
+				}
+			}
+		}
+
+		ai_chance = {
+			base = 20
+			modifier = {
+				factor = 3
+				gold < 100
+			}
+		}
+	}
+}
+
+# 0008 - Spy discovers rival's financial troubles
+mt_espionage.0008 = {
+	type = character_event
+	title = mt_espionage.0008.t
+	desc = mt_espionage.0008.desc
+	theme = intrigue
+
+	left_portrait = {
+		character = root
+		animation = schadenfreude
+	}
+
+	right_portrait = {
+		character = scope:spy_target
+		animation = sadness
+	}
+
+	trigger = {
+		has_variable = spy_mission_active
+		has_variable = spy_target
+	}
+
+	immediate = {
+		var:spy_target = {
+			save_scope_as = spy_target
+		}
+	}
+
+	# Exploit their weakness
+	option = {
+		name = mt_espionage.0008.a
+		trait = ambitious
+
+		# Can undercut them in market
+		add_character_modifier = {
+			modifier = mt_exploiting_rival_weakness
+			years = 2
+		}
+
+		add_gold = 200
+		add_prestige = 75
+
+		scope:spy_target = {
+			add_opinion = {
+				target = root
+				modifier = exploited_my_weakness_opinion
+				opinion = -50
+			}
+		}
+
+		stress_impact = {
+			compassionate = minor_stress_impact_gain
+			just = minor_stress_impact_gain
+		}
+
+		ai_chance = {
+			base = 60
+			modifier = {
+				factor = 2
+				has_trait = ambitious
+			}
+		}
+	}
+
+	# Offer to help (for a price)
+	option = {
+		name = mt_espionage.0008.b
+		skill = diplomacy
+
+		# They pay you for discretion
+		add_gold = 150
+
+		scope:spy_target = {
+			add_opinion = {
+				target = root
+				modifier = helped_in_crisis_opinion
+				opinion = 20
+			}
+		}
+
+		add_prestige = 40
+
+		ai_chance = {
+			base = 30
+			modifier = {
+				factor = 2
+				diplomacy >= 14
+			}
+		}
+	}
+
+	# Keep the information for later
+	option = {
+		name = mt_espionage.0008.c
+
+		set_variable = {
+			name = has_stolen_secrets
+			value = yes
+		}
+
+		set_variable = {
+			name = target_vulnerability
+			value = flag:financial_weakness
+		}
+
+		custom_tooltip = mt_espionage.0008.c.effect
+
+		ai_chance = {
+			base = 10
+			modifier = {
+				factor = 2
+				has_trait = paranoid
+			}
+		}
+	}
+}
+
+# 0009 - Spy learns rival's future plans
+mt_espionage.0009 = {
+	type = character_event
+	title = mt_espionage.0009.t
+	desc = mt_espionage.0009.desc
+	theme = intrigue
+
+	left_portrait = {
+		character = root
+		animation = scheme
+	}
+
+	trigger = {
+		has_variable = spy_mission_active
+		has_variable = spy_target
+	}
+
+	immediate = {
+		var:spy_target = {
+			save_scope_as = spy_target
+		}
+	}
+
+	# Counter their plans
+	option = {
+		name = mt_espionage.0009.a
+
+		add_prestige = 100
+
+		# Get there first
+		add_character_modifier = {
+			modifier = mt_stayed_ahead_of_rival
+			years = 2
+		}
+
+		add_gold = 250
+
+		scope:spy_target = {
+			add_opinion = {
+				target = root
+				modifier = sabotaged_my_plans_opinion
+				opinion = -70
+			}
+		}
+
+		ai_chance = {
+			base = 70
+		}
+	}
+
+	# Work together instead
+	option = {
+		name = mt_espionage.0009.b
+		trait = gregarious
+
+		# Propose partnership
+		scope:spy_target = {
+			trigger_event = mt_espionage.0009
+		}
+
+		add_prestige = 30
+
+		stress_impact = {
+			vengeful = minor_stress_impact_gain
+		}
+
+		ai_chance = {
+			base = 20
+			modifier = {
+				factor = 3
+				has_trait = gregarious
+			}
+		}
+	}
+
+	# Just observe
+	option = {
+		name = mt_espionage.0009.c
+
+		add_prestige = 20
+
+		ai_chance = {
+			base = 10
+		}
+	}
+}
+
+# 0010 - Spy caught snooping - partial information before fleeing
+mt_espionage.0010 = {
+	type = character_event
+	title = mt_espionage.0010.t
+	desc = mt_espionage.0010.desc
+	theme = intrigue
+
+	left_portrait = {
+		character = root
+		animation = worry
+	}
+
+	right_portrait = {
+		character = scope:spy_target
+		animation = anger
+	}
+
+	trigger = {
+		has_variable = spy_mission_active
+		has_variable = spy_target
+	}
+
+	immediate = {
+		var:spy_target = {
+			save_scope_as = spy_target
+		}
+	}
+
+	# At least we got something
+	option = {
+		name = mt_espionage.0010.a
+
+		# Partial success
+		add_gold = 75
+
+		# But spy is compromised
+		change_variable = {
+			name = spy_loyalty
+			subtract = 20
+		}
+
+		# Relations damaged
+		scope:spy_target = {
+			add_opinion = {
+				target = root
+				modifier = caught_spying_on_me_opinion
+				opinion = -40
+			}
+		}
+
+		add_prestige = -25
+
+		custom_tooltip = mt_espionage.0010.a.effect
+
+		# Clean up mission
+		remove_variable = spy_mission_active
+
+		ai_chance = {
+			base = 100
+		}
+	}
+}
+
+# 0011 - Spy captured by rival
+mt_espionage.0011 = {
+	type = character_event
+	title = mt_espionage.0011.t
+	desc = mt_espionage.0011.desc
+	theme = intrigue
+
+	left_portrait = {
+		character = root
+		animation = sadness
+	}
+
+	right_portrait = {
+		character = scope:spy_target
+		animation = anger
+	}
+
+	trigger = {
+		has_variable = spy_mission_active
+		has_variable = spy_target
+	}
+
+	immediate = {
+		var:spy_target = {
+			save_scope_as = spy_target
+		}
+	}
+
+	# Pay ransom to get spy back
+	option = {
+		name = mt_espionage.0011.a
+
+		remove_short_term_gold = 125
+
+		# Spy returns but traumatized
+		change_variable = {
+			name = spy_loyalty
+			add = 10
+		}
+
+		change_variable = {
+			name = spy_success_chance
+			subtract = 10
+		}
+
+		scope:spy_target = {
+			add_opinion = {
+				target = root
+				modifier = paid_ransom_for_spy_opinion
+				opinion = -20
+			}
+		}
+
+		custom_tooltip = mt_espionage.0011.a.effect
+
+		ai_chance = {
+			base = 50
+			modifier = {
+				factor = 2
+				gold >= 300
+			}
+			modifier = {
+				factor = 0.3
+				gold < 150
+			}
+		}
+	}
+
+	# Abandon the spy
+	option = {
+		name = mt_espionage.0011.b
+		trait = callous
+
+		# Lose the spy
+		remove_variable = has_active_spy
+		remove_variable = spy_quality
+		remove_variable = spy_loyalty
+		remove_variable = spy_success_chance
+
+		# Major relations hit
+		scope:spy_target = {
+			add_opinion = {
+				target = root
+				modifier = caught_your_spy_opinion
+				opinion = -60
+			}
+		}
+
+		add_prestige = -75
+
+		stress_impact = {
+			compassionate = major_stress_impact_gain
+		}
+
+		ai_chance = {
+			base = 30
+			modifier = {
+				factor = 3
+				gold < 100
+			}
+			modifier = {
+				factor = 2
+				has_trait = callous
+			}
+		}
+	}
+
+	# Negotiate release
+	option = {
+		name = mt_espionage.0011.c
+		skill = diplomacy
+		duel = {
+			skill = diplomacy
+			target = scope:spy_target
+		}
+
+		if = {
+			limit = { scope:duel_won = yes }
+			# Successfully negotiated
+			remove_short_term_gold = 50
+
+			scope:spy_target = {
+				add_opinion = {
+					target = root
+					modifier = resolved_peacefully_opinion
+					opinion = -10
+				}
+			}
+
+			custom_tooltip = mt_espionage.0011.c.success
+		}
+		else = {
+			# Failed - spy executed
+			remove_variable = has_active_spy
+			remove_variable = spy_quality
+			remove_variable = spy_loyalty
+
+			scope:spy_target = {
+				add_opinion = {
+					target = root
+					modifier = executed_your_spy_opinion
+					opinion = -80
+				}
+			}
+
+			add_prestige = -100
+
+			custom_tooltip = mt_espionage.0011.c.failure
+		}
+
+		ai_chance = {
+			base = 20
+			modifier = {
+				factor = 3
+				diplomacy >= 14
+			}
+		}
+	}
+}
+
+# 0012 - Spy turns out to be double agent
+mt_espionage.0012 = {
+	type = character_event
+	title = mt_espionage.0012.t
+	desc = mt_espionage.0012.desc
+	theme = intrigue
+
+	left_portrait = {
+		character = root
+		animation = shock
+	}
+
+	trigger = {
+		has_variable = spy_is_double_agent
+		has_variable = spy_mission_active
+	}
+
+	# Disaster! Fed false information
+	option = {
+		name = mt_espionage.0012.a
+
+		# Lost gold on false leads
+		remove_short_term_gold = 100
+
+		# Lost prestige
+		add_prestige = -150
+
+		# Lose the spy
+		remove_variable = has_active_spy
+		remove_variable = spy_quality
+		remove_variable = spy_loyalty
+		remove_variable = spy_is_double_agent
+
+		# Target knows your plans
+		if = {
+			limit = { has_variable = spy_target }
+			var:spy_target = {
+				add_opinion = {
+					target = root
+					modifier = fooled_you_opinion
+					opinion = -40
+				}
+			}
+		}
+
+		add_stress = 50
+
+		custom_tooltip = mt_espionage.0012.a.effect
+
+		ai_chance = {
+			base = 100
+		}
+	}
+}
+
+# 0013 - Spy assassinated during mission
+mt_espionage.0013 = {
+	type = character_event
+	title = mt_espionage.0013.t
+	desc = mt_espionage.0013.desc
+	theme = death
+
+	left_portrait = {
+		character = root
+		animation = grief
+	}
+
+	trigger = {
+		has_variable = spy_mission_active
+		has_variable = spy_target
+	}
+
+	immediate = {
+		var:spy_target = {
+			save_scope_as = spy_target
+		}
+	}
+
+	# Tragic loss - seek revenge
+	option = {
+		name = mt_espionage.0013.a
+		trait = vengeful
+
+		# Lose the spy
+		remove_variable = has_active_spy
+		remove_variable = spy_quality
+		remove_variable = spy_loyalty
+
+		# Vendetta
+		add_opinion = {
+			target = scope:spy_target
+			modifier = murdered_my_spy_opinion
+			opinion = -100
+		}
+
+		# Set up revenge
+		set_variable = {
+			name = seeking_vengeance_for_spy
+			value = scope:spy_target
+		}
+
+		add_prestige = -50
+
+		stress_impact = {
+			forgiving = major_stress_impact_gain
+			compassionate = medium_stress_impact_gain
+		}
+
+		ai_chance = {
+			base = 50
+			modifier = {
+				factor = 3
+				has_trait = vengeful
+			}
+		}
+	}
+
+	# Accept the risk of the trade
+	option = {
+		name = mt_espionage.0013.b
+		trait = callous
+
+		# Lose the spy
+		remove_variable = has_active_spy
+		remove_variable = spy_quality
+		remove_variable = spy_loyalty
+
+		add_prestige = -25
+
+		# Move on quickly
+		custom_tooltip = mt_espionage.0013.b.effect
+
+		stress_impact = {
+			compassionate = minor_stress_impact_gain
+		}
+
+		ai_chance = {
+			base = 30
+			modifier = {
+				factor = 2
+				has_trait = callous
+			}
+		}
+	}
+
+	# Honor their sacrifice
+	option = {
+		name = mt_espionage.0013.c
+
+		# Lose the spy
+		remove_variable = has_active_spy
+		remove_variable = spy_quality
+		remove_variable = spy_loyalty
+
+		add_prestige = 30
+
+		# Bonus loyalty for other spies
+		if = {
+			limit = { has_variable = spy_count }
+			add_character_modifier = {
+				modifier = mt_honors_fallen_spies
+				years = 3
+			}
+		}
+
+		ai_chance = {
+			base = 20
+		}
+	}
+}
+
+# 0014 - Spy falls in love with target's employee
+mt_espionage.0014 = {
+	type = character_event
+	title = mt_espionage.0014.t
+	desc = mt_espionage.0014.desc
+	theme = intrigue
+
+	left_portrait = {
+		character = root
+		animation = worry
+	}
+
+	trigger = {
+		has_variable = spy_mission_active
+		has_variable = spy_target
+	}
+
+	immediate = {
+		var:spy_target = {
+			save_scope_as = spy_target
+		}
+	}
+
+	# Recall the spy immediately
+	option = {
+		name = mt_espionage.0014.a
+
+		# Mission aborted
+		remove_variable = spy_mission_active
+
+		# Spy loyalty drops
+		change_variable = {
+			name = spy_loyalty
+			subtract = 30
+		}
+
+		add_prestige = -20
+
+		custom_tooltip = mt_espionage.0014.a.effect
+
+		ai_chance = {
+			base = 40
+		}
+	}
+
+	# Use this to your advantage
+	option = {
+		name = mt_espionage.0014.b
+		trait = cynical
+
+		# Spy can get even better intel
+		add_character_modifier = {
+			modifier = mt_spy_romance_intel
+			years = 1
+		}
+
+		# But loyalty permanently compromised
+		change_variable = {
+			name = spy_loyalty
+			subtract = 15
+		}
+
+		add_gold = 150
+
+		stress_impact = {
+			compassionate = minor_stress_impact_gain
+		}
+
+		ai_chance = {
+			base = 40
+			modifier = {
+				factor = 2
+				has_trait = cynical
+			}
+		}
+	}
+
+	# Let them be happy
+	option = {
+		name = mt_espionage.0014.c
+		trait = compassionate
+
+		# Lose the spy but gain honor
+		remove_variable = has_active_spy
+		remove_variable = spy_loyalty
+		remove_variable = spy_quality
+
+		add_prestige = 40
+
+		# Target appreciates mercy
+		random = {
+			chance = 50
+			scope:spy_target = {
+				add_opinion = {
+					target = root
+					modifier = showed_mercy_opinion
+					opinion = 15
+				}
+			}
+		}
+
+		stress_impact = {
+			ambitious = minor_stress_impact_gain
+		}
+
+		ai_chance = {
+			base = 20
+			modifier = {
+				factor = 4
+				has_trait = compassionate
+			}
+		}
+	}
+}
+
+# 0015 - Spy recruited by rival - defection
+mt_espionage.0015 = {
+	type = character_event
+	title = mt_espionage.0015.t
+	desc = mt_espionage.0015.desc
+	theme = intrigue
+
+	left_portrait = {
+		character = root
+		animation = rage
+	}
+
+	right_portrait = {
+		character = scope:spy_target
+		animation = schadenfreude
+	}
+
+	trigger = {
+		has_variable = has_active_spy
+		has_variable = spy_loyalty
+		var:spy_loyalty < 50
+	}
+
+	immediate = {
+		if = {
+			limit = { has_variable = spy_target }
+			var:spy_target = {
+				save_scope_as = spy_target
+			}
+		}
+		else = {
+			random_known_character = {
+				limit = {
+					is_adult = yes
+					NOT = { this = root }
+				}
+				save_scope_as = spy_target
+			}
+		}
+	}
+
+	# Betrayed!
+	option = {
+		name = mt_espionage.0015.a
+
+		# Lose spy
+		remove_variable = has_active_spy
+		remove_variable = spy_quality
+		remove_variable = spy_loyalty
+
+		# They now spy on you!
+		scope:spy_target = {
+			set_variable = {
+				name = has_active_spy
+				value = yes
+			}
+		}
+
+		add_prestige = -100
+
+		# Relations damaged
+		add_opinion = {
+			target = scope:spy_target
+			modifier = stole_my_spy_opinion
+			opinion = -60
+		}
+
+		# Learn to be more careful
+		add_intrigue_skill = 1
+
+		custom_tooltip = mt_espionage.0015.a.effect
+
+		ai_chance = {
+			base = 100
+		}
+	}
+}
+
+# 0016 - Mission succeeds beyond expectations
+mt_espionage.0016 = {
+	type = character_event
+	title = mt_espionage.0016.t
+	desc = mt_espionage.0016.desc
+	theme = intrigue
+
+	left_portrait = {
+		character = root
+		animation = happiness
+	}
+
+	trigger = {
+		has_variable = spy_mission_active
+		has_variable = spy_quality
+		var:spy_quality >= 2
+	}
+
+	# Incredible success!
+	option = {
+		name = mt_espionage.0016.a
+
+		# Major rewards
+		add_gold = {
+			integer_range = {
+				min = 300
+				max = 500
+			}
+		}
+
+		add_prestige = 150
+
+		# Steal trade secrets
+		steal_trade_secrets_effect = {
+			TARGET = var:spy_target
+		}
+
+		# Spy gains confidence
+		if = {
+			limit = {
+				var:spy_quality < 3
+			}
+			change_variable = {
+				name = spy_quality
+				add = 1
+			}
+			change_variable = {
+				name = spy_success_chance
+				add = 15
+			}
+		}
+
+		custom_tooltip = mt_espionage.0016.a.effect
+
+		ai_chance = {
+			base = 100
+		}
+	}
+}
+
+# 0017 - Spy discovers hidden alliance
+mt_espionage.0017 = {
+	type = character_event
+	title = mt_espionage.0017.t
+	desc = mt_espionage.0017.desc
+	theme = intrigue
+
+	left_portrait = {
+		character = root
+		animation = worry
+	}
+
+	right_portrait = {
+		character = scope:spy_target
+		animation = scheme
+	}
+
+	trigger = {
+		has_variable = spy_mission_active
+		has_variable = spy_target
+	}
+
+	immediate = {
+		var:spy_target = {
+			save_scope_as = spy_target
+
+			# Find one of their allies
+			random_ally = {
+				limit = {
+					is_adult = yes
+				}
+				save_scope_as = secret_ally
+			}
+		}
+	}
+
+	# This changes everything!
+	option = {
+		name = mt_espionage.0017.a
+
+		add_prestige = 75
+
+		# Store information
+		set_variable = {
+			name = discovered_secret_alliance
+			value = scope:spy_target
+		}
+
+		# Can use this information
+		add_character_modifier = {
+			modifier = mt_knows_secret_alliances
+			years = 3
+		}
+
+		custom_tooltip = mt_espionage.0017.a.effect
+
+		ai_chance = {
+			base = 100
+		}
+	}
+}
+
+# 0018 - Spy intercepts important message
+mt_espionage.0018 = {
+	type = character_event
+	title = mt_espionage.0018.t
+	desc = mt_espionage.0018.desc
+	theme = intrigue
+
+	left_portrait = {
+		character = root
+		animation = personality_rational
+	}
+
+	trigger = {
+		has_variable = spy_mission_active
+		has_variable = spy_target
+	}
+
+	immediate = {
+		var:spy_target = {
+			save_scope_as = spy_target
+		}
+	}
+
+	# Valuable intelligence
+	option = {
+		name = mt_espionage.0018.a
+
+		add_prestige = 100
+
+		# Random valuable information
+		random_list = {
+			25 = {
+				add_gold = 250
+				custom_tooltip = mt_espionage.0018.a.gold
+			}
+			25 = {
+				set_variable = {
+					name = discovered_trade_route
+					value = yes
+				}
+				custom_tooltip = mt_espionage.0018.a.route
+			}
+			25 = {
+				# Learn about their debts
+				set_variable = {
+					name = target_vulnerability
+					value = flag:debts
+				}
+				custom_tooltip = mt_espionage.0018.a.debt
+			}
+			25 = {
+				# Discover upcoming deal
+				add_character_modifier = {
+					modifier = mt_forewarned_of_deals
+					years = 1
+				}
+				custom_tooltip = mt_espionage.0018.a.deals
+			}
+		}
+
+		ai_chance = {
+			base = 100
+		}
+	}
+}
+
+# 0019 - Spy must make critical choice
+mt_espionage.0019 = {
+	type = character_event
+	title = mt_espionage.0019.t
+	desc = mt_espionage.0019.desc
+	theme = intrigue
+
+	left_portrait = {
+		character = root
+		animation = worry
+	}
+
+	trigger = {
+		has_variable = spy_mission_active
+		has_variable = spy_target
+	}
+
+	immediate = {
+		var:spy_target = {
+			save_scope_as = spy_target
+		}
+	}
+
+	# Tell spy to stay hidden - miss opportunity
+	option = {
+		name = mt_espionage.0019.a
+
+		# Safe but no extra intel
+		add_prestige = 20
+
+		# Mission continues
+		custom_tooltip = mt_espionage.0019.a.effect
+
+		ai_chance = {
+			base = 40
+			modifier = {
+				factor = 2
+				has_trait = paranoid
+			}
+		}
+	}
+
+	# Tell spy to take the risk
+	option = {
+		name = mt_espionage.0019.b
+
+		# High risk, high reward
+		random_list = {
+			60 = {
+				# Success!
+				add_gold = 300
+				add_prestige = 100
+				custom_tooltip = mt_espionage.0019.b.success
+			}
+			40 = {
+				# Caught!
+				trigger_event = mt_espionage.0010
+				custom_tooltip = mt_espionage.0019.b.failure
+			}
+		}
+
+		ai_chance = {
+			base = 60
+			modifier = {
+				factor = 2
+				has_trait = brave
+			}
+			modifier = {
+				factor = 0.5
+				has_trait = craven
+			}
+		}
+	}
+}
+
+# 0020 - Spy gains unexpected ally
+mt_espionage.0020 = {
+	type = character_event
+	title = mt_espionage.0020.t
+	desc = mt_espionage.0020.desc
+	theme = intrigue
+
+	left_portrait = {
+		character = root
+		animation = happiness
+	}
+
+	trigger = {
+		has_variable = spy_mission_active
+		has_variable = spy_target
+	}
+
+	immediate = {
+		var:spy_target = {
+			save_scope_as = spy_target
+		}
+	}
+
+	# Recruit the insider too
+	option = {
+		name = mt_espionage.0020.a
+
+		remove_short_term_gold = 50
+
+		# Now have two sources
+		add_character_modifier = {
+			modifier = mt_multiple_informants
+			years = 2
+		}
+
+		add_prestige = 75
+
+		# Better success rate
+		change_variable = {
+			name = spy_success_chance
+			add = 20
+		}
+
+		custom_tooltip = mt_espionage.0020.a.effect
+
+		ai_chance = {
+			base = 70
+			modifier = {
+				factor = 0.3
+				gold < 75
+			}
+		}
+	}
+
+	# Just use them occasionally
+	option = {
+		name = mt_espionage.0020.b
+
+		add_prestige = 40
+
+		# One-time bonus intel
+		add_gold = 100
+
+		ai_chance = {
+			base = 30
+		}
+	}
+}
+
+###############################################
+# COUNTER-ESPIONAGE EVENTS (0021-0030)
+###############################################
+
+# 0021 - Caught an enemy spy in your organization
+mt_espionage.0021 = {
+	type = character_event
+	title = mt_espionage.0021.t
+	desc = mt_espionage.0021.desc
+	theme = intrigue
+
+	left_portrait = {
+		character = root
+		animation = anger
+	}
+
+	right_portrait = {
+		character = scope:spy_master
+		animation = worry
+	}
+
+	trigger = {
+		has_variable = counter_espionage_active
+		any_known_character = {
+			is_adult = yes
+			NOT = { this = root }
+			has_variable = has_active_spy
+		}
+	}
+
+	immediate = {
+		random_known_character = {
+			limit = {
+				is_adult = yes
+				NOT = { this = root }
+				has_variable = has_active_spy
+			}
+			save_scope_as = spy_master
+		}
+	}
+
+	# Execute the spy as warning
+	option = {
+		name = mt_espionage.0021.a
+		trait = vengeful
+
+		execute_spy_effect = {
+			SPYMASTER = scope:spy_master
+		}
+
+		add_dread = 20
+
+		stress_impact = {
+			compassionate = medium_stress_impact_gain
+			forgiving = minor_stress_impact_gain
+		}
+
+		ai_chance = {
+			base = 30
+			modifier = {
+				factor = 3
+				has_trait = vengeful
+			}
+			modifier = {
+				factor = 2
+				has_trait = cruel
+			}
+		}
+	}
+
+	# Ransom the spy back
+	option = {
+		name = mt_espionage.0021.b
+
+		ransom_spy_effect = {
+			SPYMASTER = scope:spy_master
+		}
+
+		ai_chance = {
+			base = 40
+			modifier = {
+				factor = 2
+				gold < 200
+			}
+		}
+	}
+
+	# Turn them into a double agent
+	option = {
+		name = mt_espionage.0021.c
+		trait = schemer
+
+		turn_double_agent_effect = {
+			ORIGINAL_MASTER = scope:spy_master
+		}
+
+		stress_impact = {
+			honest = minor_stress_impact_gain
+		}
+
+		ai_chance = {
+			base = 30
+			modifier = {
+				factor = 3
+				has_trait = schemer
+			}
+			modifier = {
+				factor = 2
+				intrigue >= 15
+			}
+		}
+	}
+}
+
+# 0022 - Discovered false information planted by rival
+mt_espionage.0022 = {
+	type = character_event
+	title = mt_espionage.0022.t
+	desc = mt_espionage.0022.desc
+	theme = intrigue
+
+	left_portrait = {
+		character = root
+		animation = shock
+	}
+
+	right_portrait = {
+		character = scope:rival_planter
+		animation = schadenfreude
+	}
+
+	trigger = {
+		has_variable = has_stolen_secrets
+		any_relation = {
+			type = rival
+			is_alive = yes
+		}
+	}
+
+	immediate = {
+		random_relation = {
+			type = rival
+			save_scope_as = rival_planter
+		}
+	}
+
+	# Almost fell for it!
+	option = {
+		name = mt_espionage.0022.a
+
+		# Remove false secrets
+		remove_variable = has_stolen_secrets
+
+		# Learn from this
+		add_intrigue_skill = 1
+
+		add_prestige = -50
+
+		# Respect the clever trap
+		scope:rival_planter = {
+			add_opinion = {
+				target = root
+				modifier = clever_opponent_opinion
+				opinion = 10
+			}
+		}
+
+		custom_tooltip = mt_espionage.0022.a.effect
+
+		ai_chance = {
+			base = 60
+		}
+	}
+
+	# Use it against them - feed false info back
+	option = {
+		name = mt_espionage.0022.b
+		trait = schemer
+
+		# Set trap
+		set_variable = {
+			name = counter_trap_set
+			value = scope:rival_planter
+		}
+
+		add_prestige = 50
+
+		custom_tooltip = mt_espionage.0022.b.effect
+
+		stress_impact = {
+			honest = minor_stress_impact_gain
+		}
+
+		ai_chance = {
+			base = 40
+			modifier = {
+				factor = 3
+				has_trait = schemer
+			}
+		}
+	}
+}
+
+# 0023 - Your security measures prevented espionage attempt
+mt_espionage.0023 = {
+	type = character_event
+	title = mt_espionage.0023.t
+	desc = mt_espionage.0023.desc
+	theme = intrigue
+
+	left_portrait = {
+		character = root
+		animation = happiness
+	}
+
+	trigger = {
+		has_variable = counter_espionage_active
+	}
+
+	# Security investment paid off!
+	option = {
+		name = mt_espionage.0023.a
+
+		add_prestige = 100
+
+		# Boost to security reputation
+		add_character_modifier = {
+			modifier = mt_strong_security
+			years = 3
+		}
+
+		# Discover who tried
+		random = {
+			chance = 50
+			modifier = {
+				add = 20
+				intrigue >= 15
+			}
+
+			random_known_character = {
+				limit = {
+					is_adult = yes
+					NOT = { this = root }
+				}
+				save_scope_as = thwarted_spy_master
+
+				add_opinion = {
+					target = root
+					modifier = thwarted_my_espionage_opinion
+					opinion = -40
+				}
+			}
+
+			custom_tooltip = mt_espionage.0023.a.discovered
+		}
+
+		ai_chance = {
+			base = 100
+		}
+	}
+}
+
+# 0024 - Turned enemy spy into double agent
+mt_espionage.0024 = {
+	type = character_event
+	title = mt_espionage.0024.t
+	desc = mt_espionage.0024.desc
+	theme = intrigue
+
+	left_portrait = {
+		character = root
+		animation = scheme
+	}
+
+	trigger = {
+		has_variable = has_double_agent
+	}
+
+	immediate = {
+		if = {
+			limit = { has_variable = double_agent_target }
+			var:double_agent_target = {
+				save_scope_as = double_agent_target
+			}
+		}
+	}
+
+	# Feed them false information
+	option = {
+		name = mt_espionage.0024.a
+
+		add_prestige = 75
+
+		# They act on bad intel
+		scope:double_agent_target = {
+			remove_short_term_gold = 150
+			add_prestige = -100
+		}
+
+		add_opinion = {
+			target = scope:double_agent_target
+			modifier = deceived_you_opinion
+			opinion = -20
+		}
+
+		custom_tooltip = mt_espionage.0024.a.effect
+
+		ai_chance = {
+			base = 60
+		}
+	}
+
+	# Learn their plans
+	option = {
+		name = mt_espionage.0024.b
+
+		# Gain valuable intel
+		add_gold = 200
+
+		# Learn their trade routes
+		add_character_modifier = {
+			modifier = mt_double_agent_intel
+			years = 2
+		}
+
+		custom_tooltip = mt_espionage.0024.b.effect
+
+		ai_chance = {
+			base = 40
+		}
+	}
+}
+
+# 0025 - Spy network discovered - multiple agents compromised
+mt_espionage.0025 = {
+	type = character_event
+	title = mt_espionage.0025.t
+	desc = mt_espionage.0025.desc
+	theme = intrigue
+
+	left_portrait = {
+		character = root
+		animation = shock
+	}
+
+	trigger = {
+		has_variable = spy_count
+		var:spy_count >= 2
+	}
+
+	# Disaster - network exposed!
+	option = {
+		name = mt_espionage.0025.a
+
+		# Lose multiple spies
+		if = {
+			limit = { var:spy_count >= 3 }
+			change_variable = {
+				name = spy_count
+				subtract = 2
+			}
+		}
+		else = {
+			change_variable = {
+				name = spy_count
+				subtract = 1
+			}
+		}
+
+		# Major prestige loss
+		add_prestige = -200
+
+		# Gold loss
+		remove_short_term_gold = 200
+
+		# Multiple enemies now know
+		random_known_character = {
+			limit = {
+				is_adult = yes
+				NOT = { this = root }
+			}
+			save_scope_as = exposer
+
+			add_opinion = {
+				target = root
+				modifier = exposed_spy_network_opinion
+				opinion = -80
+			}
+		}
+
+		add_stress = 75
+
+		custom_tooltip = mt_espionage.0025.a.effect
+
+		ai_chance = {
+			base = 100
+		}
+	}
+}
+
+# 0026 - Mole hunt - paranoia in your company
+mt_espionage.0026 = {
+	type = character_event
+	title = mt_espionage.0026.t
+	desc = mt_espionage.0026.desc
+	theme = intrigue
+
+	left_portrait = {
+		character = root
+		animation = worry
+	}
+
+	trigger = {
+		has_variable = counter_espionage_active
+		OR = {
+			has_variable = has_active_spy
+			any_known_character = {
+				is_adult = yes
+				has_variable = has_active_spy
+			}
+		}
+	}
+
+	# Launch investigation
+	option = {
+		name = mt_espionage.0026.a
+		trait = paranoid
+
+		remove_short_term_gold = 75
+
+		# Might find something
+		random_list = {
+			40 = {
+				# Found a mole!
+				add_prestige = 150
+				custom_tooltip = mt_espionage.0026.a.found
+			}
+			60 = {
+				# False alarm - damaged morale
+				add_character_modifier = {
+					modifier = mt_paranoid_workplace
+					years = 2
+				}
+				custom_tooltip = mt_espionage.0026.a.false_alarm
+			}
+		}
+
+		ai_chance = {
+			base = 50
+			modifier = {
+				factor = 3
+				has_trait = paranoid
+			}
+			modifier = {
+				factor = 0.3
+				gold < 100
+			}
+		}
+	}
+
+	# Trust your people
+	option = {
+		name = mt_espionage.0026.b
+		trait = trusting
+
+		add_prestige = 30
+
+		# But risk remains
+		random = {
+			chance = 30
+			custom_tooltip = mt_espionage.0026.b.risk
+		}
+
+		stress_impact = {
+			paranoid = medium_stress_impact_gain
+		}
+
+		ai_chance = {
+			base = 50
+			modifier = {
+				factor = 3
+				has_trait = trusting
+			}
+		}
+	}
+}
+
+# 0027 - False accusations of espionage - internal trust damaged
+mt_espionage.0027 = {
+	type = character_event
+	title = mt_espionage.0027.t
+	desc = mt_espionage.0027.desc
+	theme = intrigue
+
+	left_portrait = {
+		character = root
+		animation = sadness
+	}
+
+	trigger = {
+		has_variable = counter_espionage_active
+	}
+
+	immediate = {
+		random_known_character = {
+			limit = {
+				is_adult = yes
+				NOT = { this = root }
+			}
+			save_scope_as = falsely_accused
+		}
+	}
+
+	# Apologize publicly
+	option = {
+		name = mt_espionage.0027.a
+		trait = just
+
+		add_prestige = -50
+
+		scope:falsely_accused = {
+			add_opinion = {
+				target = root
+				modifier = apologized_for_accusation_opinion
+				opinion = 20
+			}
+		}
+
+		# Remove some paranoia
+		if = {
+			limit = { has_character_modifier = mt_paranoid_workplace }
+			remove_character_modifier = mt_paranoid_workplace
+		}
+
+		stress_impact = {
+			arrogant = minor_stress_impact_gain
+		}
+
+		ai_chance = {
+			base = 60
+			modifier = {
+				factor = 2
+				has_trait = just
+			}
+		}
+	}
+
+	# Double down on accusation
+	option = {
+		name = mt_espionage.0027.b
+		trait = arrogant
+
+		add_prestige = -75
+
+		scope:falsely_accused = {
+			add_opinion = {
+				target = root
+				modifier = falsely_accused_opinion
+				opinion = -60
+			}
+		}
+
+		# Others lose trust
+		add_character_modifier = {
+			modifier = mt_accusations_backfired
+			years = 2
+		}
+
+		stress_impact = {
+			just = medium_stress_impact_gain
+			humble = minor_stress_impact_gain
+		}
+
+		ai_chance = {
+			base = 20
+			modifier = {
+				factor = 3
+				has_trait = arrogant
+			}
+		}
+	}
+
+	# Quietly drop it
+	option = {
+		name = mt_espionage.0027.c
+
+		add_prestige = -25
+
+		scope:falsely_accused = {
+			add_opinion = {
+				target = root
+				modifier = dropped_accusation_opinion
+				opinion = 5
+			}
+		}
+
+		ai_chance = {
+			base = 20
+		}
+	}
+}
+
+# 0028 - Successfully fed misinformation to enemy
+mt_espionage.0028 = {
+	type = character_event
+	title = mt_espionage.0028.t
+	desc = mt_espionage.0028.desc
+	theme = intrigue
+
+	left_portrait = {
+		character = root
+		animation = schadenfreude
+	}
+
+	right_portrait = {
+		character = scope:deceived_enemy
+		animation = sadness
+	}
+
+	trigger = {
+		has_variable = has_double_agent
+		has_variable = double_agent_target
+	}
+
+	immediate = {
+		var:double_agent_target = {
+			save_scope_as = deceived_enemy
+		}
+	}
+
+	# Perfect execution!
+	option = {
+		name = mt_espionage.0028.a
+
+		add_prestige = 150
+
+		# Enemy suffers
+		scope:deceived_enemy = {
+			remove_short_term_gold = 250
+			add_prestige = -150
+
+			add_opinion = {
+				target = root
+				modifier = deceived_me_opinion
+				opinion = -70
+			}
+		}
+
+		# Gain intrigue experience
+		add_intrigue_skill = 1
+
+		custom_tooltip = mt_espionage.0028.a.effect
+
+		ai_chance = {
+			base = 100
+		}
+	}
+}
+
+# 0029 - Counter-spy discovers rival's plans against you
+mt_espionage.0029 = {
+	type = character_event
+	title = mt_espionage.0029.t
+	desc = mt_espionage.0029.desc
+	theme = intrigue
+
+	left_portrait = {
+		character = root
+		animation = worry
+	}
+
+	right_portrait = {
+		character = scope:plotting_rival
+		animation = scheme
+	}
+
+	trigger = {
+		has_variable = counter_espionage_active
+		any_relation = {
+			type = rival
+			is_alive = yes
+		}
+	}
+
+	immediate = {
+		random_relation = {
+			type = rival
+			save_scope_as = plotting_rival
+		}
+	}
+
+	# Strike first!
+	option = {
+		name = mt_espionage.0029.a
+		trait = bold
+
+		# Preemptive action
+		scope:plotting_rival = {
+			add_opinion = {
+				target = root
+				modifier = struck_first_opinion
+				opinion = -80
+			}
+
+			# Damage their plans
+			remove_short_term_gold = 200
+			add_prestige = -100
+		}
+
+		add_prestige = 100
+
+		custom_tooltip = mt_espionage.0029.a.effect
+
+		stress_impact = {
+			craven = minor_stress_impact_gain
+		}
+
+		ai_chance = {
+			base = 50
+			modifier = {
+				factor = 2
+				has_trait = bold
+			}
+		}
+	}
+
+	# Prepare defenses
+	option = {
+		name = mt_espionage.0029.b
+		trait = calm
+
+		# Strengthen security
+		add_character_modifier = {
+			modifier = mt_prepared_for_attack
+			years = 2
+		}
+
+		add_prestige = 50
+
+		custom_tooltip = mt_espionage.0029.b.effect
+
+		ai_chance = {
+			base = 40
+			modifier = {
+				factor = 2
+				has_trait = calm
+			}
+		}
+	}
+
+	# Confront them diplomatically
+	option = {
+		name = mt_espionage.0029.c
+		skill = diplomacy
+
+		# Attempt to defuse
+		scope:plotting_rival = {
+			add_opinion = {
+				target = root
+				modifier = confronted_peacefully_opinion
+				opinion = 15
+			}
+		}
+
+		add_prestige = 30
+
+		stress_impact = {
+			vengeful = minor_stress_impact_gain
+		}
+
+		ai_chance = {
+			base = 10
+			modifier = {
+				factor = 5
+				diplomacy >= 16
+			}
+		}
+	}
+}
+
+# 0030 - Espionage ring busted - industry-wide impact
+mt_espionage.0030 = {
+	type = character_event
+	title = mt_espionage.0030.t
+	desc = mt_espionage.0030.desc
+	theme = intrigue
+
+	left_portrait = {
+		character = root
+		animation = shock
+	}
+
+	# Major crackdown on espionage
+	option = {
+		name = mt_espionage.0030.a
+
+		# Everyone's spies compromised
+		if = {
+			limit = { has_variable = has_active_spy }
+			remove_variable = has_active_spy
+			remove_variable = spy_quality
+			remove_variable = spy_loyalty
+		}
+
+		# Industry-wide paranoia
+		add_character_modifier = {
+			modifier = mt_espionage_crackdown
+			years = 3
+		}
+
+		# Some gain, some loss
+		random_list = {
+			50 = {
+				# You were involved
+				add_prestige = -150
+				custom_tooltip = mt_espionage.0030.a.involved
+			}
+			50 = {
+				# You avoided it
+				add_prestige = 50
+				custom_tooltip = mt_espionage.0030.a.avoided
+			}
+		}
+
+		ai_chance = {
+			base = 100
+		}
+	}
+}
+
+###############################################
+# INFORMATION MARKETPLACE EVENTS (0031-0040)
+###############################################
+
+# 0031 - Black market trader offers secrets
+mt_espionage.0031 = {
+	type = character_event
+	title = mt_espionage.0031.t
+	desc = mt_espionage.0031.desc
+	theme = intrigue
+
+	left_portrait = {
+		character = root
+		animation = worry
+	}
+
+	trigger = {
+		is_adult = yes
+		gold >= 100
+	}
+
+	# Buy the secrets
+	option = {
+		name = mt_espionage.0031.a
+
+		remove_short_term_gold = 150
+
+		# Random quality information
+		random_list = {
+			40 = {
+				# Genuine valuable intel
+				add_gold = 300
+				add_prestige = 75
+				custom_tooltip = mt_espionage.0031.a.genuine
+			}
+			30 = {
+				# Partial information
+				add_gold = 100
+				custom_tooltip = mt_espionage.0031.a.partial
+			}
+			30 = {
+				# Worthless or false
+				add_prestige = -50
+				custom_tooltip = mt_espionage.0031.a.false
+			}
+		}
+
+		ai_chance = {
+			base = 40
+			modifier = {
+				factor = 2
+				intrigue >= 14
+			}
+			modifier = {
+				factor = 0.5
+				has_trait = trusting
+			}
+		}
+	}
+
+	# Investigate the trader first
+	option = {
+		name = mt_espionage.0031.b
+		skill = intrigue
+		duel = {
+			skill = intrigue
+			value = 14
+		}
+
+		remove_short_term_gold = 50
+
+		if = {
+			limit = { scope:duel_won = yes }
+			# Verified legitimacy
+			set_variable = {
+				name = verified_information_broker
+				value = yes
+			}
+			custom_tooltip = mt_espionage.0031.b.success
+		}
+		else = {
+			# Wasted money
+			custom_tooltip = mt_espionage.0031.b.failure
+		}
+
+		ai_chance = {
+			base = 40
+			modifier = {
+				factor = 3
+				intrigue >= 15
+			}
+		}
+	}
+
+	# Decline the offer
+	option = {
+		name = mt_espionage.0031.c
+		trait = honest
+
+		add_prestige = 20
+
+		stress_impact = {
+			ambitious = minor_stress_impact_gain
+		}
+
+		ai_chance = {
+			base = 20
+			modifier = {
+				factor = 3
+				has_trait = honest
+			}
+		}
+	}
+}
+
+# 0032 - Can sell your stolen information
+mt_espionage.0032 = {
+	type = character_event
+	title = mt_espionage.0032.t
+	desc = mt_espionage.0032.desc
+	theme = intrigue
+
+	left_portrait = {
+		character = root
+		animation = personality_rational
+	}
+
+	trigger = {
+		has_variable = has_stolen_secrets
+		gold < 200
+	}
+
+	# Sell to highest bidder
+	option = {
+		name = mt_espionage.0032.a
+
+		sell_secrets_effect = yes
+
+		ai_chance = {
+			base = 70
+			modifier = {
+				factor = 2
+				gold < 100
+			}
+		}
+	}
+
+	# Keep the information
+	option = {
+		name = mt_espionage.0032.b
+
+		add_prestige = 20
+
+		custom_tooltip = mt_espionage.0032.b.effect
+
+		ai_chance = {
+			base = 30
+			modifier = {
+				factor = 2
+				gold >= 300
+			}
+		}
+	}
+}
+
+# 0033 - Information broker approaches - mutual benefit?
+mt_espionage.0033 = {
+	type = character_event
+	title = mt_espionage.0033.t
+	desc = mt_espionage.0033.desc
+	theme = intrigue
+
+	left_portrait = {
+		character = root
+		animation = scheme
+	}
+
+	trigger = {
+		is_adult = yes
+		intrigue >= 12
+		gold >= 100
+	}
+
+	# Join the information network
+	option = {
+		name = mt_espionage.0033.a
+
+		remove_short_term_gold = 100
+
+		# Get access to information network
+		add_character_modifier = {
+			modifier = mt_information_network_member
+			years = 5
+		}
+
+		# Monthly intel updates
+		set_variable = {
+			name = info_broker_member
+			value = yes
+		}
+
+		add_prestige = 50
+
+		custom_tooltip = mt_espionage.0033.a.effect
+
+		ai_chance = {
+			base = 50
+			modifier = {
+				factor = 2
+				intrigue >= 16
+			}
+			modifier = {
+				factor = 0.5
+				has_trait = honest
+			}
+		}
+	}
+
+	# Decline and report them
+	option = {
+		name = mt_espionage.0033.b
+		trait = just
+
+		add_prestige = 100
+
+		# But lose access
+		custom_tooltip = mt_espionage.0033.b.effect
+
+		stress_impact = {
+			deceitful = minor_stress_impact_gain
+		}
+
+		ai_chance = {
+			base = 30
+			modifier = {
+				factor = 3
+				has_trait = just
+			}
+		}
+	}
+
+	# Negotiate better terms
+	option = {
+		name = mt_espionage.0033.c
+		skill = diplomacy
+
+		remove_short_term_gold = 50
+
+		add_character_modifier = {
+			modifier = mt_information_network_preferred
+			years = 5
+		}
+
+		custom_tooltip = mt_espionage.0033.c.effect
+
+		ai_chance = {
+			base = 20
+			modifier = {
+				factor = 3
+				diplomacy >= 15
+			}
+		}
+	}
+}
+
+# 0034 - Discover information network - join or shut down?
+mt_espionage.0034 = {
+	type = character_event
+	title = mt_espionage.0034.t
+	desc = mt_espionage.0034.desc
+	theme = intrigue
+
+	left_portrait = {
+		character = root
+		animation = worry
+	}
+
+	trigger = {
+		is_adult = yes
+		intrigue >= 14
+	}
+
+	# Infiltrate the network
+	option = {
+		name = mt_espionage.0034.a
+		trait = schemer
+
+		remove_short_term_gold = 150
+
+		# Gain intel on multiple rivals
+		add_character_modifier = {
+			modifier = mt_infiltrated_info_network
+			years = 3
+		}
+
+		add_prestige = 100
+
+		stress_impact = {
+			honest = medium_stress_impact_gain
+		}
+
+		ai_chance = {
+			base = 40
+			modifier = {
+				factor = 3
+				has_trait = schemer
+			}
+		}
+	}
+
+	# Expose and shut it down
+	option = {
+		name = mt_espionage.0034.b
+		trait = just
+
+		add_prestige = 200
+
+		# Clean up espionage
+		add_character_modifier = {
+			modifier = mt_fought_corruption
+			years = 5
+		}
+
+		# But make enemies
+		random_known_character = {
+			limit = {
+				is_adult = yes
+				NOT = { this = root }
+			}
+			add_opinion = {
+				target = root
+				modifier = shut_down_network_opinion
+				opinion = -80
+			}
+		}
+
+		stress_impact = {
+			deceitful = minor_stress_impact_gain
+		}
+
+		ai_chance = {
+			base = 30
+			modifier = {
+				factor = 3
+				has_trait = just
+			}
+		}
+	}
+
+	# Ignore it
+	option = {
+		name = mt_espionage.0034.c
+
+		add_prestige = 10
+
+		# But network continues
+		custom_tooltip = mt_espionage.0034.c.effect
+
+		ai_chance = {
+			base = 30
+		}
+	}
+}
+
+# 0035 - Leaked information about you being sold
+mt_espionage.0035 = {
+	type = character_event
+	title = mt_espionage.0035.t
+	desc = mt_espionage.0035.desc
+	theme = intrigue
+
+	left_portrait = {
+		character = root
+		animation = shock
+	}
+
+	trigger = {
+		is_adult = yes
+	}
+
+	# Buy all copies to suppress
+	option = {
+		name = mt_espionage.0035.a
+
+		remove_short_term_gold = 300
+
+		# Mostly contained
+		add_prestige = -50
+
+		custom_tooltip = mt_espionage.0035.a.effect
+
+		ai_chance = {
+			base = 40
+			modifier = {
+				factor = 2
+				gold >= 500
+			}
+			modifier = {
+				factor = 0.3
+				gold < 350
+			}
+		}
+	}
+
+	# Track down the leaker
+	option = {
+		name = mt_espionage.0035.b
+		trait = vengeful
+
+		remove_short_term_gold = 150
+
+		# Might find them
+		random = {
+			chance = 60
+			modifier = {
+				add = 20
+				intrigue >= 15
+			}
+
+			# Found them!
+			add_prestige = 100
+			custom_tooltip = mt_espionage.0035.b.found
+		}
+
+		stress_impact = {
+			forgiving = minor_stress_impact_gain
+		}
+
+		ai_chance = {
+			base = 40
+			modifier = {
+				factor = 3
+				has_trait = vengeful
+			}
+		}
+	}
+
+	# Weather the storm
+	option = {
+		name = mt_espionage.0035.c
+
+		add_prestige = -150
+
+		# Reputation damage
+		add_character_modifier = {
+			modifier = mt_secrets_exposed
+			years = 2
+		}
+
+		add_stress = 50
+
+		ai_chance = {
+			base = 20
+			modifier = {
+				factor = 3
+				gold < 200
+			}
+		}
+	}
+}
+
+# 0036 - Trade secrets auction - bidding war
+mt_espionage.0036 = {
+	type = character_event
+	title = mt_espionage.0036.t
+	desc = mt_espionage.0036.desc
+	theme = intrigue
+
+	left_portrait = {
+		character = root
+		animation = personality_rational
+	}
+
+	trigger = {
+		is_adult = yes
+		gold >= 200
+	}
+
+	immediate = {
+		random_known_character = {
+			limit = {
+				is_adult = yes
+				NOT = { this = root }
+			}
+			save_scope_as = auction_rival
+		}
+	}
+
+	# Bid aggressively
+	option = {
+		name = mt_espionage.0036.a
+
+		remove_short_term_gold = 400
+
+		# Won the auction
+		random_list = {
+			60 = {
+				# Valuable secrets
+				set_variable = {
+					name = has_stolen_secrets
+					value = yes
+				}
+				add_prestige = 100
+				custom_tooltip = mt_espionage.0036.a.win
+			}
+			40 = {
+				# Outbid by rival
+				scope:auction_rival = {
+					set_variable = {
+						name = has_stolen_secrets
+						value = yes
+					}
+				}
+				add_prestige = -50
+				custom_tooltip = mt_espionage.0036.a.lose
+			}
+		}
+
+		ai_chance = {
+			base = 40
+			modifier = {
+				factor = 2
+				gold >= 600
+			}
+			modifier = {
+				factor = 0
+				gold < 450
+			}
+		}
+	}
+
+	# Bid conservatively
+	option = {
+		name = mt_espionage.0036.b
+
+		remove_short_term_gold = 200
+
+		# Moderate chance
+		random = {
+			chance = 40
+			set_variable = {
+				name = has_stolen_secrets
+				value = yes
+			}
+			custom_tooltip = mt_espionage.0036.b.success
+		}
+
+		ai_chance = {
+			base = 40
+		}
+	}
+
+	# Don't participate
+	option = {
+		name = mt_espionage.0036.c
+		trait = honest
+
+		add_prestige = 30
+
+		stress_impact = {
+			ambitious = minor_stress_impact_gain
+		}
+
+		ai_chance = {
+			base = 20
+			modifier = {
+				factor = 3
+				has_trait = honest
+			}
+		}
+	}
+}
+
+# 0037 - Whistleblower reveals industry secrets
+mt_espionage.0037 = {
+	type = character_event
+	title = mt_espionage.0037.t
+	desc = mt_espionage.0037.desc
+	theme = intrigue
+
+	left_portrait = {
+		character = root
+		animation = worry
+	}
+
+	trigger = {
+		is_adult = yes
+	}
+
+	# Capitalize on the chaos
+	option = {
+		name = mt_espionage.0037.a
+		trait = ambitious
+
+		add_gold = 200
+
+		# But seen as opportunistic
+		add_character_modifier = {
+			modifier = mt_exploited_scandal
+			years = 2
+		}
+
+		stress_impact = {
+			compassionate = minor_stress_impact_gain
+			just = minor_stress_impact_gain
+		}
+
+		ai_chance = {
+			base = 50
+			modifier = {
+				factor = 2
+				has_trait = ambitious
+			}
+		}
+	}
+
+	# Protect the whistleblower
+	option = {
+		name = mt_espionage.0037.b
+		trait = just
+
+		remove_short_term_gold = 100
+
+		add_prestige = 150
+
+		# Make enemies
+		random_known_character = {
+			limit = {
+				is_adult = yes
+				NOT = { this = root }
+			}
+			add_opinion = {
+				target = root
+				modifier = protected_whistleblower_opinion
+				opinion = -60
+			}
+		}
+
+		stress_impact = {
+			deceitful = medium_stress_impact_gain
+		}
+
+		ai_chance = {
+			base = 30
+			modifier = {
+				factor = 3
+				has_trait = just
+			}
+		}
+	}
+
+	# Stay neutral
+	option = {
+		name = mt_espionage.0037.c
+
+		add_prestige = 20
+
+		ai_chance = {
+			base = 20
+		}
+	}
+}
+
+# 0038 - Spymaster offers comprehensive intelligence service
+mt_espionage.0038 = {
+	type = character_event
+	title = mt_espionage.0038.t
+	desc = mt_espionage.0038.desc
+	theme = intrigue
+
+	left_portrait = {
+		character = root
+		animation = scheme
+	}
+
+	trigger = {
+		is_adult = yes
+		gold >= 250
+		intrigue >= 12
+	}
+
+	# Hire the spymaster
+	option = {
+		name = mt_espionage.0038.a
+
+		remove_short_term_gold = 250
+
+		# Elite intelligence service
+		add_character_modifier = {
+			modifier = mt_elite_spymaster
+			years = 5
+		}
+
+		# Multiple spies
+		set_variable = {
+			name = spy_count
+			value = 3
+		}
+		set_variable = {
+			name = has_active_spy
+			value = yes
+		}
+
+		add_prestige = 100
+
+		custom_tooltip = mt_espionage.0038.a.effect
+
+		ai_chance = {
+			base = 50
+			modifier = {
+				factor = 2
+				gold >= 500
+			}
+			modifier = {
+				factor = 2
+				intrigue >= 16
+			}
+		}
+	}
+
+	# Negotiate payment plan
+	option = {
+		name = mt_espionage.0038.b
+		skill = diplomacy
+
+		remove_short_term_gold = 150
+
+		add_character_modifier = {
+			modifier = mt_spymaster_services
+			years = 3
+		}
+
+		set_variable = {
+			name = spy_count
+			value = 2
+		}
+
+		custom_tooltip = mt_espionage.0038.b.effect
+
+		ai_chance = {
+			base = 30
+			modifier = {
+				factor = 2
+				diplomacy >= 14
+			}
+		}
+	}
+
+	# Decline - too expensive
+	option = {
+		name = mt_espionage.0038.c
+
+		add_prestige = 10
+
+		ai_chance = {
+			base = 20
+			modifier = {
+				factor = 5
+				gold < 300
+			}
+		}
+	}
+}
+
+# 0039 - Information cartel forming - monopoly on secrets
+mt_espionage.0039 = {
+	type = character_event
+	title = mt_espionage.0039.t
+	desc = mt_espionage.0039.desc
+	theme = intrigue
+
+	left_portrait = {
+		character = root
+		animation = worry
+	}
+
+	trigger = {
+		is_adult = yes
+		intrigue >= 14
+	}
+
+	# Join the cartel
+	option = {
+		name = mt_espionage.0039.a
+		trait = ambitious
+
+		remove_short_term_gold = 300
+
+		# Founder member benefits
+		add_character_modifier = {
+			modifier = mt_information_cartel_member
+			years = 10
+		}
+
+		add_prestige = 100
+
+		# Control information flow
+		set_variable = {
+			name = cartel_member
+			value = yes
+		}
+
+		custom_tooltip = mt_espionage.0039.a.effect
+
+		stress_impact = {
+			just = medium_stress_impact_gain
+			honest = minor_stress_impact_gain
+		}
+
+		ai_chance = {
+			base = 40
+			modifier = {
+				factor = 3
+				has_trait = ambitious
+			}
+			modifier = {
+				factor = 0
+				has_trait = just
+			}
+		}
+	}
+
+	# Oppose the cartel
+	option = {
+		name = mt_espionage.0039.b
+		trait = just
+
+		# Fight monopoly
+		add_prestige = 150
+
+		# Make powerful enemies
+		add_character_modifier = {
+			modifier = mt_opposed_cartel
+			years = 5
+		}
+
+		custom_tooltip = mt_espionage.0039.b.effect
+
+		stress_impact = {
+			craven = medium_stress_impact_gain
+		}
+
+		ai_chance = {
+			base = 30
+			modifier = {
+				factor = 3
+				has_trait = just
+			}
+		}
+	}
+
+	# Stay independent
+	option = {
+		name = mt_espionage.0039.c
+
+		# Higher costs for information
+		add_character_modifier = {
+			modifier = mt_independent_from_cartel
+			years = 5
+		}
+
+		add_prestige = 50
+
+		ai_chance = {
+			base = 30
+		}
+	}
+}
+
+# 0040 - Your secrets leaked - damage control
+mt_espionage.0040 = {
+	type = character_event
+	title = mt_espionage.0040.t
+	desc = mt_espionage.0040.desc
+	theme = intrigue
+
+	left_portrait = {
+		character = root
+		animation = rage
+	}
+
+	trigger = {
+		is_adult = yes
+		has_variable = has_stolen_secrets
+	}
+
+	immediate = {
+		random_known_character = {
+			limit = {
+				is_adult = yes
+				NOT = { this = root }
+			}
+			save_scope_as = secret_buyer
+		}
+	}
+
+	# Launch full investigation
+	option = {
+		name = mt_espionage.0040.a
+		trait = vengeful
+
+		remove_short_term_gold = 200
+
+		# Find the mole
+		random = {
+			chance = 70
+			modifier = {
+				add = 20
+				intrigue >= 16
+			}
+
+			# Found and punished
+			add_prestige = 150
+			custom_tooltip = mt_espionage.0040.a.success
+		}
+
+		stress_impact = {
+			forgiving = minor_stress_impact_gain
+		}
+
+		ai_chance = {
+			base = 50
+			modifier = {
+				factor = 3
+				has_trait = vengeful
+			}
+		}
+	}
+
+	# Damage control - spin the story
+	option = {
+		name = mt_espionage.0040.b
+		skill = diplomacy
+		duel = {
+			skill = diplomacy
+			value = 15
+		}
+
+		remove_short_term_gold = 150
+
+		if = {
+			limit = { scope:duel_won = yes }
+			# Successfully spun
+			add_prestige = 75
+			custom_tooltip = mt_espionage.0040.b.success
+		}
+		else = {
+			# Failed to contain
+			add_prestige = -100
+			custom_tooltip = mt_espionage.0040.b.failure
+		}
+
+		ai_chance = {
+			base = 30
+			modifier = {
+				factor = 3
+				diplomacy >= 16
+			}
+		}
+	}
+
+	# Accept the loss
+	option = {
+		name = mt_espionage.0040.c
+
+		add_prestige = -200
+
+		# Major reputation hit
+		add_character_modifier = {
+			modifier = mt_major_security_breach
+			years = 3
+		}
+
+		# Remove compromised secrets
+		remove_variable = has_stolen_secrets
+
+		add_stress = 75
+
+		custom_tooltip = mt_espionage.0040.c.effect
+
+		ai_chance = {
+			base = 20
+			modifier = {
+				factor = 3
+				gold < 200
+			}
+		}
+	}
+}
