@@ -1,0 +1,3665 @@
+####################################
+# MERCHANTS AND TRADERS MOD
+# Merchant Personality Events
+####################################
+#
+# Event namespace: mt_personality_events
+#
+# 0001-0010: Trait Acquisition Moments (personality-defining decisions)
+# 0011-0025: Living Your Traits (events showcasing trait benefits/consequences)
+# 0026-0040: Trait Conflicts (internal struggles and personality clashes)
+# 0050-0099: Trait management events
+# 0100-0199: Trait synergy consequences
+# 0200-0299: Assessment and milestone events
+#
+####################################
+
+namespace = mt_personality_events
+
+####################################
+# TRAIT ACQUISITION MOMENTS (0001-0010)
+####################################
+
+# 0001: Caught merchant cheating you
+# Tests honesty - how do you respond to fraud?
+mt_personality_events.1 = {
+	type = character_event
+	title = mt_personality_events.1.t
+	desc = mt_personality_events.1.desc
+	theme = intrigue
+
+	left_portrait = {
+		character = root
+		animation = anger
+	}
+
+	right_portrait = {
+		character = scope:cheating_merchant
+		animation = worry
+	}
+
+	trigger = {
+		# Must be a merchant
+		OR = {
+			has_trait = wandering_merchant
+			has_trait = trade_post_owner
+			has_trait = trading_company_head
+			has_trait = merchant_prince
+		}
+
+		# Not already committed to honesty/dishonesty path
+		NOT = { has_trait = trustworthy_dealer }
+		NOT = { has_trait = dishonest_trader }
+	}
+
+	immediate = {
+		# Create the cheating merchant
+		create_character = {
+			template = mt_merchant_templates
+			save_scope_as = cheating_merchant
+		}
+	}
+
+	# Option A: Report them (trustworthy_dealer path)
+	option = {
+		name = mt_personality_events.1.a
+
+		# Gain reputation for honesty
+		change_variable = {
+			name = mt_reputation
+			add = 10
+		}
+
+		# Track honest behavior
+		mt_track_honest_dealing_effect = yes
+
+		# Lose the potential profit from exploit
+		add_gold = -50
+
+		# Gain prestige for doing right thing
+		add_prestige = 50
+
+		# Chance to gain trustworthy_dealer trait
+		random = {
+			chance = 40
+			mt_gain_merchant_trait_effect = { trait = trustworthy_dealer }
+		}
+
+		# Opinion boost from honest merchants
+		every_character_with_trait = trustworthy_dealer = {
+			limit = { knows_of_character = root }
+			add_opinion = {
+				target = root
+				modifier = mt_honest_merchant_opinion
+				opinion = 20
+			}
+		}
+
+		ai_chance = {
+			base = 40
+
+			# More likely if already has high reputation
+			modifier = {
+				add = 30
+				has_variable = mt_reputation
+				var:mt_reputation >= 50
+			}
+
+			# Less likely if struggling financially
+			modifier = {
+				add = -20
+				gold < 200
+			}
+		}
+
+		stress_impact = {
+			greedy = minor_stress_impact_gain
+			ambitious = minor_stress_impact_gain
+		}
+	}
+
+	# Option B: Exploit for profit (dishonest_trader path)
+	option = {
+		name = mt_personality_events.1.b
+
+		# Gain gold from blackmail/exploitation
+		add_gold = 200
+
+		# Lose reputation
+		change_variable = {
+			name = mt_reputation
+			add = -15
+		}
+
+		# Track dishonest behavior
+		mt_track_dishonest_dealing_effect = yes
+
+		# Chance to gain dishonest_trader trait
+		random = {
+			chance = 40
+			mt_gain_merchant_trait_effect = { trait = dishonest_trader }
+		}
+
+		# Opinion penalty from honest merchants
+		every_character_with_trait = trustworthy_dealer = {
+			limit = { knows_of_character = root }
+			add_opinion = {
+				target = root
+				modifier = mt_dishonest_merchant_opinion
+				opinion = -30
+			}
+		}
+
+		ai_chance = {
+			base = 30
+
+			# More likely if greedy or struggling
+			modifier = {
+				add = 40
+				gold < 100
+			}
+
+			modifier = {
+				add = 20
+				has_trait = greedy
+			}
+		}
+
+		stress_impact = {
+			just = major_stress_impact_gain
+			honest = major_stress_impact_gain
+		}
+	}
+
+	# Option C: Negotiate fair solution (shrewd_negotiator path)
+	option = {
+		name = mt_personality_events.1.c
+
+		# Balanced outcome
+		add_gold = 75
+
+		# Small reputation gain
+		change_variable = {
+			name = mt_reputation
+			add = 5
+		}
+
+		# Track successful negotiation
+		change_variable = {
+			name = mt_successful_deals
+			add = 1
+		}
+
+		# Chance to gain shrewd_negotiator trait
+		random = {
+			chance = 30
+			mt_gain_merchant_trait_effect = { trait = shrewd_negotiator }
+		}
+
+		ai_chance = {
+			base = 30
+
+			# More likely if rational
+			modifier = {
+				add = 30
+				ai_rationality >= 0
+			}
+		}
+	}
+}
+
+# 0002: Risky venture with huge potential
+# Tests risk appetite
+mt_personality_events.2 = {
+	type = character_event
+	title = mt_personality_events.2.t
+	desc = mt_personality_events.2.desc
+	theme = stewardship
+
+	left_portrait = {
+		character = root
+		animation = personality_rational
+	}
+
+	trigger = {
+		# Must be a merchant
+		OR = {
+			has_trait = wandering_merchant
+			has_trait = trade_post_owner
+			has_trait = trading_company_head
+			has_trait = merchant_prince
+		}
+
+		# Not already on risk path
+		NOT = { has_trait = risk_taker }
+		NOT = { has_trait = patient_investor }
+		NOT = { has_trait = reckless_gambler }
+
+		# Has enough gold to invest
+		gold >= 300
+	}
+
+	# Option A: All in (risk_taker path)
+	option = {
+		name = mt_personality_events.2.a
+
+		# Large investment
+		remove_gold = 300
+
+		# Track risky behavior
+		mt_track_risky_venture_effect = yes
+
+		# Random outcome
+		random_list = {
+			# 40% - huge success
+			40 = {
+				desc = mt_personality_events.2.a.success
+
+				add_gold = 900
+				add_prestige = 100
+
+				# Likely to gain risk_taker
+				random = {
+					chance = 60
+					mt_gain_merchant_trait_effect = { trait = risk_taker }
+				}
+			}
+
+			# 30% - moderate success
+			30 = {
+				desc = mt_personality_events.2.a.moderate
+
+				add_gold = 450
+				add_prestige = 50
+			}
+
+			# 30% - total failure
+			30 = {
+				desc = mt_personality_events.2.a.failure
+
+				# Lost all investment
+				add_prestige = -50
+
+				# Might become reckless_gambler if this happens often
+				if = {
+					limit = {
+						has_variable = mt_risky_decisions
+						var:mt_risky_decisions >= 3
+					}
+					random = {
+						chance = 40
+						mt_gain_merchant_trait_effect = { trait = reckless_gambler }
+					}
+				}
+			}
+		}
+
+		ai_chance = {
+			base = 20
+
+			modifier = {
+				add = 40
+				ai_boldness >= 25
+			}
+
+			modifier = {
+				add = 30
+				ai_greed >= 25
+			}
+
+			modifier = {
+				add = -30
+				ai_rationality >= 25
+			}
+		}
+
+		stress_impact = {
+			craven = major_stress_impact_gain
+			patient = minor_stress_impact_gain
+		}
+	}
+
+	# Option B: Calculated portion (balanced path)
+	option = {
+		name = mt_personality_events.2.b
+
+		# Moderate investment
+		remove_gold = 150
+
+		# Balanced outcome
+		random_list = {
+			60 = {
+				desc = mt_personality_events.2.b.success
+				add_gold = 300
+				add_prestige = 50
+			}
+
+			40 = {
+				desc = mt_personality_events.2.b.failure
+				# Only lose half
+				add_gold = 75
+				add_prestige = -20
+			}
+		}
+
+		ai_chance = {
+			base = 50
+
+			modifier = {
+				add = 30
+				ai_rationality >= 0
+			}
+		}
+	}
+
+	# Option C: Pass on it (patient_investor path)
+	option = {
+		name = mt_personality_events.2.c
+
+		# No risk, no reward
+		add_prestige = 25
+
+		# Track conservative behavior
+		add_character_flag = {
+			flag = mt_prefers_long_term
+			years = 5
+		}
+
+		# Chance to gain patient_investor
+		random = {
+			chance = 40
+			mt_gain_merchant_trait_effect = { trait = patient_investor }
+		}
+
+		ai_chance = {
+			base = 30
+
+			modifier = {
+				add = 40
+				ai_rationality >= 25
+			}
+
+			modifier = {
+				add = -30
+				ai_greed >= 25
+			}
+		}
+
+		stress_impact = {
+			ambitious = minor_stress_impact_gain
+			greedy = minor_stress_impact_gain
+		}
+	}
+}
+
+# 0003: Poor merchant asks for help
+# Tests generosity
+mt_personality_events.3 = {
+	type = character_event
+	title = mt_personality_events.3.t
+	desc = mt_personality_events.3.desc
+	theme = diplomacy
+
+	left_portrait = {
+		character = root
+		animation = personality_compassionate
+	}
+
+	right_portrait = {
+		character = scope:poor_merchant
+		animation = beg
+	}
+
+	trigger = {
+		# Must be a merchant
+		OR = {
+			has_trait = wandering_merchant
+			has_trait = trade_post_owner
+			has_trait = trading_company_head
+			has_trait = merchant_prince
+		}
+
+		# Not already on generosity path
+		NOT = { has_trait = generous_patron }
+		NOT = { has_trait = penny_pincher }
+
+		# Has enough gold to help
+		gold >= 200
+	}
+
+	immediate = {
+		create_character = {
+			template = mt_merchant_templates
+			save_scope_as = poor_merchant
+			gold = 10
+		}
+	}
+
+	# Option A: Give freely (generous_patron path)
+	option = {
+		name = mt_personality_events.3.a
+
+		# Give substantial help
+		remove_gold = 150
+
+		# Track generosity
+		mt_track_generous_action_effect = { amount = 150 }
+
+		# Gain prestige and opinion
+		add_prestige = 100
+		add_piety = 50
+
+		# Excellent opinion from recipient
+		scope:poor_merchant = {
+			add_opinion = {
+				target = root
+				modifier = mt_grateful_merchant_opinion
+				opinion = 100
+			}
+		}
+
+		# Chance to gain generous_patron
+		random = {
+			chance = 50
+			mt_gain_merchant_trait_effect = { trait = generous_patron }
+		}
+
+		ai_chance = {
+			base = 25
+
+			modifier = {
+				add = 40
+				ai_compassion >= 25
+			}
+
+			modifier = {
+				add = -30
+				ai_greed >= 25
+			}
+		}
+
+		stress_impact = {
+			greedy = major_stress_impact_gain
+			callous = minor_stress_impact_gain
+		}
+	}
+
+	# Option B: Loan with interest (practical path)
+	option = {
+		name = mt_personality_events.3.b
+
+		# Give loan
+		remove_gold = 100
+
+		# Will get it back with interest eventually
+		trigger_event = {
+			id = mt_personality_events.101
+			days = { 365 730 }
+		}
+
+		# Moderate opinion
+		scope:poor_merchant = {
+			add_opinion = {
+				target = root
+				modifier = mt_fair_merchant_opinion
+				opinion = 30
+			}
+		}
+
+		ai_chance = {
+			base = 50
+
+			modifier = {
+				add = 30
+				ai_rationality >= 0
+			}
+		}
+	}
+
+	# Option C: Refuse (penny_pincher path)
+	option = {
+		name = mt_personality_events.3.c
+
+		# Keep your gold
+		# But lose reputation
+		change_variable = {
+			name = mt_reputation
+			add = -10
+		}
+
+		# Track frugality
+		change_variable = {
+			name = mt_refused_expenses
+			add = 1
+		}
+		add_character_flag = {
+			flag = mt_extremely_frugal
+			years = 5
+		}
+
+		# Negative opinion
+		scope:poor_merchant = {
+			add_opinion = {
+				target = root
+				modifier = mt_greedy_merchant_opinion
+				opinion = -50
+			}
+		}
+
+		# Chance to gain penny_pincher
+		random = {
+			chance = 40
+			mt_gain_merchant_trait_effect = { trait = penny_pincher }
+		}
+
+		ai_chance = {
+			base = 25
+
+			modifier = {
+				add = 50
+				ai_greed >= 25
+			}
+
+			modifier = {
+				add = -30
+				ai_compassion >= 0
+			}
+		}
+
+		stress_impact = {
+			compassionate = major_stress_impact_gain
+			generous = major_stress_impact_gain
+		}
+	}
+}
+
+# 0004: Can take advantage of desperate customer
+# Moral dilemma
+mt_personality_events.4 = {
+	type = character_event
+	title = mt_personality_events.4.t
+	desc = mt_personality_events.4.desc
+	theme = stewardship
+
+	left_portrait = {
+		character = root
+		animation = personality_greedy
+	}
+
+	right_portrait = {
+		character = scope:desperate_customer
+		animation = worry
+	}
+
+	trigger = {
+		OR = {
+			has_trait = wandering_merchant
+			has_trait = trade_post_owner
+			has_trait = trading_company_head
+			has_trait = merchant_prince
+		}
+	}
+
+	immediate = {
+		create_character = {
+			dynasty = none
+			save_scope_as = desperate_customer
+		}
+	}
+
+	# Option A: Charge fair price (honest path)
+	option = {
+		name = mt_personality_events.4.a
+
+		add_gold = 50
+		add_prestige = 50
+
+		mt_track_honest_dealing_effect = yes
+
+		scope:desperate_customer = {
+			add_opinion = {
+				target = root
+				modifier = mt_honest_merchant_opinion
+				opinion = 50
+			}
+		}
+
+		ai_chance = {
+			base = 40
+
+			modifier = {
+				add = 30
+				ai_honor >= 25
+			}
+		}
+
+		stress_impact = {
+			greedy = minor_stress_impact_gain
+		}
+	}
+
+	# Option B: Exploit their desperation (ruthless path)
+	option = {
+		name = mt_personality_events.4.b
+
+		add_gold = 200
+
+		change_variable = {
+			name = mt_reputation
+			add = -10
+		}
+
+		# Chance to gain ruthless_merchant
+		random = {
+			chance = 35
+			mt_gain_merchant_trait_effect = { trait = ruthless_merchant }
+		}
+
+		scope:desperate_customer = {
+			add_opinion = {
+				target = root
+				modifier = mt_exploitative_merchant_opinion
+				opinion = -75
+			}
+		}
+
+		ai_chance = {
+			base = 30
+
+			modifier = {
+				add = 40
+				ai_greed >= 25
+			}
+		}
+
+		stress_impact = {
+			just = major_stress_impact_gain
+			compassionate = major_stress_impact_gain
+		}
+	}
+
+	# Option C: Give them what they need for free
+	option = {
+		name = mt_personality_events.4.c
+
+		add_prestige = 100
+		add_piety = 75
+
+		mt_track_generous_action_effect = { amount = 100 }
+
+		scope:desperate_customer = {
+			add_opinion = {
+				target = root
+				modifier = mt_grateful_merchant_opinion
+				opinion = 100
+			}
+		}
+
+		ai_chance = {
+			base = 20
+
+			modifier = {
+				add = 40
+				ai_compassion >= 25
+			}
+		}
+
+		stress_impact = {
+			greedy = major_stress_impact_gain
+		}
+	}
+}
+
+# 0005: Moral dilemma in trade negotiations
+mt_personality_events.5 = {
+	type = character_event
+	title = mt_personality_events.5.t
+	desc = mt_personality_events.5.desc
+	theme = diplomacy
+
+	left_portrait = {
+		character = root
+		animation = thinking
+	}
+
+	trigger = {
+		OR = {
+			has_trait = wandering_merchant
+			has_trait = trade_post_owner
+			has_trait = trading_company_head
+			has_trait = merchant_prince
+		}
+	}
+
+	# Option A: Be transparent about the flaw
+	option = {
+		name = mt_personality_events.5.a
+
+		add_gold = 30
+		add_prestige = 40
+
+		mt_track_honest_dealing_effect = yes
+
+		change_variable = {
+			name = mt_successful_deals
+			add = 1
+		}
+
+		ai_chance = {
+			base = 50
+
+			modifier = {
+				add = 30
+				ai_honor >= 25
+			}
+		}
+	}
+
+	# Option B: Hide the flaw
+	option = {
+		name = mt_personality_events.5.b
+
+		add_gold = 120
+
+		mt_track_dishonest_dealing_effect = yes
+
+		# Risk of being caught
+		random_list = {
+			70 = {
+				desc = mt_personality_events.5.b.success
+				# Got away with it
+			}
+
+			30 = {
+				desc = mt_personality_events.5.b.caught
+
+				# Caught - major reputation damage
+				change_variable = {
+					name = mt_reputation
+					add = -30
+				}
+
+				add_prestige = -100
+
+				# Lose the gold plus penalty
+				remove_gold = 200
+			}
+		}
+
+		ai_chance = {
+			base = 30
+
+			modifier = {
+				add = 40
+				ai_greed >= 25
+			}
+		}
+	}
+
+	# Option C: Cancel the deal
+	option = {
+		name = mt_personality_events.5.c
+
+		# No gain, no loss
+		add_prestige = 10
+
+		ai_chance = {
+			base = 20
+		}
+	}
+}
+
+# 0006: Choose between short-term vs long-term profit
+mt_personality_events.6 = {
+	type = character_event
+	title = mt_personality_events.6.t
+	desc = mt_personality_events.6.desc
+	theme = stewardship
+
+	left_portrait = {
+		character = root
+		animation = personality_rational
+	}
+
+	trigger = {
+		OR = {
+			has_trait = wandering_merchant
+			has_trait = trade_post_owner
+			has_trait = trading_company_head
+			has_trait = merchant_prince
+		}
+	}
+
+	# Option A: Take quick profit now
+	option = {
+		name = mt_personality_events.6.a
+
+		add_gold = 200
+		add_prestige = 30
+
+		ai_chance = {
+			base = 40
+
+			modifier = {
+				add = 30
+				ai_greed >= 25
+			}
+		}
+	}
+
+	# Option B: Invest for long-term gain
+	option = {
+		name = mt_personality_events.6.b
+
+		remove_gold = 100
+
+		# Future payoff
+		trigger_event = {
+			id = mt_personality_events.102
+			days = { 730 1095 }
+		}
+
+		add_character_flag = {
+			flag = mt_prefers_long_term
+			years = 5
+		}
+
+		# Chance to gain patient_investor
+		random = {
+			chance = 35
+			mt_gain_merchant_trait_effect = { trait = patient_investor }
+		}
+
+		ai_chance = {
+			base = 40
+
+			modifier = {
+				add = 30
+				ai_rationality >= 25
+			}
+		}
+	}
+
+	# Option C: Split the difference
+	option = {
+		name = mt_personality_events.6.c
+
+		add_gold = 100
+
+		trigger_event = {
+			id = mt_personality_events.102
+			days = { 730 1095 }
+		}
+
+		ai_chance = {
+			base = 20
+		}
+	}
+}
+
+# 0007: How you treat employees reveals character
+mt_personality_events.7 = {
+	type = character_event
+	title = mt_personality_events.7.t
+	desc = mt_personality_events.7.desc
+	theme = diplomacy
+
+	left_portrait = {
+		character = root
+		animation = personality_bold
+	}
+
+	right_portrait = {
+		character = scope:employee
+		animation = worry
+	}
+
+	trigger = {
+		OR = {
+			has_trait = trade_post_owner
+			has_trait = trading_company_head
+			has_trait = merchant_prince
+		}
+	}
+
+	immediate = {
+		create_character = {
+			dynasty = none
+			save_scope_as = employee
+		}
+	}
+
+	# Option A: Generous treatment
+	option = {
+		name = mt_personality_events.7.a
+
+		remove_gold = 50
+		add_prestige = 50
+
+		mt_track_generous_action_effect = { amount = 50 }
+
+		scope:employee = {
+			add_opinion = {
+				target = root
+				modifier = mt_good_employer_opinion
+				opinion = 75
+			}
+		}
+
+		ai_chance = {
+			base = 30
+
+			modifier = {
+				add = 40
+				ai_compassion >= 25
+			}
+		}
+	}
+
+	# Option B: Fair but firm
+	option = {
+		name = mt_personality_events.7.b
+
+		remove_gold = 25
+		add_prestige = 25
+
+		scope:employee = {
+			add_opinion = {
+				target = root
+				modifier = mt_fair_employer_opinion
+				opinion = 30
+			}
+		}
+
+		ai_chance = {
+			base = 50
+		}
+	}
+
+	# Option C: Ruthless exploitation
+	option = {
+		name = mt_personality_events.7.c
+
+		add_gold = 25
+
+		change_variable = {
+			name = mt_reputation
+			add = -5
+		}
+
+		# Chance to gain ruthless_merchant
+		random = {
+			chance = 30
+			mt_gain_merchant_trait_effect = { trait = ruthless_merchant }
+		}
+
+		scope:employee = {
+			add_opinion = {
+				target = root
+				modifier = mt_bad_employer_opinion
+				opinion = -75
+			}
+		}
+
+		ai_chance = {
+			base = 20
+
+			modifier = {
+				add = 40
+				ai_greed >= 25
+			}
+		}
+	}
+}
+
+# 0008: Response to competitor's distress
+mt_personality_events.8 = {
+	type = character_event
+	title = mt_personality_events.8.t
+	desc = mt_personality_events.8.desc
+	theme = intrigue
+
+	left_portrait = {
+		character = root
+		animation = thinking
+	}
+
+	right_portrait = {
+		character = scope:competitor
+		animation = sadness
+	}
+
+	trigger = {
+		OR = {
+			has_trait = wandering_merchant
+			has_trait = trade_post_owner
+			has_trait = trading_company_head
+			has_trait = merchant_prince
+		}
+	}
+
+	immediate = {
+		create_character = {
+			template = mt_merchant_templates
+			save_scope_as = competitor
+		}
+	}
+
+	# Option A: Help them
+	option = {
+		name = mt_personality_events.8.a
+
+		remove_gold = 100
+		add_prestige = 75
+
+		scope:competitor = {
+			add_opinion = {
+				target = root
+				modifier = mt_helped_in_need_opinion
+				opinion = 100
+			}
+		}
+
+		ai_chance = {
+			base = 25
+
+			modifier = {
+				add = 40
+				ai_compassion >= 25
+			}
+		}
+	}
+
+	# Option B: Buy them out at fair price
+	option = {
+		name = mt_personality_events.8.b
+
+		remove_gold = 200
+		add_gold = 400
+		add_prestige = 30
+
+		scope:competitor = {
+			add_opinion = {
+				target = root
+				modifier = mt_fair_merchant_opinion
+				opinion = 20
+			}
+		}
+
+		ai_chance = {
+			base = 50
+		}
+	}
+
+	# Option C: Crush them while they're down
+	option = {
+		name = mt_personality_events.8.c
+
+		add_gold = 300
+
+		change_variable = {
+			name = mt_reputation
+			add = -15
+		}
+
+		# Chance to gain ruthless_merchant
+		random = {
+			chance = 40
+			mt_gain_merchant_trait_effect = { trait = ruthless_merchant }
+		}
+
+		scope:competitor = {
+			add_opinion = {
+				target = root
+				modifier = mt_ruthless_competitor_opinion
+				opinion = -100
+			}
+		}
+
+		ai_chance = {
+			base = 25
+
+			modifier = {
+				add = 40
+				ai_greed >= 25
+			}
+		}
+	}
+}
+
+# 0009: Handling of company funds
+mt_personality_events.9 = {
+	type = character_event
+	title = mt_personality_events.9.t
+	desc = mt_personality_events.9.desc
+	theme = stewardship
+
+	left_portrait = {
+		character = root
+		animation = personality_greedy
+	}
+
+	trigger = {
+		OR = {
+			has_trait = trade_post_owner
+			has_trait = trading_company_head
+			has_trait = merchant_prince
+		}
+
+		gold >= 100
+	}
+
+	# Option A: Meticulous accounting
+	option = {
+		name = mt_personality_events.9.a
+
+		add_prestige = 50
+
+		# Discover inefficiencies
+		add_gold = 75
+
+		# Chance to gain meticulous_accountant
+		random = {
+			chance = 40
+			mt_gain_merchant_trait_effect = { trait = meticulous_accountant }
+		}
+
+		ai_chance = {
+			base = 50
+
+			modifier = {
+				add = 30
+				ai_rationality >= 25
+			}
+		}
+	}
+
+	# Option B: Skim a little off the top
+	option = {
+		name = mt_personality_events.9.b
+
+		add_gold = 150
+
+		mt_track_dishonest_dealing_effect = yes
+
+		# Risk of being caught
+		random = {
+			chance = 30
+
+			change_variable = {
+				name = mt_reputation
+				add = -25
+			}
+
+			add_prestige = -100
+		}
+
+		# Chance to gain corrupt_merchant
+		random = {
+			chance = 35
+			mt_gain_merchant_trait_effect = { trait = corrupt_merchant }
+		}
+
+		ai_chance = {
+			base = 20
+
+			modifier = {
+				add = 40
+				ai_greed >= 25
+			}
+		}
+	}
+
+	# Option C: Don't bother tracking closely
+	option = {
+		name = mt_personality_events.9.c
+
+		# Lose money to waste
+		remove_gold = 50
+
+		# Chance to gain lazy_merchant
+		random = {
+			chance = 30
+			mt_gain_merchant_trait_effect = { trait = lazy_merchant }
+		}
+
+		ai_chance = {
+			base = 20
+
+			modifier = {
+				add = 30
+				ai_rationality <= -25
+			}
+		}
+	}
+}
+
+# 0010: Reaction to sudden windfall
+mt_personality_events.10 = {
+	type = character_event
+	title = mt_personality_events.10.t
+	desc = mt_personality_events.10.desc
+	theme = diplomacy
+
+	left_portrait = {
+		character = root
+		animation = happiness
+	}
+
+	trigger = {
+		OR = {
+			has_trait = wandering_merchant
+			has_trait = trade_post_owner
+			has_trait = trading_company_head
+			has_trait = merchant_prince
+		}
+	}
+
+	immediate = {
+		# Unexpected windfall
+		add_gold = 500
+	}
+
+	# Option A: Share the wealth
+	option = {
+		name = mt_personality_events.10.a
+
+		remove_gold = 250
+		add_prestige = 150
+		add_piety = 100
+
+		mt_track_generous_action_effect = { amount = 250 }
+
+		ai_chance = {
+			base = 25
+
+			modifier = {
+				add = 40
+				ai_compassion >= 25
+			}
+		}
+	}
+
+	# Option B: Invest it wisely
+	option = {
+		name = mt_personality_events.10.b
+
+		# Investment returns later
+		trigger_event = {
+			id = mt_personality_events.103
+			days = { 365 730 }
+		}
+
+		add_character_flag = {
+			flag = mt_prefers_long_term
+			years = 5
+		}
+
+		ai_chance = {
+			base = 50
+
+			modifier = {
+				add = 30
+				ai_rationality >= 25
+			}
+		}
+	}
+
+	# Option C: Spend it on yourself
+	option = {
+		name = mt_personality_events.10.c
+
+		# Keep it all
+		add_prestige = 50
+
+		ai_chance = {
+			base = 25
+
+			modifier = {
+				add = 30
+				ai_greed >= 25
+			}
+		}
+	}
+}
+
+####################################
+# LIVING YOUR TRAITS (0011-0025)
+####################################
+
+# 0011: Shrewd negotiator gets amazing deal
+mt_personality_events.11 = {
+	type = character_event
+	title = mt_personality_events.11.t
+	desc = mt_personality_events.11.desc
+	theme = diplomacy
+
+	left_portrait = {
+		character = root
+		animation = personality_bold
+	}
+
+	right_portrait = {
+		character = scope:trade_partner
+		animation = beg
+	}
+
+	trigger = {
+		has_trait = shrewd_negotiator
+	}
+
+	weight_multiplier = {
+		base = 1
+
+		modifier = {
+			add = 2
+			has_trait = silver_tongued
+		}
+	}
+
+	immediate = {
+		create_character = {
+			template = mt_merchant_templates
+			save_scope_as = trade_partner
+		}
+	}
+
+	option = {
+		name = mt_personality_events.11.a
+
+		# Exceptional deal due to negotiation skills
+		add_gold = 300
+		add_prestige = 75
+
+		change_variable = {
+			name = mt_successful_deals
+			add = 1
+		}
+
+		change_variable = {
+			name = mt_reputation
+			add = 5
+		}
+
+		scope:trade_partner = {
+			add_opinion = {
+				target = root
+				modifier = mt_impressed_by_skill_opinion
+				opinion = 50
+			}
+		}
+
+		stress_impact = {
+			shy = minor_stress_impact_loss
+		}
+	}
+}
+
+# 0012: Silver-tongued talks out of trouble
+mt_personality_events.12 = {
+	type = character_event
+	title = mt_personality_events.12.t
+	desc = mt_personality_events.12.desc
+	theme = diplomacy
+
+	left_portrait = {
+		character = root
+		animation = personality_bold
+	}
+
+	right_portrait = {
+		character = scope:angry_noble
+		animation = anger
+	}
+
+	trigger = {
+		has_trait = silver_tongued
+	}
+
+	immediate = {
+		create_character = {
+			template = noble_character
+			save_scope_as = angry_noble
+		}
+	}
+
+	option = {
+		name = mt_personality_events.12.a
+
+		# Smooth talk prevents disaster
+		add_prestige = 100
+
+		# Avoided major financial loss
+		custom_tooltip = mt_personality_events.12.a.tt
+
+		scope:angry_noble = {
+			add_opinion = {
+				target = root
+				modifier = mt_charmed_opinion
+				opinion = 75
+			}
+		}
+
+		stress_impact = {
+			shy = minor_stress_impact_loss
+		}
+	}
+}
+
+# 0013: Trustworthy dealer offered exclusive partnership
+mt_personality_events.13 = {
+	type = character_event
+	title = mt_personality_events.13.t
+	desc = mt_personality_events.13.desc
+	theme = stewardship
+
+	left_portrait = {
+		character = root
+		animation = happiness
+	}
+
+	right_portrait = {
+		character = scope:guild_master
+		animation = personality_honorable
+	}
+
+	trigger = {
+		has_trait = trustworthy_dealer
+
+		has_variable = mt_reputation
+		var:mt_reputation >= 50
+	}
+
+	immediate = {
+		create_character = {
+			template = mt_merchant_templates
+			save_scope_as = guild_master
+		}
+	}
+
+	option = {
+		name = mt_personality_events.13.a
+
+		# Offered exclusive trading rights due to reputation
+		add_prestige = 150
+
+		add_character_modifier = {
+			modifier = mt_exclusive_partnership
+			years = 10
+		}
+
+		# Bonus income from partnership
+		add_gold = 500
+
+		scope:guild_master = {
+			add_opinion = {
+				target = root
+				modifier = mt_trusted_partner_opinion
+				opinion = 100
+			}
+		}
+	}
+}
+
+# 0014: Innovative trader discovers new method
+mt_personality_events.14 = {
+	type = character_event
+	title = mt_personality_events.14.t
+	desc = mt_personality_events.14.desc
+	theme = learning
+
+	left_portrait = {
+		character = root
+		animation = personality_rational
+	}
+
+	trigger = {
+		has_trait = innovative_trader
+	}
+
+	option = {
+		name = mt_personality_events.14.a
+
+		# Discovered new trade route or method
+		add_prestige = 200
+
+		add_character_modifier = {
+			modifier = mt_innovative_method
+			years = 15
+		}
+
+		# Significant profit boost
+		add_gold = 400
+
+		change_variable = {
+			name = mt_reputation
+			add = 15
+		}
+	}
+}
+
+# 0015: Risk-taker's gamble pays off spectacularly
+mt_personality_events.15 = {
+	type = character_event
+	title = mt_personality_events.15.t
+	desc = mt_personality_events.15.desc
+	theme = stewardship
+
+	left_portrait = {
+		character = root
+		animation = happiness
+	}
+
+	trigger = {
+		has_trait = risk_taker
+	}
+
+	option = {
+		name = mt_personality_events.15.a
+
+		# Bold risk pays off
+		add_gold = 800
+		add_prestige = 150
+
+		mt_track_risky_venture_effect = yes
+
+		# Temporary income boost
+		add_character_modifier = {
+			modifier = mt_successful_venture
+			years = 5
+		}
+	}
+}
+
+# 0016: Patient investor's long game yields rewards
+mt_personality_events.16 = {
+	type = character_event
+	title = mt_personality_events.16.t
+	desc = mt_personality_events.16.desc
+	theme = stewardship
+
+	left_portrait = {
+		character = root
+		animation = personality_rational
+	}
+
+	trigger = {
+		has_trait = patient_investor
+	}
+
+	option = {
+		name = mt_personality_events.16.a
+
+		# Long-term investments mature
+		add_gold = 1000
+		add_prestige = 200
+
+		# Compound returns modifier
+		add_character_modifier = {
+			modifier = mt_compound_returns
+			years = 10
+		}
+
+		change_variable = {
+			name = mt_reputation
+			add = 10
+		}
+	}
+}
+
+# 0017: Generous patron's charity builds loyalty
+mt_personality_events.17 = {
+	type = character_event
+	title = mt_personality_events.17.t
+	desc = mt_personality_events.17.desc
+	theme = diplomacy
+
+	left_portrait = {
+		character = root
+		animation = personality_compassionate
+	}
+
+	trigger = {
+		has_trait = generous_patron
+	}
+
+	option = {
+		name = mt_personality_events.17.a
+
+		# Past generosity pays dividends
+		add_prestige = 250
+		add_piety = 150
+
+		# Loyal followers
+		add_character_modifier = {
+			modifier = mt_loyal_following
+			years = 15
+		}
+
+		# People remember your kindness
+		every_courtier = {
+			limit = { is_alive = yes }
+			add_opinion = {
+				target = root
+				modifier = mt_generous_patron_opinion
+				opinion = 30
+			}
+		}
+	}
+}
+
+# 0018: Meticulous accountant catches embezzlement
+mt_personality_events.18 = {
+	type = character_event
+	title = mt_personality_events.18.t
+	desc = mt_personality_events.18.desc
+	theme = intrigue
+
+	left_portrait = {
+		character = root
+		animation = personality_rational
+	}
+
+	right_portrait = {
+		character = scope:embezzler
+		animation = fear
+	}
+
+	trigger = {
+		has_trait = meticulous_accountant
+
+		any_courtier = {
+			count >= 1
+		}
+	}
+
+	immediate = {
+		random_courtier = {
+			save_scope_as = embezzler
+		}
+	}
+
+	# Option A: Prosecute fully
+	option = {
+		name = mt_personality_events.18.a
+
+		# Recover stolen funds plus deterrent effect
+		add_gold = 400
+		add_prestige = 100
+
+		scope:embezzler = {
+			# Remove from court
+			if = {
+				limit = { is_alive = yes }
+				add_opinion = {
+					target = root
+					modifier = mt_caught_embezzler_opinion
+					opinion = -100
+				}
+			}
+		}
+
+		# Deterrent effect
+		add_character_modifier = {
+			modifier = mt_strict_accounting
+			years = 20
+		}
+	}
+
+	# Option B: Give them a second chance
+	option = {
+		name = mt_personality_events.18.b
+
+		add_gold = 200
+		add_prestige = 50
+
+		scope:embezzler = {
+			add_opinion = {
+				target = root
+				modifier = mt_merciful_employer_opinion
+				opinion = 75
+			}
+		}
+
+		stress_impact = {
+			just = minor_stress_impact_gain
+		}
+	}
+}
+
+# 0019: Charming merchant seduces way to contract
+mt_personality_events.19 = {
+	type = character_event
+	title = mt_personality_events.19.t
+	desc = mt_personality_events.19.desc
+	theme = diplomacy
+
+	left_portrait = {
+		character = root
+		animation = flirtation
+	}
+
+	right_portrait = {
+		character = scope:attracted_noble
+		animation = happiness
+	}
+
+	trigger = {
+		has_trait = charming_merchant
+	}
+
+	immediate = {
+		create_character = {
+			template = noble_character
+			save_scope_as = attracted_noble
+		}
+	}
+
+	option = {
+		name = mt_personality_events.19.a
+
+		# Charm wins lucrative contract
+		add_gold = 600
+		add_prestige = 75
+
+		scope:attracted_noble = {
+			add_opinion = {
+				target = root
+				modifier = mt_charmed_opinion
+				opinion = 100
+			}
+		}
+
+		# Potential romance
+		if = {
+			limit = {
+				can_start_scheme = { type = seduce target = scope:attracted_noble }
+			}
+			custom_tooltip = mt_personality_events.19.a.romance
+		}
+	}
+}
+
+# 0020: Cultural adapter thrives in foreign land
+mt_personality_events.20 = {
+	type = character_event
+	title = mt_personality_events.20.t
+	desc = mt_personality_events.20.desc
+	theme = learning
+
+	left_portrait = {
+		character = root
+		animation = personality_rational
+	}
+
+	trigger = {
+		has_trait = cultural_adapter
+	}
+
+	option = {
+		name = mt_personality_events.20.a
+
+		# Thrive in foreign markets
+		add_gold = 500
+		add_prestige = 150
+
+		# Cross-cultural expertise
+		add_character_modifier = {
+			modifier = mt_cultural_expertise
+			years = 20
+		}
+
+		change_variable = {
+			name = mt_reputation
+			add = 10
+		}
+	}
+}
+
+# 0021: Dishonest trader caught in lie - consequences
+mt_personality_events.21 = {
+	type = character_event
+	title = mt_personality_events.21.t
+	desc = mt_personality_events.21.desc
+	theme = intrigue
+
+	left_portrait = {
+		character = root
+		animation = fear
+	}
+
+	right_portrait = {
+		character = scope:accuser
+		animation = anger
+	}
+
+	trigger = {
+		has_trait = dishonest_trader
+	}
+
+	immediate = {
+		create_character = {
+			template = mt_merchant_templates
+			save_scope_as = accuser
+		}
+	}
+
+	option = {
+		name = mt_personality_events.21.a
+
+		# Caught - major consequences
+		remove_gold = 500
+		add_prestige = -150
+
+		change_variable = {
+			name = mt_reputation
+			add = -30
+		}
+
+		mt_track_dishonest_dealing_effect = yes
+
+		scope:accuser = {
+			add_opinion = {
+				target = root
+				modifier = mt_exposed_liar_opinion
+				opinion = -100
+			}
+		}
+
+		# Warning modifier
+		add_character_modifier = {
+			modifier = mt_exposed_fraud
+			years = 10
+		}
+	}
+}
+
+# 0022: Ruthless merchant feared by all
+mt_personality_events.22 = {
+	type = character_event
+	title = mt_personality_events.22.t
+	desc = mt_personality_events.22.desc
+	theme = intrigue
+
+	left_portrait = {
+		character = root
+		animation = personality_bold
+	}
+
+	trigger = {
+		has_trait = ruthless_merchant
+	}
+
+	option = {
+		name = mt_personality_events.22.a
+
+		# Fear brings profits
+		add_gold = 400
+		add_prestige = 100
+
+		# Increase dread
+		add_character_modifier = {
+			modifier = mt_feared_merchant
+			years = 10
+		}
+
+		# But terrible relations
+		every_known_character = {
+			limit = {
+				OR = {
+					has_trait = wandering_merchant
+					has_trait = trade_post_owner
+					has_trait = trading_company_head
+					has_trait = merchant_prince
+				}
+			}
+			add_opinion = {
+				target = root
+				modifier = mt_ruthless_competitor_opinion
+				opinion = -30
+			}
+		}
+	}
+}
+
+# 0023: Penny pincher loses deal over small amount
+mt_personality_events.23 = {
+	type = character_event
+	title = mt_personality_events.23.t
+	desc = mt_personality_events.23.desc
+	theme = stewardship
+
+	left_portrait = {
+		character = root
+		animation = anger
+	}
+
+	right_portrait = {
+		character = scope:annoyed_partner
+		animation = dismissal
+	}
+
+	trigger = {
+		has_trait = penny_pincher
+	}
+
+	immediate = {
+		create_character = {
+			template = mt_merchant_templates
+			save_scope_as = annoyed_partner
+		}
+	}
+
+	option = {
+		name = mt_personality_events.23.a
+
+		# Saved small amount, lost big opportunity
+		add_gold = 10
+		add_prestige = -50
+
+		custom_tooltip = mt_personality_events.23.a.tt
+
+		scope:annoyed_partner = {
+			add_opinion = {
+				target = root
+				modifier = mt_greedy_merchant_opinion
+				opinion = -75
+			}
+		}
+
+		change_variable = {
+			name = mt_reputation
+			add = -10
+		}
+	}
+}
+
+# 0024: Reckless gambler loses everything
+mt_personality_events.24 = {
+	type = character_event
+	title = mt_personality_events.24.t
+	desc = mt_personality_events.24.desc
+	theme = stewardship
+
+	left_portrait = {
+		character = root
+		animation = sadness
+	}
+
+	trigger = {
+		has_trait = reckless_gambler
+
+		gold >= 200
+	}
+
+	option = {
+		name = mt_personality_events.24.a
+
+		# Devastating loss
+		remove_long_term_gold = 500
+		add_prestige = -200
+
+		change_variable = {
+			name = mt_reputation
+			add = -20
+		}
+
+		# Crisis modifier
+		add_character_modifier = {
+			modifier = mt_gambling_crisis
+			years = 5
+		}
+
+		# Risk of becoming desperate
+		if = {
+			limit = {
+				gold < 100
+				NOT = { has_trait = desperate_merchant }
+			}
+			random = {
+				chance = 50
+				mt_gain_merchant_trait_effect = { trait = desperate_merchant }
+			}
+		}
+
+		stress_impact = {
+			calm = major_stress_impact_gain
+			patient = major_stress_impact_gain
+		}
+	}
+}
+
+# 0025: Paranoid merchant uncovers real conspiracy
+mt_personality_events.25 = {
+	type = character_event
+	title = mt_personality_events.25.t
+	desc = mt_personality_events.25.desc
+	theme = intrigue
+
+	left_portrait = {
+		character = root
+		animation = personality_rational
+	}
+
+	right_portrait = {
+		character = scope:conspirator
+		animation = fear
+	}
+
+	trigger = {
+		has_trait = paranoid_merchant
+
+		any_courtier = {
+			count >= 1
+		}
+	}
+
+	immediate = {
+		random_courtier = {
+			save_scope_as = conspirator
+		}
+	}
+
+	option = {
+		name = mt_personality_events.25.a
+
+		# Paranoia vindicated
+		add_prestige = 100
+
+		# Prevented major theft
+		custom_tooltip = mt_personality_events.25.a.tt
+
+		scope:conspirator = {
+			# Remove from court
+			if = {
+				limit = { is_alive = yes }
+				add_opinion = {
+					target = root
+					modifier = mt_foiled_plot_opinion
+					opinion = -100
+				}
+			}
+		}
+
+		# Validation
+		custom_tooltip = mt_personality_events.25.a.validation
+
+		stress_impact = {
+			trusting = minor_stress_impact_loss
+			paranoid = major_stress_impact_loss
+		}
+	}
+}
+
+####################################
+# TRAIT CONFLICTS (0026-0040)
+####################################
+
+# 0026: Generous vs penny-pincher - internal conflict
+mt_personality_events.26 = {
+	type = character_event
+	title = mt_personality_events.26.t
+	desc = mt_personality_events.26.desc
+	theme = diplomacy
+
+	left_portrait = {
+		character = root
+		animation = thinking
+	}
+
+	right_portrait = {
+		character = scope:petitioner
+		animation = beg
+	}
+
+	trigger = {
+		# Internal conflict between generosity and frugality
+		has_character_flag = mt_generous_impulse
+		has_character_flag = mt_frugal_impulse
+	}
+
+	immediate = {
+		create_character = {
+			dynasty = none
+			save_scope_as = petitioner
+		}
+	}
+
+	# Option A: Give in to generosity
+	option = {
+		name = mt_personality_events.26.a
+
+		remove_gold = 100
+		add_prestige = 50
+
+		remove_character_flag = mt_frugal_impulse
+
+		# Move toward generous_patron
+		if = {
+			limit = { NOT = { has_trait = generous_patron } }
+			random = {
+				chance = 30
+				mt_gain_merchant_trait_effect = { trait = generous_patron }
+			}
+		}
+
+		# Remove penny_pincher if present
+		if = {
+			limit = { has_trait = penny_pincher }
+			random = {
+				chance = 40
+				mt_remove_merchant_trait_effect = { trait = penny_pincher }
+			}
+		}
+
+		ai_chance = {
+			base = 50
+
+			modifier = {
+				add = 30
+				ai_compassion >= 0
+			}
+		}
+	}
+
+	# Option B: Stay frugal
+	option = {
+		name = mt_personality_events.26.b
+
+		remove_character_flag = mt_generous_impulse
+
+		# Move toward penny_pincher
+		if = {
+			limit = { NOT = { has_trait = penny_pincher } }
+			random = {
+				chance = 30
+				mt_gain_merchant_trait_effect = { trait = penny_pincher }
+			}
+		}
+
+		ai_chance = {
+			base = 50
+
+			modifier = {
+				add = 30
+				ai_greed >= 25
+			}
+		}
+	}
+}
+
+# 0027: Honest vs ruthless - moral crossroads
+mt_personality_events.27 = {
+	type = character_event
+	title = mt_personality_events.27.t
+	desc = mt_personality_events.27.desc
+	theme = intrigue
+
+	left_portrait = {
+		character = root
+		animation = thinking
+	}
+
+	trigger = {
+		OR = {
+			has_trait = trustworthy_dealer
+			has_trait = ruthless_merchant
+			has_trait = dishonest_trader
+		}
+
+		# Faced with moral choice
+		gold >= 100
+	}
+
+	# Option A: Stay honest despite cost
+	option = {
+		name = mt_personality_events.27.a
+
+		remove_gold = 200
+		add_prestige = 100
+
+		mt_track_honest_dealing_effect = yes
+
+		# Strengthen trustworthy_dealer
+		if = {
+			limit = { has_trait = trustworthy_dealer }
+			change_variable = {
+				name = mt_reputation
+				add = 15
+			}
+		}
+
+		# May lose ruthless_merchant
+		if = {
+			limit = { has_trait = ruthless_merchant }
+			random = {
+				chance = 50
+				mt_remove_merchant_trait_effect = { trait = ruthless_merchant }
+			}
+		}
+
+		stress_impact = {
+			greedy = major_stress_impact_gain
+			callous = minor_stress_impact_gain
+		}
+
+		ai_chance = {
+			base = 40
+
+			modifier = {
+				add = 40
+				ai_honor >= 25
+			}
+		}
+	}
+
+	# Option B: Choose ruthless profit
+	option = {
+		name = mt_personality_events.27.b
+
+		add_gold = 400
+
+		change_variable = {
+			name = mt_reputation
+			add = -20
+		}
+
+		# Strengthen ruthless_merchant
+		if = {
+			limit = { has_trait = ruthless_merchant }
+			add_prestige = 75
+		}
+
+		# May lose trustworthy_dealer
+		if = {
+			limit = { has_trait = trustworthy_dealer }
+			random = {
+				chance = 50
+				mt_remove_merchant_trait_effect = { trait = trustworthy_dealer }
+				mt_gain_merchant_trait_effect = { trait = ruthless_merchant }
+			}
+		}
+
+		stress_impact = {
+			just = major_stress_impact_gain
+			compassionate = major_stress_impact_gain
+		}
+
+		ai_chance = {
+			base = 40
+
+			modifier = {
+				add = 40
+				ai_greed >= 25
+			}
+		}
+	}
+
+	# Option C: Find middle path
+	option = {
+		name = mt_personality_events.27.c
+
+		add_gold = 100
+		add_prestige = 50
+
+		ai_chance = {
+			base = 20
+		}
+	}
+}
+
+# 0028: Risk-taker vs patient - strategy clash
+mt_personality_events.28 = {
+	type = character_event
+	title = mt_personality_events.28.t
+	desc = mt_personality_events.28.desc
+	theme = stewardship
+
+	left_portrait = {
+		character = root
+		animation = thinking
+	}
+
+	trigger = {
+		OR = {
+			has_trait = risk_taker
+			has_trait = patient_investor
+		}
+
+		gold >= 300
+	}
+
+	# Option A: Take the bold risk
+	option = {
+		name = mt_personality_events.28.a
+
+		remove_gold = 300
+
+		mt_track_risky_venture_effect = yes
+
+		random_list = {
+			40 = {
+				desc = mt_personality_events.28.a.success
+				add_gold = 900
+				add_prestige = 150
+			}
+
+			60 = {
+				desc = mt_personality_events.28.a.failure
+				add_prestige = -100
+
+				# May become reckless_gambler
+				if = {
+					limit = { has_trait = risk_taker }
+					random = {
+						chance = 30
+						mt_remove_merchant_trait_effect = { trait = risk_taker }
+						mt_gain_merchant_trait_effect = { trait = reckless_gambler }
+					}
+				}
+			}
+		}
+
+		# May lose patient_investor
+		if = {
+			limit = { has_trait = patient_investor }
+			random = {
+				chance = 40
+				mt_remove_merchant_trait_effect = { trait = patient_investor }
+			}
+		}
+
+		ai_chance = {
+			base = 40
+
+			modifier = {
+				add = 40
+				has_trait = risk_taker
+			}
+
+			modifier = {
+				add = -40
+				has_trait = patient_investor
+			}
+		}
+	}
+
+	# Option B: Patient approach
+	option = {
+		name = mt_personality_events.28.b
+
+		remove_gold = 200
+
+		add_character_flag = {
+			flag = mt_prefers_long_term
+			years = 5
+		}
+
+		# Guaranteed good return later
+		trigger_event = {
+			id = mt_personality_events.102
+			days = { 730 1095 }
+		}
+
+		# May lose risk_taker
+		if = {
+			limit = { has_trait = risk_taker }
+			random = {
+				chance = 40
+				mt_remove_merchant_trait_effect = { trait = risk_taker }
+			}
+		}
+
+		ai_chance = {
+			base = 40
+
+			modifier = {
+				add = 40
+				has_trait = patient_investor
+			}
+
+			modifier = {
+				add = -40
+				has_trait = risk_taker
+			}
+		}
+	}
+
+	# Option C: Pass on it
+	option = {
+		name = mt_personality_events.28.c
+
+		add_prestige = 25
+
+		ai_chance = {
+			base = 20
+		}
+	}
+}
+
+# 0029: Arrogant vs charming - personality crisis
+mt_personality_events.29 = {
+	type = character_event
+	title = mt_personality_events.29.t
+	desc = mt_personality_events.29.desc
+	theme = diplomacy
+
+	left_portrait = {
+		character = root
+		animation = thinking
+	}
+
+	right_portrait = {
+		character = scope:important_client
+		animation = anger
+	}
+
+	trigger = {
+		OR = {
+			has_trait = arrogant_trader
+			has_trait = charming_merchant
+		}
+	}
+
+	immediate = {
+		create_character = {
+			template = noble_character
+			save_scope_as = important_client
+		}
+	}
+
+	# Option A: Humble yourself
+	option = {
+		name = mt_personality_events.29.a
+
+		add_prestige = -50
+
+		scope:important_client = {
+			add_opinion = {
+				target = root
+				modifier = mt_humble_merchant_opinion
+				opinion = 50
+			}
+		}
+
+		# Huge contract
+		add_gold = 600
+
+		# May lose arrogant_trader
+		if = {
+			limit = { has_trait = arrogant_trader }
+			random = {
+				chance = 50
+				mt_remove_merchant_trait_effect = { trait = arrogant_trader }
+			}
+		}
+
+		# May gain charming_merchant
+		if = {
+			limit = { NOT = { has_trait = charming_merchant } }
+			random = {
+				chance = 30
+				mt_gain_merchant_trait_effect = { trait = charming_merchant }
+			}
+		}
+
+		stress_impact = {
+			arrogant = major_stress_impact_gain
+			proud = major_stress_impact_gain
+		}
+
+		ai_chance = {
+			base = 50
+
+			modifier = {
+				add = -40
+				has_trait = arrogant_trader
+			}
+		}
+	}
+
+	# Option B: Stand proud
+	option = {
+		name = mt_personality_events.29.b
+
+		add_prestige = 50
+
+		scope:important_client = {
+			add_opinion = {
+				target = root
+				modifier = mt_arrogant_merchant_opinion
+				opinion = -75
+			}
+		}
+
+		# Lost contract
+		custom_tooltip = mt_personality_events.29.b.tt
+
+		# May lose charming_merchant
+		if = {
+			limit = { has_trait = charming_merchant }
+			random = {
+				chance = 50
+				mt_remove_merchant_trait_effect = { trait = charming_merchant }
+			}
+		}
+
+		stress_impact = {
+			humble = major_stress_impact_gain
+		}
+
+		ai_chance = {
+			base = 30
+
+			modifier = {
+				add = 40
+				has_trait = arrogant_trader
+			}
+		}
+	}
+
+	# Option C: Find diplomatic solution
+	option = {
+		name = mt_personality_events.29.c
+
+		add_gold = 300
+		add_prestige = 25
+
+		scope:important_client = {
+			add_opinion = {
+				target = root
+				modifier = mt_diplomatic_merchant_opinion
+				opinion = 25
+			}
+		}
+
+		ai_chance = {
+			base = 20
+
+			modifier = {
+				add = 30
+				ai_rationality >= 0
+			}
+		}
+	}
+}
+
+# 0030: Desperate merchant considering dishonesty
+mt_personality_events.30 = {
+	type = character_event
+	title = mt_personality_events.30.t
+	desc = mt_personality_events.30.desc
+	theme = intrigue
+
+	left_portrait = {
+		character = root
+		animation = worry
+	}
+
+	trigger = {
+		has_trait = desperate_merchant
+
+		gold < 150
+	}
+
+	# Option A: Stay honest despite desperation
+	option = {
+		name = mt_personality_events.30.a
+
+		add_prestige = 75
+
+		# Small help arrives
+		add_gold = 100
+
+		# May lose desperate_merchant
+		random = {
+			chance = 30
+			mt_remove_merchant_trait_effect = { trait = desperate_merchant }
+		}
+
+		# May gain trustworthy_dealer
+		if = {
+			limit = { NOT = { has_trait = trustworthy_dealer } }
+			random = {
+				chance = 40
+				mt_gain_merchant_trait_effect = { trait = trustworthy_dealer }
+			}
+		}
+
+		stress_impact = {
+			greedy = major_stress_impact_gain
+		}
+
+		ai_chance = {
+			base = 30
+
+			modifier = {
+				add = 40
+				ai_honor >= 25
+			}
+		}
+	}
+
+	# Option B: Resort to dishonesty
+	option = {
+		name = mt_personality_events.30.b
+
+		add_gold = 300
+
+		mt_track_dishonest_dealing_effect = yes
+
+		change_variable = {
+			name = mt_reputation
+			add = -25
+		}
+
+		# May gain dishonest_trader
+		random = {
+			chance = 60
+			mt_gain_merchant_trait_effect = { trait = dishonest_trader }
+		}
+
+		# May lose trustworthy_dealer if had it
+		if = {
+			limit = { has_trait = trustworthy_dealer }
+			mt_remove_merchant_trait_effect = { trait = trustworthy_dealer }
+		}
+
+		stress_impact = {
+			just = major_stress_impact_gain
+			honest = major_stress_impact_gain
+		}
+
+		ai_chance = {
+			base = 50
+
+			modifier = {
+				add = 40
+				gold < 50
+			}
+		}
+	}
+
+	# Option C: Ask for help
+	option = {
+		name = mt_personality_events.30.c
+
+		add_prestige = -50
+
+		# Receive loan
+		add_gold = 200
+
+		# Future obligation event
+		trigger_event = {
+			id = mt_personality_events.101
+			days = { 365 730 }
+		}
+
+		ai_chance = {
+			base = 20
+		}
+	}
+}
+
+# 0031: Trust crisis
+mt_personality_events.31 = {
+	type = character_event
+	title = mt_personality_events.31.t
+	desc = mt_personality_events.31.desc
+	theme = intrigue
+
+	left_portrait = {
+		character = root
+		animation = worry
+	}
+
+	trigger = {
+		OR = {
+			has_trait = trustworthy_dealer
+			has_trait = paranoid_merchant
+		}
+
+		# Recently betrayed
+		has_character_flag = mt_recently_betrayed
+	}
+
+	# Option A: Maintain trust
+	option = {
+		name = mt_personality_events.31.a
+
+		add_prestige = 50
+
+		remove_character_flag = mt_recently_betrayed
+
+		# Strengthen trustworthy_dealer
+		if = {
+			limit = { has_trait = trustworthy_dealer }
+			change_variable = {
+				name = mt_reputation
+				add = 10
+			}
+		}
+
+		# May lose paranoid_merchant
+		if = {
+			limit = { has_trait = paranoid_merchant }
+			random = {
+				chance = 30
+				mt_remove_merchant_trait_effect = { trait = paranoid_merchant }
+			}
+		}
+
+		ai_chance = {
+			base = 50
+		}
+	}
+
+	# Option B: Become paranoid
+	option = {
+		name = mt_personality_events.31.b
+
+		# May gain paranoid_merchant
+		if = {
+			limit = { NOT = { has_trait = paranoid_merchant } }
+			random = {
+				chance = 50
+				mt_gain_merchant_trait_effect = { trait = paranoid_merchant }
+			}
+		}
+
+		# May lose trustworthy_dealer
+		if = {
+			limit = { has_trait = trustworthy_dealer }
+			random = {
+				chance = 40
+				mt_remove_merchant_trait_effect = { trait = trustworthy_dealer }
+			}
+		}
+
+		ai_chance = {
+			base = 50
+
+			modifier = {
+				add = 30
+				ai_boldness <= -25
+			}
+		}
+	}
+}
+
+# 0032: Greed vs honor
+mt_personality_events.32 = {
+	type = character_event
+	title = mt_personality_events.32.t
+	desc = mt_personality_events.32.desc
+	theme = stewardship
+
+	left_portrait = {
+		character = root
+		animation = thinking
+	}
+
+	trigger = {
+		OR = {
+			has_trait = wandering_merchant
+			has_trait = trade_post_owner
+			has_trait = trading_company_head
+			has_trait = merchant_prince
+		}
+
+		gold >= 200
+	}
+
+	# Option A: Choose honor
+	option = {
+		name = mt_personality_events.32.a
+
+		remove_gold = 150
+		add_prestige = 100
+		add_piety = 75
+
+		mt_track_honest_dealing_effect = yes
+
+		stress_impact = {
+			greedy = major_stress_impact_gain
+		}
+
+		ai_chance = {
+			base = 40
+
+			modifier = {
+				add = 40
+				ai_honor >= 25
+			}
+		}
+	}
+
+	# Option B: Choose greed
+	option = {
+		name = mt_personality_events.32.b
+
+		add_gold = 300
+
+		change_variable = {
+			name = mt_reputation
+			add = -15
+		}
+
+		stress_impact = {
+			just = major_stress_impact_gain
+		}
+
+		ai_chance = {
+			base = 40
+
+			modifier = {
+				add = 40
+				ai_greed >= 25
+			}
+		}
+	}
+
+	# Option C: Balance both
+	option = {
+		name = mt_personality_events.32.c
+
+		add_gold = 100
+		add_prestige = 50
+
+		ai_chance = {
+			base = 20
+		}
+	}
+}
+
+# 0033: Safety vs opportunity
+mt_personality_events.33 = {
+	type = character_event
+	title = mt_personality_events.33.t
+	desc = mt_personality_events.33.desc
+	theme = stewardship
+
+	left_portrait = {
+		character = root
+		animation = thinking
+	}
+
+	trigger = {
+		OR = {
+			has_trait = wandering_merchant
+			has_trait = trade_post_owner
+			has_trait = trading_company_head
+			has_trait = merchant_prince
+		}
+
+		gold >= 250
+	}
+
+	# Option A: Safe path
+	option = {
+		name = mt_personality_events.33.a
+
+		remove_gold = 150
+
+		# Guaranteed return
+		trigger_event = {
+			id = mt_personality_events.102
+			days = { 365 730 }
+		}
+
+		ai_chance = {
+			base = 50
+
+			modifier = {
+				add = 30
+				ai_rationality >= 25
+			}
+		}
+	}
+
+	# Option B: Risky opportunity
+	option = {
+		name = mt_personality_events.33.b
+
+		remove_gold = 250
+
+		mt_track_risky_venture_effect = yes
+
+		random_list = {
+			50 = {
+				desc = mt_personality_events.33.b.success
+				add_gold = 800
+				add_prestige = 150
+			}
+
+			50 = {
+				desc = mt_personality_events.33.b.failure
+				add_prestige = -75
+			}
+		}
+
+		ai_chance = {
+			base = 30
+
+			modifier = {
+				add = 40
+				ai_boldness >= 25
+			}
+		}
+	}
+
+	# Option C: Do nothing
+	option = {
+		name = mt_personality_events.33.c
+
+		# Keep your gold
+		add_prestige = 10
+
+		ai_chance = {
+			base = 20
+		}
+	}
+}
+
+# 0034: Reputation vs profit
+mt_personality_events.34 = {
+	type = character_event
+	title = mt_personality_events.34.t
+	desc = mt_personality_events.34.desc
+	theme = diplomacy
+
+	left_portrait = {
+		character = root
+		animation = thinking
+	}
+
+	trigger = {
+		has_variable = mt_reputation
+		var:mt_reputation >= 40
+	}
+
+	# Option A: Protect reputation
+	option = {
+		name = mt_personality_events.34.a
+
+		# Refuse profitable but shady deal
+		add_prestige = 75
+
+		change_variable = {
+			name = mt_reputation
+			add = 15
+		}
+
+		mt_track_honest_dealing_effect = yes
+
+		ai_chance = {
+			base = 50
+
+			modifier = {
+				add = 30
+				var:mt_reputation >= 60
+			}
+		}
+	}
+
+	# Option B: Take the profit
+	option = {
+		name = mt_personality_events.34.b
+
+		add_gold = 500
+
+		change_variable = {
+			name = mt_reputation
+			add = -25
+		}
+
+		ai_chance = {
+			base = 40
+
+			modifier = {
+				add = 30
+				ai_greed >= 25
+			}
+		}
+	}
+
+	# Option C: Negotiate better terms
+	option = {
+		name = mt_personality_events.34.c
+
+		add_gold = 250
+		add_prestige = 50
+
+		change_variable = {
+			name = mt_reputation
+			add = 5
+		}
+
+		ai_chance = {
+			base = 10
+
+			modifier = {
+				add = 30
+				has_trait = shrewd_negotiator
+			}
+		}
+	}
+}
+
+# 0035: Pride before fall
+mt_personality_events.35 = {
+	type = character_event
+	title = mt_personality_events.35.t
+	desc = mt_personality_events.35.desc
+	theme = diplomacy
+
+	left_portrait = {
+		character = root
+		animation = personality_bold
+	}
+
+	trigger = {
+		has_trait = arrogant_trader
+	}
+
+	# Option A: Admit you were wrong
+	option = {
+		name = mt_personality_events.35.a
+
+		add_prestige = -100
+
+		# Avoid disaster
+		add_gold = 200
+
+		# May lose arrogant_trader
+		random = {
+			chance = 60
+			mt_remove_merchant_trait_effect = { trait = arrogant_trader }
+		}
+
+		stress_impact = {
+			arrogant = major_stress_impact_gain
+			proud = major_stress_impact_gain
+		}
+
+		ai_chance = {
+			base = 40
+
+			modifier = {
+				add = 30
+				ai_rationality >= 25
+			}
+		}
+	}
+
+	# Option B: Double down on pride
+	option = {
+		name = mt_personality_events.35.b
+
+		add_prestige = 50
+
+		# But suffer consequences
+		remove_gold = 400
+
+		change_variable = {
+			name = mt_reputation
+			add = -20
+		}
+
+		stress_impact = {
+			humble = major_stress_impact_gain
+		}
+
+		ai_chance = {
+			base = 40
+
+			modifier = {
+				add = 40
+				has_trait = arrogant
+			}
+		}
+	}
+
+	# Option C: Quiet retreat
+	option = {
+		name = mt_personality_events.35.c
+
+		remove_gold = 100
+
+		ai_chance = {
+			base = 20
+		}
+	}
+}
+
+# 0036: Breaking point
+mt_personality_events.36 = {
+	type = character_event
+	title = mt_personality_events.36.t
+	desc = mt_personality_events.36.desc
+	theme = intrigue
+
+	left_portrait = {
+		character = root
+		animation = sadness
+	}
+
+	trigger = {
+		OR = {
+			has_trait = desperate_merchant
+			AND = {
+				gold < 100
+				has_variable = mt_reputation
+				var:mt_reputation <= 25
+			}
+		}
+	}
+
+	# Option A: Give up merchant career
+	option = {
+		name = mt_personality_events.36.a
+
+		# Remove all merchant traits
+		if = {
+			limit = { has_trait = wandering_merchant }
+			remove_trait = wandering_merchant
+		}
+		if = {
+			limit = { has_trait = trade_post_owner }
+			remove_trait = trade_post_owner
+		}
+		if = {
+			limit = { has_trait = trading_company_head }
+			remove_trait = trading_company_head
+		}
+		if = {
+			limit = { has_trait = merchant_prince }
+			remove_trait = merchant_prince
+		}
+
+		add_prestige = -200
+
+		ai_chance = {
+			base = 10
+
+			modifier = {
+				add = 30
+				gold < 20
+			}
+		}
+	}
+
+	# Option B: One last desperate gamble
+	option = {
+		name = mt_personality_events.36.b
+
+		# Bet everything
+		save_temporary_scope_value_as = {
+			name = gamble_amount
+			value = gold
+		}
+
+		remove_long_term_gold = scope:gamble_amount
+
+		random_list = {
+			20 = {
+				desc = mt_personality_events.36.b.success
+
+				# Triple your money
+				multiply_temporary_scope_value = {
+					name = gamble_amount
+					value = 3
+				}
+
+				add_gold = scope:gamble_amount
+				add_prestige = 200
+
+				# May lose desperate_merchant
+				if = {
+					limit = { has_trait = desperate_merchant }
+					mt_remove_merchant_trait_effect = { trait = desperate_merchant }
+				}
+			}
+
+			80 = {
+				desc = mt_personality_events.36.b.failure
+
+				# Lost everything
+				add_prestige = -300
+
+				# Definitely becomes desperate if wasn't already
+				if = {
+					limit = { NOT = { has_trait = desperate_merchant } }
+					mt_gain_merchant_trait_effect = { trait = desperate_merchant }
+				}
+			}
+		}
+
+		ai_chance = {
+			base = 30
+
+			modifier = {
+				add = 40
+				has_trait = reckless_gambler
+			}
+		}
+	}
+
+	# Option C: Start over slowly
+	option = {
+		name = mt_personality_events.36.c
+
+		add_gold = 100
+		add_prestige = 50
+
+		# May lose desperate_merchant
+		if = {
+			limit = { has_trait = desperate_merchant }
+			random = {
+				chance = 40
+				mt_remove_merchant_trait_effect = { trait = desperate_merchant }
+			}
+		}
+
+		ai_chance = {
+			base = 60
+
+			modifier = {
+				add = 30
+				ai_rationality >= 0
+			}
+		}
+	}
+}
+
+# 0037: Redemption opportunity
+mt_personality_events.37 = {
+	type = character_event
+	title = mt_personality_events.37.t
+	desc = mt_personality_events.37.desc
+	theme = diplomacy
+
+	left_portrait = {
+		character = root
+		animation = thinking
+	}
+
+	trigger = {
+		OR = {
+			has_trait = dishonest_trader
+			has_trait = ruthless_merchant
+			has_trait = corrupt_merchant
+		}
+
+		has_variable = mt_reputation
+		var:mt_reputation <= 40
+	}
+
+	# Option A: Seek redemption
+	option = {
+		name = mt_personality_events.37.a
+
+		# Expensive to rebuild reputation
+		remove_gold = 300
+
+		add_prestige = 150
+		add_piety = 100
+
+		change_variable = {
+			name = mt_reputation
+			add = 30
+		}
+
+		# May lose negative traits
+		if = {
+			limit = { has_trait = dishonest_trader }
+			random = {
+				chance = 50
+				mt_remove_merchant_trait_effect = { trait = dishonest_trader }
+			}
+		}
+		if = {
+			limit = { has_trait = corrupt_merchant }
+			random = {
+				chance = 50
+				mt_remove_merchant_trait_effect = { trait = corrupt_merchant }
+			}
+		}
+
+		# May gain trustworthy_dealer
+		if = {
+			limit = { NOT = { has_trait = trustworthy_dealer } }
+			random = {
+				chance = 40
+				mt_gain_merchant_trait_effect = { trait = trustworthy_dealer }
+			}
+		}
+
+		ai_chance = {
+			base = 30
+
+			modifier = {
+				add = 30
+				var:mt_reputation <= 20
+			}
+		}
+	}
+
+	# Option B: Stay the course
+	option = {
+		name = mt_personality_events.37.b
+
+		add_gold = 200
+
+		# Continue on dark path
+		change_variable = {
+			name = mt_reputation
+			add = -10
+		}
+
+		ai_chance = {
+			base = 50
+
+			modifier = {
+				add = 30
+				ai_greed >= 25
+			}
+		}
+	}
+
+	# Option C: Leave the past behind
+	option = {
+		name = mt_personality_events.37.c
+
+		# Fresh start
+		add_prestige = 75
+
+		change_variable = {
+			name = mt_reputation
+			add = 10
+		}
+
+		ai_chance = {
+			base = 20
+		}
+	}
+}
+
+# 0038: Descent into corruption
+mt_personality_events.38 = {
+	type = character_event
+	title = mt_personality_events.38.t
+	desc = mt_personality_events.38.desc
+	theme = intrigue
+
+	left_portrait = {
+		character = root
+		animation = personality_greedy
+	}
+
+	trigger = {
+		OR = {
+			has_trait = dishonest_trader
+			has_trait = ruthless_merchant
+		}
+
+		NOT = { has_trait = corrupt_merchant }
+
+		gold >= 200
+	}
+
+	# Option A: Resist corruption
+	option = {
+		name = mt_personality_events.38.a
+
+		add_prestige = 100
+
+		# May lose negative traits
+		if = {
+			limit = { has_trait = dishonest_trader }
+			random = {
+				chance = 40
+				mt_remove_merchant_trait_effect = { trait = dishonest_trader }
+			}
+		}
+
+		stress_impact = {
+			greedy = major_stress_impact_gain
+		}
+
+		ai_chance = {
+			base = 40
+
+			modifier = {
+				add = 40
+				ai_honor >= 0
+			}
+		}
+	}
+
+	# Option B: Embrace corruption
+	option = {
+		name = mt_personality_events.38.b
+
+		add_gold = 500
+
+		change_variable = {
+			name = mt_reputation
+			add = -30
+		}
+
+		# Gain corrupt_merchant
+		random = {
+			chance = 70
+			mt_gain_merchant_trait_effect = { trait = corrupt_merchant }
+		}
+
+		stress_impact = {
+			just = major_stress_impact_gain
+		}
+
+		ai_chance = {
+			base = 40
+
+			modifier = {
+				add = 40
+				ai_greed >= 25
+			}
+		}
+	}
+
+	# Option C: Walk away
+	option = {
+		name = mt_personality_events.38.c
+
+		add_prestige = 25
+
+		ai_chance = {
+			base = 20
+		}
+	}
+}
+
+# 0039: Final gamble
+mt_personality_events.39 = {
+	type = character_event
+	title = mt_personality_events.39.t
+	desc = mt_personality_events.39.desc
+	theme = stewardship
+
+	left_portrait = {
+		character = root
+		animation = personality_bold
+	}
+
+	trigger = {
+		has_trait = reckless_gambler
+
+		gold >= 500
+	}
+
+	# Option A: Walk away from gambling
+	option = {
+		name = mt_personality_events.39.a
+
+		add_prestige = 100
+
+		# Remove reckless_gambler
+		mt_remove_merchant_trait_effect = { trait = reckless_gambler }
+
+		# May gain patient_investor
+		random = {
+			chance = 50
+			mt_gain_merchant_trait_effect = { trait = patient_investor }
+		}
+
+		stress_impact = {
+			greedy = major_stress_impact_gain
+		}
+
+		ai_chance = {
+			base = 20
+
+			modifier = {
+				add = 40
+				ai_rationality >= 25
+			}
+		}
+	}
+
+	# Option B: One more bet
+	option = {
+		name = mt_personality_events.39.b
+
+		remove_gold = 500
+
+		random_list = {
+			25 = {
+				desc = mt_personality_events.39.b.success
+				add_gold = 2000
+				add_prestige = 250
+			}
+
+			75 = {
+				desc = mt_personality_events.39.b.failure
+				add_prestige = -300
+
+				# May become desperate
+				if = {
+					limit = {
+						gold < 100
+						NOT = { has_trait = desperate_merchant }
+					}
+					mt_gain_merchant_trait_effect = { trait = desperate_merchant }
+				}
+			}
+		}
+
+		ai_chance = {
+			base = 60
+
+			modifier = {
+				add = 30
+				ai_boldness >= 25
+			}
+		}
+	}
+
+	# Option C: Moderate bet
+	option = {
+		name = mt_personality_events.39.c
+
+		remove_gold = 200
+
+		random_list = {
+			50 = {
+				desc = mt_personality_events.39.c.success
+				add_gold = 500
+				add_prestige = 100
+			}
+
+			50 = {
+				desc = mt_personality_events.39.c.failure
+				add_prestige = -100
+			}
+		}
+
+		ai_chance = {
+			base = 20
+		}
+	}
+}
+
+# 0040: Identity crisis
+mt_personality_events.40 = {
+	type = character_event
+	title = mt_personality_events.40.t
+	desc = mt_personality_events.40.desc
+	theme = diplomacy
+
+	left_portrait = {
+		character = root
+		animation = thinking
+	}
+
+	trigger = {
+		# Has conflicting personality traits
+		calc_true_if = {
+			amount >= 3
+			has_trait = shrewd_negotiator
+			has_trait = silver_tongued
+			has_trait = trustworthy_dealer
+			has_trait = innovative_trader
+			has_trait = risk_taker
+			has_trait = patient_investor
+			has_trait = generous_patron
+			has_trait = meticulous_accountant
+			has_trait = charming_merchant
+			has_trait = cultural_adapter
+			has_trait = dishonest_trader
+			has_trait = ruthless_merchant
+			has_trait = penny_pincher
+			has_trait = reckless_gambler
+			has_trait = paranoid_merchant
+			has_trait = arrogant_trader
+			has_trait = desperate_merchant
+			has_trait = lazy_merchant
+			has_trait = indecisive_trader
+			has_trait = corrupt_merchant
+		}
+	}
+
+	# Option A: Simplify - focus on core values
+	option = {
+		name = mt_personality_events.40.a
+
+		add_prestige = 100
+
+		# Clarity of purpose
+		custom_tooltip = mt_personality_events.40.a.tt
+
+		# Remove one random personality trait
+		add_character_flag = mt_personality_simplification
+
+		ai_chance = {
+			base = 50
+		}
+	}
+
+	# Option B: Embrace complexity
+	option = {
+		name = mt_personality_events.40.b
+
+		add_prestige = 50
+
+		# Being multifaceted is okay
+		custom_tooltip = mt_personality_events.40.b.tt
+
+		# Temporary stress relief
+		add_stress = -50
+
+		ai_chance = {
+			base = 50
+		}
+	}
+}
