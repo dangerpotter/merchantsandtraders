@@ -1,0 +1,585 @@
+####################################
+# MERCHANTS AND TRADERS MOD
+# Merchant Personality Trait Effects
+####################################
+#
+# Effects for managing merchant personality traits
+# Traits are earned through gameplay, not randomly assigned
+#
+####################################
+
+####################################
+# TRAIT ACQUISITION EFFECTS
+####################################
+
+# Effect: Gain merchant trait based on behavior
+# Scope: Character
+# Usage: character = { mt_gain_merchant_trait_effect = { trait = shrewd_negotiator } }
+mt_gain_merchant_trait_effect = {
+	# Store the trait being added
+	save_temporary_scope_value_as = {
+		name = trait_to_add
+		value = $trait$
+	}
+
+	# Check if character already has too many personality traits (max 3)
+	if = {
+		limit = {
+			mt_has_max_personality_traits_trigger = yes
+		}
+
+		# Trigger event to choose which trait to replace
+		trigger_event = {
+			id = mt_personality_events.50
+			days = 1
+		}
+	}
+	else = {
+		# Add the trait directly
+		add_trait = $trait$
+
+		# Trigger notification event
+		trigger_event = {
+			id = mt_personality_events.51
+			days = 1
+		}
+
+		# Update character reputation based on trait
+		if = {
+			limit = { has_trait = trustworthy_dealer }
+			change_variable = {
+				name = mt_reputation
+				add = 10
+			}
+		}
+		if = {
+			limit = { has_trait = dishonest_trader }
+			change_variable = {
+				name = mt_reputation
+				add = -20
+			}
+		}
+	}
+}
+
+# Effect: Remove merchant trait based on changed behavior
+# Scope: Character
+# Usage: character = { mt_remove_merchant_trait_effect = { trait = dishonest_trader } }
+mt_remove_merchant_trait_effect = {
+	# Remove the trait
+	remove_trait = $trait$
+
+	# Trigger notification event
+	trigger_event = {
+		id = mt_personality_events.52
+		days = 1
+	}
+
+	# Adjust reputation if needed
+	if = {
+		limit = { $trait$ = dishonest_trader }
+		change_variable = {
+			name = mt_reputation
+			add = 10
+		}
+	}
+	if = {
+		limit = { $trait$ = trustworthy_dealer }
+		change_variable = {
+			name = mt_reputation
+			add = -5
+		}
+	}
+}
+
+####################################
+# PERSONALITY ASSESSMENT EFFECTS
+####################################
+
+# Effect: Assess character's trading behavior for trait acquisition
+# Scope: Character
+# Analyzes last 5 years of behavior to award/remove traits
+mt_merchant_personality_assessment_effect = {
+	# Track assessment
+	add_character_flag = {
+		flag = mt_personality_assessed
+		years = 5
+	}
+
+	# Check for HONEST behavior patterns
+	if = {
+		limit = {
+			NOT = { has_trait = trustworthy_dealer }
+			NOT = { has_trait = dishonest_trader }
+			# High reputation indicates honest dealing
+			has_variable = mt_reputation
+			var:mt_reputation >= 50
+			# No fraud incidents
+			NOT = { has_character_flag = mt_caught_cheating }
+		}
+
+		# Chance to gain trustworthy_dealer
+		random = {
+			chance = 30
+			mt_gain_merchant_trait_effect = { trait = trustworthy_dealer }
+		}
+	}
+
+	# Check for DISHONEST behavior patterns
+	if = {
+		limit = {
+			NOT = { has_trait = dishonest_trader }
+			NOT = { has_trait = trustworthy_dealer }
+			OR = {
+				# Low reputation
+				AND = {
+					has_variable = mt_reputation
+					var:mt_reputation <= 20
+				}
+				# Caught cheating multiple times
+				has_character_flag = mt_serial_cheater
+			}
+		}
+
+		random = {
+			chance = 40
+			mt_gain_merchant_trait_effect = { trait = dishonest_trader }
+		}
+	}
+
+	# Check for RISK-TAKING behavior
+	if = {
+		limit = {
+			NOT = { has_trait = risk_taker }
+			NOT = { has_trait = patient_investor }
+			has_character_flag = mt_takes_risky_ventures
+			# Multiple risky decisions
+			has_variable = mt_risky_decisions
+			var:mt_risky_decisions >= 5
+		}
+
+		random = {
+			chance = 35
+			mt_gain_merchant_trait_effect = { trait = risk_taker }
+		}
+	}
+
+	# Check for PATIENT INVESTOR behavior
+	if = {
+		limit = {
+			NOT = { has_trait = patient_investor }
+			NOT = { has_trait = risk_taker }
+			has_character_flag = mt_prefers_long_term
+			# Avoided risky ventures
+			OR = {
+				NOT = { has_variable = mt_risky_decisions }
+				var:mt_risky_decisions <= 2
+			}
+		}
+
+		random = {
+			chance = 30
+			mt_gain_merchant_trait_effect = { trait = patient_investor }
+		}
+	}
+
+	# Check for SHREWD NEGOTIATOR
+	if = {
+		limit = {
+			NOT = { has_trait = shrewd_negotiator }
+			has_character_flag = mt_successful_negotiator
+			# Multiple successful negotiations
+			has_variable = mt_successful_deals
+			var:mt_successful_deals >= 10
+		}
+
+		random = {
+			chance = 25
+			mt_gain_merchant_trait_effect = { trait = shrewd_negotiator }
+		}
+	}
+
+	# Check for GENEROUS PATRON
+	if = {
+		limit = {
+			NOT = { has_trait = generous_patron }
+			NOT = { has_trait = penny_pincher }
+			has_character_flag = mt_generous_to_others
+			# Has given gifts/charity
+			has_variable = mt_charity_given
+			var:mt_charity_given >= 500
+		}
+
+		random = {
+			chance = 30
+			mt_gain_merchant_trait_effect = { trait = generous_patron }
+		}
+	}
+
+	# Check for PENNY PINCHER
+	if = {
+		limit = {
+			NOT = { has_trait = penny_pincher }
+			NOT = { has_trait = generous_patron }
+			has_character_flag = mt_extremely_frugal
+			# Refuses to spend on anything
+			has_variable = mt_refused_expenses
+			var:mt_refused_expenses >= 8
+		}
+
+		random = {
+			chance = 35
+			mt_gain_merchant_trait_effect = { trait = penny_pincher }
+		}
+	}
+
+	# Check for behavior changes (trait removal)
+	if = {
+		limit = {
+			has_trait = dishonest_trader
+			# Reformed behavior - high reputation now
+			has_variable = mt_reputation
+			var:mt_reputation >= 60
+		}
+
+		random = {
+			chance = 20
+			mt_remove_merchant_trait_effect = { trait = dishonest_trader }
+		}
+	}
+}
+
+####################################
+# TRAIT SYNERGY EFFECTS
+####################################
+
+# Effect: Check and apply trait synergies
+# Scope: Character
+# Combines compatible traits for bonus effects
+mt_trait_synergy_effect = {
+	# MASTER DEALMAKER: silver_tongued + shrewd_negotiator
+	if = {
+		limit = {
+			has_trait = silver_tongued
+			has_trait = shrewd_negotiator
+			NOT = { has_character_modifier = mt_master_dealmaker }
+		}
+
+		add_character_modifier = {
+			modifier = mt_master_dealmaker
+			years = 10
+		}
+
+		# Notification
+		send_interface_toast = {
+			title = mt_trait_synergy_master_dealmaker_title
+			left_icon = root
+
+			custom_tooltip = mt_trait_synergy_master_dealmaker_desc
+		}
+	}
+
+	# GAMBLER'S RUIN: risk_taker + reckless_gambler
+	if = {
+		limit = {
+			has_trait = risk_taker
+			has_trait = reckless_gambler
+			NOT = { has_character_modifier = mt_gamblers_ruin }
+		}
+
+		add_character_modifier = {
+			modifier = mt_gamblers_ruin
+			years = 10
+		}
+
+		# Warning notification
+		send_interface_toast = {
+			title = mt_trait_synergy_gamblers_ruin_title
+			left_icon = root
+
+			custom_tooltip = mt_trait_synergy_gamblers_ruin_desc
+		}
+
+		# High chance of disaster event
+		random = {
+			chance = 50
+			trigger_event = {
+				id = mt_personality_events.100
+				days = { 30 90 }
+			}
+		}
+	}
+
+	# BELOVED MERCHANT: trustworthy_dealer + generous_patron
+	if = {
+		limit = {
+			has_trait = trustworthy_dealer
+			has_trait = generous_patron
+			NOT = { has_character_modifier = mt_beloved_merchant }
+		}
+
+		add_character_modifier = {
+			modifier = mt_beloved_merchant
+			years = 10
+		}
+
+		# Notification
+		send_interface_toast = {
+			title = mt_trait_synergy_beloved_merchant_title
+			left_icon = root
+
+			custom_tooltip = mt_trait_synergy_beloved_merchant_desc
+		}
+	}
+
+	# MASTER ACCOUNTANT: meticulous_accountant + patient_investor
+	if = {
+		limit = {
+			has_trait = meticulous_accountant
+			has_trait = patient_investor
+			NOT = { has_character_modifier = mt_master_accountant }
+		}
+
+		add_character_modifier = {
+			modifier = mt_master_accountant
+			years = 10
+		}
+
+		send_interface_toast = {
+			title = mt_trait_synergy_master_accountant_title
+			left_icon = root
+
+			custom_tooltip = mt_trait_synergy_master_accountant_desc
+		}
+	}
+
+	# FEARED TYRANT: ruthless_merchant + arrogant_trader
+	if = {
+		limit = {
+			has_trait = ruthless_merchant
+			has_trait = arrogant_trader
+			NOT = { has_character_modifier = mt_feared_tyrant }
+		}
+
+		add_character_modifier = {
+			modifier = mt_feared_tyrant
+			years = 10
+		}
+
+		send_interface_toast = {
+			title = mt_trait_synergy_feared_tyrant_title
+			left_icon = root
+
+			custom_tooltip = mt_trait_synergy_feared_tyrant_desc
+		}
+	}
+
+	# WORLD TRADER: cultural_adapter + exotic_goods_dealer
+	if = {
+		limit = {
+			has_trait = cultural_adapter
+			has_trait = exotic_goods_dealer
+			NOT = { has_character_modifier = mt_world_trader }
+		}
+
+		add_character_modifier = {
+			modifier = mt_world_trader
+			years = 10
+		}
+
+		send_interface_toast = {
+			title = mt_trait_synergy_world_trader_title
+			left_icon = root
+
+			custom_tooltip = mt_trait_synergy_world_trader_desc
+		}
+	}
+}
+
+####################################
+# PERSONALITY EVENT TRIGGERS
+####################################
+
+# Effect: Trigger personality-defining moment
+# Scope: Character
+# Creates situations that reveal character and lead to traits
+mt_merchant_personality_event_effect = {
+	# Random personality-defining event
+	random_list = {
+		# Honesty test
+		20 = {
+			trigger = {
+				NOT = { has_trait = trustworthy_dealer }
+				NOT = { has_trait = dishonest_trader }
+			}
+			trigger_event = mt_personality_events.1
+		}
+
+		# Risk appetite test
+		20 = {
+			trigger = {
+				NOT = { has_trait = risk_taker }
+				NOT = { has_trait = patient_investor }
+			}
+			trigger_event = mt_personality_events.2
+		}
+
+		# Generosity test
+		20 = {
+			trigger = {
+				NOT = { has_trait = generous_patron }
+				NOT = { has_trait = penny_pincher }
+			}
+			trigger_event = mt_personality_events.3
+		}
+
+		# Moral dilemma
+		15 = {
+			trigger_event = mt_personality_events.4
+		}
+
+		# Competitor in distress
+		15 = {
+			trigger_event = mt_personality_events.8
+		}
+
+		# Handling windfall
+		10 = {
+			trigger_event = mt_personality_events.10
+		}
+	}
+}
+
+####################################
+# SPECIALIZATION EFFECTS
+####################################
+
+# Effect: Gain trade specialization
+# Scope: Character
+# Awards specialization trait based on primary traded good
+mt_gain_specialization_effect = {
+	# Check primary trade good
+	if = {
+		limit = {
+			has_variable = mt_primary_trade_good
+			var:mt_primary_trade_good = flag:silk
+			NOT = { has_trait = silk_specialist }
+		}
+
+		# Years of experience required
+		if = {
+			limit = {
+				has_variable = mt_silk_trades
+				var:mt_silk_trades >= 20
+			}
+
+			add_trait = silk_specialist
+
+			send_interface_toast = {
+				title = mt_specialization_gained_title
+				left_icon = root
+
+				custom_tooltip = mt_specialization_silk_desc
+			}
+		}
+	}
+
+	# Similar checks for other specializations
+	if = {
+		limit = {
+			has_variable = mt_primary_trade_good
+			var:mt_primary_trade_good = flag:grain
+			NOT = { has_trait = grain_merchant }
+		}
+
+		if = {
+			limit = {
+				has_variable = mt_grain_trades
+				var:mt_grain_trades >= 20
+			}
+
+			add_trait = grain_merchant
+
+			send_interface_toast = {
+				title = mt_specialization_gained_title
+				left_icon = root
+
+				custom_tooltip = mt_specialization_grain_desc
+			}
+		}
+	}
+}
+
+####################################
+# BEHAVIOR TRACKING EFFECTS
+####################################
+
+# Effect: Track honest dealing
+# Scope: Character
+mt_track_honest_dealing_effect = {
+	change_variable = {
+		name = mt_reputation
+		add = 2
+	}
+
+	add_character_flag = {
+		flag = mt_honest_dealer
+		years = 5
+	}
+
+	# Remove dishonest flags
+	remove_character_flag = mt_caught_cheating
+}
+
+# Effect: Track dishonest dealing
+# Scope: Character
+mt_track_dishonest_dealing_effect = {
+	change_variable = {
+		name = mt_reputation
+		add = -5
+	}
+
+	add_character_flag = {
+		flag = mt_caught_cheating
+		years = 5
+	}
+
+	# Serial cheater tracking
+	if = {
+		limit = {
+			has_character_flag = mt_caught_cheating
+		}
+		add_character_flag = {
+			flag = mt_serial_cheater
+			years = 10
+		}
+	}
+}
+
+# Effect: Track risky venture
+# Scope: Character
+mt_track_risky_venture_effect = {
+	add_character_flag = {
+		flag = mt_takes_risky_ventures
+		years = 5
+	}
+
+	change_variable = {
+		name = mt_risky_decisions
+		add = 1
+	}
+}
+
+# Effect: Track generous action
+# Scope: Character
+mt_track_generous_action_effect = {
+	add_character_flag = {
+		flag = mt_generous_to_others
+		years = 5
+	}
+
+	change_variable = {
+		name = mt_charity_given
+		add = $amount$
+	}
+}

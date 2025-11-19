@@ -1,0 +1,1151 @@
+####################################
+# MERCHANTS AND TRADERS MOD
+# Merchant Personality Traits
+####################################
+#
+# These traits define merchant personalities and behavior
+# Earned through gameplay actions and decisions
+# Can be gained or lost based on character behavior
+#
+# TRAIT CATEGORIES:
+# - Positive Traits (1-10): Beneficial personality traits
+# - Negative Traits (11-20): Detrimental personality traits
+# - Specialized Traits (21-25): Trade specialization traits
+#
+####################################
+
+####################################
+# POSITIVE PERSONALITY TRAITS
+####################################
+
+# 1. Shrewd Negotiator
+# Expert at getting the best deals through skillful bargaining
+shrewd_negotiator = {
+	index = 101
+	category = personality
+
+	# Enhanced diplomatic skills
+	diplomacy = 2
+
+	# Better trade profits
+	monthly_character_income_mult = 0.15
+
+	# AI behavior - values careful negotiation
+	ai_rationality = 10
+	ai_greed = 5
+
+	# Opinion modifiers
+	same_opinion = 5
+	opposite_opinion = -5
+
+	# Visual
+	icon = "trait_shrewd_negotiator.dds"
+
+	desc = {
+		first_valid = {
+			triggered_desc = {
+				trigger = { always = yes }
+				desc = shrewd_negotiator_desc
+			}
+		}
+	}
+
+	# Can be earned through consistent successful negotiations
+	# Cannot be acquired at birth
+	shown_in_ruler_designer = no
+}
+
+# 2. Silver Tongued
+# Charismatic speaker who wins people over with words
+silver_tongued = {
+	index = 102
+	category = personality
+
+	# Exceptional charisma
+	diplomacy = 3
+
+	# Improved relations with everyone
+	general_opinion = 20
+
+	# Better at persuasion
+	diplomatic_range_mult = 0.05
+
+	# AI behavior - focuses on diplomacy
+	ai_sociability = 15
+	ai_honor = 5
+
+	# Opinion modifiers
+	attraction_opinion = 5
+
+	# Visual
+	icon = "trait_silver_tongued.dds"
+
+	desc = {
+		first_valid = {
+			triggered_desc = {
+				trigger = { always = yes }
+				desc = silver_tongued_desc
+			}
+		}
+	}
+
+	# Incompatible with being rude or blunt
+	incompatible = {
+		arrogant_trader
+	}
+
+	shown_in_ruler_designer = no
+}
+
+# 3. Trustworthy Dealer
+# Known for honesty and fair dealing
+trustworthy_dealer = {
+	index = 103
+	category = personality
+
+	# Slight prestige gain from reputation
+	monthly_prestige = 0.1
+
+	# Excellent opinion among merchants
+	same_opinion = 25
+	dynasty_opinion = 10
+
+	# Better deals due to reputation
+	monthly_character_income_mult = 0.08
+
+	# AI behavior - honest and honorable
+	ai_honor = 20
+	ai_rationality = 10
+	ai_greed = -10
+
+	# Visual
+	icon = "trait_trustworthy_dealer.dds"
+
+	desc = {
+		first_valid = {
+			triggered_desc = {
+				trigger = { always = yes }
+				desc = trustworthy_dealer_desc
+			}
+		}
+	}
+
+	# Incompatible with dishonest behavior
+	incompatible = {
+		dishonest_trader
+		corrupt_merchant
+	}
+
+	shown_in_ruler_designer = no
+}
+
+# 4. Innovative Trader
+# Discovers new trade methods and opportunities
+innovative_trader = {
+	index = 104
+	category = personality
+
+	# Enhanced learning for new methods
+	learning = 1
+	stewardship = 1
+
+	# Chance for rare goods and opportunities
+	monthly_prestige = 0.15
+
+	# Better at finding new routes
+	monthly_character_income_mult = 0.10
+
+	# AI behavior - curious and experimental
+	ai_rationality = 10
+	ai_boldness = 10
+	ai_ambition = 5
+
+	# Opinion modifiers
+	same_opinion = 10
+
+	# Visual
+	icon = "trait_innovative_trader.dds"
+
+	desc = {
+		first_valid = {
+			triggered_desc = {
+				trigger = { always = yes }
+				desc = innovative_trader_desc
+			}
+		}
+	}
+
+	# Incompatible with being stuck in old ways
+	incompatible = {
+		lazy_merchant
+		indecisive_trader
+	}
+
+	shown_in_ruler_designer = no
+}
+
+# 5. Risk Taker
+# Willing to take calculated risks for greater rewards
+risk_taker = {
+	index = 105
+	category = personality
+
+	# Potential for higher profits (with higher variance)
+	monthly_character_income_mult = 0.12
+
+	# More adventurous
+	monthly_prestige = 0.20
+
+	# AI behavior - bold and daring
+	ai_boldness = 25
+	ai_greed = 15
+	ai_rationality = -10
+
+	# Opinion modifiers
+	same_opinion = 5
+
+	# Visual
+	icon = "trait_risk_taker.dds"
+
+	desc = {
+		first_valid = {
+			triggered_desc = {
+				trigger = { always = yes }
+				desc = risk_taker_desc
+			}
+		}
+	}
+
+	# Can stack with reckless for extreme behavior
+	# But incompatible with cautious traits
+	incompatible = {
+		patient_investor
+		paranoid_merchant
+	}
+
+	shown_in_ruler_designer = no
+}
+
+# 6. Patient Investor
+# Focuses on long-term gains over short-term profits
+patient_investor = {
+	index = 106
+	category = personality
+
+	# Lower immediate profits but better long-term
+	stewardship = 2
+
+	# Steady income growth
+	monthly_character_income_mult = 0.15
+
+	# Prestige from wise decisions
+	monthly_prestige = 0.25
+
+	# AI behavior - rational and patient
+	ai_rationality = 20
+	ai_greed = -5
+	ai_honor = 10
+
+	# Opinion modifiers
+	same_opinion = 15
+
+	# Visual
+	icon = "trait_patient_investor.dds"
+
+	desc = {
+		first_valid = {
+			triggered_desc = {
+				trigger = { always = yes }
+				desc = patient_investor_desc
+			}
+		}
+	}
+
+	# Incompatible with impulsive behavior
+	incompatible = {
+		risk_taker
+		reckless_gambler
+		desperate_merchant
+	}
+
+	shown_in_ruler_designer = no
+}
+
+# 7. Generous Patron
+# Uses wealth to support others and build loyalty
+generous_patron = {
+	index = 107
+	category = personality
+
+	# Prestige from philanthropy
+	monthly_prestige = 1.0
+
+	# Excellent courtier opinion
+	courtier_opinion = 30
+	vassal_opinion = 15
+
+	# Attracts talented individuals
+	attraction_opinion = 10
+
+	# AI behavior - generous and honorable
+	ai_honor = 15
+	ai_greed = -20
+	ai_compassion = 20
+
+	# Opinion modifiers
+	same_opinion = 20
+	dynasty_opinion = 15
+
+	# Visual
+	icon = "trait_generous_patron.dds"
+
+	desc = {
+		first_valid = {
+			triggered_desc = {
+				trigger = { always = yes }
+				desc = generous_patron_desc
+			}
+		}
+	}
+
+	# Incompatible with greedy behavior
+	incompatible = {
+		penny_pincher
+		ruthless_merchant
+	}
+
+	shown_in_ruler_designer = no
+}
+
+# 8. Meticulous Accountant
+# Carefully tracks every transaction and expense
+meticulous_accountant = {
+	index = 108
+	category = personality
+
+	# Better administrative efficiency
+	stewardship = 3
+
+	# Reduced costs through careful management
+	monthly_character_expenses_mult = -0.15
+
+	# Small income boost from efficiency
+	monthly_character_income_mult = 0.05
+
+	# AI behavior - rational and detail-oriented
+	ai_rationality = 25
+	ai_greed = 5
+
+	# Opinion modifiers
+	same_opinion = 10
+
+	# Visual
+	icon = "trait_meticulous_accountant.dds"
+
+	desc = {
+		first_valid = {
+			triggered_desc = {
+				trigger = { always = yes }
+				desc = meticulous_accountant_desc
+			}
+		}
+	}
+
+	# Incompatible with careless behavior
+	incompatible = {
+		lazy_merchant
+		reckless_gambler
+	}
+
+	shown_in_ruler_designer = no
+}
+
+# 9. Charming Merchant
+# Wins over customers and partners with personal charm
+charming_merchant = {
+	index = 109
+	category = personality
+
+	# Enhanced diplomatic abilities
+	diplomacy = 4
+
+	# Better negotiations
+	monthly_character_income_mult = 0.08
+
+	# Improved relations
+	general_opinion = 15
+	attraction_opinion = 10
+
+	# AI behavior - sociable and friendly
+	ai_sociability = 20
+	ai_boldness = 10
+	ai_compassion = 10
+
+	# Opinion modifiers
+	same_opinion = 15
+	opposite_opinion = 5
+
+	# Visual
+	icon = "trait_charming_merchant.dds"
+
+	desc = {
+		first_valid = {
+			triggered_desc = {
+				trigger = { always = yes }
+				desc = charming_merchant_desc
+			}
+		}
+	}
+
+	# Works well with silver_tongued for maximum charisma
+	# Incompatible with off-putting traits
+	incompatible = {
+		arrogant_trader
+		paranoid_merchant
+	}
+
+	shown_in_ruler_designer = no
+}
+
+# 10. Cultural Adapter
+# Thrives in foreign lands and adapts to local customs
+cultural_adapter = {
+	index = 110
+	category = personality
+
+	# Better at foreign diplomacy
+	diplomacy = 2
+	learning = 1
+
+	# No foreign trade penalties (handled in triggers)
+	monthly_character_income_mult = 0.10
+
+	# Extended reach
+	diplomatic_range_mult = 0.15
+
+	# AI behavior - adaptable and curious
+	ai_rationality = 15
+	ai_sociability = 10
+
+	# Opinion modifiers with different cultures
+	same_opinion = 5
+
+	# Visual
+	icon = "trait_cultural_adapter.dds"
+
+	desc = {
+		first_valid = {
+			triggered_desc = {
+				trigger = { always = yes }
+				desc = cultural_adapter_desc
+			}
+		}
+	}
+
+	shown_in_ruler_designer = no
+}
+
+####################################
+# NEGATIVE PERSONALITY TRAITS
+####################################
+
+# 11. Dishonest Trader
+# Known for lying and cheating in business dealings
+dishonest_trader = {
+	index = 111
+	category = personality
+
+	# Increased profits through deception
+	monthly_character_income_mult = 0.20
+
+	# Terrible reputation
+	general_opinion = -50
+	same_opinion = -30
+
+	# Prestige loss from dishonor
+	monthly_prestige = -0.5
+
+	# AI behavior - dishonorable and greedy
+	ai_honor = -30
+	ai_greed = 30
+	ai_boldness = 15
+
+	# Opinion modifiers
+	opposite_opinion = -25
+
+	# Visual
+	icon = "trait_dishonest_trader.dds"
+
+	desc = {
+		first_valid = {
+			triggered_desc = {
+				trigger = { always = yes }
+				desc = dishonest_trader_desc
+			}
+		}
+	}
+
+	# Incompatible with honest behavior
+	incompatible = {
+		trustworthy_dealer
+		generous_patron
+	}
+
+	shown_in_ruler_designer = no
+}
+
+# 12. Ruthless Merchant
+# Willing to crush competitors and exploit others
+ruthless_merchant = {
+	index = 112
+	category = personality
+
+	# Higher profits through exploitation
+	monthly_character_income_mult = 0.15
+
+	# Feared but not loved
+	general_opinion = -20
+	dread_baseline_add = 10
+
+	# Intrigue bonus for schemes
+	intrigue = 1
+
+	# AI behavior - ruthless and ambitious
+	ai_boldness = 20
+	ai_greed = 25
+	ai_compassion = -25
+	ai_honor = -15
+
+	# Opinion modifiers
+	same_opinion = -15
+
+	# Visual
+	icon = "trait_ruthless_merchant.dds"
+
+	desc = {
+		first_valid = {
+			triggered_desc = {
+				trigger = { always = yes }
+				desc = ruthless_merchant_desc
+			}
+		}
+	}
+
+	# Incompatible with kind behavior
+	incompatible = {
+		generous_patron
+		trustworthy_dealer
+	}
+
+	shown_in_ruler_designer = no
+}
+
+# 13. Penny Pincher
+# Obsessed with saving every coin, even at the cost of relationships
+penny_pincher = {
+	index = 113
+	category = personality
+
+	# Reduced costs but poor diplomacy
+	monthly_character_expenses_mult = -0.30
+	diplomacy = -2
+
+	# Annoying to work with
+	general_opinion = -15
+	courtier_opinion = -20
+
+	# AI behavior - extremely greedy
+	ai_greed = 40
+	ai_compassion = -20
+	ai_sociability = -15
+
+	# Opinion modifiers
+	same_opinion = -10
+
+	# Visual
+	icon = "trait_penny_pincher.dds"
+
+	desc = {
+		first_valid = {
+			triggered_desc = {
+				trigger = { always = yes }
+				desc = penny_pincher_desc
+			}
+		}
+	}
+
+	# Incompatible with generosity
+	incompatible = {
+		generous_patron
+	}
+
+	shown_in_ruler_designer = no
+}
+
+# 14. Reckless Gambler
+# Takes wild risks without proper planning
+reckless_gambler = {
+	index = 114
+	category = personality
+
+	# Extreme profit variance (can win or lose big)
+	monthly_character_income_mult = 0.25
+
+	# But also increased expenses from bad bets
+	monthly_character_expenses_mult = 0.20
+
+	# Prestige from bold moves (when they work)
+	monthly_prestige = 0.15
+
+	# AI behavior - extremely bold and irrational
+	ai_boldness = 40
+	ai_rationality = -30
+	ai_greed = 30
+
+	# Opinion modifiers
+	same_opinion = -10
+
+	# Visual
+	icon = "trait_reckless_gambler.dds"
+
+	desc = {
+		first_valid = {
+			triggered_desc = {
+				trigger = { always = yes }
+				desc = reckless_gambler_desc
+			}
+		}
+	}
+
+	# Incompatible with cautious behavior
+	incompatible = {
+		patient_investor
+		meticulous_accountant
+	}
+
+	shown_in_ruler_designer = no
+}
+
+# 15. Paranoid Merchant
+# Trusts no one, sees threats everywhere
+paranoid_merchant = {
+	index = 115
+	category = personality
+
+	# Better intrigue defense
+	intrigue = 2
+
+	# But terrible social skills
+	diplomacy = -1
+	general_opinion = -15
+
+	# Harder to scheme against
+	hostile_scheme_resistance_add = 20
+
+	# AI behavior - suspicious and defensive
+	ai_rationality = -10
+	ai_boldness = -20
+	ai_sociability = -25
+
+	# Opinion modifiers
+	same_opinion = -20
+
+	# Visual
+	icon = "trait_paranoid_merchant.dds"
+
+	desc = {
+		first_valid = {
+			triggered_desc = {
+				trigger = { always = yes }
+				desc = paranoid_merchant_desc
+			}
+		}
+	}
+
+	# Incompatible with trusting behavior
+	incompatible = {
+		charming_merchant
+		trustworthy_dealer
+	}
+
+	shown_in_ruler_designer = no
+}
+
+# 16. Arrogant Trader
+# Believes they are superior to other merchants
+arrogant_trader = {
+	index = 116
+	category = personality
+
+	# Some prestige from confidence
+	monthly_prestige = 0.20
+
+	# But terrible relations with peers
+	same_opinion = -20
+	general_opinion = -10
+
+	# Slightly better at intimidation
+	diplomacy = -1
+	dread_baseline_add = 5
+
+	# AI behavior - proud and dismissive
+	ai_honor = 15
+	ai_boldness = 20
+	ai_sociability = -15
+	ai_rationality = -10
+
+	# Opinion modifiers
+	courtier_opinion = -10
+
+	# Visual
+	icon = "trait_arrogant_trader.dds"
+
+	desc = {
+		first_valid = {
+			triggered_desc = {
+				trigger = { always = yes }
+				desc = arrogant_trader_desc
+			}
+		}
+	}
+
+	# Incompatible with humble behavior
+	incompatible = {
+		silver_tongued
+		charming_merchant
+	}
+
+	shown_in_ruler_designer = no
+}
+
+# 17. Desperate Merchant
+# On the brink of bankruptcy, making poor decisions
+desperate_merchant = {
+	index = 117
+	category = personality
+
+	# Terrible financial situation
+	monthly_character_income_mult = -0.15
+	monthly_character_expenses_mult = 0.10
+
+	# Poor decision making
+	diplomacy = -2
+	stewardship = -2
+
+	# Lost prestige
+	monthly_prestige = -0.30
+
+	# AI behavior - desperate and irrational
+	ai_rationality = -25
+	ai_boldness = -15
+	ai_greed = 30
+
+	# Opinion modifiers
+	same_opinion = -15
+	general_opinion = -10
+
+	# Visual
+	icon = "trait_desperate_merchant.dds"
+
+	desc = {
+		first_valid = {
+			triggered_desc = {
+				trigger = { always = yes }
+				desc = desperate_merchant_desc
+			}
+		}
+	}
+
+	# Incompatible with successful behavior
+	incompatible = {
+		patient_investor
+		meticulous_accountant
+		shrewd_negotiator
+	}
+
+	shown_in_ruler_designer = no
+}
+
+# 18. Lazy Merchant
+# Neglects business for comfort and leisure
+lazy_merchant = {
+	index = 118
+	category = personality
+
+	# Significant income loss from neglect
+	monthly_character_income_mult = -0.25
+
+	# Poor administrative skills
+	stewardship = -2
+
+	# Lost opportunities
+	monthly_prestige = -0.20
+
+	# AI behavior - inactive and unmotivated
+	ai_ambition = -30
+	ai_boldness = -20
+	ai_rationality = -10
+
+	# Opinion modifiers
+	same_opinion = -15
+	courtier_opinion = -10
+
+	# Visual
+	icon = "trait_lazy_merchant.dds"
+
+	desc = {
+		first_valid = {
+			triggered_desc = {
+				trigger = { always = yes }
+				desc = lazy_merchant_desc
+			}
+		}
+	}
+
+	# Incompatible with hardworking traits
+	incompatible = {
+		innovative_trader
+		meticulous_accountant
+		patient_investor
+	}
+
+	shown_in_ruler_designer = no
+}
+
+# 19. Indecisive Trader
+# Cannot make timely decisions, misses opportunities
+indecisive_trader = {
+	index = 119
+	category = personality
+
+	# Reduced income from missed opportunities
+	monthly_character_income_mult = -0.15
+
+	# Poor leadership
+	diplomacy = -1
+	stewardship = -1
+
+	# Lost prestige from inaction
+	monthly_prestige = -0.15
+
+	# AI behavior - hesitant and cautious
+	ai_boldness = -30
+	ai_rationality = -15
+	ai_ambition = -20
+
+	# Opinion modifiers
+	same_opinion = -10
+	vassal_opinion = -10
+
+	# Visual
+	icon = "trait_indecisive_trader.dds"
+
+	desc = {
+		first_valid = {
+			triggered_desc = {
+				trigger = { always = yes }
+				desc = indecisive_trader_desc
+			}
+		}
+	}
+
+	# Incompatible with bold behavior
+	incompatible = {
+		innovative_trader
+		risk_taker
+		shrewd_negotiator
+	}
+
+	shown_in_ruler_designer = no
+}
+
+# 20. Corrupt Merchant
+# Uses bribes and corruption to get ahead
+corrupt_merchant = {
+	index = 120
+	category = personality
+
+	# Higher profits from illegal activities
+	monthly_character_income_mult = 0.30
+
+	# But serious reputation damage
+	monthly_prestige = -0.50
+	general_opinion = -25
+
+	# Better at schemes
+	intrigue = 2
+
+	# AI behavior - dishonorable and greedy
+	ai_honor = -40
+	ai_greed = 35
+	ai_boldness = 15
+
+	# Opinion modifiers
+	same_opinion = -20
+
+	# Visual
+	icon = "trait_corrupt_merchant.dds"
+
+	desc = {
+		first_valid = {
+			triggered_desc = {
+				trigger = { always = yes }
+				desc = corrupt_merchant_desc
+			}
+		}
+	}
+
+	# Incompatible with honest behavior
+	incompatible = {
+		trustworthy_dealer
+	}
+
+	shown_in_ruler_designer = no
+}
+
+####################################
+# SPECIALIZED TRAITS
+####################################
+
+# 21. Silk Specialist
+# Expert in the silk trade with deep market knowledge
+silk_specialist = {
+	index = 121
+	category = lifestyle
+
+	# Expertise in specific good
+	stewardship = 2
+	learning = 1
+
+	# Major bonus to silk profits (handled in triggers/effects)
+	monthly_character_income_mult = 0.12
+
+	# Prestige from specialization
+	monthly_prestige = 0.30
+
+	# AI behavior - focused and knowledgeable
+	ai_rationality = 15
+	ai_greed = 10
+
+	# Opinion modifiers
+	same_opinion = 10
+
+	# Visual
+	icon = "trait_silk_specialist.dds"
+
+	desc = {
+		first_valid = {
+			triggered_desc = {
+				trigger = { always = yes }
+				desc = silk_specialist_desc
+			}
+		}
+	}
+
+	# Cannot be combined with other specializations
+	incompatible = {
+		grain_merchant
+		luxury_trader
+		bulk_goods_hauler
+		exotic_goods_dealer
+	}
+
+	shown_in_ruler_designer = no
+}
+
+# 22. Grain Merchant
+# Specializes in essential food commodities
+grain_merchant = {
+	index = 122
+	category = lifestyle
+
+	# Practical expertise
+	stewardship = 3
+
+	# Good steady profits from essentials (handled in triggers/effects)
+	monthly_character_income_mult = 0.10
+
+	# Prestige from feeding the people
+	monthly_prestige = 0.25
+
+	# Better relations with common folk
+	general_opinion = 10
+
+	# AI behavior - practical and steady
+	ai_rationality = 20
+	ai_honor = 10
+
+	# Opinion modifiers
+	same_opinion = 15
+
+	# Visual
+	icon = "trait_grain_merchant.dds"
+
+	desc = {
+		first_valid = {
+			triggered_desc = {
+				trigger = { always = yes }
+				desc = grain_merchant_desc
+			}
+		}
+	}
+
+	# Cannot be combined with other specializations
+	incompatible = {
+		silk_specialist
+		luxury_trader
+		bulk_goods_hauler
+		exotic_goods_dealer
+	}
+
+	shown_in_ruler_designer = no
+}
+
+# 23. Luxury Trader
+# Deals in high-end luxury goods
+luxury_trader = {
+	index = 123
+	category = lifestyle
+
+	# Refined skills and knowledge
+	diplomacy = 2
+	learning = 1
+
+	# Higher profit margins on luxury items (handled in triggers/effects)
+	monthly_character_income_mult = 0.15
+
+	# Significant prestige from luxury trade
+	monthly_prestige = 0.50
+
+	# Better relations with nobility
+	dynasty_opinion = 15
+
+	# AI behavior - refined and ambitious
+	ai_rationality = 15
+	ai_greed = 15
+	ai_sociability = 10
+
+	# Opinion modifiers
+	same_opinion = 10
+
+	# Visual
+	icon = "trait_luxury_trader.dds"
+
+	desc = {
+		first_valid = {
+			triggered_desc = {
+				trigger = { always = yes }
+				desc = luxury_trader_desc
+			}
+		}
+	}
+
+	# Cannot be combined with other specializations
+	incompatible = {
+		silk_specialist
+		grain_merchant
+		bulk_goods_hauler
+		exotic_goods_dealer
+	}
+
+	shown_in_ruler_designer = no
+}
+
+# 24. Bulk Goods Hauler
+# Moves large quantities of common goods
+bulk_goods_hauler = {
+	index = 124
+	category = lifestyle
+
+	# Strong organizational skills
+	stewardship = 3
+
+	# Profit from volume (handled in triggers/effects)
+	monthly_character_income_mult = 0.13
+
+	# Modest prestige from scale
+	monthly_prestige = 0.20
+
+	# Practical reputation
+	same_opinion = 10
+
+	# AI behavior - practical and efficient
+	ai_rationality = 20
+	ai_greed = 10
+
+	# Opinion modifiers
+	courtier_opinion = 10
+
+	# Visual
+	icon = "trait_bulk_goods_hauler.dds"
+
+	desc = {
+		first_valid = {
+			triggered_desc = {
+				trigger = { always = yes }
+				desc = bulk_goods_hauler_desc
+			}
+		}
+	}
+
+	# Cannot be combined with other specializations
+	incompatible = {
+		silk_specialist
+		grain_merchant
+		luxury_trader
+		exotic_goods_dealer
+	}
+
+	shown_in_ruler_designer = no
+}
+
+# 25. Exotic Goods Dealer
+# Trades in rare and exotic items from distant lands
+exotic_goods_dealer = {
+	index = 125
+	category = lifestyle
+
+	# Well-traveled and knowledgeable
+	diplomacy = 2
+	learning = 2
+
+	# High profits from rare goods (handled in triggers/effects)
+	monthly_character_income_mult = 0.18
+
+	# Significant prestige from exclusivity
+	monthly_prestige = 0.60
+
+	# Extended reach for distant trade
+	diplomatic_range_mult = 0.20
+
+	# AI behavior - adventurous and ambitious
+	ai_boldness = 15
+	ai_rationality = 10
+	ai_ambition = 15
+
+	# Opinion modifiers - exotic and interesting
+	same_opinion = 15
+	attraction_opinion = 5
+
+	# Visual
+	icon = "trait_exotic_goods_dealer.dds"
+
+	desc = {
+		first_valid = {
+			triggered_desc = {
+				trigger = { always = yes }
+				desc = exotic_goods_dealer_desc
+			}
+		}
+	}
+
+	# Cannot be combined with other specializations
+	incompatible = {
+		silk_specialist
+		grain_merchant
+		luxury_trader
+		bulk_goods_hauler
+	}
+
+	shown_in_ruler_designer = no
+}

@@ -1,0 +1,277 @@
+####################################
+# MERCHANTS AND TRADERS MOD
+# Personality On-Actions
+####################################
+#
+# Triggers for merchant personality assessment and trait management
+# Assessments happen every 5 years to track behavior patterns
+#
+####################################
+
+####################################
+# PERSONALITY ASSESSMENT
+####################################
+
+# Assess merchant personality every 5 years
+# Checks behavior patterns and awards/removes traits accordingly
+on_merchant_personality_assessment = {
+	events = {
+		# Main assessment event
+		mt_personality_events.200
+	}
+}
+
+####################################
+# YEARLY PULSE
+####################################
+
+# Check for personality-defining moments yearly
+# Random chance for events that reveal character
+yearly_pulse_merchant_personality = {
+	on_actions = {
+		# Personality defining moments
+		random_merchant_personality_event
+	}
+}
+
+# Random personality event trigger
+random_merchant_personality_event = {
+	trigger = {
+		# Must be a merchant
+		OR = {
+			has_trait = wandering_merchant
+			has_trait = trade_post_owner
+			has_trait = trading_company_head
+			has_trait = merchant_prince
+		}
+
+		# Not too frequent
+		NOT = { has_character_flag = mt_recent_personality_event }
+	}
+
+	random_events = {
+		chance_to_happen = 20
+
+		100 = 0 # Nothing happens
+
+		# Personality-defining moments (10% chance total)
+		5 = mt_personality_events.1   # Honesty test
+		5 = mt_personality_events.2   # Risk appetite test
+		5 = mt_personality_events.3   # Generosity test
+		3 = mt_personality_events.4   # Moral dilemma
+		3 = mt_personality_events.5   # Take advantage of desperate customer
+		3 = mt_personality_events.6   # Short-term vs long-term profit
+		3 = mt_personality_events.7   # How you treat employees
+		3 = mt_personality_events.8   # Competitor's distress
+		2 = mt_personality_events.9   # Company funds handling
+		2 = mt_personality_events.10  # Sudden windfall
+	}
+
+	on_trigger = {
+		add_character_flag = {
+			flag = mt_recent_personality_event
+			years = 2
+		}
+	}
+}
+
+####################################
+# TRAIT-SPECIFIC EVENTS
+####################################
+
+# Living your traits - events that fire when you have specific traits
+yearly_pulse_trait_events = {
+	trigger = {
+		# Must be a merchant
+		OR = {
+			has_trait = wandering_merchant
+			has_trait = trade_post_owner
+			has_trait = trading_company_head
+			has_trait = merchant_prince
+		}
+
+		# Has at least one personality trait
+		OR = {
+			has_trait = shrewd_negotiator
+			has_trait = silver_tongued
+			has_trait = trustworthy_dealer
+			has_trait = innovative_trader
+			has_trait = risk_taker
+			has_trait = patient_investor
+			has_trait = generous_patron
+			has_trait = meticulous_accountant
+			has_trait = charming_merchant
+			has_trait = cultural_adapter
+			has_trait = dishonest_trader
+			has_trait = ruthless_merchant
+			has_trait = penny_pincher
+			has_trait = reckless_gambler
+			has_trait = paranoid_merchant
+			has_trait = arrogant_trader
+			has_trait = desperate_merchant
+			has_trait = lazy_merchant
+			has_trait = indecisive_trader
+			has_trait = corrupt_merchant
+		}
+	}
+
+	random_events = {
+		chance_to_happen = 15
+
+		100 = 0 # Nothing happens
+
+		# Living your traits events (11-25)
+		3 = mt_personality_events.11  # Shrewd negotiator succeeds
+		3 = mt_personality_events.12  # Silver-tongued talks out of trouble
+		3 = mt_personality_events.13  # Trustworthy dealer offered partnership
+		3 = mt_personality_events.14  # Innovative trader discovers new method
+		3 = mt_personality_events.15  # Risk-taker's gamble pays off
+		3 = mt_personality_events.16  # Patient investor's rewards
+		3 = mt_personality_events.17  # Generous patron builds loyalty
+		3 = mt_personality_events.18  # Meticulous accountant catches fraud
+		2 = mt_personality_events.19  # Charming merchant seduces way to contract
+		2 = mt_personality_events.20  # Cultural adapter thrives abroad
+		2 = mt_personality_events.21  # Dishonest trader caught
+		2 = mt_personality_events.22  # Ruthless merchant feared
+		2 = mt_personality_events.23  # Penny pincher loses deal
+		2 = mt_personality_events.24  # Reckless gambler disaster
+		2 = mt_personality_events.25  # Paranoid merchant uncovers conspiracy
+	}
+}
+
+####################################
+# TRAIT CONFLICT EVENTS
+####################################
+
+# Events triggered by conflicting personality traits or situations
+yearly_pulse_trait_conflicts = {
+	trigger = {
+		# Must be a merchant
+		OR = {
+			has_trait = wandering_merchant
+			has_trait = trade_post_owner
+			has_trait = trading_company_head
+			has_trait = merchant_prince
+		}
+
+		# Has conflicting traits or is in conflict situation
+		OR = {
+			# Internal conflicts
+			AND = {
+				has_character_flag = mt_generous_impulse
+				has_character_flag = mt_frugal_impulse
+			}
+			# Personality under stress
+			has_character_flag = mt_personality_crisis
+			# Multiple negative traits
+			calc_true_if = {
+				amount >= 2
+				has_trait = dishonest_trader
+				has_trait = ruthless_merchant
+				has_trait = desperate_merchant
+				has_trait = corrupt_merchant
+			}
+		}
+	}
+
+	random_events = {
+		chance_to_happen = 25
+
+		100 = 0 # Nothing happens
+
+		# Conflict events (26-40)
+		5 = mt_personality_events.26  # Generous vs penny-pincher
+		5 = mt_personality_events.27  # Honest vs ruthless
+		5 = mt_personality_events.28  # Risk-taker vs patient
+		5 = mt_personality_events.29  # Arrogant vs charming
+		5 = mt_personality_events.30  # Desperate considering dishonesty
+		3 = mt_personality_events.31  # Trust crisis
+		3 = mt_personality_events.32  # Greed vs honor
+		3 = mt_personality_events.33  # Safety vs opportunity
+		3 = mt_personality_events.34  # Reputation vs profit
+		3 = mt_personality_events.35  # Pride before fall
+		2 = mt_personality_events.36  # Breaking point
+		2 = mt_personality_events.37  # Redemption opportunity
+		2 = mt_personality_events.38  # Descent into corruption
+		2 = mt_personality_events.39  # Final gamble
+		2 = mt_personality_events.40  # Identity crisis
+	}
+}
+
+####################################
+# MERCHANT CAREER MILESTONES
+####################################
+
+# Trigger personality assessment at key career moments
+on_merchant_tier_upgrade = {
+	events = {
+		# Check for trait synergies
+		mt_personality_events.60
+	}
+
+	effect = {
+		# Apply any trait synergies
+		mt_trait_synergy_effect = yes
+	}
+}
+
+# When merchant gains significant reputation
+on_merchant_reputation_milestone = {
+	trigger = {
+		has_variable = mt_reputation
+		var:mt_reputation >= 75
+	}
+
+	events = {
+		# High reputation milestone event
+		mt_personality_events.61
+	}
+}
+
+# When merchant loses significant reputation
+on_merchant_reputation_loss = {
+	trigger = {
+		has_variable = mt_reputation
+		var:mt_reputation <= 25
+	}
+
+	events = {
+		# Low reputation crisis event
+		mt_personality_events.62
+	}
+}
+
+####################################
+# SPECIALIZATION TRIGGERS
+####################################
+
+# Check for trade specialization eligibility
+on_merchant_specialization_check = {
+	trigger = {
+		# Must be established merchant
+		OR = {
+			has_trait = trade_post_owner
+			has_trait = trading_company_head
+			has_trait = merchant_prince
+		}
+
+		# Doesn't already have specialization
+		NOT = {
+			OR = {
+				has_trait = silk_specialist
+				has_trait = grain_merchant
+				has_trait = luxury_trader
+				has_trait = bulk_goods_hauler
+				has_trait = exotic_goods_dealer
+			}
+		}
+
+		# Has focused on one trade good
+		has_variable = mt_primary_trade_good
+	}
+
+	effect = {
+		# Attempt to gain specialization
+		mt_gain_specialization_effect = yes
+	}
+}
