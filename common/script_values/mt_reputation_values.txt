@@ -1,391 +1,328 @@
 ####################################
-# MERCHANTS AND TRADERS MOD
-# Reputation System - Script Values
-# Version: 0.1.0
+# MERCHANT REPUTATION SCRIPT VALUES
 ####################################
-#
-# This file contains scripted values for the merchant reputation system
-# Reputation works like a fame system for merchants, tracking their standing
-# in the merchant community and providing progressive bonuses
-#
-####################################
+# Fame-like reputation system for merchants
+# Reputation affects prices, opportunities, and prestige
 
-####################################
-# BASE REPUTATION GAIN/LOSS VALUES
-####################################
+#######################
+# BASE REPUTATION GAIN
+#######################
 
-# Value: Base reputation gain from successful trade
-# Scope: Character
-# Usage: value = mt_base_reputation_gain_value
-mt_base_reputation_gain_value = {
-	value = 1
+# Base reputation from successful major trade
+reputation_successful_trade = {
+	value = 10
 
-	# Bonus from stewardship skill
-	add = {
-		value = stewardship
-		multiply = 0.1
-	}
-
-	# Bonus from diplomacy skill
-	add = {
-		value = diplomacy
-		multiply = 0.05
-	}
-
-	# Bonus for ambitious merchants
+	# Bonus for exceptional profit
 	if = {
-		limit = { has_trait = ambitious }
-		multiply = 1.2
+		limit = { has_character_flag = exceptional_profit_trade }
+		add = 5
 	}
 
-	# Bonus for gregarious merchants
+	# Bonus for first trade in new region
 	if = {
-		limit = { has_trait = gregarious }
-		multiply = 1.1
-	}
-
-	min = 0.5
-	max = 5
-}
-
-# Value: Base reputation loss from failures
-# Scope: Character
-# Usage: value = mt_base_reputation_loss_value
-mt_base_reputation_loss_value = {
-	value = -1
-
-	# Worse for high-tier merchants (more to lose)
-	if = {
-		limit = { has_trait = merchant_prince }
-		multiply = 2.0
-	}
-	if = {
-		limit = { has_trait = trading_company_head }
-		multiply = 1.5
-	}
-	if = {
-		limit = { has_trait = trade_post_owner }
-		multiply = 1.2
-	}
-
-	min = -10
-	max = -0.5
-}
-
-####################################
-# REPUTATION FROM SOURCES
-####################################
-
-# Value: Reputation decay per year (natural decline)
-# Scope: Character
-# Usage: value = mt_reputation_decay_value
-mt_reputation_decay_value = {
-	value = -1  # Lose 1 reputation per year without activity
-
-	# Slower decay for legendary merchants
-	if = {
-		limit = {
-			has_character_modifier = mt_legendary_merchant
-		}
-		multiply = 0.5
-	}
-
-	# Slower decay if in merchant guild
-	if = {
-		limit = {
-			has_character_modifier = mt_guild_member
-		}
-		multiply = 0.75
-	}
-
-	min = -5
-	max = 0
-}
-
-# Value: Reputation bonus from wealth
-# Scope: Character
-# Usage: value = mt_reputation_from_wealth_value
-mt_reputation_from_wealth_value = {
-	value = 0
-
-	# +1 reputation per 1000 gold
-	add = {
-		value = gold
-		divide = 1000
-	}
-
-	min = 0
-	max = 50  # Cap at +50 from wealth
-}
-
-# Value: Reputation bonus from active profitable trade routes
-# Scope: Character
-# Usage: value = mt_reputation_from_routes_value
-mt_reputation_from_routes_value = {
-	value = 0
-
-	# This would need to count actual trade routes
-	# For now, placeholder based on merchant tier
-	if = {
-		limit = { has_trait = merchant_prince }
-		add = 20
-	}
-	if = {
-		limit = { has_trait = trading_company_head }
+		limit = { has_character_flag = pioneering_trade }
 		add = 10
 	}
-	if = {
-		limit = { has_trait = trade_post_owner }
-		add = 4
-	}
-	if = {
-		limit = { has_trait = wandering_merchant }
-		add = 2
-	}
-
-	min = 0
-	max = 100
 }
 
-# Value: Reputation bonus from merchant tier
-# Scope: Character
-# Usage: value = mt_reputation_from_tier_value
-mt_reputation_from_tier_value = {
-	value = 0
-
-	if = {
-		limit = { has_trait = wandering_merchant }
-		add = 0
-	}
-	if = {
-		limit = { has_trait = trade_post_owner }
-		add = 15
-	}
-	if = {
-		limit = { has_trait = trading_company_head }
-		add = 30
-	}
-	if = {
-		limit = { has_trait = merchant_prince }
-		add = 50
-	}
-
-	min = 0
-	max = 50
-}
-
-####################################
-# TOTAL REPUTATION CALCULATION
-####################################
-
-# Value: Total merchant reputation score
-# Scope: Character
-# Usage: value = mt_total_reputation_value
-mt_total_reputation_value = {
-	value = 0
-
-	# Add base reputation from character variable
-	# (This would be stored and tracked separately)
-	# add = var:merchant_reputation
-
-	# Add bonuses from various sources
-	add = mt_reputation_from_wealth_value
-	add = mt_reputation_from_routes_value
-	add = mt_reputation_from_tier_value
-
-	# Bonus from prestige
-	add = {
-		value = prestige
-		divide = 500
-	}
-
-	min = 0
-	max = 1000  # Maximum reputation cap
-}
-
-####################################
-# REPUTATION TIER THRESHOLDS
-####################################
-
-# Value: Reputation required for next tier
-# Scope: Character
-# Usage: value = mt_reputation_next_tier_value
-mt_reputation_next_tier_value = {
-	value = 10
-
-	# Calculate based on current tier
-	if = {
-		limit = { has_character_modifier = mt_reputation_unknown_peddler }
-		value = 10  # Need 10 for local trader
-	}
-	if = {
-		limit = { has_character_modifier = mt_reputation_local_trader }
-		value = 25  # Need 25 for known merchant
-	}
-	if = {
-		limit = { has_character_modifier = mt_reputation_known_merchant }
-		value = 50  # Need 50 for respected trader
-	}
-	if = {
-		limit = { has_character_modifier = mt_reputation_respected_trader }
-		value = 100  # Need 100 for prominent merchant
-	}
-	if = {
-		limit = { has_character_modifier = mt_reputation_prominent_merchant }
-		value = 200  # Need 200 for renowned trader
-	}
-	if = {
-		limit = { has_character_modifier = mt_reputation_renowned_trader }
-		value = 300  # Need 300 for merchant magnate
-	}
-	if = {
-		limit = { has_character_modifier = mt_reputation_merchant_magnate }
-		value = 450  # Need 450 for trade master
-	}
-	if = {
-		limit = { has_character_modifier = mt_reputation_trade_master }
-		value = 600  # Need 600 for legend of commerce
-	}
-	if = {
-		limit = { has_character_modifier = mt_reputation_legend_of_commerce }
-		value = 800  # Need 800 for immortal legacy
-	}
-	if = {
-		limit = { has_character_modifier = mt_reputation_immortal_legacy }
-		value = 1000  # Already at max
-	}
-}
-
-####################################
-# REPUTATION EVENT VALUES
-####################################
-
-# Value: Reputation gain from successful major trade
-# Scope: Character
-# Usage: value = mt_reputation_major_trade_value
-mt_reputation_major_trade_value = {
-	value = 10
-
-	# More for higher tier merchants
-	if = {
-		limit = { has_trait = merchant_prince }
-		multiply = 1.5
-	}
-}
-
-# Value: Reputation gain from charitable donation
-# Scope: Character
-# Usage: value = mt_reputation_charity_value
-mt_reputation_charity_value = {
+# Reputation from charitable acts
+reputation_from_charity = {
 	value = 5
 
+	# Large donations worth more
 	if = {
-		limit = { has_trait = compassionate }
-		multiply = 1.5
+		limit = { has_character_flag = major_charitable_donation }
+		add = 10
+	}
+
+	# Bonus if charity to poor
+	if = {
+		limit = { has_character_flag = charity_to_poor }
+		add = 5
 	}
 }
 
-# Value: Reputation gain from honest dealing
-# Scope: Character
-# Usage: value = mt_reputation_honesty_value
-mt_reputation_honesty_value = {
+# Reputation from honest dealing
+reputation_from_honesty = {
 	value = 15
 
+	# Extra bonus if temptation was high
 	if = {
-		limit = { has_trait = just }
-		multiply = 1.3
+		limit = { has_character_flag = resisted_major_fraud_opportunity }
+		add = 10
 	}
 }
 
-# Value: Reputation gain from helping ruler financially
-# Scope: Character
-# Usage: value = mt_reputation_royal_help_value
-mt_reputation_royal_help_value = {
+# Reputation from helping rulers
+reputation_from_royal_service = {
 	value = 20
 
+	# Bonus for critical assistance
 	if = {
-		limit = {
-			exists = liege
-			liege = { is_ruler = yes }
-		}
-		multiply = 1.2
+		limit = { has_character_flag = saved_realm_financially }
+		add = 30
 	}
 }
 
-# Value: Reputation gain from discovering new trade route
-# Scope: Character
-# Usage: value = mt_reputation_new_route_value
-mt_reputation_new_route_value = {
+# Reputation from discovering trade routes
+reputation_from_discovery = {
 	value = 25
 
+	# Major discovery worth more
 	if = {
-		limit = { learning >= 12 }
-		multiply = 1.2
+		limit = { has_character_flag = discovered_silk_road }
+		add = 25
 	}
 }
 
-# Value: Reputation loss from failed trade
-# Scope: Character
-# Usage: value = mt_reputation_failed_trade_value
-mt_reputation_failed_trade_value = {
+#######################
+# BASE REPUTATION LOSS
+#######################
+
+# Reputation loss from failed trade
+reputation_loss_failed_trade = {
 	value = -5
+
+	# Worse if total loss
+	if = {
+		limit = { has_character_flag = catastrophic_trade_failure }
+		add = -10
+	}
 }
 
-# Value: Reputation loss from bankruptcy
-# Scope: Character
-# Usage: value = mt_reputation_bankruptcy_value
-mt_reputation_bankruptcy_value = {
+# Reputation loss from bankruptcy
+reputation_loss_bankruptcy = {
 	value = -50
 
-	# Worse for established merchants
+	# Even worse if second bankruptcy
 	if = {
-		limit = {
-			OR = {
-				has_trait = trading_company_head
-				has_trait = merchant_prince
+		limit = { has_variable = bankruptcy_count }
+		if = {
+			limit = {
+				check_variable = {
+					which = bankruptcy_count
+					value >= 2
+				}
 			}
+			add = -50
 		}
-		multiply = 1.5
 	}
 }
 
-# Value: Reputation loss from fraud
-# Scope: Character
-# Usage: value = mt_reputation_fraud_value
-mt_reputation_fraud_value = {
+# Reputation loss from fraud
+reputation_loss_fraud = {
 	value = -100
 
-	# Devastating for high reputation
+	# Catastrophic if caught multiple times
 	if = {
-		limit = { prestige >= 1000 }
-		multiply = 1.5
+		limit = { has_character_flag = repeat_fraudster }
+		add = -100
 	}
 }
 
-# Value: Reputation loss from breaking contract
-# Scope: Character
-# Usage: value = mt_reputation_broken_contract_value
-mt_reputation_broken_contract_value = {
+# Reputation loss from breaking contracts
+reputation_loss_broken_contract = {
 	value = -30
+
+	# Worse if contract with ruler
+	if = {
+		limit = { has_character_flag = broke_royal_contract }
+		add = -30
+	}
 }
 
-# Value: Reputation loss from defaulting on loan
-# Scope: Character
-# Usage: value = mt_reputation_loan_default_value
-mt_reputation_loan_default_value = {
+# Reputation loss from defaulting on loans
+reputation_loss_loan_default = {
 	value = -40
+
+	# Worse for larger loans
+	if = {
+		limit = { has_character_flag = major_loan_default }
+		add = -35
+	}
 }
 
-####################################
-# REPUTATION MILESTONE VALUES
-####################################
+#######################
+# REPUTATION MODIFIERS
+#######################
 
-# Value: Check if at major milestone
-# Scope: Character
-# Returns: 1 if at milestone (100, 250, 500, 750), 0 otherwise
-mt_at_reputation_milestone_value = {
+# Yearly reputation decay
+reputation_decay_yearly = {
+	value = -1
+
+	# No decay if actively trading
+	if = {
+		limit = { has_character_flag = actively_trading }
+		add = 1
+	}
+
+	# Slower decay at higher tiers
+	if = {
+		limit = { has_variable = merchant_reputation }
+		if = {
+			limit = {
+				check_variable = {
+					which = merchant_reputation
+					value >= 300
+				}
+			}
+			add = 0.5
+		}
+	}
+}
+
+# Reputation bonus from wealth
+reputation_from_wealth = {
 	value = 0
 
-	# This would check current reputation against milestones
-	# Implementation depends on how reputation is stored
+	# +1 per 1000 gold
+	if = {
+		limit = { gold >= 1000 }
+		add = 1
+	}
+	if = {
+		limit = { gold >= 2000 }
+		add = 1
+	}
+	if = {
+		limit = { gold >= 3000 }
+		add = 1
+	}
+	if = {
+		limit = { gold >= 5000 }
+		add = 2
+	}
+	if = {
+		limit = { gold >= 7500 }
+		add = 2
+	}
+	if = {
+		limit = { gold >= 10000 }
+		add = 3
+	}
+}
+
+# Reputation bonus from active profitable routes
+reputation_from_routes = {
+	value = 0
+
+	# +2 per profitable route (tracked via variables)
+	if = {
+		limit = { has_variable = profitable_routes }
+		add = profitable_routes
+		multiply = 2
+	}
+}
+
+# Reputation bonus from merchant tier
+reputation_from_tier = {
+	value = 0
+
+	# Wandering Merchant: 0
+	if = {
+		limit = { has_character_modifier = wandering_merchant }
+		add = 0
+	}
+
+	# Local Trader: 10
+	if = {
+		limit = { has_character_modifier = local_trader_tier }
+		add = 10
+	}
+
+	# Regional Merchant: 20
+	if = {
+		limit = { has_character_modifier = regional_merchant }
+		add = 20
+	}
+
+	# Trade Factor: 30
+	if = {
+		limit = { has_character_modifier = trade_factor }
+		add = 30
+	}
+
+	# Merchant Prince: 50
+	if = {
+		limit = { has_character_modifier = merchant_prince }
+		add = 50
+	}
+}
+
+#######################
+# TOTAL REPUTATION
+#######################
+
+# Calculate total merchant reputation
+total_merchant_reputation = {
+	value = 0
+
+	# Base reputation from variable
+	if = {
+		limit = { has_variable = merchant_reputation }
+		add = merchant_reputation
+	}
+
+	# Ongoing bonuses from wealth
+	add = reputation_from_wealth
+
+	# Ongoing bonuses from routes
+	add = reputation_from_routes
+
+	# Ongoing bonuses from tier
+	add = reputation_from_tier
+}
+
+#######################
+# REPUTATION TIER THRESHOLDS
+#######################
+
+# Check if at tier 1: Unknown Peddler (0-9)
+reputation_tier_1_threshold = {
+	value = 0
+}
+
+# Check if at tier 2: Local Trader (10-24)
+reputation_tier_2_threshold = {
+	value = 10
+}
+
+# Check if at tier 3: Known Merchant (25-49)
+reputation_tier_3_threshold = {
+	value = 25
+}
+
+# Check if at tier 4: Respected Trader (50-99)
+reputation_tier_4_threshold = {
+	value = 50
+}
+
+# Check if at tier 5: Prominent Merchant (100-199)
+reputation_tier_5_threshold = {
+	value = 100
+}
+
+# Check if at tier 6: Renowned Trader (200-299)
+reputation_tier_6_threshold = {
+	value = 200
+}
+
+# Check if at tier 7: Merchant Magnate (300-449)
+reputation_tier_7_threshold = {
+	value = 300
+}
+
+# Check if at tier 8: Trade Master (450-599)
+reputation_tier_8_threshold = {
+	value = 450
+}
+
+# Check if at tier 9: Legend of Commerce (600-799)
+reputation_tier_9_threshold = {
+	value = 600
+}
+
+# Check if at tier 10: Immortal Legacy (800+)
+reputation_tier_10_threshold = {
+	value = 800
 }
