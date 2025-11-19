@@ -1,0 +1,161 @@
+l_english:
+
+ ####################################
+ # Phase 6 Decisions - Auto-generated
+ ####################################
+
+ # Artificial Scarcity
+ artificial_scarcity_decision:0 "Artificial Scarcity"
+ artificial_scarcity_decision_desc:0 "Make decisions about artificial scarcity."
+ artificial_scarcity_decision_tooltip:0 "Choose to artificial scarcity"
+ artificial_scarcity_decision_confirm:0 "Confirm"
+ # Assign Espionage Mission
+ assign_espionage_mission_decision:0 "Assign Espionage Mission"
+ assign_espionage_mission_decision_desc:0 "Make decisions about assign espionage mission."
+ assign_espionage_mission_decision_tooltip:0 "Choose to assign espionage mission"
+ assign_espionage_mission_decision_confirm:0 "Confirm"
+ # Attempt Market Corner
+ attempt_market_corner_decision:0 "Attempt Market Corner"
+ attempt_market_corner_decision_desc:0 "Make decisions about attempt market corner."
+ attempt_market_corner_decision_tooltip:0 "Choose to attempt market corner"
+ attempt_market_corner_decision_confirm:0 "Confirm"
+ # Break Contract
+ break_contract_decision:0 "Break Contract"
+ break_contract_decision_desc:0 "Make decisions about break contract."
+ break_contract_decision_tooltip:0 "Choose to break contract"
+ break_contract_decision_confirm:0 "Confirm"
+ # Close Trade Route
+ close_trade_route_decision:0 "Close Trade Route"
+ # Conduct Performance Review
+ conduct_performance_review_decision:0 "Conduct Performance Review"
+ conduct_performance_review_decision_desc:0 "Make decisions about conduct performance review."
+ conduct_performance_review_decision_tooltip:0 "Choose to conduct performance review"
+ conduct_performance_review_decision_confirm:0 "Confirm"
+ # Create Volume Commitment
+ create_volume_commitment_decision:0 "Create Volume Commitment"
+ create_volume_commitment_decision_desc:0 "Make decisions about create volume commitment."
+ create_volume_commitment_decision_tooltip:0 "Choose to create volume commitment"
+ create_volume_commitment_decision_confirm:0 "Confirm"
+ # Dismiss Spy
+ dismiss_spy_decision:0 "Dismiss Spy"
+ dismiss_spy_decision_desc:0 "Make decisions about dismiss spy."
+ dismiss_spy_decision_tooltip:0 "Choose to dismiss spy"
+ dismiss_spy_decision_confirm:0 "Confirm"
+ # Emergency Close All Routes
+ emergency_close_all_routes_decision:0 "Emergency Close All Routes"
+ # Employee Training
+ employee_training_decision:0 "Employee Training"
+ employee_training_decision_desc:0 "Make decisions about employee training."
+ employee_training_decision_tooltip:0 "Choose to employee training"
+ employee_training_decision_confirm:0 "Confirm"
+ # Establish New Trade Route
+ establish_new_trade_route_decision:0 "Establish New Trade Route"
+ # Expose Spy
+ expose_spy_decision:0 "Expose Spy"
+ expose_spy_decision_desc:0 "Make decisions about expose spy."
+ expose_spy_decision_tooltip:0 "Choose to expose spy"
+ expose_spy_decision_confirm:0 "Confirm"
+ # Fire Employee
+ fire_employee_decision:0 "Fire Employee"
+ fire_employee_decision_desc:0 "Make decisions about fire employee."
+ fire_employee_decision_tooltip:0 "Choose to fire employee"
+ fire_employee_decision_confirm:0 "Confirm"
+ # Form Intelligence Network
+ form_intelligence_network_decision:0 "Form Intelligence Network"
+ form_intelligence_network_decision_desc:0 "Make decisions about form intelligence network."
+ form_intelligence_network_decision_tooltip:0 "Choose to form intelligence network"
+ form_intelligence_network_decision_confirm:0 "Confirm"
+ # Form Price Cartel
+ form_price_cartel_decision:0 "Form Price Cartel"
+ form_price_cartel_decision_desc:0 "Make decisions about form price cartel."
+ form_price_cartel_decision_tooltip:0 "Choose to form price cartel"
+ form_price_cartel_decision_confirm:0 "Confirm"
+ # Give Employee Bonus
+ give_employee_bonus_decision:0 "Give Employee Bonus"
+ give_employee_bonus_decision_desc:0 "Make decisions about give employee bonus."
+ give_employee_bonus_decision_tooltip:0 "Choose to give employee bonus"
+ give_employee_bonus_decision_confirm:0 "Confirm"
+ # Hire Employee
+ hire_employee_decision:0 "Hire Employee"
+ hire_employee_decision_desc:0 "Make decisions about hire employee."
+ hire_employee_decision_tooltip:0 "Choose to hire employee"
+ hire_employee_decision_confirm:0 "Confirm"
+ # Inspect Route Health
+ inspect_route_health_decision:0 "Inspect Route Health"
+ # Invest In Security
+ invest_in_security_decision:0 "Invest In Security"
+ invest_in_security_decision_desc:0 "Make decisions about invest in security."
+ invest_in_security_decision_tooltip:0 "Choose to invest in security"
+ invest_in_security_decision_confirm:0 "Confirm"
+ # Investigate Embezzlement
+ investigate_embezzlement_decision:0 "Investigate Embezzlement"
+ investigate_embezzlement_decision_desc:0 "Make decisions about investigate embezzlement."
+ investigate_embezzlement_decision_tooltip:0 "Choose to investigate embezzlement"
+ investigate_embezzlement_decision_confirm:0 "Confirm"
+ # Launch Sabotage Campaign
+ launch_sabotage_campaign_decision:0 "Launch Sabotage Campaign"
+ launch_sabotage_campaign_decision_desc:0 "Make decisions about launch sabotage campaign."
+ launch_sabotage_campaign_decision_tooltip:0 "Choose to launch sabotage campaign"
+ launch_sabotage_campaign_decision_confirm:0 "Confirm"
+ # Market Flooding
+ market_flooding_decision:0 "Market Flooding"
+ market_flooding_decision_desc:0 "Make decisions about market flooding."
+ market_flooding_decision_tooltip:0 "Choose to market flooding"
+ market_flooding_decision_confirm:0 "Confirm"
+ # Mt Establish Trade Post
+ mt_establish_trade_post_decision:0 "Mt Establish Trade Post"
+ # Mt Expand Trading Company
+ mt_expand_trading_company_decision:0 "Mt Expand Trading Company"
+ # Mt Hire Merchant Agent
+ mt_hire_merchant_agent_decision:0 "Mt Hire Merchant Agent"
+ # Mt Petition Merchant Republic Status
+ mt_petition_merchant_republic_status_decision:0 "Mt Petition Merchant Republic Status"
+ # Mt Scout Trade Opportunity
+ mt_scout_trade_opportunity_decision:0 "Mt Scout Trade Opportunity"
+ # Negotiate Supply Contract
+ negotiate_supply_contract_decision:0 "Negotiate Supply Contract"
+ negotiate_supply_contract_decision_desc:0 "Make decisions about negotiate supply contract."
+ negotiate_supply_contract_decision_tooltip:0 "Choose to negotiate supply contract"
+ negotiate_supply_contract_decision_confirm:0 "Confirm"
+ # Offer Exclusive Purchase
+ offer_exclusive_purchase_decision:0 "Offer Exclusive Purchase"
+ offer_exclusive_purchase_decision_desc:0 "Make decisions about offer exclusive purchase."
+ offer_exclusive_purchase_decision_tooltip:0 "Choose to offer exclusive purchase"
+ offer_exclusive_purchase_decision_confirm:0 "Confirm"
+ # Promote Employee
+ promote_employee_decision:0 "Promote Employee"
+ promote_employee_decision_desc:0 "Make decisions about promote employee."
+ promote_employee_decision_tooltip:0 "Choose to promote employee"
+ promote_employee_decision_confirm:0 "Confirm"
+ # Recruit Spy
+ recruit_spy_decision:0 "Recruit Spy"
+ recruit_spy_decision_desc:0 "Make decisions about recruit spy."
+ recruit_spy_decision_tooltip:0 "Choose to recruit spy"
+ recruit_spy_decision_confirm:0 "Confirm"
+ # Regulatory Compliance
+ regulatory_compliance_decision:0 "Regulatory Compliance"
+ regulatory_compliance_decision_desc:0 "Make decisions about regulatory compliance."
+ regulatory_compliance_decision_tooltip:0 "Choose to regulatory compliance"
+ regulatory_compliance_decision_confirm:0 "Confirm"
+ # Renegotiate Contract
+ renegotiate_contract_decision:0 "Renegotiate Contract"
+ renegotiate_contract_decision_desc:0 "Make decisions about renegotiate contract."
+ renegotiate_contract_decision_tooltip:0 "Choose to renegotiate contract"
+ renegotiate_contract_decision_confirm:0 "Confirm"
+ # Request Price Protection
+ request_price_protection_decision:0 "Request Price Protection"
+ request_price_protection_decision_desc:0 "Make decisions about request price protection."
+ request_price_protection_decision_tooltip:0 "Choose to request price protection"
+ request_price_protection_decision_confirm:0 "Confirm"
+ # Reroute Trade Goods
+ reroute_trade_goods_decision:0 "Reroute Trade Goods"
+ # Sell Secrets
+ sell_secrets_decision:0 "Sell Secrets"
+ sell_secrets_decision_desc:0 "Make decisions about sell secrets."
+ sell_secrets_decision_tooltip:0 "Choose to sell secrets"
+ sell_secrets_decision_confirm:0 "Confirm"
+ # Spread Market Rumors
+ spread_market_rumors_decision:0 "Spread Market Rumors"
+ spread_market_rumors_decision_desc:0 "Make decisions about spread market rumors."
+ spread_market_rumors_decision_tooltip:0 "Choose to spread market rumors"
+ spread_market_rumors_decision_confirm:0 "Confirm"

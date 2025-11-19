@@ -1,0 +1,367 @@
+####################################
+# MERCHANTS AND TRADERS MOD
+# System Integration On-Actions
+####################################
+#
+# This file integrates all Phase 6 systems:
+# - AI merchant system (Phase 6)
+# - Employee management (Phase 6)
+# - Contract system (Phase 6)
+# - Espionage system (Phase 6)
+# - Reputation system (Phase 6)
+# - Manipulation system (Phase 6)
+# With existing Phase 1-5 systems:
+# - Core merchant mechanics
+# - Trade routes
+# - Regional specialization
+# - Market dynamics
+#
+####################################
+
+# MONTHLY PULSE - Integration of all systems
+on_monthly_pulse = {
+	events = {
+		# PHASE 1-2: Core Systems
+		mt_trade_route_events.0001  # Monthly trade route maintenance
+
+		# PHASE 6: Company Management
+		mt_company_management_events.6   # Random employee performance events
+		mt_company_management_events.16  # Employee raise requests
+		mt_company_management_events.18  # Employee personal issues
+
+		# PHASE 6: AI Merchants
+		# AI merchants should benefit from trade routes
+		# Linked to Phase 2 trade route system
+
+		# PHASE 6: Reputation System
+		mt_reputation_events.0001  # Monthly reputation calculation
+
+		# PHASE 6: Contract System
+		mt_contract_events.0010  # Contract performance tracking
+		mt_contract_events.0015  # Contract renewal reminders
+	}
+}
+
+# YEARLY PULSE - Major system updates
+on_yearly_pulse = {
+	events = {
+		# PHASE 6: Employee Reviews
+		# Links employee performance to route profitability
+		mt_company_management_events.32  # Team performance review
+
+		# PHASE 6: Reputation Updates
+		mt_reputation_events.0020  # Annual reputation assessment
+
+		# PHASE 6: Contract Renewals
+		mt_contract_events.0020  # Annual contract review
+
+		# PHASE 6: Regional Development
+		# Integrates with Phase 3 regional specialization
+		mt_regional_development.0001  # Regional economic update
+	}
+}
+
+# MERCHANT CHARACTER GAINS TRAIT - Integration hook
+on_trait_gained = {
+	events = {
+		mt_merchant_career_events.1000  # New merchant initialization
+	}
+}
+
+# When gaining mt_merchant base trait, also trigger employee system initialization
+on_trait_gained_interaction = {
+	on_actions = {
+		on_trait_gained
+	}
+
+	events = {
+		# Initialize company management for new merchants
+		mt_company_management_events.1  # Hiring decision prompt
+	}
+}
+
+# CHARACTER BECOMES MERCHANT - Full system initialization
+on_become_merchant = {
+	trigger = {
+		has_trait = mt_merchant
+		NOT = { has_variable = merchant_initialized }
+	}
+
+	effect = {
+		# Mark as initialized
+		set_variable = {
+			name = merchant_initialized
+			value = yes
+		}
+
+		# Initialize core merchant systems (Phase 1-2)
+		mt_initialize_merchant_effect = yes
+
+		# Initialize reputation system (Phase 6)
+		set_variable = {
+			name = merchant_reputation
+			value = 50
+		}
+
+		# Initialize employee management (Phase 6)
+		set_variable = {
+			name = employee_count
+			value = 0
+		}
+
+		# Initialize contract system (Phase 6)
+		set_variable = {
+			name = active_contracts
+			value = 0
+		}
+
+		# Initialize espionage network (Phase 6)
+		set_variable = {
+			name = intelligence_network_size
+			value = 0
+		}
+	}
+}
+
+# TRADE ROUTE ESTABLISHED - Link to employee system
+on_trade_route_established = {
+	effect = {
+		# Phase 2: Core trade route effects
+		mt_establish_route_effect = yes
+
+		# Phase 6: Employee benefits
+		# Route managers improve route profitability
+		if = {
+			limit = {
+				any_courtier = {
+					has_variable = employer
+					var:employer = root
+					var:employee_role = flag:route_manager
+				}
+			}
+
+			# Bonus from having route manager
+			add_character_modifier = {
+				modifier = mt_professional_route_management
+				years = 1
+			}
+		}
+
+		# Phase 6: Reputation gain
+		change_variable = {
+			name = merchant_reputation
+			add = 5
+		}
+	}
+}
+
+# TRADE ROUTE PROFITS - Link to employee bonuses
+on_trade_route_profit = {
+	effect = {
+		# Phase 2: Base profit calculation
+		mt_calculate_route_profit_effect = yes
+
+		# Phase 6: Employee loyalty boost on profitable routes
+		every_courtier = {
+			limit = {
+				has_variable = employer
+				var:employer = root
+			}
+			change_variable = {
+				name = employee_loyalty
+				add = 1
+			}
+		}
+	}
+}
+
+# RIVALRY ESTABLISHED - Link to espionage
+on_rivalry_started = {
+	events = {
+		# Phase 6: Espionage opportunities with rivals
+		mt_espionage.0001  # Spy on rival opportunity
+	}
+}
+
+# AI MERCHANT SPAWNED - Integration with core systems
+on_ai_merchant_spawned = {
+	effect = {
+		# Phase 6: AI merchants use Phase 2 trade routes
+		add_trait = mt_merchant
+
+		# Initialize with base trade route
+		mt_initialize_ai_merchant_routes_effect = yes
+
+		# Set base reputation
+		set_variable = {
+			name = merchant_reputation
+			value = 40
+		}
+	}
+}
+
+# MARKET MANIPULATION - Link to reputation
+on_market_manipulation_attempt = {
+	effect = {
+		# Phase 6: Manipulation affects reputation
+		if = {
+			limit = {
+				has_variable = manipulation_successful
+				var:manipulation_successful = yes
+			}
+			change_variable = {
+				name = merchant_reputation
+				add = -10
+			}
+		}
+	}
+}
+
+# CONTRACT BREACHED - Link to reputation and relationships
+on_contract_breached = {
+	effect = {
+		# Phase 6: Contract breach damages reputation
+		change_variable = {
+			name = merchant_reputation
+			add = -20
+		}
+
+		# Damage relationships
+		if = {
+			limit = { exists = scope:contract_partner }
+			scope:contract_partner = {
+				add_opinion = {
+					target = root
+					modifier = broken_contract_opinion
+					opinion = -40
+				}
+			}
+		}
+	}
+
+	events = {
+		mt_contract_events.0025  # Breach consequences
+	}
+}
+
+# ESPIONAGE DISCOVERED - Link to rivalry and reputation
+on_espionage_discovered = {
+	events = {
+		mt_espionage.0020  # Caught spying event
+	}
+
+	effect = {
+		# Phase 6: Reputation damage
+		change_variable = {
+			name = merchant_reputation
+			add = -15
+		}
+
+		# May start rivalry
+		if = {
+			limit = { exists = scope:spy_target }
+			scope:spy_target = {
+				add_opinion = {
+					target = root
+					modifier = caught_spying_opinion
+					opinion = -50
+				}
+			}
+		}
+	}
+}
+
+# EMPLOYEE HIRED - Initialize employee variables
+on_employee_hired = {
+	effect = {
+		scope:new_employee = {
+			# Set employer
+			set_variable = {
+				name = employer
+				value = root
+			}
+
+			# Set role (passed as parameter)
+			set_variable = {
+				name = employee_role
+				value = scope:role
+			}
+
+			# Initialize loyalty
+			set_variable = {
+				name = employee_loyalty
+				value = 50
+			}
+
+			# Initialize performance
+			set_variable = {
+				name = employee_performance
+				value = 50
+			}
+
+			# Set quality level
+			set_variable = {
+				name = employee_quality
+				value = scope:quality_level
+			}
+
+			# Set base salary
+			set_variable = {
+				name = employee_salary
+				value = 5
+			}
+		}
+
+		# Increment employer's employee count
+		change_variable = {
+			name = employee_count
+			add = 1
+		}
+	}
+}
+
+# REGIONAL DEVELOPMENT - Link to trade routes and economy
+on_regional_development = {
+	effect = {
+		# Phase 3: Regional specialization effects
+		# Phase 6: Enhanced by AI merchant presence
+
+		if = {
+			limit = {
+				any_character_in_county = {
+					has_trait = mt_merchant
+				}
+			}
+
+			# Merchant presence boosts regional development
+			add_county_modifier = {
+				modifier = mt_merchant_development_boost
+				years = 5
+			}
+		}
+	}
+}
+
+# PHASE 6 SYSTEM INITIALIZATION
+# Called when the mod is loaded on an existing save
+on_game_start = {
+	events = {
+		mt_initialization.0001  # Check and initialize merchant systems
+	}
+}
+
+# MERCHANT RANK UP - Trigger company expansion opportunities
+on_merchant_rank_up = {
+	events = {
+		mt_company_management_events.35  # Attract top talent
+		mt_merchant_career_events.1010  # New tier unlocked
+	}
+
+	effect = {
+		# Reputation boost
+		change_variable = {
+			name = merchant_reputation
+			add = 15
+		}
+	}
+}
