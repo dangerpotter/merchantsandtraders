@@ -889,11 +889,6 @@ mt_expanded_empire = {
 	diplomacy = 2
 }
 
-mt_bumper_crop = {
-	icon = "gfx/interface/icons/modifiers/trade.dds"
-	monthly_character_income_mult = 0.20
-	monthly_prestige = 0.40
-}
 
 ####################################
 # END OF FILE
