@@ -1,0 +1,690 @@
+##############################################
+# MERCHANTS AND TRADERS - Company Management Decisions
+# Author: Merchants and Traders Mod Team
+# Description: Decisions for hiring and managing merchant company employees
+##############################################
+
+##############################################
+# HIRE EMPLOYEE DECISION
+# Allows merchants to recruit staff for their company
+##############################################
+hire_employee_decision = {
+	title = hire_employee_decision_title
+	desc = hire_employee_decision_desc
+	selection_tooltip = hire_employee_decision_tooltip
+
+	picture = "gfx/interface/illustrations/decisions/decision_personal_religious.dds"
+
+	sort_order = 100
+
+	is_shown = {
+		has_trait = mt_merchant
+	}
+
+	is_valid_showing_failures_only = {
+		is_imprisoned = no
+		is_incapable = no
+		is_at_war = no
+
+		# Must have enough gold for hiring fee and salary
+		custom_tooltip = {
+			text = hire_employee_gold_requirement_tt
+			gold >= 60
+		}
+
+		# Cannot exceed maximum employees (10 total)
+		custom_tooltip = {
+			text = hire_employee_max_employees_tt
+			OR = {
+				NOT = { has_variable = total_employees }
+				var:total_employees < 10
+			}
+		}
+	}
+
+	cost = {
+		gold = 50
+	}
+
+	effect = {
+		# Trigger hiring event to select role and quality
+		trigger_event = {
+			id = mt_company_management_events.1
+		}
+
+		# Increment total employees counter
+		if = {
+			limit = { has_variable = total_employees }
+			change_variable = {
+				name = total_employees
+				add = 1
+			}
+		}
+		else = {
+			set_variable = {
+				name = total_employees
+				value = 1
+			}
+		}
+	}
+
+	ai_check_interval = 60
+
+	ai_potential = {
+		has_trait = mt_merchant
+		gold >= 100
+	}
+
+	ai_will_do = {
+		base = 20
+
+		modifier = {
+			add = 20
+			gold >= 200
+		}
+
+		modifier = {
+			add = 10
+			has_trait = ambitious
+		}
+
+		modifier = {
+			add = -50
+			has_variable = total_employees
+			var:total_employees >= 5
+		}
+
+		modifier = {
+			factor = 0
+			has_variable = total_employees
+			var:total_employees >= 8
+		}
+	}
+}
+
+##############################################
+# PROMOTE EMPLOYEE DECISION
+# Upgrade an employee's quality level
+##############################################
+promote_employee_decision = {
+	title = promote_employee_decision_title
+	desc = promote_employee_decision_desc
+	selection_tooltip = promote_employee_decision_tooltip
+
+	picture = "gfx/interface/illustrations/decisions/decision_personal_religious.dds"
+
+	sort_order = 101
+
+	is_shown = {
+		has_trait = mt_merchant
+
+		# Must have at least one employee who can be promoted
+		any_courtier = {
+			has_variable = employer
+			var:employer = root
+			has_variable = employee_quality
+			var:employee_quality < 4
+		}
+	}
+
+	is_valid_showing_failures_only = {
+		is_imprisoned = no
+		is_incapable = no
+
+		# Must have enough gold for increased salary
+		custom_tooltip = {
+			text = promote_employee_gold_requirement_tt
+			gold >= 100
+		}
+	}
+
+	cost = {
+		gold = 50
+		prestige = 100
+	}
+
+	effect = {
+		# Trigger promotion selection event
+		trigger_event = {
+			id = mt_company_management_events.40
+		}
+	}
+
+	ai_check_interval = 90
+
+	ai_potential = {
+		has_trait = mt_merchant
+		gold >= 200
+	}
+
+	ai_will_do = {
+		base = 15
+
+		modifier = {
+			add = 20
+			gold >= 400
+		}
+
+		modifier = {
+			add = 10
+			has_trait = generous
+		}
+
+		modifier = {
+			add = 10
+			has_trait = diligent
+		}
+
+		modifier = {
+			add = -20
+			has_trait = greedy
+		}
+	}
+}
+
+##############################################
+# FIRE EMPLOYEE DECISION
+# Remove an underperforming employee
+##############################################
+fire_employee_decision = {
+	title = fire_employee_decision_title
+	desc = fire_employee_decision_desc
+	selection_tooltip = fire_employee_decision_tooltip
+
+	picture = "gfx/interface/illustrations/decisions/decision_personal_religious.dds"
+
+	sort_order = 102
+
+	is_shown = {
+		has_trait = mt_merchant
+
+		# Must have at least one employee
+		any_courtier = {
+			has_variable = employer
+			var:employer = root
+		}
+	}
+
+	is_valid_showing_failures_only = {
+		is_imprisoned = no
+		is_incapable = no
+	}
+
+	effect = {
+		# Trigger firing selection event
+		trigger_event = {
+			id = mt_company_management_events.41
+		}
+
+		# Decrement total employees counter
+		if = {
+			limit = {
+				has_variable = total_employees
+				var:total_employees > 0
+			}
+			change_variable = {
+				name = total_employees
+				add = -1
+			}
+		}
+	}
+
+	ai_check_interval = 60
+
+	ai_potential = {
+		has_trait = mt_merchant
+
+		# AI only fires employees with very low loyalty or performance
+		any_courtier = {
+			has_variable = employer
+			var:employer = root
+			OR = {
+				AND = {
+					has_variable = employee_loyalty
+					var:employee_loyalty < 20
+				}
+				AND = {
+					has_variable = employee_performance
+					var:employee_performance < 30
+				}
+			}
+		}
+	}
+
+	ai_will_do = {
+		base = 30
+
+		modifier = {
+			add = 30
+			has_trait = callous
+		}
+
+		modifier = {
+			add = 20
+			has_trait = wrathful
+		}
+
+		modifier = {
+			add = -30
+			has_trait = compassionate
+		}
+
+		modifier = {
+			add = -20
+			has_trait = forgiving
+		}
+	}
+}
+
+##############################################
+# GIVE EMPLOYEE BONUS DECISION
+# Reward excellent performance with a bonus
+##############################################
+give_employee_bonus_decision = {
+	title = give_employee_bonus_decision_title
+	desc = give_employee_bonus_decision_desc
+	selection_tooltip = give_employee_bonus_decision_tooltip
+
+	picture = "gfx/interface/illustrations/decisions/decision_personal_religious.dds"
+
+	sort_order = 103
+
+	is_shown = {
+		has_trait = mt_merchant
+
+		# Must have at least one employee
+		any_courtier = {
+			has_variable = employer
+			var:employer = root
+		}
+	}
+
+	is_valid_showing_failures_only = {
+		is_imprisoned = no
+		is_incapable = no
+
+		# Must have enough gold for bonuses
+		custom_tooltip = {
+			text = give_employee_bonus_gold_requirement_tt
+			gold >= 50
+		}
+	}
+
+	cost = {
+		gold = {
+			value = 0
+			# Cost handled in event based on selection
+		}
+	}
+
+	effect = {
+		# Trigger bonus selection event
+		trigger_event = {
+			id = mt_company_management_events.42
+		}
+	}
+
+	ai_check_interval = 120
+
+	ai_potential = {
+		has_trait = mt_merchant
+		gold >= 200
+
+		# AI only gives bonuses to high performers
+		any_courtier = {
+			has_variable = employer
+			var:employer = root
+			has_variable = employee_performance
+			var:employee_performance >= 80
+		}
+	}
+
+	ai_will_do = {
+		base = 10
+
+		modifier = {
+			add = 30
+			has_trait = generous
+		}
+
+		modifier = {
+			add = 20
+			has_trait = just
+		}
+
+		modifier = {
+			add = 15
+			gold >= 500
+		}
+
+		modifier = {
+			add = -30
+			has_trait = greedy
+		}
+
+		modifier = {
+			factor = 0
+			gold < 200
+		}
+	}
+}
+
+##############################################
+# INVESTIGATE EMBEZZLEMENT DECISION
+# Check for employee fraud
+##############################################
+investigate_embezzlement_decision = {
+	title = investigate_embezzlement_decision_title
+	desc = investigate_embezzlement_decision_desc
+	selection_tooltip = investigate_embezzlement_decision_tooltip
+
+	picture = "gfx/interface/illustrations/decisions/decision_personal_religious.dds"
+
+	sort_order = 104
+
+	cooldown = { years = 1 }
+
+	is_shown = {
+		has_trait = mt_merchant
+
+		# Must have employees
+		any_courtier = {
+			has_variable = employer
+			var:employer = root
+		}
+	}
+
+	is_valid_showing_failures_only = {
+		is_imprisoned = no
+		is_incapable = no
+
+		# Must have gold for investigation
+		custom_tooltip = {
+			text = investigate_embezzlement_gold_requirement_tt
+			gold >= 30
+		}
+	}
+
+	cost = {
+		gold = 30
+	}
+
+	effect = {
+		# Check each employee for embezzlement
+		every_courtier = {
+			limit = {
+				has_variable = employer
+				var:employer = root
+				has_variable = employee_loyalty
+				var:employee_loyalty < 40
+			}
+
+			save_temporary_scope_as = suspect_employee
+
+			root = {
+				embezzlement_detection_effect = {
+					employee = scope:suspect_employee
+				}
+			}
+		}
+
+		# All loyal employees lose a bit of trust
+		every_courtier = {
+			limit = {
+				has_variable = employer
+				var:employer = root
+				has_variable = employee_loyalty
+				var:employee_loyalty >= 60
+			}
+
+			change_variable = {
+				name = employee_loyalty
+				add = -5
+			}
+		}
+
+		# Trigger investigation results event
+		trigger_event = {
+			id = mt_company_management_events.43
+			days = 7
+		}
+	}
+
+	ai_check_interval = 120
+
+	ai_potential = {
+		has_trait = mt_merchant
+
+		# AI investigates if they suspect embezzlement
+		any_courtier = {
+			has_variable = employer
+			var:employer = root
+			has_variable = employee_loyalty
+			var:employee_loyalty < 25
+		}
+	}
+
+	ai_will_do = {
+		base = 40
+
+		modifier = {
+			add = 30
+			has_trait = paranoid
+		}
+
+		modifier = {
+			add = 20
+			has_trait = diligent
+		}
+
+		modifier = {
+			add = 20
+			has_trait = just
+		}
+
+		modifier = {
+			add = -20
+			has_trait = trusting
+		}
+
+		modifier = {
+			add = -30
+			has_trait = forgiving
+		}
+	}
+}
+
+##############################################
+# CONDUCT PERFORMANCE REVIEW DECISION
+# Quarterly evaluation of all employees
+##############################################
+conduct_performance_review_decision = {
+	title = conduct_performance_review_decision_title
+	desc = conduct_performance_review_decision_desc
+	selection_tooltip = conduct_performance_review_decision_tooltip
+
+	picture = "gfx/interface/illustrations/decisions/decision_personal_religious.dds"
+
+	sort_order = 105
+
+	cooldown = { months = 3 }
+
+	is_shown = {
+		has_trait = mt_merchant
+
+		# Must have employees
+		any_courtier = {
+			has_variable = employer
+			var:employer = root
+		}
+	}
+
+	is_valid_showing_failures_only = {
+		is_imprisoned = no
+		is_incapable = no
+	}
+
+	cost = {
+		prestige = 50
+	}
+
+	effect = {
+		# Conduct performance reviews
+		employee_performance_review_effect = yes
+
+		# Trigger summary event
+		trigger_event = {
+			id = mt_company_management_events.44
+			days = 5
+		}
+	}
+
+	ai_check_interval = 90
+
+	ai_potential = {
+		has_trait = mt_merchant
+	}
+
+	ai_will_do = {
+		base = 30
+
+		modifier = {
+			add = 20
+			has_trait = diligent
+		}
+
+		modifier = {
+			add = 15
+			has_trait = just
+		}
+
+		modifier = {
+			add = -20
+			has_trait = lazy
+		}
+
+		modifier = {
+			add = -15
+			has_trait = trusting
+		}
+	}
+}
+
+##############################################
+# EMPLOYEE TRAINING DECISION
+# Improve employee skills and loyalty
+##############################################
+employee_training_decision = {
+	title = employee_training_decision_title
+	desc = employee_training_decision_desc
+	selection_tooltip = employee_training_decision_tooltip
+
+	picture = "gfx/interface/illustrations/decisions/decision_personal_religious.dds"
+
+	sort_order = 106
+
+	cooldown = { years = 2 }
+
+	is_shown = {
+		has_trait = mt_merchant
+
+		# Must have employees
+		any_courtier = {
+			has_variable = employer
+			var:employer = root
+		}
+	}
+
+	is_valid_showing_failures_only = {
+		is_imprisoned = no
+		is_incapable = no
+
+		# Must have gold for training program
+		custom_tooltip = {
+			text = employee_training_gold_requirement_tt
+			gold >= 100
+		}
+	}
+
+	cost = {
+		gold = 100
+		prestige = 150
+	}
+
+	effect = {
+		# Improve all employees
+		every_courtier = {
+			limit = {
+				has_variable = employer
+				var:employer = root
+			}
+
+			# Increase loyalty
+			change_variable = {
+				name = employee_loyalty
+				add = 10
+			}
+
+			# Increase performance
+			change_variable = {
+				name = employee_performance
+				add = 10
+			}
+
+			# Small chance to improve quality
+			random = {
+				chance = 20
+
+				if = {
+					limit = { var:employee_quality < 4 }
+					change_variable = {
+						name = employee_quality
+						add = 1
+					}
+				}
+			}
+		}
+
+		# Trigger training event
+		trigger_event = {
+			id = mt_company_management_events.45
+			days = 30
+		}
+	}
+
+	ai_check_interval = 180
+
+	ai_potential = {
+		has_trait = mt_merchant
+		gold >= 300
+	}
+
+	ai_will_do = {
+		base = 15
+
+		modifier = {
+			add = 25
+			has_trait = diligent
+		}
+
+		modifier = {
+			add = 20
+			has_trait = ambitious
+		}
+
+		modifier = {
+			add = 15
+			learning >= 15
+		}
+
+		modifier = {
+			add = -20
+			has_trait = greedy
+		}
+
+		modifier = {
+			factor = 0
+			gold < 250
+		}
+	}
+}
