@@ -1,0 +1,860 @@
+####################################
+# MERCHANTS AND TRADERS MOD
+# Contract Character Interactions
+####################################
+#
+# This file defines character interactions for the contract system:
+# 1. propose_trade_agreement_interaction - Propose contract to potential partner
+# 2. sue_for_breach_interaction - Legal action for contract breach
+# 3. request_contract_extension_interaction - Extend successful partnership
+#
+####################################
+
+####################################
+# 1. PROPOSE TRADE AGREEMENT
+# Merchant proposes formal contract to potential partner
+####################################
+
+propose_trade_agreement_interaction = {
+	category = interaction_category_diplomacy
+
+	desc = propose_trade_agreement_interaction_desc
+
+	greeting = positive
+	notification_text = PROPOSE_TRADE_AGREEMENT_NOTIFICATION
+
+	ai_targets = {
+		ai_recipients = neighboring_rulers
+		ai_recipients = liege
+		ai_recipients = vassals
+		ai_recipients = courtiers
+	}
+
+	ai_frequency = 36  # Check every 3 years
+
+	# Show to merchants when targeting potential partners
+	is_shown = {
+		scope:actor = {
+			# Actor must be a merchant
+			is_any_merchant_trigger = yes
+
+			# Must not have too many active contracts
+			trigger_if = {
+				limit = {
+					has_variable = mt_supply_contract_active
+					has_variable = mt_purchase_contract_active
+				}
+				custom_description = {
+					text = mt_too_many_contracts_tt
+					always = no
+				}
+			}
+		}
+
+		scope:recipient = {
+			# Recipient must be ruler or merchant
+			OR = {
+				is_ruler = yes
+				is_any_merchant_trigger = yes
+			}
+		}
+
+		# Not the same character
+		scope:actor != scope:recipient
+
+		# Not already in contract together
+		scope:actor = {
+			NOR = {
+				var:mt_supply_contract_partner = scope:recipient
+				var:mt_purchase_contract_partner = scope:recipient
+			}
+		}
+	}
+
+	is_valid_showing_failures_only = {
+		# Not at war with each other
+		scope:actor = {
+			NOR = {
+				is_at_war_with = scope:recipient
+				has_truce = scope:recipient
+			}
+		}
+
+		# Actor has enough gold
+		scope:actor = {
+			gold >= 100
+		}
+
+		# Actor not a notorious contract breaker
+		scope:actor = {
+			NOT = { has_character_modifier = mt_notorious_contract_breaker }
+		}
+
+		# Recipient not a notorious contract breaker
+		scope:recipient = {
+			NOT = { has_character_modifier = mt_notorious_contract_breaker }
+		}
+
+		# At least neutral relations
+		scope:recipient = {
+			opinion = {
+				target = scope:actor
+				value >= 0
+			}
+		}
+	}
+
+	can_send = {
+		# Actor must have decent reputation
+		scope:actor = {
+			trigger_if = {
+				limit = { has_variable = merchant_reputation }
+				custom_description = {
+					text = mt_contract_reputation_requirement_tt
+					var:merchant_reputation >= 10
+				}
+			}
+		}
+	}
+
+	# Contract type options
+	send_option = {
+		is_valid = {
+			scope:actor = {
+				# Can propose supply contract
+				NOT = { has_variable = mt_supply_contract_active }
+			}
+		}
+		flag = supply_contract
+		localization = SUPPLY_CONTRACT_OPTION
+	}
+
+	send_option = {
+		is_valid = {
+			scope:actor = {
+				# Can propose purchase contract
+				NOT = { has_variable = mt_purchase_contract_active }
+				gold >= 200
+			}
+		}
+		flag = purchase_contract
+		localization = PURCHASE_CONTRACT_OPTION
+	}
+
+	send_option = {
+		is_valid = {
+			scope:actor = {
+				# Can propose volume commitment
+				NOT = { has_variable = mt_volume_commitment_active }
+				gold >= 300
+			}
+		}
+		flag = volume_commitment
+		localization = VOLUME_COMMITMENT_OPTION
+	}
+
+	send_option = {
+		is_valid = {
+			scope:actor = {
+				# Can propose price guarantee
+				NOT = { has_variable = mt_price_guarantee_active }
+			}
+		}
+		flag = price_guarantee
+		localization = PRICE_GUARANTEE_OPTION
+	}
+
+	# Duration options
+	send_option = {
+		is_valid = {
+			scope:actor = {
+				gold >= 50
+			}
+		}
+		flag = short_duration
+		localization = SHORT_DURATION_OPTION
+	}
+
+	send_option = {
+		is_valid = {
+			scope:actor = {
+				gold >= 100
+			}
+		}
+		flag = medium_duration
+		localization = MEDIUM_DURATION_OPTION
+	}
+
+	send_option = {
+		is_valid = {
+			scope:actor = {
+				gold >= 200
+			}
+		}
+		flag = long_duration
+		localization = LONG_DURATION_OPTION
+	}
+
+	on_accept = {
+		# Store contract parameters
+		scope:actor = {
+			set_variable = {
+				name = contract_partner
+				value = scope:recipient
+			}
+		}
+
+		scope:recipient = {
+			set_variable = {
+				name = contract_partner
+				value = scope:actor
+			}
+		}
+
+		# Determine contract type and create it
+		if = {
+			limit = { scope:supply_contract = yes }
+
+			# Set duration
+			if = {
+				limit = { scope:short_duration = yes }
+				scope:actor = {
+					set_variable = { name = contract_duration value = 3 }
+					set_variable = { name = contract_price value = 30 }
+				}
+			}
+			else_if = {
+				limit = { scope:medium_duration = yes }
+				scope:actor = {
+					set_variable = { name = contract_duration value = 5 }
+					set_variable = { name = contract_price value = 50 }
+				}
+			}
+			else_if = {
+				limit = { scope:long_duration = yes }
+				scope:actor = {
+					set_variable = { name = contract_duration value = 10 }
+					set_variable = { name = contract_price value = 80 }
+				}
+			}
+
+			# Create supply contract
+			scope:actor = {
+				create_supply_contract_effect = yes
+			}
+
+			# Notification event
+			scope:actor = {
+				trigger_event = mt_contract_events.0011
+			}
+		}
+		else_if = {
+			limit = { scope:purchase_contract = yes }
+
+			# Set duration and price
+			if = {
+				limit = { scope:short_duration = yes }
+				scope:actor = {
+					set_variable = { name = contract_duration value = 3 }
+					set_variable = { name = contract_price value = 40 }
+				}
+			}
+			else_if = {
+				limit = { scope:medium_duration = yes }
+				scope:actor = {
+					set_variable = { name = contract_duration value = 5 }
+					set_variable = { name = contract_price value = 60 }
+				}
+			}
+			else_if = {
+				limit = { scope:long_duration = yes }
+				scope:actor = {
+					set_variable = { name = contract_duration value = 10 }
+					set_variable = { name = contract_price value = 100 }
+				}
+			}
+
+			# Create purchase contract
+			scope:actor = {
+				create_exclusive_purchase_contract_effect = yes
+			}
+
+			scope:actor = {
+				trigger_event = mt_contract_events.0012
+			}
+		}
+		else_if = {
+			limit = { scope:volume_commitment = yes }
+
+			# Set parameters
+			scope:actor = {
+				set_variable = { name = contract_duration value = 3 }
+				set_variable = { name = monthly_volume value = 100 }
+				set_variable = { name = penalty_amount value = 50 }
+			}
+
+			# Create volume commitment
+			scope:actor = {
+				create_volume_commitment_effect = yes
+			}
+
+			scope:actor = {
+				trigger_event = mt_contract_events.0013
+			}
+		}
+		else_if = {
+			limit = { scope:price_guarantee = yes }
+
+			# Set parameters
+			scope:actor = {
+				set_variable = { name = contract_duration value = 2 }
+				set_variable = { name = fixed_price value = 100 }
+				set_variable = { name = guarantee_premium value = 50 }
+			}
+
+			# Create price guarantee
+			scope:actor = {
+				create_price_guarantee_effect = yes
+			}
+
+			scope:actor = {
+				trigger_event = mt_contract_events.0014
+			}
+		}
+
+		# Add business partner relation
+		scope:actor = {
+			add_relation_flag = {
+				relation = mt_business_partner
+				target = scope:recipient
+			}
+		}
+
+		scope:recipient = {
+			add_relation_flag = {
+				relation = mt_business_partner
+				target = scope:actor
+			}
+		}
+	}
+
+	on_decline = {
+		# Small opinion loss
+		scope:actor = {
+			add_opinion = {
+				target = scope:recipient
+				modifier = disappointed_opinion
+				opinion = -5
+			}
+		}
+
+		# Trigger rejection event
+		scope:actor = {
+			trigger_event = mt_contract_events.0010
+		}
+	}
+
+	# AI evaluation
+	ai_accept = {
+		base = 20
+
+		# Evaluate profitability
+		modifier = {
+			add = 30
+			scope:recipient = {
+				gold < 200
+			}
+			desc = AI_NEEDS_INCOME
+		}
+
+		modifier = {
+			add = 40
+			scope:recipient = {
+				opinion = {
+					target = scope:actor
+					value >= 50
+				}
+			}
+			desc = AI_GOOD_RELATIONS
+		}
+
+		modifier = {
+			add = -50
+			scope:recipient = {
+				opinion = {
+					target = scope:actor
+					value < 0
+				}
+			}
+			desc = AI_POOR_RELATIONS
+		}
+
+		modifier = {
+			add = 25
+			scope:actor = {
+				has_variable = merchant_reputation
+				var:merchant_reputation >= 50
+			}
+			desc = AI_GOOD_REPUTATION
+		}
+
+		modifier = {
+			add = -40
+			scope:recipient = {
+				OR = {
+					has_variable = mt_supply_contract_active
+					has_variable = mt_purchase_contract_active
+				}
+			}
+			desc = AI_ALREADY_CONTRACTED
+		}
+
+		# Personality factors
+		modifier = {
+			add = 20
+			scope:recipient = {
+				has_trait = greedy
+			}
+			desc = AI_GREEDY
+		}
+
+		modifier = {
+			add = -30
+			scope:recipient = {
+				has_trait = paranoid
+			}
+			desc = AI_PARANOID
+		}
+
+		modifier = {
+			add = 15
+			scope:recipient = {
+				has_trait = trusting
+			}
+			desc = AI_TRUSTING
+		}
+	}
+
+	ai_potential = {
+		is_any_merchant_trigger = yes
+		gold >= 150
+		NOR = {
+			has_variable = mt_supply_contract_active
+			has_variable = mt_purchase_contract_active
+		}
+	}
+
+	ai_will_do = {
+		base = 40
+
+		modifier = {
+			add = 30
+			gold >= 300
+		}
+
+		modifier = {
+			add = 20
+			has_trait = ambitious
+		}
+	}
+}
+
+####################################
+# 2. SUE FOR BREACH
+# Legal action against contract breaker
+####################################
+
+sue_for_breach_interaction = {
+	category = interaction_category_hostile
+
+	desc = sue_for_breach_interaction_desc
+
+	greeting = negative
+	notification_text = SUE_FOR_BREACH_NOTIFICATION
+
+	ai_targets = {
+		ai_recipients = neighboring_rulers
+		ai_recipients = vassals
+		ai_recipients = courtiers
+	}
+
+	ai_frequency = 12  # Check monthly
+
+	is_shown = {
+		scope:actor = {
+			# Actor must have been wronged by breach
+			has_variable = mt_contract_breached_by
+			var:mt_contract_breached_by = scope:recipient
+		}
+
+		scope:recipient = {
+			# Recipient must be the contract breaker
+			has_character_modifier = mt_notorious_contract_breaker
+		}
+
+		scope:actor != scope:recipient
+	}
+
+	is_valid_showing_failures_only = {
+		scope:actor = {
+			# Must have gold for legal fees
+			gold >= 100
+		}
+
+		scope:recipient = {
+			# Must be alive and accessible
+			is_alive = yes
+			is_imprisoned = no
+		}
+
+		# Must be within legal jurisdiction
+		custom_tooltip = {
+			text = sue_for_breach_jurisdiction_tt
+			OR = {
+				scope:actor = {
+					liege = scope:recipient.liege
+				}
+				scope:recipient = {
+					is_vassal_of = scope:actor
+				}
+				scope:actor = {
+					is_vassal_of = scope:recipient
+				}
+			}
+		}
+	}
+
+	can_send = {
+		# Can't sue twice
+		scope:actor = {
+			NOT = { has_character_modifier = mt_lawsuit_pending }
+		}
+	}
+
+	send_option = {
+		is_valid = {
+			scope:actor = {
+				gold >= 100
+			}
+		}
+		flag = standard_damages
+		localization = STANDARD_DAMAGES_OPTION
+	}
+
+	send_option = {
+		is_valid = {
+			scope:actor = {
+				gold >= 200
+				prestige >= 100
+			}
+		}
+		flag = punitive_damages
+		localization = PUNITIVE_DAMAGES_OPTION
+	}
+
+	on_send = {
+		# Pay legal fees
+		scope:actor = {
+			remove_short_term_gold = 100
+
+			add_character_modifier = {
+				modifier = mt_lawsuit_pending
+				months = 6
+			}
+		}
+
+		# Trigger court case event
+		if = {
+			limit = {
+				scope:actor = {
+					exists = liege
+				}
+			}
+
+			# Liege judges the case
+			scope:actor.liege = {
+				trigger_event = mt_contract_events.0024
+			}
+		}
+		else = {
+			# No liege - independent arbitration
+			scope:actor = {
+				trigger_event = mt_contract_events.0025
+			}
+		}
+	}
+
+	ai_potential = {
+		has_variable = mt_contract_breached_by
+		gold >= 150
+	}
+
+	ai_will_do = {
+		base = 60
+
+		modifier = {
+			add = 40
+			has_trait = just
+		}
+
+		modifier = {
+			add = 30
+			has_trait = vengeful
+		}
+
+		modifier = {
+			add = -40
+			has_trait = forgiving
+		}
+	}
+}
+
+####################################
+# 3. REQUEST CONTRACT EXTENSION
+# Extend successful partnership
+####################################
+
+request_contract_extension_interaction = {
+	category = interaction_category_diplomacy
+
+	desc = request_contract_extension_interaction_desc
+
+	greeting = positive
+	notification_text = REQUEST_CONTRACT_EXTENSION_NOTIFICATION
+
+	ai_targets = {
+		ai_recipients = relation_target
+	}
+
+	ai_frequency = 36
+
+	is_shown = {
+		scope:actor = {
+			# Must have active contract nearing completion
+			OR = {
+				AND = {
+					has_variable = mt_supply_contract_active
+					has_variable = mt_contract_months_fulfilled
+					var:mt_contract_months_fulfilled >= 10
+				}
+				AND = {
+					has_variable = mt_purchase_contract_active
+					has_variable = mt_contract_months_fulfilled
+					var:mt_contract_months_fulfilled >= 10
+				}
+			}
+		}
+
+		scope:recipient = {
+			# Recipient is the contract partner
+			OR = {
+				this = scope:actor.var:mt_supply_contract_partner
+				this = scope:actor.var:mt_purchase_contract_partner
+			}
+		}
+
+		scope:actor != scope:recipient
+	}
+
+	is_valid_showing_failures_only = {
+		# Good relationship required
+		scope:recipient = {
+			opinion = {
+				target = scope:actor
+				value >= 20
+			}
+		}
+
+		# No recent breaches or issues
+		scope:actor = {
+			NOT = { has_character_modifier = mt_contract_payment_overdue }
+			NOT = { has_character_modifier = mt_contract_dispute }
+		}
+	}
+
+	can_send = {
+		scope:actor = {
+			gold >= 50
+		}
+	}
+
+	send_option = {
+		is_valid = {
+			scope:actor = {
+				gold >= 50
+			}
+		}
+		flag = same_terms
+		localization = SAME_TERMS_OPTION
+	}
+
+	send_option = {
+		is_valid = {
+			scope:actor = {
+				gold >= 100
+			}
+		}
+		flag = improved_terms
+		localization = IMPROVED_TERMS_OPTION
+	}
+
+	on_accept = {
+		# Extend contract duration
+		if = {
+			limit = { scope:same_terms = yes }
+
+			scope:actor = {
+				# Add 5 more years
+				change_variable = {
+					name = mt_contract_months_total
+					add = 60
+				}
+
+				# Small bonus to relationship
+				add_opinion = {
+					target = scope:recipient
+					modifier = grateful_opinion
+					opinion = 10
+				}
+
+				# Trigger extension confirmation
+				trigger_event = mt_contract_events.0033
+			}
+
+			scope:recipient = {
+				add_prestige = 50
+			}
+		}
+		else_if = {
+			limit = { scope:improved_terms = yes }
+
+			scope:actor = {
+				# Add 5 years with better terms
+				change_variable = {
+					name = mt_contract_months_total
+					add = 60
+				}
+
+				# Increase monthly payment/discount
+				if = {
+					limit = { has_variable = mt_supply_contract_monthly_payment }
+					change_variable = {
+						name = mt_supply_contract_monthly_payment
+						add = 10
+					}
+				}
+
+				# Better relationship
+				add_opinion = {
+					target = scope:recipient
+					modifier = grateful_opinion
+					opinion = 20
+				}
+
+				trigger_event = mt_contract_events.0034
+			}
+
+			scope:recipient = {
+				add_prestige = 75
+				add_gold = 100
+			}
+		}
+
+		# Strengthen business partnership
+		scope:actor = {
+			add_opinion = {
+				target = scope:recipient
+				modifier = mt_trusted_partner_opinion
+				opinion = 15
+			}
+		}
+
+		scope:recipient = {
+			add_opinion = {
+				target = scope:actor
+				modifier = mt_trusted_partner_opinion
+				opinion = 15
+			}
+		}
+	}
+
+	on_decline = {
+		# Contract will expire naturally
+		scope:actor = {
+			trigger_event = mt_contract_events.0035
+		}
+
+		# Slight disappointment
+		scope:actor = {
+			add_opinion = {
+				target = scope:recipient
+				modifier = disappointed_opinion
+				opinion = -10
+			}
+		}
+	}
+
+	ai_accept = {
+		base = 60
+
+		modifier = {
+			add = 40
+			scope:recipient = {
+				opinion = {
+					target = scope:actor
+					value >= 50
+				}
+			}
+			desc = AI_GOOD_RELATIONS
+		}
+
+		modifier = {
+			add = 30
+			scope:improved_terms = yes
+			desc = AI_IMPROVED_TERMS
+		}
+
+		modifier = {
+			add = 20
+			scope:recipient = {
+				gold < 300
+			}
+			desc = AI_NEEDS_INCOME
+		}
+
+		modifier = {
+			add = -30
+			scope:recipient = {
+				opinion = {
+					target = scope:actor
+					value < 20
+				}
+			}
+			desc = AI_POOR_RELATIONS
+		}
+	}
+
+	ai_potential = {
+		OR = {
+			has_variable = mt_supply_contract_active
+			has_variable = mt_purchase_contract_active
+		}
+	}
+
+	ai_will_do = {
+		base = 70
+
+		modifier = {
+			add = 30
+			opinion = {
+				target = scope:recipient
+				value >= 50
+			}
+		}
+
+		modifier = {
+			add = -50
+			gold < 100
+		}
+	}
+}
