@@ -1,7 +1,41 @@
-# Trade Espionage System - Scripted Effects
-# Effects for recruiting spies, assigning missions, and handling espionage
+####################################
+# MERCHANTS AND TRADERS - ESPIONAGE EFFECTS
+# Version: 1.0.0
+####################################
+#
+# This file contains scripted effects for the espionage system
+# Merchants can recruit spies, assign missions, and gather intelligence on rivals
+#
+# KEY SYSTEMS:
+# - Spy recruitment (3 quality tiers: Amateur, Competent, Expert)
+# - Mission assignment (steal routes, discover prices, sabotage, counter-espionage)
+# - Loyalty tracking (affects mission success and risk of betrayal)
+# - Counter-espionage (defensive operations)
+#
+# VARIABLES USED:
+# - spy_quality: 1-3 (Amateur/Competent/Expert)
+# - spy_success_chance: 30-85% (based on quality)
+# - spy_loyalty: 0-100 (affects reliability)
+# - spy_mission_active: flag for active missions
+# - spy_count: total number of spies employed
+#
+####################################
 
-# Recruit a spy to work for you
+####################################
+# RECRUITMENT EFFECTS
+####################################
+
+# ==============================================================================
+# recruit_spy_effect
+# Recruits a new spy with random quality tier
+# ==============================================================================
+# SCOPE: Character (merchant)
+# COST: 50 gold upfront + 3-8 gold/month salary
+# OUTPUTS:
+#   - spy_quality (1-3)
+#   - spy_success_chance (30-85%)
+#   - spy_loyalty (60-100)
+# ==============================================================================
 recruit_spy_effect = {
 	# Cost: 50 gold upfront + 3 gold/month salary
 	remove_short_term_gold = 50
@@ -88,7 +122,22 @@ recruit_spy_effect = {
 	}
 }
 
-# Assign a spy to a specific mission
+####################################
+# MISSION ASSIGNMENT EFFECTS
+####################################
+
+# ==============================================================================
+# assign_spy_mission_effect
+# Assigns an active spy to a specific espionage mission
+# ==============================================================================
+# SCOPE: Character (merchant with active spy)
+# PARAMETERS:
+#   - TARGET: Character to spy on
+#   - MISSION_TYPE: steal_route_info, discover_prices, sabotage, counter_espionage
+# DURATION: 30-90 days (random)
+# MODIFIERS:
+#   - Target's counter-espionage: -30% success chance
+# ==============================================================================
 assign_spy_mission_effect = {
 	# $TARGET$ = character to spy on
 	# $MISSION_TYPE$ = steal_route_info, discover_prices, sabotage, counter_espionage

@@ -39,6 +39,12 @@ on_monthly_pulse = {
 		# PHASE 6: Contract System
 		mt_contract_events.0010  # Contract performance tracking
 		mt_contract_events.0015  # Contract renewal reminders
+
+		# PHASE 6: Personality Events (random triggers)
+		mt_personality_events.1   # Personality trait manifestation
+		mt_personality_events.10  # Merchant personality challenge
+		mt_personality_events.20  # Personality-driven opportunity
+		mt_personality_events.30  # Character development moment
 	}
 }
 
@@ -57,7 +63,14 @@ on_yearly_pulse = {
 
 		# PHASE 6: Regional Development
 		# Integrates with Phase 3 regional specialization
-		mt_regional_development.0001  # Regional economic update
+		mt_regional_development_events.1   # Regional economic update
+		mt_regional_development_events.10  # Infrastructure development
+		mt_regional_development_events.20  # Trade hub emergence
+		mt_regional_development_events.30  # Regional specialization shift
+
+		# PHASE 6: Rivalry Events (yearly check)
+		mt_rivalry_events.1  # Potential new rivalry
+		mt_rivalry_events.20 # Rivalry escalation or resolution
 	}
 }
 
