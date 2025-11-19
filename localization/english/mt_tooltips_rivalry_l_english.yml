@@ -1,0 +1,292 @@
+l_english:
+ ####################################
+ # RIVALRY EVENT TOOLTIPS
+ ####################################
+
+ # Event 1 - Rivalry Begins
+ mt_rivalry.0001.a.tt:0 "Accept this as a business rivalry"
+ mt_rivalry.0001.b.tt:0 "Try to de-escalate tensions"
+ mt_rivalry.0001.c.tt:0 "Crush them completely"
+
+ # Event 2 - Undercut Prices
+ mt_rivalry.0002.a.success:0 "Successfully undercut their prices"
+ mt_rivalry.0002.a.failure:0 "They matched your prices - no advantage gained"
+ mt_rivalry.0002.b.tt:0 "Compete on quality instead of price"
+ mt_rivalry.0002.c.tt:0 "Ignore their provocations"
+
+ # Event 3 - Poach Employees
+ mt_rivalry.0003.a.tt:0 "Poach their best employees"
+ mt_rivalry.0003.b.tt:0 "Hire through normal channels"
+ mt_rivalry.0003.c.tt:0 "Protect your own employees first"
+
+ # Event 4 - Trade Route Competition
+ mt_rivalry.0004.a.tt:0 "Compete for the same trade routes"
+ mt_rivalry.0004.b.tt:0 "Find alternative routes"
+ mt_rivalry.0004.c.tt:0 "Share routes to reduce conflict"
+
+ # Event 5 - Public Confrontation
+ mt_rivalry.0005.a.tt:0 "Confront them publicly"
+ mt_rivalry.0005.b.tt:0 "Handle this privately"
+ mt_rivalry.0005.c.tt:0 "Ignore the provocation"
+
+ # Event 6 - Customer Theft
+ mt_rivalry.0006.a.tt:0 "Steal their best customers"
+ mt_rivalry.0006.b.tt:0 "Focus on your own customer base"
+ mt_rivalry.0006.c.tt:0 "Build new customer relationships"
+
+ # Event 7 - Sabotage Opportunity
+ mt_rivalry.0007.a.tt:0 "Sabotage their operations"
+ mt_rivalry.0007.b.tt:0 "Compete fairly"
+ mt_rivalry.0007.c.tt:0 "Warn them about the vulnerability"
+
+ # Event 8 - Intelligence Gathering
+ mt_rivalry.0008.a.success:0 "Successfully gathered their secrets"
+ mt_rivalry.0008.a.failure:0 "Intelligence operation failed"
+ mt_rivalry.0008.b.tt:0 "Spy on their operations"
+ mt_rivalry.0008.c.tt:0 "Focus on your own business"
+
+ # Event 9 - Bidding War
+ mt_rivalry.0009.a.success:0 "Won the bidding war!"
+ mt_rivalry.0009.a.failure:0 "Lost the bidding war"
+ mt_rivalry.0009.b.success:0 "Strategic withdrawal paid off"
+ mt_rivalry.0009.b.failure:0 "Withdrawal gave them too much advantage"
+ mt_rivalry.0009.c.tt:0 "Share the contract to avoid conflict"
+
+ # Event 10 - Reputation Attack
+ mt_rivalry.0010.a.tt:0 "Attack their reputation"
+ mt_rivalry.0010.b.tt:0 "Focus on building your own reputation"
+ mt_rivalry.0010.c.tt:0 "Defend against their attacks"
+
+ # Event 11 - Alliance Against Rival
+ mt_rivalry.0011.a.tt:0 "Form alliance against mutual rival"
+ mt_rivalry.0011.b.tt:0 "Handle them alone"
+ mt_rivalry.0011.c.tt:0 "Refuse to ally with former enemies"
+
+ # Event 12 - Exclusive Contract
+ mt_rivalry.0012.a.success:0 "Secured the exclusive contract!"
+ mt_rivalry.0012.a.failure:0 "Rival secured the contract instead"
+ mt_rivalry.0012.b.tt:0 "Negotiate for shared access"
+ mt_rivalry.0012.c.tt:0 "Find alternative suppliers"
+
+ # Event 13 - Legal Challenge
+ mt_rivalry.0013.a.tt:0 "Sue them for unfair practices"
+ mt_rivalry.0013.b.tt:0 "Handle this outside the courts"
+ mt_rivalry.0013.c.success:0 "Legal victory achieved!"
+ mt_rivalry.0013.c.failure:0 "Lost the legal battle"
+
+ # Event 14 - Merger Proposal
+ mt_rivalry.0014.a.tt:0 "Propose merging operations"
+ mt_rivalry.0014.b.tt:0 "Maintain independence"
+ mt_rivalry.0014.c.tt:0 "Reject this as weakness"
+
+ # Event 15 - Market Division
+ mt_rivalry.0015.a.tt:0 "Agree to divide markets"
+ mt_rivalry.0015.b.tt:0 "Compete for all markets"
+ mt_rivalry.0015.c.tt:0 "Report the illegal collusion"
+
+ # Event 16 - Hostile Takeover Attempt
+ mt_rivalry.0016.a.tt:0 "Launch hostile takeover"
+ mt_rivalry.0016.b.success:0 "Takeover successful!"
+ mt_rivalry.0016.b.failure:0 "Takeover attempt repelled"
+ mt_rivalry.0016.c.tt:0 "Too risky - abandon takeover"
+
+ # Event 17 - Supplier Exclusivity
+ mt_rivalry.0017.a.success:0 "Locked them out of key suppliers"
+ mt_rivalry.0017.a.failure:0 "Suppliers refused exclusivity deal"
+ mt_rivalry.0017.b.tt:0 "Allow fair access to suppliers"
+ mt_rivalry.0017.c.tt:0 "Find new suppliers instead"
+
+ # Event 18 - Price War
+ mt_rivalry.0018.a.success:0 "Won the price war"
+ mt_rivalry.0018.a.failure:0 "Price war hurt you more than them"
+ mt_rivalry.0018.b.tt:0 "Avoid destructive price war"
+ mt_rivalry.0018.c.tt:0 "Compete on quality, not price"
+
+ # Event 19 - Espionage Discovery
+ mt_rivalry.0019.a.tt:0 "Confront them about spying"
+ mt_rivalry.0019.b.success:0 "Successfully turned their spy"
+ mt_rivalry.0019.b.failure:0 "Spy remained loyal to rival"
+ mt_rivalry.0019.c.success:0 "Fed them false information"
+ mt_rivalry.0019.c.failure:0 "They saw through the deception"
+
+ # Event 20 - Truce Offer
+ mt_rivalry.0020.a.success:0 "Truce successfully negotiated"
+ mt_rivalry.0020.a.failure:0 "Truce rejected - rivalry intensifies"
+ mt_rivalry.0020.b.tt:0 "Accept the truce"
+ mt_rivalry.0020.c.tt:0 "This rivalry must continue"
+
+ # Event 21 - Third Party Mediation
+ mt_rivalry.0021.a.tt:0 "Accept mediation"
+ mt_rivalry.0021.b.tt:0 "Refuse outside interference"
+ mt_rivalry.0021.c.tt:0 "Demand unconditional surrender"
+
+ # Event 22 - Joint Venture
+ mt_rivalry.0022.a.tt:0 "Propose joint venture"
+ mt_rivalry.0022.b.success:0 "Joint venture successful"
+ mt_rivalry.0022.b.failure:0 "Joint venture collapsed"
+ mt_rivalry.0022.c.tt:0 "Never work with them"
+
+ # Event 23 - Crisis Opportunity
+ mt_rivalry.0023.a.tt:0 "Exploit their crisis for gain"
+ mt_rivalry.0023.b.tt:0 "Offer assistance during crisis"
+ mt_rivalry.0023.c.tt:0 "Maintain neutral stance"
+
+ # Event 24 - Counter-Attack
+ mt_rivalry.0024.a.tt:0 "Launch counter-attack"
+ mt_rivalry.0024.b.success:0 "Counter-attack succeeded!"
+ mt_rivalry.0024.b.failure:0 "Counter-attack backfired"
+ mt_rivalry.0024.c.success:0 "Defense held firm"
+ mt_rivalry.0024.c.failure:0 "Defenses were breached"
+
+ # Event 25 - Generational Rivalry
+ mt_rivalry.0025.a.tt:0 "Pass the rivalry to your heir"
+ mt_rivalry.0025.b.tt:0 "End it with this generation"
+ mt_rivalry.0025.c.tt:0 "Escalate before retirement"
+
+ # Event 26 - Mutual Destruction
+ mt_rivalry.0026.a.success:0 "Survived the mutual destruction"
+ mt_rivalry.0026.a.failure:0 "Both businesses severely damaged"
+ mt_rivalry.0026.b.success:0 "De-escalation successful"
+ mt_rivalry.0026.b.failure:0 "De-escalation rejected"
+ mt_rivalry.0026.c.tt:0 "Fight to the bitter end"
+
+ # Event 27 - Succession Crisis
+ mt_rivalry.0027.a.success:0 "Exploited their succession crisis"
+ mt_rivalry.0027.a.failure:0 "They resolved succession smoothly"
+ mt_rivalry.0027.b.tt:0 "Stay neutral during succession"
+ mt_rivalry.0027.c.tt:0 "Support their heir for future relations"
+
+ # Event 28 - Industry Leadership
+ mt_rivalry.0028.a.tt:0 "Challenge for industry leadership"
+ mt_rivalry.0028.b.tt:0 "Acknowledge their leadership"
+ mt_rivalry.0028.c.tt:0 "Split leadership roles"
+
+ # Event 29 - Rival's Downfall
+ mt_rivalry.0029.a.tt:0 "Finish them off"
+ mt_rivalry.0029.b.success:0 "Merciful approach paid off"
+ mt_rivalry.0029.b.failure:0 "They recovered and struck back"
+ mt_rivalry.0029.c.tt:0 "Absorb their business"
+
+ # Event 30 - Reconciliation
+ mt_rivalry.0030.a.tt:0 "Seek reconciliation"
+ mt_rivalry.0030.b.success:0 "Reconciliation successful"
+ mt_rivalry.0030.b.failure:0 "Reconciliation rejected"
+ mt_rivalry.0030.c.tt:0 "Never reconcile"
+
+ # Event 31 - New Generation
+ mt_rivalry.0031.a.tt:0 "Continue family rivalry"
+ mt_rivalry.0031.b.success:0 "Peace established between families"
+ mt_rivalry.0031.b.failure:0 "New generation intensified rivalry"
+ mt_rivalry.0031.c.tt:0 "Unite the families through marriage"
+
+ # Event 32 - Market Crash Impact
+ mt_rivalry.0032.a.tt:0 "Cooperate during market crash"
+ mt_rivalry.0032.b.tt:0 "Use crash against them"
+ mt_rivalry.0032.c.tt:0 "Focus on survival"
+
+ # Event 33 - Innovation Race
+ mt_rivalry.0033.a.tt:0 "Race to innovate first"
+ mt_rivalry.0033.b.tt:0 "Copy their innovations"
+ mt_rivalry.0033.c.tt:0 "Focus on proven methods"
+
+ # Event 34 - Expansion Conflict
+ mt_rivalry.0034.a.success:0 "Beat them to the new market"
+ mt_rivalry.0034.a.failure:0 "They established dominance first"
+ mt_rivalry.0034.b.tt:0 "Share the new market"
+ mt_rivalry.0034.c.tt:0 "Expand elsewhere"
+
+ # Event 35 - Sabotage Accusation
+ mt_rivalry.0035.a.tt:0 "Deny the accusation"
+ mt_rivalry.0035.b.success:0 "Cleared your name"
+ mt_rivalry.0035.b.failure:0 "Accusation stuck - reputation damaged"
+ mt_rivalry.0035.c.tt:0 "Counter-accuse them"
+
+ # Event 36 - Alliance Offer
+ mt_rivalry.0036.a.tt:0 "Accept alliance against common foe"
+ mt_rivalry.0036.b.tt:0 "Refuse the alliance"
+ mt_rivalry.0036.c.tt:0 "Use this to set a trap"
+
+ # Event 37 - Reputation Defense
+ mt_rivalry.0037.a.tt:0 "Publicly defend your reputation"
+ mt_rivalry.0037.b.tt:0 "Ignore their slander"
+ mt_rivalry.0037.c.tt:0 "Counter with your own accusations"
+
+ # Event 38 - Final Confrontation
+ mt_rivalry.0038.a.success:0 "Emerged victorious"
+ mt_rivalry.0038.a.failure:0 "Suffered defeat"
+ mt_rivalry.0038.b.tt:0 "Negotiate settlement"
+ mt_rivalry.0038.c.success:0 "Forced them to surrender"
+ mt_rivalry.0038.c.failure:0 "They fought back successfully"
+
+ # Event 39 - Legacy Rivalry
+ mt_rivalry.0039.a.success:0 "Your legacy eclipsed theirs"
+ mt_rivalry.0039.a.failure:0 "Their legacy proved greater"
+ mt_rivalry.0039.b.tt:0 "Create shared legacy"
+ mt_rivalry.0039.c.tt:0 "Erase them from history"
+
+ # Event 40 - Final Peace
+ mt_rivalry.0040.a.tt:0 "Make permanent peace"
+ mt_rivalry.0040.b.success:0 "Peace treaty successful"
+ mt_rivalry.0040.b.failure:0 "Peace treaty collapsed"
+ mt_rivalry.0040.c.tt:0 "Fight until one side falls"
+
+ # Event 41 - Unexpected Alliance
+ mt_rivalry.0041.a.success:0 "Alliance formed successfully"
+ mt_rivalry.0041.a.failure:0 "Alliance proposal rejected"
+ mt_rivalry.0041.b.tt:0 "Maintain the rivalry"
+ mt_rivalry.0041.c.tt:0 "Propose merger instead"
+
+ # Event 42 - Generational Peace
+ mt_rivalry.0042.a.tt:0 "Negotiate peace between heirs"
+ mt_rivalry.0042.b.tt:0 "Ensure rivalry continues"
+ mt_rivalry.0042.c.tt:0 "Arrange dynastic marriage"
+
+ # Event 43 - Market Domination
+ mt_rivalry.0043.a.success:0 "Achieved market domination"
+ mt_rivalry.0043.a.failure:0 "Domination attempt failed"
+ mt_rivalry.0043.b.success:0 "Mutual domination established"
+ mt_rivalry.0043.b.failure:0 "Neither achieved dominance"
+ mt_rivalry.0043.c.tt:0 "Accept shared market"
+
+ # Event 44 - Total Victory
+ mt_rivalry.0044.a.success:0 "Total victory achieved!"
+ mt_rivalry.0044.a.failure:0 "Victory snatched away"
+ mt_rivalry.0044.b.success:0 "Merciful victory"
+ mt_rivalry.0044.b.failure:0 "Mercy was exploited"
+ mt_rivalry.0044.c.tt:0 "Settle for mutual respect"
+
+ # Event 45 - Final Reckoning
+ mt_rivalry.0045.a.success:0 "Emerged supreme"
+ mt_rivalry.0045.a.failure:0 "Defeated in final battle"
+ mt_rivalry.0045.b.success:0 "Negotiated favorable terms"
+ mt_rivalry.0045.b.failure:0 "Negotiations failed"
+ mt_rivalry.0045.c.success:0 "Mutual destruction avoided"
+ mt_rivalry.0045.c.failure:0 "Mutual destruction occurred"
+
+ # Event 46 - Legacy Choice
+ mt_rivalry.0046.a.tt:0 "Be remembered as ruthless victor"
+ mt_rivalry.0046.b.tt:0 "Be remembered as merciful winner"
+ mt_rivalry.0046.c.tt:0 "Be remembered as noble rival"
+
+ # Event 47 - Historical Rivalry
+ mt_rivalry.0047.a.success:0 "Your version became history"
+ mt_rivalry.0047.a.failure:0 "Their version became history"
+ mt_rivalry.0047.b.tt:0 "Let historians decide"
+ mt_rivalry.0047.c.tt:0 "Ensure both stories survive"
+
+ # Event 48 - Monument to Rivalry
+ mt_rivalry.0048.a.success:0 "Monument celebrates your victory"
+ mt_rivalry.0048.a.failure:0 "Monument honors their triumph"
+ mt_rivalry.0048.b.tt:0 "Build monument to competition"
+ mt_rivalry.0048.c.tt:0 "No monuments needed"
+
+ # Event 49 - Merchant Legacy
+ mt_rivalry.0049.a.tt:0 "Ensure your commercial legacy"
+ mt_rivalry.0049.b.tt:0 "Share credit for innovation"
+ mt_rivalry.0049.c.tt:0 "Focus on future generations"
+
+ # Event 50 - Final Testament
+ mt_rivalry.0050.a.tt:0 "Write rivalry into family charter"
+ mt_rivalry.0050.b.success:0 "Peace endures for generations"
+ mt_rivalry.0050.b.failure:0 "Rivalry reignites after death"
+ mt_rivalry.0050.c.tt:0 "Leave no instructions - let heirs decide"

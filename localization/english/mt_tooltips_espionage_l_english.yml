@@ -1,0 +1,147 @@
+l_english:
+ ####################################
+ # ESPIONAGE EVENT TOOLTIPS
+ ####################################
+
+ # Event 1 - Recruit Spy
+ mt_espionage.0001.a.risk:0 "This carries some risk of discovery"
+
+ # Event 2 - Assign Mission
+ mt_espionage.0002.a.effect:0 "Your spy will begin gathering intelligence"
+ mt_espionage.0002.b.success:0 "Mission successful! Intelligence gathered"
+ mt_espionage.0002.b.failure:0 "Mission failed - spy was discovered"
+
+ # Event 3 - Spy Reports
+ mt_espionage.0003.a.effect:0 "Review the intelligence report"
+ mt_espionage.0003.b.effect:0 "Act on this intelligence immediately"
+
+ # Event 4 - Counter-Spy Trap
+ mt_espionage.0004.a.success:0 "Your spy avoided the trap!"
+ mt_espionage.0004.a.trap:0 "Your spy fell into their trap!"
+ mt_espionage.0004.b.discovered:0 "Your spy has been discovered"
+ mt_espionage.0004.c.inform:0 "Warn your spy about the danger"
+
+ # Event 5 - Espionage Recruitment
+ mt_espionage.0005.a.effect:0 "Recruit this spy for your network"
+ mt_espionage.0005.b.effect:0 "Turn them down politely"
+ mt_espionage.0005.d.effect:0 "Report them to their current employer"
+
+ # Event 6 - Infiltration Success
+ mt_espionage.0006.a.effect:0 "You've successfully infiltrated their operation"
+
+ # Event 7 - Stolen Trade Routes
+ mt_espionage.0007.a.effect:0 "Your spy has stolen valuable route information"
+
+ # Event 8 - Rivalry Espionage
+ mt_espionage.0008.c.effect:0 "This will escalate the rivalry"
+
+ # Event 10 - Spy Captured
+ mt_espionage.0010.a.effect:0 "Demand the return of your spy"
+
+ # Event 11 - Spy Ransom
+ mt_espionage.0011.a.effect:0 "Pay the ransom to free your spy"
+ mt_espionage.0011.c.success:0 "Rescue mission successful!"
+ mt_espionage.0011.c.failure:0 "Rescue attempt failed - spy executed"
+
+ # Event 12 - Spy Betrayal
+ mt_espionage.0012.a.effect:0 "Accept their offer to switch sides"
+
+ # Event 13 - Spy Romance
+ mt_espionage.0013.b.effect:0 "This relationship could provide valuable intelligence"
+
+ # Event 14 - Spy Memorial
+ mt_espionage.0014.a.effect:0 "Honor the memory of your fallen spy"
+
+ # Event 15 - Spy Turned
+ mt_espionage.0015.a.effect:0 "Your spy has been turned against you"
+
+ # Event 16 - Secret Alliance
+ mt_espionage.0016.a.effect:0 "You've learned of a secret alliance"
+
+ # Event 17 - Alliance Intelligence
+ mt_espionage.0017.a.effect:0 "This intelligence could be very valuable"
+
+ # Event 18 - Intelligence Options
+ mt_espionage.0018.a.gold:0 "Learn about their gold reserves"
+ mt_espionage.0018.a.route:0 "Discover their trade routes"
+ mt_espionage.0018.a.debt:0 "Find out about their debts"
+ mt_espionage.0018.a.deals:0 "Uncover their secret deals"
+
+ # Event 19 - Multiple Informants
+ mt_espionage.0019.a.effect:0 "Build a network of informants"
+ mt_espionage.0019.b.success:0 "Network established successfully"
+ mt_espionage.0019.b.failure:0 "Network compromised - informants scattered"
+
+ # Event 20 - Counter-Espionage
+ mt_espionage.0020.a.effect:0 "Implement counter-espionage measures"
+
+ # Event 22 - Security Measures
+ mt_espionage.0022.a.effect:0 "Increase security protocols"
+ mt_espionage.0022.b.effect:0 "Maintain current security level"
+
+ # Event 23 - Double Agent
+ mt_espionage.0023.a.discovered:0 "The double agent has been discovered!"
+
+ # Event 24 - Double Agent Intel
+ mt_espionage.0024.a.effect:0 "Your double agent provides crucial intel"
+ mt_espionage.0024.b.effect:0 "Feed false information through them"
+
+ # Event 25 - Spy Network Exposed
+ mt_espionage.0025.a.effect:0 "Your spy network has been exposed"
+
+ # Event 26 - Paranoia
+ mt_espionage.0026.a.found:0 "You found a real spy!"
+ mt_espionage.0026.a.false_alarm:0 "It was a false alarm - no spy found"
+ mt_espionage.0026.b.risk:0 "This could damage morale if you're wrong"
+
+ # Event 28 - Preemptive Strike
+ mt_espionage.0028.a.effect:0 "Strike first before they can act"
+
+ # Event 29 - Prepared Defense
+ mt_espionage.0029.a.effect:0 "Prepare defenses based on intelligence"
+ mt_espionage.0029.b.effect:0 "Confront them diplomatically"
+
+ # Event 30 - Crackdown
+ mt_espionage.0030.a.involved:0 "Your agents were involved in the crackdown"
+ mt_espionage.0030.a.avoided:0 "Your agents avoided detection"
+
+ # Event 31 - Intelligence Quality
+ mt_espionage.0031.a.genuine:0 "The intelligence appears genuine"
+ mt_espionage.0031.a.partial:0 "The intelligence is partially accurate"
+ mt_espionage.0031.a.false:0 "The intelligence was deliberately false"
+ mt_espionage.0031.b.success:0 "Successfully verified the intelligence"
+ mt_espionage.0031.b.failure:0 "Unable to verify - act on faith"
+
+ # Event 32 - Join Information Network
+ mt_espionage.0032.b.effect:0 "Decline membership in the network"
+
+ # Event 33 - Network Benefits
+ mt_espionage.0033.a.effect:0 "Enjoy the benefits of network membership"
+ mt_espionage.0033.b.effect:0 "Share valuable intelligence with the network"
+ mt_espionage.0033.c.effect:0 "Request specific intelligence"
+
+ # Event 34 - Infiltrate Network
+ mt_espionage.0034.c.effect:0 "This is a major intelligence coup"
+
+ # Event 35 - Network Corruption
+ mt_espionage.0035.a.effect:0 "Fight against the corruption"
+ mt_espionage.0035.b.found:0 "You've found evidence of corruption"
+
+ # Event 36 - Network Conflict
+ mt_espionage.0036.a.win:0 "You prevailed in the conflict"
+ mt_espionage.0036.a.lose:0 "You were outmaneuvered"
+ mt_espionage.0036.b.success:0 "Successfully exposed their corruption"
+
+ # Event 38 - Spymaster
+ mt_espionage.0038.a.effect:0 "Hire an elite spymaster"
+ mt_espionage.0038.b.effect:0 "Continue managing intelligence yourself"
+
+ # Event 39 - Information Cartel
+ mt_espionage.0039.a.effect:0 "Join the information cartel"
+ mt_espionage.0039.b.effect:0 "Oppose the cartel's influence"
+
+ # Event 40 - Security Breach
+ mt_espionage.0040.a.success:0 "Security breach contained!"
+ mt_espionage.0040.b.success:0 "Damage controlled successfully"
+ mt_espionage.0040.b.failure:0 "The breach caused major damage"
+ mt_espionage.0040.c.effect:0 "Investigate the source of the breach"

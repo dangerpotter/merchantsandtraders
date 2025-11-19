@@ -1,0 +1,187 @@
+l_english:
+ ####################################
+ # MARKET MANIPULATION EVENT TOOLTIPS
+ ####################################
+
+ # Event 1 - Price Manipulation
+ mt_manipulation.0001.a.tt:0 "Drive prices up through artificial scarcity"
+ mt_manipulation.0001.b.tt:0 "Flood the market to crash prices"
+ mt_manipulation.0001.c.tt:0 "Maintain fair market practices"
+
+ # Event 2 - Corner the Market
+ mt_manipulation.0002.a.success:0 "Successfully cornered the market!"
+ mt_manipulation.0002.a.failure:0 "Failed - competitors responded too quickly"
+ mt_manipulation.0002.b.tt:0 "This requires significant capital"
+ mt_manipulation.0002.c.tt:0 "Too risky - abandon the attempt"
+
+ # Event 3 - Rumor Spreading
+ mt_manipulation.0003.a.tt:0 "Spread rumors to destabilize competitor prices"
+ mt_manipulation.0003.b.tt:0 "Refrain from underhanded tactics"
+
+ # Event 4 - False Shortage
+ mt_manipulation.0004.a.success:0 "The false shortage drove prices up!"
+ mt_manipulation.0004.a.failure:0 "The deception was uncovered"
+ mt_manipulation.0004.b.tt:0 "Create the illusion of scarcity"
+ mt_manipulation.0004.c.tt:0 "Too risky - maintain honest practices"
+
+ # Event 5 - Bribe Officials
+ mt_manipulation.0005.a.tt:0 "Bribe officials for favorable regulations"
+ mt_manipulation.0005.b.success:0 "Officials successfully bribed"
+ mt_manipulation.0005.b.failure:0 "Bribery attempt exposed!"
+ mt_manipulation.0005.c.tt:0 "Refuse to resort to bribery"
+
+ # Event 6 - Monopoly Formation
+ mt_manipulation.0006.a.tt:0 "Form a monopoly in this market"
+ mt_manipulation.0006.b.tt:0 "Allow healthy competition"
+
+ # Event 7 - Price Fixing
+ mt_manipulation.0007.a.tt:0 "Fix prices with other merchants"
+
+ # Event 8 - Market Sabotage
+ mt_manipulation.0008.a.tt:0 "Sabotage competitor operations"
+ mt_manipulation.0008.b.tt:0 "Compete fairly"
+
+ # Event 9 - Insider Information
+ mt_manipulation.0009.a.tt:0 "Use insider information for profit"
+ mt_manipulation.0009.b.tt:0 "Refuse to exploit insider knowledge"
+
+ # Event 10 - Pump and Dump
+ mt_manipulation.0010.a.tt:0 "Inflate prices then sell at peak"
+ mt_manipulation.0010.b.tt:0 "This is too unethical"
+
+ # Event 11 - Cartel Formation
+ mt_manipulation.0011.a.tt:0 "Join the merchant cartel"
+ mt_manipulation.0011.b.success:0 "Cartel formed successfully"
+ mt_manipulation.0011.b.failure:0 "Cartel formation blocked by authorities"
+ mt_manipulation.0011.c.tt:0 "Refuse to join the cartel"
+
+ # Event 12 - Supply Hoarding
+ mt_manipulation.0012.a.tt:0 "Hoard supplies to create artificial scarcity"
+
+ # Event 13 - Predatory Pricing
+ mt_manipulation.0013.a.tt:0 "Price below cost to drive out competitors"
+
+ # Event 14 - Market Intelligence
+ mt_manipulation.0014.a.tt:0 "Buy exclusive market intelligence"
+ mt_manipulation.0014.b.success:0 "Intelligence was accurate and valuable"
+ mt_manipulation.0014.b.failure:0 "Intelligence was false or outdated"
+
+ # Event 15 - Regulatory Capture
+ mt_manipulation.0015.a.tt:0 "Influence regulators to favor your interests"
+ mt_manipulation.0015.b.success:0 "Successfully captured the regulators"
+ mt_manipulation.0015.b.failure:0 "Attempt exposed - facing backlash"
+ mt_manipulation.0015.c.tt:0 "Work within existing regulations"
+
+ # Event 16 - Exclusive Deals
+ mt_manipulation.0016.a.tt:0 "Secure exclusive supplier agreements"
+ mt_manipulation.0016.b.tt:0 "Allow open market competition"
+
+ # Event 17 - Market Timing
+ mt_manipulation.0017.a.tt:0 "Time the market for maximum profit"
+ mt_manipulation.0017.b.tt:0 "Maintain steady trading patterns"
+
+ # Event 18 - Information Asymmetry
+ mt_manipulation.0018.a.tt:0 "Exploit information advantage"
+ mt_manipulation.0018.b.tt:0 "Share information fairly"
+
+ # Event 19 - Futures Manipulation
+ mt_manipulation.0019.a.success:0 "Futures manipulation successful!"
+ mt_manipulation.0019.a.failure:0 "Futures bet went wrong"
+ mt_manipulation.0019.b.tt:0 "Too risky - avoid futures"
+
+ # Event 20 - Cornering Supplier
+ mt_manipulation.0020.a.success:0 "Successfully monopolized the supplier"
+ mt_manipulation.0020.a.failure:0 "Supplier found alternative buyers"
+ mt_manipulation.0020.b.tt:0 "Allow free supplier relationships"
+
+ # Event 21 - Price Discrimination
+ mt_manipulation.0021.a.tt:0 "Charge different prices to different buyers"
+ mt_manipulation.0021.b.tt:0 "Maintain uniform pricing"
+
+ # Event 22 - Artificial Demand
+ mt_manipulation.0022.a.tt:0 "Create artificial demand through marketing"
+ mt_manipulation.0022.b.tt:0 "Let natural demand drive sales"
+
+ # Event 23 - Quality Manipulation
+ mt_manipulation.0023.a.tt:0 "Cut quality while maintaining prices"
+ mt_manipulation.0023.b.tt:0 "Maintain quality standards"
+
+ # Event 24 - Market Segmentation
+ mt_manipulation.0024.a.tt:0 "Segment market for price discrimination"
+ mt_manipulation.0024.b.tt:0 "Treat all customers equally"
+
+ # Event 25 - Reputation Manipulation
+ mt_manipulation.0025.a.success:0 "Successfully damaged competitor's reputation"
+ mt_manipulation.0025.b.tt:0 "Compete on merit, not slander"
+
+ # Event 26 - Fake Endorsements
+ mt_manipulation.0026.a.success:0 "Fake endorsements boosted sales"
+ mt_manipulation.0026.a.failure:0 "Fake endorsements exposed!"
+ mt_manipulation.0026.b.tt:0 "Use only genuine testimonials"
+
+ # Event 27 - Parallel Importing
+ mt_manipulation.0027.a.success:0 "Parallel import scheme successful"
+ mt_manipulation.0027.a.failure:0 "Parallel imports seized by authorities"
+ mt_manipulation.0027.b.tt:0 "Trade through official channels only"
+ mt_manipulation.0027.c.tt:0 "Report the scheme to authorities"
+
+ # Event 28 - Vertical Integration
+ mt_manipulation.0028.a.tt:0 "Integrate vertically to control supply chain"
+ mt_manipulation.0028.b.success:0 "Integration successful!"
+ mt_manipulation.0028.b.failure:0 "Integration attempt failed"
+
+ # Event 29 - Hostile Takeover
+ mt_manipulation.0029.a.win:0 "Takeover successful!"
+ mt_manipulation.0029.a.lose:0 "Takeover attempt failed"
+ mt_manipulation.0029.b.tt:0 "Abandon the takeover attempt"
+
+ # Event 30 - Market Manipulation Ring
+ mt_manipulation.0030.a.success:0 "Manipulation ring formed successfully"
+ mt_manipulation.0030.a.failure:0 "Ring members betrayed the plan"
+ mt_manipulation.0030.b.tt:0 "Refuse to participate"
+ mt_manipulation.0030.c.success:0 "Successfully exposed the ring"
+ mt_manipulation.0030.c.failure:0 "Exposure attempt backfired"
+
+ # Event 31 - Pump Scheme
+ mt_manipulation.0031.a.tt:0 "Participate in the pump scheme"
+
+ # Event 32 - Dump Scheme
+ mt_manipulation.0032.a.tt:0 "Execute the coordinated dump"
+
+ # Event 33 - Market Corner
+ mt_manipulation.0033.a.tt:0 "Attempt to corner the entire market"
+ mt_manipulation.0033.b.tt:0 "This requires massive capital"
+ mt_manipulation.0033.c.tt:0 "Too ambitious - likely to fail"
+
+ # Event 34 - Leverage Buyout
+ mt_manipulation.0034.a.tt:0 "Use leverage for aggressive expansion"
+
+ # Event 35 - Debt Manipulation
+ mt_manipulation.0035.a.tt:0 "Manipulate debt markets"
+ mt_manipulation.0035.b.tt:0 "Avoid debt market manipulation"
+
+ # Event 36 - Currency Speculation
+ mt_manipulation.0036.a.success:0 "Currency speculation paid off!"
+ mt_manipulation.0036.a.failure:0 "Currency bet went wrong"
+ mt_manipulation.0036.b.tt:0 "Too volatile - avoid currency speculation"
+ mt_manipulation.0036.c.tt:0 "Hedge against currency risk"
+
+ # Event 37 - Trade Secret Theft
+ mt_manipulation.0037.a.tt:0 "Steal trade secrets from competitors"
+ mt_manipulation.0037.b.success:0 "Trade secrets successfully stolen"
+ mt_manipulation.0037.b.failure:0 "Theft discovered - facing consequences"
+ mt_manipulation.0037.c.success:0 "Developed secrets through legal R&D"
+ mt_manipulation.0037.c.failure:0 "R&D efforts failed to produce results"
+
+ # Event 38 - Regulatory Arbitrage
+ mt_manipulation.0038.a.tt:0 "Exploit regulatory loopholes"
+ mt_manipulation.0038.b.tt:0 "Follow the spirit of the law"
+
+ # Event 39 - Shadow Trading
+ mt_manipulation.0039.a.tt:0 "Engage in shadow trading network"
+ mt_manipulation.0039.b.tt:0 "Trade only through legitimate channels"
+
+ # Event 40 - Market Chaos
+ mt_manipulation.0040.a.tt:0 "Profit from the market chaos"
+ mt_manipulation.0040.b.success:0 "Chaos exploitation successful"
+ mt_manipulation.0040.b.failure:0 "Caught in the chaos yourself"
