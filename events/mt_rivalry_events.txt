@@ -1,0 +1,8326 @@
+####################################
+# MERCHANTS AND TRADERS MOD
+# Merchant Rivalry Events
+####################################
+#
+# Event namespace: mt_rivalry
+#
+# 0001-0005: Discovering Rivals
+# 0006-0015: Price Wars
+# 0016-0025: Route Sabotage
+# 0026-0035: Espionage
+# 0036-0040: Hostile Takeovers
+# 0041-0050: Reputation Battles
+#
+####################################
+
+namespace = mt_rivalry
+
+####################################
+# DISCOVERING RIVALS (0001-0005)
+####################################
+
+# 0001: New merchant appears in your region - introduction event
+mt_rivalry.0001 = {
+	type = character_event
+	title = mt_rivalry.0001.t
+	desc = mt_rivalry.0001.desc
+	theme = stewardship
+
+	left_portrait = {
+		character = root
+		animation = personality_rational
+	}
+
+	right_portrait = {
+		character = scope:new_rival
+		animation = personality_bold
+	}
+
+	trigger = {
+		OR = {
+			has_trait = trade_post_owner
+			has_trait = trading_company_head
+			has_trait = merchant_prince
+		}
+		any_courtier = {
+			OR = {
+				has_trait = trade_post_owner
+				has_trait = trading_company_head
+			}
+			NOT = { this = root }
+			NOT = { has_relation_rival = root }
+		}
+	}
+
+	weight_multiplier = {
+		base = 1
+
+		modifier = {
+			add = 2
+			has_character_modifier = mt_reputation_established_merchant
+		}
+	}
+
+	immediate = {
+		random_courtier = {
+			limit = {
+				OR = {
+					has_trait = trade_post_owner
+					has_trait = trading_company_head
+				}
+				NOT = { this = root }
+				NOT = { has_relation_rival = root }
+			}
+			save_scope_as = new_rival
+		}
+	}
+
+	# Greet them professionally - cautious approach
+	option = {
+		name = mt_rivalry.0001.a
+
+		add_prestige = 10
+
+		scope:new_rival = {
+			add_opinion = {
+				target = root
+				modifier = trade_partner_opinion
+				opinion = 10
+			}
+		}
+
+		custom_tooltip = mt_rivalry.0001.a.tt
+
+		ai_chance = {
+			base = 40
+
+			modifier = {
+				add = 30
+				has_trait = diplomat
+			}
+
+			modifier = {
+				add = 20
+				has_trait = gregarious
+			}
+		}
+	}
+
+	# Keep your distance - watch them carefully
+	option = {
+		name = mt_rivalry.0001.b
+
+		add_intrigue = 1
+
+		add_character_modifier = {
+			modifier = mt_watching_rival
+			months = 12
+		}
+
+		custom_tooltip = mt_rivalry.0001.b.tt
+
+		ai_chance = {
+			base = 40
+
+			modifier = {
+				add = 30
+				has_trait = paranoid
+			}
+
+			modifier = {
+				add = 20
+				has_trait = diligent
+			}
+		}
+	}
+
+	# Immediately assert dominance - aggressive
+	option = {
+		name = mt_rivalry.0001.c
+
+		scope:new_rival = {
+			add_opinion = {
+				target = root
+				modifier = arrogant_opinion
+				opinion = -20
+			}
+		}
+
+		add_prestige = 25
+
+		stress_impact = {
+			humble = minor_stress_impact_gain
+			compassionate = minor_stress_impact_gain
+		}
+
+		custom_tooltip = mt_rivalry.0001.c.tt
+
+		ai_chance = {
+			base = 20
+
+			modifier = {
+				add = 40
+				has_trait = arrogant
+			}
+
+			modifier = {
+				add = 30
+				has_trait = ambitious
+			}
+		}
+	}
+}
+
+# 0002: Existing merchant encroaching on your routes - warning
+mt_rivalry.0002 = {
+	type = character_event
+	title = mt_rivalry.0002.t
+	desc = mt_rivalry.0002.desc
+	theme = stewardship
+
+	left_portrait = {
+		character = root
+		animation = anger
+	}
+
+	right_portrait = {
+		character = scope:encroaching_merchant
+		animation = dismissal
+	}
+
+	trigger = {
+		OR = {
+			has_trait = trade_post_owner
+			has_trait = trading_company_head
+			has_trait = merchant_prince
+		}
+		any_courtier = {
+			OR = {
+				has_trait = trade_post_owner
+				has_trait = trading_company_head
+			}
+			NOT = { this = root }
+		}
+	}
+
+	weight_multiplier = {
+		base = 1
+
+		modifier = {
+			add = 2
+			any_courtier = {
+				has_relation_rival = root
+			}
+		}
+	}
+
+	immediate = {
+		random_courtier = {
+			limit = {
+				OR = {
+					has_trait = trade_post_owner
+					has_trait = trading_company_head
+				}
+				NOT = { this = root }
+			}
+			save_scope_as = encroaching_merchant
+		}
+	}
+
+	# Confront them directly - demand they back off
+	option = {
+		name = mt_rivalry.0002.a
+
+		duel = {
+			skill = diplomacy
+			target = scope:encroaching_merchant
+
+			50 = { # You win
+				desc = mt_rivalry.0002.a.success
+				compare_modifier = {
+					value = scope:duel_value
+					multiplier = 3
+				}
+
+				scope:encroaching_merchant = {
+					add_opinion = {
+						target = root
+						modifier = intimidated_opinion
+						opinion = -15
+					}
+				}
+
+				add_prestige = 50
+				add_gold = 50
+			}
+
+			50 = { # You lose
+				desc = mt_rivalry.0002.a.failure
+				compare_modifier = {
+					value = scope:duel_value
+					multiplier = -3
+				}
+
+				scope:encroaching_merchant = {
+					add_opinion = {
+						target = root
+						modifier = dismissed_opinion
+						opinion = -25
+					}
+				}
+
+				add_prestige = -25
+				remove_short_term_gold = 50
+			}
+		}
+
+		ai_chance = {
+			base = 40
+
+			modifier = {
+				add = 30
+				diplomacy >= 14
+			}
+
+			modifier = {
+				add = 20
+				has_trait = arrogant
+			}
+		}
+	}
+
+	# Negotiate territory - divide the routes
+	option = {
+		name = mt_rivalry.0002.b
+
+		scope:encroaching_merchant = {
+			add_opinion = {
+				target = root
+				modifier = trade_partner_opinion
+				opinion = 15
+			}
+		}
+
+		add_gold = 100
+
+		custom_tooltip = mt_rivalry.0002.b.tt
+
+		ai_chance = {
+			base = 40
+
+			modifier = {
+				add = 30
+				has_trait = just
+			}
+
+			modifier = {
+				add = 20
+				has_trait = content
+			}
+		}
+	}
+
+	# Prepare for competition - strengthen your position
+	option = {
+		name = mt_rivalry.0002.c
+
+		add_character_modifier = {
+			modifier = mt_strengthening_position
+			months = 18
+		}
+
+		remove_short_term_gold = 75
+
+		custom_tooltip = mt_rivalry.0002.c.tt
+
+		ai_chance = {
+			base = 20
+
+			modifier = {
+				add = 30
+				has_trait = patient
+			}
+
+			modifier = {
+				add = 20
+				stewardship >= 14
+			}
+		}
+	}
+}
+
+# 0003: Rival using same trade goods - price competition begins
+mt_rivalry.0003 = {
+	type = character_event
+	title = mt_rivalry.0003.t
+	desc = mt_rivalry.0003.desc
+	theme = stewardship
+
+	left_portrait = {
+		character = root
+		animation = worry
+	}
+
+	right_portrait = {
+		character = scope:competing_merchant
+		animation = scheme
+	}
+
+	trigger = {
+		OR = {
+			has_trait = trade_post_owner
+			has_trait = trading_company_head
+			has_trait = merchant_prince
+		}
+		any_courtier = {
+			OR = {
+				has_trait = trade_post_owner
+				has_trait = trading_company_head
+			}
+			NOT = { this = root }
+		}
+	}
+
+	immediate = {
+		random_courtier = {
+			limit = {
+				OR = {
+					has_trait = trade_post_owner
+					has_trait = trading_company_head
+				}
+				NOT = { this = root }
+			}
+			save_scope_as = competing_merchant
+		}
+	}
+
+	# Diversify your goods - avoid direct competition
+	option = {
+		name = mt_rivalry.0003.a
+
+		add_stewardship = 1
+		remove_short_term_gold = 100
+
+		add_character_modifier = {
+			modifier = mt_diversified_inventory
+			years = 2
+		}
+
+		custom_tooltip = mt_rivalry.0003.a.tt
+
+		ai_chance = {
+			base = 35
+
+			modifier = {
+				add = 30
+				has_trait = patient
+			}
+
+			modifier = {
+				add = 25
+				stewardship >= 16
+			}
+		}
+	}
+
+	# Focus on quality over price
+	option = {
+		name = mt_rivalry.0003.b
+
+		add_prestige = 50
+		remove_short_term_gold = 150
+
+		add_character_modifier = {
+			modifier = mt_premium_goods
+			years = 3
+		}
+
+		custom_tooltip = mt_rivalry.0003.b.tt
+
+		ai_chance = {
+			base = 30
+
+			modifier = {
+				add = 30
+				has_trait = ambitious
+			}
+
+			modifier = {
+				add = 20
+				gold >= 500
+			}
+		}
+	}
+
+	# Accept the competition - may the best merchant win
+	option = {
+		name = mt_rivalry.0003.c
+
+		scope:competing_merchant = {
+			set_relation_rival = root
+		}
+
+		add_character_modifier = {
+			modifier = mt_in_price_competition
+			months = 12
+		}
+
+		stress_impact = {
+			craven = minor_stress_impact_gain
+		}
+
+		custom_tooltip = mt_rivalry.0003.c.tt
+
+		ai_chance = {
+			base = 35
+
+			modifier = {
+				add = 40
+				has_trait = brave
+			}
+
+			modifier = {
+				add = 30
+				has_trait = greedy
+			}
+		}
+	}
+}
+
+# 0004: Ambitious merchant wants to dominate region - threat
+mt_rivalry.0004 = {
+	type = character_event
+	title = mt_rivalry.0004.t
+	desc = mt_rivalry.0004.desc
+	theme = intrigue
+
+	left_portrait = {
+		character = root
+		animation = disbelief
+	}
+
+	right_portrait = {
+		character = scope:ambitious_rival
+		animation = personality_bold
+	}
+
+	trigger = {
+		OR = {
+			has_trait = trade_post_owner
+			has_trait = trading_company_head
+			has_trait = merchant_prince
+		}
+		any_courtier = {
+			OR = {
+				has_trait = trading_company_head
+				has_trait = merchant_prince
+			}
+			has_trait = ambitious
+			NOT = { this = root }
+		}
+	}
+
+	immediate = {
+		random_courtier = {
+			limit = {
+				OR = {
+					has_trait = trading_company_head
+					has_trait = merchant_prince
+				}
+				has_trait = ambitious
+				NOT = { this = root }
+			}
+			save_scope_as = ambitious_rival
+		}
+	}
+
+	# Form alliance with other merchants against them
+	option = {
+		name = mt_rivalry.0004.a
+
+		add_character_modifier = {
+			modifier = mt_merchant_coalition_leader
+			years = 2
+		}
+
+		scope:ambitious_rival = {
+			add_opinion = {
+				target = root
+				modifier = blocked_ambitions_opinion
+				opinion = -50
+			}
+			set_relation_rival = root
+		}
+
+		add_prestige = 75
+
+		custom_tooltip = mt_rivalry.0004.a.tt
+
+		ai_chance = {
+			base = 40
+
+			modifier = {
+				add = 30
+				diplomacy >= 14
+			}
+
+			modifier = {
+				add = 20
+				has_trait = gregarious
+			}
+		}
+	}
+
+	# Challenge them directly - prove your superiority
+	option = {
+		name = mt_rivalry.0004.b
+
+		scope:ambitious_rival = {
+			set_relation_rival = root
+			add_opinion = {
+				target = root
+				modifier = rivalry_opinion
+				opinion = -40
+			}
+		}
+
+		add_character_modifier = {
+			modifier = mt_fierce_rivalry
+			years = 3
+		}
+
+		add_prestige = 50
+
+		stress_impact = {
+			craven = medium_stress_impact_gain
+			humble = minor_stress_impact_gain
+		}
+
+		custom_tooltip = mt_rivalry.0004.b.tt
+
+		ai_chance = {
+			base = 30
+
+			modifier = {
+				add = 40
+				has_trait = brave
+			}
+
+			modifier = {
+				add = 30
+				has_trait = ambitious
+			}
+		}
+	}
+
+	# Lay low and protect what you have
+	option = {
+		name = mt_rivalry.0004.c
+
+		add_character_modifier = {
+			modifier = mt_defensive_posture
+			years = 2
+		}
+
+		add_gold = 100
+		add_prestige = -25
+
+		stress_impact = {
+			brave = minor_stress_impact_gain
+			ambitious = medium_stress_impact_gain
+		}
+
+		custom_tooltip = mt_rivalry.0004.c.tt
+
+		ai_chance = {
+			base = 30
+
+			modifier = {
+				add = 30
+				has_trait = craven
+			}
+
+			modifier = {
+				add = 20
+				has_trait = content
+			}
+		}
+	}
+}
+
+# 0005: Old friend becomes rival merchant - complicated relationship
+mt_rivalry.0005 = {
+	type = character_event
+	title = mt_rivalry.0005.t
+	desc = mt_rivalry.0005.desc
+	theme = diplomacy
+
+	left_portrait = {
+		character = root
+		animation = sadness
+	}
+
+	right_portrait = {
+		character = scope:friend_rival
+		animation = beg
+	}
+
+	trigger = {
+		OR = {
+			has_trait = trade_post_owner
+			has_trait = trading_company_head
+			has_trait = merchant_prince
+		}
+		any_courtier = {
+			has_relation_friend = root
+			OR = {
+				has_trait = trade_post_owner
+				has_trait = trading_company_head
+			}
+		}
+	}
+
+	immediate = {
+		random_courtier = {
+			limit = {
+				has_relation_friend = root
+				OR = {
+					has_trait = trade_post_owner
+					has_trait = trading_company_head
+				}
+			}
+			save_scope_as = friend_rival
+		}
+	}
+
+	# Try to maintain the friendship - avoid competition
+	option = {
+		name = mt_rivalry.0005.a
+
+		scope:friend_rival = {
+			add_opinion = {
+				target = root
+				modifier = grateful_opinion
+				opinion = 25
+			}
+		}
+
+		add_character_modifier = {
+			modifier = mt_avoided_conflict
+			months = 18
+		}
+
+		remove_short_term_gold = 100
+
+		custom_tooltip = mt_rivalry.0005.a.tt
+
+		ai_chance = {
+			base = 45
+
+			modifier = {
+				add = 30
+				has_trait = compassionate
+			}
+
+			modifier = {
+				add = 25
+				has_trait = trusting
+			}
+		}
+	}
+
+	# Business is business - compete fairly
+	option = {
+		name = mt_rivalry.0005.b
+
+		scope:friend_rival = {
+			add_opinion = {
+				target = root
+				modifier = disappointed_opinion
+				opinion = -10
+			}
+		}
+
+		add_character_modifier = {
+			modifier = mt_friendly_competition
+			years = 2
+		}
+
+		add_gold = 75
+
+		custom_tooltip = mt_rivalry.0005.b.tt
+
+		ai_chance = {
+			base = 35
+
+			modifier = {
+				add = 30
+				has_trait = just
+			}
+
+			modifier = {
+				add = 20
+				stewardship >= 14
+			}
+		}
+	}
+
+	# Friendship ends here - crush them
+	option = {
+		name = mt_rivalry.0005.c
+
+		scope:friend_rival = {
+			remove_relation_friend = root
+			set_relation_rival = root
+			add_opinion = {
+				target = root
+				modifier = betrayed_opinion
+				opinion = -50
+			}
+		}
+
+		add_prestige = 50
+		add_gold = 150
+
+		stress_impact = {
+			compassionate = major_stress_impact_gain
+			trusting = medium_stress_impact_gain
+			just = minor_stress_impact_gain
+		}
+
+		custom_tooltip = mt_rivalry.0005.c.tt
+
+		ai_chance = {
+			base = 20
+
+			modifier = {
+				add = 40
+				has_trait = callous
+			}
+
+			modifier = {
+				add = 30
+				has_trait = greedy
+			}
+
+			modifier = {
+				add = 25
+				has_trait = ambitious
+			}
+		}
+	}
+}
+
+####################################
+# PRICE WARS (0006-0015)
+####################################
+
+# 0006: Rival undercuts your prices
+mt_rivalry.0006 = {
+	type = character_event
+	title = mt_rivalry.0006.t
+	desc = mt_rivalry.0006.desc
+	theme = stewardship
+
+	left_portrait = {
+		character = root
+		animation = anger
+	}
+
+	right_portrait = {
+		character = scope:price_cutter
+		animation = schadenfreude
+	}
+
+	trigger = {
+		OR = {
+			has_trait = trade_post_owner
+			has_trait = trading_company_head
+			has_trait = merchant_prince
+		}
+		any_courtier = {
+			has_relation_rival = root
+			OR = {
+				has_trait = trade_post_owner
+				has_trait = trading_company_head
+			}
+		}
+	}
+
+	immediate = {
+		random_courtier = {
+			limit = {
+				has_relation_rival = root
+				OR = {
+					has_trait = trade_post_owner
+					has_trait = trading_company_head
+				}
+			}
+			save_scope_as = price_cutter
+		}
+	}
+
+	# Match their prices - reduce profit
+	option = {
+		name = mt_rivalry.0006.a
+
+		remove_short_term_gold = 150
+
+		add_character_modifier = {
+			modifier = mt_price_war_matching
+			months = 12
+		}
+
+		scope:price_cutter = {
+			add_opinion = {
+				target = root
+				modifier = rivalry_opinion
+				opinion = -10
+			}
+		}
+
+		custom_tooltip = mt_rivalry.0006.a.tt
+
+		ai_chance = {
+			base = 35
+
+			modifier = {
+				add = 30
+				has_trait = stubborn
+			}
+
+			modifier = {
+				add = 20
+				gold >= 500
+			}
+		}
+	}
+
+	# Maintain prices - lose customers
+	option = {
+		name = mt_rivalry.0006.b
+
+		add_prestige = -25
+		remove_short_term_gold = 100
+
+		add_character_modifier = {
+			modifier = mt_losing_customers
+			months = 18
+		}
+
+		stress_impact = {
+			ambitious = minor_stress_impact_gain
+			greedy = minor_stress_impact_gain
+		}
+
+		custom_tooltip = mt_rivalry.0006.b.tt
+
+		ai_chance = {
+			base = 25
+
+			modifier = {
+				add = 30
+				has_trait = patient
+			}
+
+			modifier = {
+				add = 20
+				has_trait = stubborn
+			}
+		}
+	}
+
+	# Improve quality instead
+	option = {
+		name = mt_rivalry.0006.c
+
+		remove_short_term_gold = 200
+
+		add_character_modifier = {
+			modifier = mt_superior_quality
+			years = 2
+		}
+
+		add_stewardship = 1
+
+		custom_tooltip = mt_rivalry.0006.c.tt
+
+		ai_chance = {
+			base = 40
+
+			modifier = {
+				add = 30
+				stewardship >= 16
+			}
+
+			modifier = {
+				add = 20
+				has_trait = diligent
+			}
+		}
+	}
+}
+
+# 0007: You discover rival's pricing strategy - can exploit weakness
+mt_rivalry.0007 = {
+	type = character_event
+	title = mt_rivalry.0007.t
+	desc = mt_rivalry.0007.desc
+	theme = intrigue
+
+	left_portrait = {
+		character = root
+		animation = scheme
+	}
+
+	right_portrait = {
+		character = scope:rival_merchant
+		animation = worry
+	}
+
+	trigger = {
+		OR = {
+			has_trait = trade_post_owner
+			has_trait = trading_company_head
+			has_trait = merchant_prince
+		}
+		any_courtier = {
+			has_relation_rival = root
+		}
+		intrigue >= 10
+	}
+
+	immediate = {
+		random_courtier = {
+			limit = {
+				has_relation_rival = root
+			}
+			save_scope_as = rival_merchant
+		}
+	}
+
+	# Exploit the weakness aggressively
+	option = {
+		name = mt_rivalry.0007.a
+
+		add_gold = 200
+		add_prestige = 50
+
+		scope:rival_merchant = {
+			add_opinion = {
+				target = root
+				modifier = rivalry_opinion
+				opinion = -30
+			}
+			add_prestige = -50
+			remove_short_term_gold = 100
+		}
+
+		add_character_modifier = {
+			modifier = mt_outsmarted_rival
+			months = 18
+		}
+
+		custom_tooltip = mt_rivalry.0007.a.tt
+
+		ai_chance = {
+			base = 50
+
+			modifier = {
+				add = 30
+				has_trait = greedy
+			}
+
+			modifier = {
+				add = 20
+				intrigue >= 14
+			}
+		}
+	}
+
+	# Use it moderately - don't destroy them
+	option = {
+		name = mt_rivalry.0007.b
+
+		add_gold = 100
+		add_prestige = 25
+
+		scope:rival_merchant = {
+			add_opinion = {
+				target = root
+				modifier = rivalry_opinion
+				opinion = -15
+			}
+		}
+
+		custom_tooltip = mt_rivalry.0007.b.tt
+
+		ai_chance = {
+			base = 35
+
+			modifier = {
+				add = 30
+				has_trait = just
+			}
+
+			modifier = {
+				add = 20
+				has_trait = compassionate
+			}
+		}
+	}
+
+	# Share the information - propose cooperation
+	option = {
+		name = mt_rivalry.0007.c
+
+		scope:rival_merchant = {
+			remove_relation_rival = root
+			add_opinion = {
+				target = root
+				modifier = grateful_opinion
+				opinion = 40
+			}
+		}
+
+		add_gold = 50
+
+		stress_impact = {
+			greedy = medium_stress_impact_gain
+			ambitious = minor_stress_impact_gain
+		}
+
+		custom_tooltip = mt_rivalry.0007.c.tt
+
+		ai_chance = {
+			base = 15
+
+			modifier = {
+				add = 40
+				has_trait = compassionate
+			}
+
+			modifier = {
+				add = 30
+				has_trait = trusting
+			}
+		}
+	}
+}
+
+# 0008: Price war escalating - both losing money, first to blink loses
+mt_rivalry.0008 = {
+	type = character_event
+	title = mt_rivalry.0008.t
+	desc = mt_rivalry.0008.desc
+	theme = stewardship
+
+	left_portrait = {
+		character = root
+		animation = stress
+	}
+
+	right_portrait = {
+		character = scope:war_rival
+		animation = stress
+	}
+
+	trigger = {
+		OR = {
+			has_character_modifier = mt_price_war_matching
+			has_character_modifier = mt_in_price_competition
+		}
+		any_courtier = {
+			has_relation_rival = root
+		}
+	}
+
+	immediate = {
+		random_courtier = {
+			limit = {
+				has_relation_rival = root
+			}
+			save_scope_as = war_rival
+		}
+	}
+
+	# Hold firm - refuse to yield
+	option = {
+		name = mt_rivalry.0008.a
+
+		duel = {
+			skill = stewardship
+			target = scope:war_rival
+
+			50 = { # You outlast them
+				desc = mt_rivalry.0008.a.success
+				compare_modifier = {
+					value = scope:duel_value
+					multiplier = 3
+				}
+
+				remove_short_term_gold = 200
+				add_prestige = 100
+				add_gold = 300
+
+				scope:war_rival = {
+					add_opinion = {
+						target = root
+						modifier = defeated_opinion
+						opinion = -40
+					}
+					add_prestige = -75
+					remove_short_term_gold = 300
+				}
+
+				add_character_modifier = {
+					modifier = mt_price_war_victor
+					years = 2
+				}
+
+				custom_tooltip = mt_rivalry.0008.a.success.tt
+			}
+
+			50 = { # They outlast you
+				desc = mt_rivalry.0008.a.failure
+				compare_modifier = {
+					value = scope:duel_value
+					multiplier = -3
+				}
+
+				remove_short_term_gold = 300
+				add_prestige = -75
+
+				scope:war_rival = {
+					add_prestige = 100
+					add_gold = 200
+				}
+
+				add_character_modifier = {
+					modifier = mt_price_war_defeated
+					months = 18
+				}
+
+				custom_tooltip = mt_rivalry.0008.a.failure.tt
+			}
+		}
+
+		stress_impact = {
+			craven = minor_stress_impact_gain
+		}
+
+		ai_chance = {
+			base = 40
+
+			modifier = {
+				add = 30
+				has_trait = stubborn
+			}
+
+			modifier = {
+				add = 20
+				gold >= 1000
+			}
+		}
+	}
+
+	# Yield strategically - cut losses
+	option = {
+		name = mt_rivalry.0008.b
+
+		remove_short_term_gold = 150
+		add_prestige = -50
+
+		scope:war_rival = {
+			add_prestige = 50
+			add_gold = 100
+		}
+
+		add_character_modifier = {
+			modifier = mt_strategic_retreat
+			months = 12
+		}
+
+		stress_impact = {
+			ambitious = medium_stress_impact_gain
+			stubborn = minor_stress_impact_gain
+		}
+
+		custom_tooltip = mt_rivalry.0008.b.tt
+
+		ai_chance = {
+			base = 35
+
+			modifier = {
+				add = 40
+				has_trait = patient
+			}
+
+			modifier = {
+				add = -30
+				gold >= 1000
+			}
+		}
+	}
+
+	# Propose truce - end the madness
+	option = {
+		name = mt_rivalry.0008.c
+
+		scope:war_rival = {
+			add_opinion = {
+				target = root
+				modifier = trade_partner_opinion
+				opinion = 20
+			}
+		}
+
+		remove_short_term_gold = 100
+
+		add_character_modifier = {
+			modifier = mt_price_truce
+			years = 3
+		}
+
+		custom_tooltip = mt_rivalry.0008.c.tt
+
+		ai_chance = {
+			base = 25
+
+			modifier = {
+				add = 40
+				has_trait = just
+			}
+
+			modifier = {
+				add = 30
+				gold < 300
+			}
+		}
+	}
+}
+
+# 0009: Third merchant joins price war - chaos in market
+mt_rivalry.0009 = {
+	type = character_event
+	title = mt_rivalry.0009.t
+	desc = mt_rivalry.0009.desc
+	theme = stewardship
+
+	left_portrait = {
+		character = root
+		animation = disbelief
+	}
+
+	right_portrait = {
+		character = scope:third_merchant
+		animation = personality_bold
+	}
+
+	trigger = {
+		OR = {
+			has_character_modifier = mt_price_war_matching
+			has_character_modifier = mt_in_price_competition
+		}
+		any_courtier = {
+			OR = {
+				has_trait = trade_post_owner
+				has_trait = trading_company_head
+			}
+			NOT = { this = root }
+			NOT = { has_relation_rival = root }
+		}
+	}
+
+	immediate = {
+		random_courtier = {
+			limit = {
+				OR = {
+					has_trait = trade_post_owner
+					has_trait = trading_company_head
+				}
+				NOT = { this = root }
+				NOT = { has_relation_rival = root }
+			}
+			save_scope_as = third_merchant
+		}
+	}
+
+	# Try to form alliance with original rival
+	option = {
+		name = mt_rivalry.0009.a
+
+		duel = {
+			skill = diplomacy
+			target = scope:third_merchant
+
+			60 = { # Alliance works
+				desc = mt_rivalry.0009.a.success
+				compare_modifier = {
+					value = scope:duel_value
+					multiplier = 2
+				}
+
+				add_gold = 150
+				add_prestige = 50
+
+				scope:third_merchant = {
+					add_opinion = {
+						target = root
+						modifier = defeated_opinion
+						opinion = -35
+					}
+					remove_short_term_gold = 150
+				}
+
+				custom_tooltip = mt_rivalry.0009.a.success.tt
+			}
+
+			40 = { # Alliance fails
+				desc = mt_rivalry.0009.a.failure
+				compare_modifier = {
+					value = scope:duel_value
+					multiplier = -2
+				}
+
+				remove_short_term_gold = 200
+				add_prestige = -35
+
+				scope:third_merchant = {
+					add_gold = 200
+					set_relation_rival = root
+				}
+
+				custom_tooltip = mt_rivalry.0009.a.failure.tt
+			}
+		}
+
+		ai_chance = {
+			base = 40
+
+			modifier = {
+				add = 30
+				diplomacy >= 14
+			}
+		}
+	}
+
+	# Undercut everyone - race to the bottom
+	option = {
+		name = mt_rivalry.0009.b
+
+		remove_short_term_gold = 250
+
+		random = {
+			chance = 40
+			compare_value = {
+				value = stewardship
+				multiplier = 2
+			}
+
+			add_gold = 400
+			add_prestige = 75
+
+			scope:third_merchant = {
+				remove_short_term_gold = 100
+			}
+
+			custom_tooltip = mt_rivalry.0009.b.success.tt
+		}
+
+		random = {
+			chance = 60
+			compare_value = {
+				value = stewardship
+				multiplier = -2
+			}
+
+			add_prestige = -50
+
+			scope:third_merchant = {
+				add_gold = 300
+			}
+
+			custom_tooltip = mt_rivalry.0009.b.failure.tt
+		}
+
+		stress_impact = {
+			patient = minor_stress_impact_gain
+		}
+
+		ai_chance = {
+			base = 30
+
+			modifier = {
+				add = 40
+				has_trait = greedy
+			}
+
+			modifier = {
+				add = -30
+				gold < 500
+			}
+		}
+	}
+
+	# Exit the price war entirely
+	option = {
+		name = mt_rivalry.0009.c
+
+		remove_character_modifier = mt_price_war_matching
+		remove_character_modifier = mt_in_price_competition
+
+		add_character_modifier = {
+			modifier = mt_exited_price_war
+			months = 12
+		}
+
+		add_prestige = -40
+		remove_short_term_gold = 100
+
+		stress_impact = {
+			ambitious = medium_stress_impact_gain
+			brave = minor_stress_impact_gain
+		}
+
+		custom_tooltip = mt_rivalry.0009.c.tt
+
+		ai_chance = {
+			base = 30
+
+			modifier = {
+				add = 40
+				has_trait = craven
+			}
+
+			modifier = {
+				add = 30
+				gold < 300
+			}
+		}
+	}
+}
+
+# 0010: Price war resolved - winner gains reputation, loser retreats
+mt_rivalry.0010 = {
+	type = character_event
+	title = mt_rivalry.0010.t
+	desc = mt_rivalry.0010.desc
+	theme = stewardship
+
+	left_portrait = {
+		character = root
+		animation = happiness
+	}
+
+	right_portrait = {
+		character = scope:defeated_rival
+		animation = sadness
+	}
+
+	trigger = {
+		has_character_modifier = mt_price_war_victor
+		any_courtier = {
+			has_relation_rival = root
+			has_character_modifier = mt_price_war_defeated
+		}
+	}
+
+	immediate = {
+		random_courtier = {
+			limit = {
+				has_relation_rival = root
+				has_character_modifier = mt_price_war_defeated
+			}
+			save_scope_as = defeated_rival
+		}
+	}
+
+	# Offer to buy them out - total victory
+	option = {
+		name = mt_rivalry.0010.a
+
+		remove_short_term_gold = 300
+
+		scope:defeated_rival = {
+			remove_relation_rival = root
+			add_opinion = {
+				target = root
+				modifier = grateful_opinion
+				opinion = 30
+			}
+			remove_character_modifier = mt_price_war_defeated
+			remove_trait = trade_post_owner
+			remove_trait = trading_company_head
+		}
+
+		add_prestige = 100
+		add_gold = 500
+
+		add_character_modifier = {
+			modifier = mt_acquired_competitor
+			years = 5
+		}
+
+		custom_tooltip = mt_rivalry.0010.a.tt
+
+		ai_chance = {
+			base = 35
+
+			modifier = {
+				add = 40
+				gold >= 1000
+			}
+
+			modifier = {
+				add = 30
+				has_trait = ambitious
+			}
+		}
+	}
+
+	# Let them recover - show mercy
+	option = {
+		name = mt_rivalry.0010.b
+
+		scope:defeated_rival = {
+			remove_relation_rival = root
+			add_opinion = {
+				target = root
+				modifier = grateful_opinion
+				opinion = 50
+			}
+			remove_character_modifier = mt_price_war_defeated
+			add_gold = 100
+		}
+
+		add_prestige = 75
+
+		stress_impact = {
+			callous = minor_stress_impact_gain
+			greedy = minor_stress_impact_gain
+		}
+
+		custom_tooltip = mt_rivalry.0010.b.tt
+
+		ai_chance = {
+			base = 35
+
+			modifier = {
+				add = 40
+				has_trait = compassionate
+			}
+
+			modifier = {
+				add = 30
+				has_trait = forgiving
+			}
+		}
+	}
+
+	# Press your advantage - dominate the market
+	option = {
+		name = mt_rivalry.0010.c
+
+		scope:defeated_rival = {
+			add_opinion = {
+				target = root
+				modifier = crushed_opinion
+				opinion = -60
+			}
+			remove_short_term_gold = 200
+			add_prestige = -100
+		}
+
+		add_gold = 400
+		add_prestige = 125
+
+		add_character_modifier = {
+			modifier = mt_market_domination
+			years = 3
+		}
+
+		stress_impact = {
+			compassionate = major_stress_impact_gain
+			just = medium_stress_impact_gain
+		}
+
+		custom_tooltip = mt_rivalry.0010.c.tt
+
+		ai_chance = {
+			base = 30
+
+			modifier = {
+				add = 50
+				has_trait = callous
+			}
+
+			modifier = {
+				add = 40
+				has_trait = greedy
+			}
+
+			modifier = {
+				add = 30
+				has_trait = ambitious
+			}
+		}
+	}
+}
+
+# 0011: Merchant cartel forms to stabilize prices
+mt_rivalry.0011 = {
+	type = character_event
+	title = mt_rivalry.0011.t
+	desc = mt_rivalry.0011.desc
+	theme = diplomacy
+
+	left_portrait = {
+		character = root
+		animation = personality_rational
+	}
+
+	trigger = {
+		OR = {
+			has_trait = trade_post_owner
+			has_trait = trading_company_head
+			has_trait = merchant_prince
+		}
+		OR = {
+			has_character_modifier = mt_price_war_matching
+			has_character_modifier = mt_in_price_competition
+			has_character_modifier = mt_exited_price_war
+		}
+	}
+
+	# Join the cartel - price fixing
+	option = {
+		name = mt_rivalry.0011.a
+
+		add_gold = 200
+
+		add_character_modifier = {
+			modifier = mt_cartel_member
+			years = 5
+		}
+
+		remove_character_modifier = mt_price_war_matching
+		remove_character_modifier = mt_in_price_competition
+		remove_character_modifier = mt_exited_price_war
+
+		custom_tooltip = mt_rivalry.0011.a.tt
+
+		ai_chance = {
+			base = 50
+
+			modifier = {
+				add = 30
+				has_trait = greedy
+			}
+
+			modifier = {
+				add = -40
+				has_trait = just
+			}
+		}
+	}
+
+	# Refuse - compete honestly
+	option = {
+		name = mt_rivalry.0011.b
+
+		add_prestige = 50
+
+		add_character_modifier = {
+			modifier = mt_honest_competitor
+			years = 3
+		}
+
+		stress_impact = {
+			deceitful = minor_stress_impact_gain
+		}
+
+		custom_tooltip = mt_rivalry.0011.b.tt
+
+		ai_chance = {
+			base = 30
+
+			modifier = {
+				add = 50
+				has_trait = just
+			}
+
+			modifier = {
+				add = 30
+				has_trait = honest
+			}
+		}
+	}
+
+	# Report to authorities - break up the cartel
+	option = {
+		name = mt_rivalry.0011.c
+
+		add_prestige = 100
+		add_gold = 150
+
+		random_courtier = {
+			limit = {
+				OR = {
+					has_trait = trade_post_owner
+					has_trait = trading_company_head
+				}
+			}
+			add_opinion = {
+				target = root
+				modifier = betrayed_opinion
+				opinion = -75
+			}
+		}
+
+		stress_impact = {
+			deceitful = medium_stress_impact_gain
+			trusting = minor_stress_impact_gain
+		}
+
+		custom_tooltip = mt_rivalry.0011.c.tt
+
+		ai_chance = {
+			base = 20
+
+			modifier = {
+				add = 40
+				has_trait = zealous
+			}
+
+			modifier = {
+				add = 30
+				has_trait = just
+			}
+		}
+	}
+}
+
+# 0012: Undercutting backfires - customers question quality
+mt_rivalry.0012 = {
+	type = character_event
+	title = mt_rivalry.0012.t
+	desc = mt_rivalry.0012.desc
+	theme = stewardship
+
+	left_portrait = {
+		character = root
+		animation = worry
+	}
+
+	trigger = {
+		has_character_modifier = mt_price_war_matching
+		gold >= 100
+	}
+
+	# Invest in marketing - explain value
+	option = {
+		name = mt_rivalry.0012.a
+
+		remove_short_term_gold = 150
+
+		random = {
+			chance = 60
+			compare_value = {
+				value = diplomacy
+				multiplier = 3
+			}
+
+			add_prestige = 75
+			add_gold = 200
+
+			remove_character_modifier = mt_price_war_matching
+
+			custom_tooltip = mt_rivalry.0012.a.success.tt
+		}
+
+		random = {
+			chance = 40
+			compare_value = {
+				value = diplomacy
+				multiplier = -3
+			}
+
+			add_prestige = -25
+
+			custom_tooltip = mt_rivalry.0012.a.failure.tt
+		}
+
+		ai_chance = {
+			base = 40
+
+			modifier = {
+				add = 30
+				diplomacy >= 14
+			}
+
+			modifier = {
+				add = 20
+				gold >= 500
+			}
+		}
+	}
+
+	# Raise prices immediately - restore perception
+	option = {
+		name = mt_rivalry.0012.b
+
+		remove_character_modifier = mt_price_war_matching
+
+		add_character_modifier = {
+			modifier = mt_premium_pricing
+			years = 2
+		}
+
+		remove_short_term_gold = 100
+		add_prestige = 50
+
+		custom_tooltip = mt_rivalry.0012.b.tt
+
+		ai_chance = {
+			base = 35
+
+			modifier = {
+				add = 30
+				has_trait = ambitious
+			}
+
+			modifier = {
+				add = 20
+				stewardship >= 14
+			}
+		}
+	}
+
+	# Accept the damage - ride it out
+	option = {
+		name = mt_rivalry.0012.c
+
+		add_prestige = -50
+		remove_short_term_gold = 75
+
+		add_character_modifier = {
+			modifier = mt_damaged_reputation
+			months = 18
+		}
+
+		stress_impact = {
+			ambitious = minor_stress_impact_gain
+		}
+
+		custom_tooltip = mt_rivalry.0012.c.tt
+
+		ai_chance = {
+			base = 25
+
+			modifier = {
+				add = 30
+				has_trait = patient
+			}
+
+			modifier = {
+				add = -30
+				gold >= 500
+			}
+		}
+	}
+}
+
+# 0013: Supplier offers exclusive deal - shut out rivals
+mt_rivalry.0013 = {
+	type = character_event
+	title = mt_rivalry.0013.t
+	desc = mt_rivalry.0013.desc
+	theme = intrigue
+
+	left_portrait = {
+		character = root
+		animation = scheme
+	}
+
+	trigger = {
+		OR = {
+			has_trait = trade_post_owner
+			has_trait = trading_company_head
+			has_trait = merchant_prince
+		}
+		any_courtier = {
+			has_relation_rival = root
+		}
+		gold >= 200
+	}
+
+	# Take the exclusive deal
+	option = {
+		name = mt_rivalry.0013.a
+
+		remove_short_term_gold = 300
+
+		add_gold = 500
+		add_prestige = 75
+
+		random_courtier = {
+			limit = {
+				has_relation_rival = root
+			}
+			add_opinion = {
+				target = root
+				modifier = rivalry_opinion
+				opinion = -50
+			}
+			remove_short_term_gold = 200
+		}
+
+		add_character_modifier = {
+			modifier = mt_exclusive_supplier
+			years = 3
+		}
+
+		custom_tooltip = mt_rivalry.0013.a.tt
+
+		ai_chance = {
+			base = 50
+
+			modifier = {
+				add = 30
+				has_trait = greedy
+			}
+
+			modifier = {
+				add = 20
+				gold >= 800
+			}
+		}
+	}
+
+	# Share the supplier - fair competition
+	option = {
+		name = mt_rivalry.0013.b
+
+		random_courtier = {
+			limit = {
+				has_relation_rival = root
+			}
+			add_opinion = {
+				target = root
+				modifier = grateful_opinion
+				opinion = 25
+			}
+		}
+
+		add_gold = 150
+		add_prestige = 25
+
+		stress_impact = {
+			greedy = medium_stress_impact_gain
+			ambitious = minor_stress_impact_gain
+		}
+
+		custom_tooltip = mt_rivalry.0013.b.tt
+
+		ai_chance = {
+			base = 30
+
+			modifier = {
+				add = 50
+				has_trait = just
+			}
+
+			modifier = {
+				add = 30
+				has_trait = compassionate
+			}
+		}
+	}
+
+	# Negotiate better terms for everyone
+	option = {
+		name = mt_rivalry.0013.c
+
+		duel = {
+			skill = diplomacy
+			target = root
+
+			65 = { # Success
+				desc = mt_rivalry.0013.c.success
+
+				add_gold = 300
+				add_prestige = 100
+
+				random_courtier = {
+					limit = {
+						has_relation_rival = root
+					}
+					remove_relation_rival = root
+					add_opinion = {
+						target = root
+						modifier = grateful_opinion
+						opinion = 40
+					}
+				}
+
+				custom_tooltip = mt_rivalry.0013.c.success.tt
+			}
+
+			35 = { # Failure
+				desc = mt_rivalry.0013.c.failure
+
+				add_prestige = -25
+
+				random_courtier = {
+					limit = {
+						has_relation_rival = root
+					}
+					add_gold = 200
+				}
+
+				custom_tooltip = mt_rivalry.0013.c.failure.tt
+			}
+		}
+
+		ai_chance = {
+			base = 20
+
+			modifier = {
+				add = 40
+				diplomacy >= 16
+			}
+
+			modifier = {
+				add = 30
+				has_trait = gregarious
+			}
+		}
+	}
+}
+
+# 0014: Price manipulation scheme discovered
+mt_rivalry.0014 = {
+	type = character_event
+	title = mt_rivalry.0014.t
+	desc = mt_rivalry.0014.desc
+	theme = intrigue
+
+	left_portrait = {
+		character = root
+		animation = disbelief
+	}
+
+	right_portrait = {
+		character = scope:scheming_rival
+		animation = scheme
+	}
+
+	trigger = {
+		OR = {
+			has_trait = trade_post_owner
+			has_trait = trading_company_head
+			has_trait = merchant_prince
+		}
+		any_courtier = {
+			has_relation_rival = root
+			intrigue >= 12
+		}
+	}
+
+	immediate = {
+		random_courtier = {
+			limit = {
+				has_relation_rival = root
+				intrigue >= 12
+			}
+			save_scope_as = scheming_rival
+		}
+	}
+
+	# Expose them publicly
+	option = {
+		name = mt_rivalry.0014.a
+
+		scope:scheming_rival = {
+			add_opinion = {
+				target = root
+				modifier = rivalry_opinion
+				opinion = -60
+			}
+			add_prestige = -150
+			remove_short_term_gold = 250
+		}
+
+		add_prestige = 100
+		add_gold = 200
+
+		custom_tooltip = mt_rivalry.0014.a.tt
+
+		ai_chance = {
+			base = 50
+
+			modifier = {
+				add = 30
+				has_trait = just
+			}
+
+			modifier = {
+				add = 20
+				has_trait = zealous
+			}
+		}
+	}
+
+	# Blackmail them privately
+	option = {
+		name = mt_rivalry.0014.b
+
+		scope:scheming_rival = {
+			add_opinion = {
+				target = root
+				modifier = blackmailed_opinion
+				opinion = -40
+			}
+		}
+
+		add_gold = 400
+
+		add_character_modifier = {
+			modifier = mt_blackmailing_rival
+			years = 5
+		}
+
+		stress_impact = {
+			honest = medium_stress_impact_gain
+			just = minor_stress_impact_gain
+		}
+
+		custom_tooltip = mt_rivalry.0014.b.tt
+
+		ai_chance = {
+			base = 30
+
+			modifier = {
+				add = 50
+				has_trait = greedy
+			}
+
+			modifier = {
+				add = 40
+				intrigue >= 14
+			}
+		}
+	}
+
+	# Use it yourself - fight fire with fire
+	option = {
+		name = mt_rivalry.0014.c
+
+		add_gold = 250
+		add_prestige = -25
+
+		add_character_modifier = {
+			modifier = mt_price_manipulator
+			years = 3
+		}
+
+		stress_impact = {
+			honest = major_stress_impact_gain
+			just = medium_stress_impact_gain
+		}
+
+		custom_tooltip = mt_rivalry.0014.c.tt
+
+		ai_chance = {
+			base = 20
+
+			modifier = {
+				add = 50
+				has_trait = deceitful
+			}
+
+			modifier = {
+				add = 30
+				has_trait = greedy
+			}
+		}
+	}
+}
+
+# 0015: Premium goods strategy pays off
+mt_rivalry.0015 = {
+	type = character_event
+	title = mt_rivalry.0015.t
+	desc = mt_rivalry.0015.desc
+	theme = stewardship
+
+	left_portrait = {
+		character = root
+		animation = happiness
+	}
+
+	trigger = {
+		OR = {
+			has_character_modifier = mt_premium_goods
+			has_character_modifier = mt_superior_quality
+			has_character_modifier = mt_premium_pricing
+		}
+	}
+
+	# Expand premium line - luxury market
+	option = {
+		name = mt_rivalry.0015.a
+
+		remove_short_term_gold = 250
+
+		add_gold = 600
+		add_prestige = 100
+
+		add_character_modifier = {
+			modifier = mt_luxury_merchant
+			years = 5
+		}
+
+		custom_tooltip = mt_rivalry.0015.a.tt
+
+		ai_chance = {
+			base = 45
+
+			modifier = {
+				add = 30
+				gold >= 800
+			}
+
+			modifier = {
+				add = 25
+				has_trait = ambitious
+			}
+		}
+	}
+
+	# Maintain current strategy - steady profits
+	option = {
+		name = mt_rivalry.0015.b
+
+		add_gold = 300
+		add_prestige = 50
+
+		add_stewardship = 1
+
+		custom_tooltip = mt_rivalry.0015.b.tt
+
+		ai_chance = {
+			base = 40
+
+			modifier = {
+				add = 30
+				has_trait = patient
+			}
+
+			modifier = {
+				add = 20
+				stewardship >= 14
+			}
+		}
+	}
+
+	# Celebrate publicly - boost reputation
+	option = {
+		name = mt_rivalry.0015.c
+
+		remove_short_term_gold = 100
+
+		add_prestige = 150
+		add_gold = 200
+
+		add_character_modifier = {
+			modifier = mt_celebrated_merchant
+			years = 2
+		}
+
+		custom_tooltip = mt_rivalry.0015.c.tt
+
+		ai_chance = {
+			base = 15
+
+			modifier = {
+				add = 40
+				has_trait = gregarious
+			}
+
+			modifier = {
+				add = 30
+				diplomacy >= 14
+			}
+		}
+	}
+}
+
+####################################
+# ROUTE SABOTAGE (0016-0025)
+####################################
+
+# 0016: Suspect rival bribed officials - your route delayed
+mt_rivalry.0016 = {
+	type = character_event
+	title = mt_rivalry.0016.t
+	desc = mt_rivalry.0016.desc
+	theme = intrigue
+
+	left_portrait = {
+		character = root
+		animation = anger
+	}
+
+	right_portrait = {
+		character = scope:suspected_rival
+		animation = dismissal
+	}
+
+	trigger = {
+		OR = {
+			has_trait = trade_post_owner
+			has_trait = trading_company_head
+			has_trait = merchant_prince
+		}
+		any_courtier = {
+			has_relation_rival = root
+			gold >= 100
+		}
+	}
+
+	immediate = {
+		random_courtier = {
+			limit = {
+				has_relation_rival = root
+				gold >= 100
+			}
+			save_scope_as = suspected_rival
+		}
+	}
+
+	# Bribe officials yourself - fight corruption with corruption
+	option = {
+		name = mt_rivalry.0016.a
+
+		remove_short_term_gold = 200
+
+		add_gold = 150
+
+		add_character_modifier = {
+			modifier = mt_bribed_officials
+			months = 18
+		}
+
+		stress_impact = {
+			just = medium_stress_impact_gain
+			honest = minor_stress_impact_gain
+		}
+
+		custom_tooltip = mt_rivalry.0016.a.tt
+
+		ai_chance = {
+			base = 40
+
+			modifier = {
+				add = 40
+				has_trait = deceitful
+			}
+
+			modifier = {
+				add = -50
+				has_trait = just
+			}
+		}
+	}
+
+	# Report to higher authorities
+	option = {
+		name = mt_rivalry.0016.b
+
+		duel = {
+			skill = intrigue
+			target = scope:suspected_rival
+
+			55 = { # Successfully expose them
+				desc = mt_rivalry.0016.b.success
+
+				scope:suspected_rival = {
+					add_opinion = {
+						target = root
+						modifier = rivalry_opinion
+						opinion = -50
+					}
+					remove_short_term_gold = 250
+					add_prestige = -75
+				}
+
+				add_prestige = 75
+				add_gold = 200
+
+				custom_tooltip = mt_rivalry.0016.b.success.tt
+			}
+
+			45 = { # No evidence found
+				desc = mt_rivalry.0016.b.failure
+
+				add_prestige = -25
+
+				scope:suspected_rival = {
+					add_opinion = {
+						target = root
+						modifier = rivalry_opinion
+						opinion = -25
+					}
+				}
+
+				custom_tooltip = mt_rivalry.0016.b.failure.tt
+			}
+		}
+
+		ai_chance = {
+			base = 35
+
+			modifier = {
+				add = 50
+				has_trait = just
+			}
+
+			modifier = {
+				add = 30
+				intrigue >= 14
+			}
+		}
+	}
+
+	# Find alternative route - avoid the problem
+	option = {
+		name = mt_rivalry.0016.c
+
+		remove_short_term_gold = 150
+
+		add_character_modifier = {
+			modifier = mt_alternative_route
+			years = 2
+		}
+
+		add_stewardship = 1
+
+		custom_tooltip = mt_rivalry.0016.c.tt
+
+		ai_chance = {
+			base = 25
+
+			modifier = {
+				add = 40
+				has_trait = patient
+			}
+
+			modifier = {
+				add = 30
+				stewardship >= 14
+			}
+		}
+	}
+}
+
+# 0017: Rival's caravan "accidentally" blocks your route
+mt_rivalry.0017 = {
+	type = character_event
+	title = mt_rivalry.0017.t
+	desc = mt_rivalry.0017.desc
+	theme = stewardship
+
+	left_portrait = {
+		character = root
+		animation = anger
+	}
+
+	right_portrait = {
+		character = scope:blocking_rival
+		animation = schadenfreude
+	}
+
+	trigger = {
+		OR = {
+			has_trait = trade_post_owner
+			has_trait = trading_company_head
+			has_trait = merchant_prince
+		}
+		any_courtier = {
+			has_relation_rival = root
+		}
+	}
+
+	immediate = {
+		random_courtier = {
+			limit = {
+				has_relation_rival = root
+			}
+			save_scope_as = blocking_rival
+		}
+	}
+
+	# Confront them aggressively
+	option = {
+		name = mt_rivalry.0017.a
+
+		duel = {
+			skill = prowess
+			target = scope:blocking_rival
+
+			60 = { # Intimidate them
+				desc = mt_rivalry.0017.a.success
+
+				scope:blocking_rival = {
+					add_opinion = {
+						target = root
+						modifier = intimidated_opinion
+						opinion = -30
+					}
+				}
+
+				add_prestige = 50
+
+				custom_tooltip = mt_rivalry.0017.a.success.tt
+			}
+
+			40 = { # They stand firm
+				desc = mt_rivalry.0017.a.failure
+
+				remove_short_term_gold = 100
+				add_prestige = -25
+
+				scope:blocking_rival = {
+					add_prestige = 25
+				}
+
+				custom_tooltip = mt_rivalry.0017.a.failure.tt
+			}
+		}
+
+		stress_impact = {
+			craven = minor_stress_impact_gain
+		}
+
+		ai_chance = {
+			base = 40
+
+			modifier = {
+				add = 40
+				has_trait = brave
+			}
+
+			modifier = {
+				add = 30
+				prowess >= 12
+			}
+		}
+	}
+
+	# Negotiate compensation
+	option = {
+		name = mt_rivalry.0017.b
+
+		scope:blocking_rival = {
+			remove_short_term_gold = 100
+		}
+
+		add_gold = 100
+
+		scope:blocking_rival = {
+			add_opinion = {
+				target = root
+				modifier = trade_partner_opinion
+				opinion = 10
+			}
+		}
+
+		custom_tooltip = mt_rivalry.0017.b.tt
+
+		ai_chance = {
+			base = 35
+
+			modifier = {
+				add = 40
+				diplomacy >= 14
+			}
+
+			modifier = {
+				add = 30
+				has_trait = greedy
+			}
+		}
+	}
+
+	# Block their route in return
+	option = {
+		name = mt_rivalry.0017.c
+
+		scope:blocking_rival = {
+			add_opinion = {
+				target = root
+				modifier = rivalry_opinion
+				opinion = -40
+			}
+			remove_short_term_gold = 150
+		}
+
+		add_gold = 100
+
+		add_character_modifier = {
+			modifier = mt_route_feud
+			years = 2
+		}
+
+		custom_tooltip = mt_rivalry.0017.c.tt
+
+		ai_chance = {
+			base = 25
+
+			modifier = {
+				add = 50
+				has_trait = vengeful
+			}
+
+			modifier = {
+				add = 30
+				has_trait = wrathful
+			}
+		}
+	}
+}
+
+# 0018: Discover rival spreading rumors about your goods quality
+mt_rivalry.0018 = {
+	type = character_event
+	title = mt_rivalry.0018.t
+	desc = mt_rivalry.0018.desc
+	theme = diplomacy
+
+	left_portrait = {
+		character = root
+		animation = rage
+	}
+
+	right_portrait = {
+		character = scope:rumor_spreader
+		animation = scheme
+	}
+
+	trigger = {
+		OR = {
+			has_trait = trade_post_owner
+			has_trait = trading_company_head
+			has_trait = merchant_prince
+		}
+		any_courtier = {
+			has_relation_rival = root
+			diplomacy >= 10
+		}
+	}
+
+	immediate = {
+		random_courtier = {
+			limit = {
+				has_relation_rival = root
+				diplomacy >= 10
+			}
+			save_scope_as = rumor_spreader
+		}
+	}
+
+	# Launch counter-campaign
+	option = {
+		name = mt_rivalry.0018.a
+
+		remove_short_term_gold = 150
+
+		duel = {
+			skill = diplomacy
+			target = scope:rumor_spreader
+
+			60 = { # Successful counter
+				desc = mt_rivalry.0018.a.success
+
+				add_prestige = 100
+
+				scope:rumor_spreader = {
+					add_prestige = -75
+					add_opinion = {
+						target = root
+						modifier = rivalry_opinion
+						opinion = -40
+					}
+				}
+
+				custom_tooltip = mt_rivalry.0018.a.success.tt
+			}
+
+			40 = { # Backfires
+				desc = mt_rivalry.0018.a.failure
+
+				add_prestige = -50
+				remove_short_term_gold = 100
+
+				scope:rumor_spreader = {
+					add_prestige = 50
+				}
+
+				custom_tooltip = mt_rivalry.0018.a.failure.tt
+			}
+		}
+
+		ai_chance = {
+			base = 45
+
+			modifier = {
+				add = 30
+				diplomacy >= 14
+			}
+
+			modifier = {
+				add = 20
+				gold >= 500
+			}
+		}
+	}
+
+	# Prove quality with demonstrations
+	option = {
+		name = mt_rivalry.0018.b
+
+		remove_short_term_gold = 200
+
+		add_prestige = 75
+		add_gold = 250
+
+		add_character_modifier = {
+			modifier = mt_proven_quality
+			years = 3
+		}
+
+		scope:rumor_spreader = {
+			add_opinion = {
+				target = root
+				modifier = rivalry_opinion
+				opinion = -25
+			}
+		}
+
+		custom_tooltip = mt_rivalry.0018.b.tt
+
+		ai_chance = {
+			base = 35
+
+			modifier = {
+				add = 40
+				has_trait = diligent
+			}
+
+			modifier = {
+				add = 30
+				gold >= 500
+			}
+		}
+	}
+
+	# Spread worse rumors about them
+	option = {
+		name = mt_rivalry.0018.c
+
+		scope:rumor_spreader = {
+			add_opinion = {
+				target = root
+				modifier = rivalry_opinion
+				opinion = -60
+			}
+			add_prestige = -50
+		}
+
+		add_gold = 100
+
+		add_character_modifier = {
+			modifier = mt_rumor_war
+			years = 2
+		}
+
+		stress_impact = {
+			honest = medium_stress_impact_gain
+			just = minor_stress_impact_gain
+		}
+
+		custom_tooltip = mt_rivalry.0018.c.tt
+
+		ai_chance = {
+			base = 20
+
+			modifier = {
+				add = 50
+				has_trait = deceitful
+			}
+
+			modifier = {
+				add = 40
+				has_trait = vengeful
+			}
+		}
+	}
+}
+
+# 0019: Rival hired bandits to attack you - decision to retaliate or report
+mt_rivalry.0019 = {
+	type = character_event
+	title = mt_rivalry.0019.t
+	desc = mt_rivalry.0019.desc
+	theme = intrigue
+
+	left_portrait = {
+		character = root
+		animation = rage
+	}
+
+	right_portrait = {
+		character = scope:bandit_hirer
+		animation = scheme
+	}
+
+	trigger = {
+		OR = {
+			has_trait = trade_post_owner
+			has_trait = trading_company_head
+			has_trait = merchant_prince
+		}
+		any_courtier = {
+			has_relation_rival = root
+			intrigue >= 12
+			gold >= 150
+		}
+	}
+
+	immediate = {
+		random_courtier = {
+			limit = {
+				has_relation_rival = root
+				intrigue >= 12
+				gold >= 150
+			}
+			save_scope_as = bandit_hirer
+		}
+	}
+
+	# Hire mercenaries to retaliate
+	option = {
+		name = mt_rivalry.0019.a
+
+		remove_short_term_gold = 250
+
+		scope:bandit_hirer = {
+			add_opinion = {
+				target = root
+				modifier = rivalry_opinion
+				opinion = -75
+			}
+			remove_short_term_gold = 300
+			add_prestige = -50
+		}
+
+		add_prestige = 50
+
+		add_character_modifier = {
+			modifier = mt_hired_protection
+			years = 3
+		}
+
+		stress_impact = {
+			compassionate = minor_stress_impact_gain
+		}
+
+		custom_tooltip = mt_rivalry.0019.a.tt
+
+		ai_chance = {
+			base = 40
+
+			modifier = {
+				add = 40
+				has_trait = vengeful
+			}
+
+			modifier = {
+				add = 30
+				gold >= 800
+			}
+		}
+	}
+
+	# Report to liege - legal approach
+	option = {
+		name = mt_rivalry.0019.b
+
+		duel = {
+			skill = intrigue
+			target = scope:bandit_hirer
+
+			65 = { # Evidence found
+				desc = mt_rivalry.0019.b.success
+
+				scope:bandit_hirer = {
+					add_opinion = {
+						target = root
+						modifier = rivalry_opinion
+						opinion = -100
+					}
+					remove_short_term_gold = 500
+					add_prestige = -150
+				}
+
+				add_prestige = 125
+				add_gold = 300
+
+				custom_tooltip = mt_rivalry.0019.b.success.tt
+			}
+
+			35 = { # Not enough proof
+				desc = mt_rivalry.0019.b.failure
+
+				add_prestige = -25
+
+				scope:bandit_hirer = {
+					add_opinion = {
+						target = root
+						modifier = rivalry_opinion
+						opinion = -50
+					}
+				}
+
+				custom_tooltip = mt_rivalry.0019.b.failure.tt
+			}
+		}
+
+		ai_chance = {
+			base = 35
+
+			modifier = {
+				add = 50
+				has_trait = just
+			}
+
+			modifier = {
+				add = 30
+				intrigue >= 14
+			}
+		}
+	}
+
+	# Ambush the bandits yourself
+	option = {
+		name = mt_rivalry.0019.c
+
+		duel = {
+			skill = martial
+			target = root
+
+			50 = { # Successful ambush
+				desc = mt_rivalry.0019.c.success
+
+				add_gold = 200
+				add_prestige = 75
+
+				scope:bandit_hirer = {
+					add_opinion = {
+						target = root
+						modifier = fear_opinion
+						opinion = -60
+					}
+				}
+
+				custom_tooltip = mt_rivalry.0019.c.success.tt
+			}
+
+			50 = { # Ambush fails
+				desc = mt_rivalry.0019.c.failure
+
+				remove_short_term_gold = 150
+				add_prestige = -35
+
+				scope:bandit_hirer = {
+					add_prestige = 50
+				}
+
+				custom_tooltip = mt_rivalry.0019.c.failure.tt
+			}
+		}
+
+		stress_impact = {
+			craven = medium_stress_impact_gain
+		}
+
+		ai_chance = {
+			base = 25
+
+			modifier = {
+				add = 50
+				has_trait = brave
+			}
+
+			modifier = {
+				add = 40
+				martial >= 14
+			}
+		}
+	}
+}
+
+# 0020: Your warehouse mysteriously catches fire - arson suspected
+mt_rivalry.0020 = {
+	type = character_event
+	title = mt_rivalry.0020.t
+	desc = mt_rivalry.0020.desc
+	theme = intrigue
+
+	left_portrait = {
+		character = root
+		animation = sadness
+	}
+
+	trigger = {
+		OR = {
+			has_trait = trade_post_owner
+			has_trait = trading_company_head
+			has_trait = merchant_prince
+		}
+		any_courtier = {
+			has_relation_rival = root
+			intrigue >= 10
+		}
+		gold >= 200
+	}
+
+	immediate = {
+		random_courtier = {
+			limit = {
+				has_relation_rival = root
+				intrigue >= 10
+			}
+			save_scope_as = suspected_arsonist
+		}
+
+		# Immediate loss from fire
+		remove_short_term_gold = 300
+	}
+
+	# Investigate thoroughly
+	option = {
+		name = mt_rivalry.0020.a
+
+		remove_short_term_gold = 150
+
+		duel = {
+			skill = intrigue
+			target = scope:suspected_arsonist
+
+			50 = { # Find evidence
+				desc = mt_rivalry.0020.a.success
+
+				scope:suspected_arsonist = {
+					add_opinion = {
+						target = root
+						modifier = rivalry_opinion
+						opinion = -100
+					}
+					remove_short_term_gold = 400
+					add_prestige = -125
+				}
+
+				add_prestige = 100
+				add_gold = 400
+
+				custom_tooltip = mt_rivalry.0020.a.success.tt
+			}
+
+			50 = { # No proof
+				desc = mt_rivalry.0020.a.failure
+
+				add_prestige = -25
+
+				custom_tooltip = mt_rivalry.0020.a.failure.tt
+			}
+		}
+
+		ai_chance = {
+			base = 45
+
+			modifier = {
+				add = 40
+				intrigue >= 14
+			}
+
+			modifier = {
+				add = 30
+				has_trait = just
+			}
+		}
+	}
+
+	# Rebuild quickly
+	option = {
+		name = mt_rivalry.0020.b
+
+		remove_short_term_gold = 250
+
+		add_character_modifier = {
+			modifier = mt_rebuilt_warehouse
+			years = 2
+		}
+
+		add_prestige = 50
+
+		custom_tooltip = mt_rivalry.0020.b.tt
+
+		ai_chance = {
+			base = 35
+
+			modifier = {
+				add = 40
+				has_trait = patient
+			}
+
+			modifier = {
+				add = 30
+				gold >= 800
+			}
+		}
+	}
+
+	# Retaliate in kind
+	option = {
+		name = mt_rivalry.0020.c
+
+		remove_short_term_gold = 200
+
+		scope:suspected_arsonist = {
+			add_opinion = {
+				target = root
+				modifier = rivalry_opinion
+				opinion = -100
+			}
+			remove_short_term_gold = 350
+			add_prestige = -75
+		}
+
+		add_character_modifier = {
+			modifier = mt_sabotage_war
+			years = 3
+		}
+
+		stress_impact = {
+			just = major_stress_impact_gain
+			honest = medium_stress_impact_gain
+			compassionate = minor_stress_impact_gain
+		}
+
+		custom_tooltip = mt_rivalry.0020.c.tt
+
+		ai_chance = {
+			base = 20
+
+			modifier = {
+				add = 60
+				has_trait = vengeful
+			}
+
+			modifier = {
+				add = 50
+				has_trait = wrathful
+			}
+
+			modifier = {
+				add = -60
+				has_trait = just
+			}
+		}
+	}
+}
+
+# 0021: Sabotage escalation - guards needed
+mt_rivalry.0021 = {
+	type = character_event
+	title = mt_rivalry.0021.t
+	desc = mt_rivalry.0021.desc
+	theme = stewardship
+
+	left_portrait = {
+		character = root
+		animation = worry
+	}
+
+	trigger = {
+		OR = {
+			has_character_modifier = mt_route_feud
+			has_character_modifier = mt_sabotage_war
+			has_character_modifier = mt_rumor_war
+		}
+	}
+
+	# Hire professional guards
+	option = {
+		name = mt_rivalry.0021.a
+
+		remove_short_term_gold = 300
+
+		add_character_modifier = {
+			modifier = mt_professional_guards
+			years = 5
+		}
+
+		add_gold = 200
+
+		custom_tooltip = mt_rivalry.0021.a.tt
+
+		ai_chance = {
+			base = 50
+
+			modifier = {
+				add = 30
+				gold >= 800
+			}
+
+			modifier = {
+				add = 20
+				has_trait = paranoid
+			}
+		}
+	}
+
+	# Rally community merchants for mutual protection
+	option = {
+		name = mt_rivalry.0021.b
+
+		remove_short_term_gold = 150
+
+		add_character_modifier = {
+			modifier = mt_merchant_protection_pact
+			years = 3
+		}
+
+		add_prestige = 50
+
+		custom_tooltip = mt_rivalry.0021.b.tt
+
+		ai_chance = {
+			base = 35
+
+			modifier = {
+				add = 40
+				diplomacy >= 14
+			}
+
+			modifier = {
+				add = 30
+				has_trait = gregarious
+			}
+		}
+	}
+
+	# Escalate further - offensive action
+	option = {
+		name = mt_rivalry.0021.c
+
+		remove_short_term_gold = 250
+
+		random_courtier = {
+			limit = {
+				has_relation_rival = root
+			}
+			add_opinion = {
+				target = root
+				modifier = rivalry_opinion
+				opinion = -75
+			}
+			remove_short_term_gold = 300
+		}
+
+		add_gold = 200
+
+		stress_impact = {
+			just = medium_stress_impact_gain
+			compassionate = minor_stress_impact_gain
+		}
+
+		custom_tooltip = mt_rivalry.0021.c.tt
+
+		ai_chance = {
+			base = 15
+
+			modifier = {
+				add = 50
+				has_trait = wrathful
+			}
+
+			modifier = {
+				add = 40
+				has_trait = vengeful
+			}
+		}
+	}
+}
+
+# 0022: Rival sabotages your supplier relationship
+mt_rivalry.0022 = {
+	type = character_event
+	title = mt_rivalry.0022.t
+	desc = mt_rivalry.0022.desc
+	theme = intrigue
+
+	left_portrait = {
+		character = root
+		animation = disbelief
+	}
+
+	right_portrait = {
+		character = scope:saboteur_rival
+		animation = scheme
+	}
+
+	trigger = {
+		OR = {
+			has_trait = trade_post_owner
+			has_trait = trading_company_head
+			has_trait = merchant_prince
+		}
+		any_courtier = {
+			has_relation_rival = root
+			intrigue >= 11
+		}
+	}
+
+	immediate = {
+		random_courtier = {
+			limit = {
+				has_relation_rival = root
+				intrigue >= 11
+			}
+			save_scope_as = saboteur_rival
+		}
+	}
+
+	# Find new suppliers quickly
+	option = {
+		name = mt_rivalry.0022.a
+
+		remove_short_term_gold = 200
+
+		add_character_modifier = {
+			modifier = mt_diverse_suppliers
+			years = 3
+		}
+
+		add_stewardship = 1
+
+		custom_tooltip = mt_rivalry.0022.a.tt
+
+		ai_chance = {
+			base = 45
+
+			modifier = {
+				add = 30
+				stewardship >= 14
+			}
+
+			modifier = {
+				add = 20
+				has_trait = patient
+			}
+		}
+	}
+
+	# Repair relationship with supplier
+	option = {
+		name = mt_rivalry.0022.b
+
+		remove_short_term_gold = 250
+
+		duel = {
+			skill = diplomacy
+			target = root
+
+			60 = { # Successfully restore relationship
+				desc = mt_rivalry.0022.b.success
+
+				add_gold = 300
+				add_prestige = 50
+
+				scope:saboteur_rival = {
+					add_prestige = -25
+				}
+
+				custom_tooltip = mt_rivalry.0022.b.success.tt
+			}
+
+			40 = { # Relationship lost
+				desc = mt_rivalry.0022.b.failure
+
+				add_prestige = -25
+
+				scope:saboteur_rival = {
+					add_prestige = 50
+				}
+
+				custom_tooltip = mt_rivalry.0022.b.failure.tt
+			}
+		}
+
+		ai_chance = {
+			base = 35
+
+			modifier = {
+				add = 40
+				diplomacy >= 14
+			}
+
+			modifier = {
+				add = 30
+				gold >= 600
+			}
+		}
+	}
+
+	# Sabotage their suppliers in return
+	option = {
+		name = mt_rivalry.0022.c
+
+		remove_short_term_gold = 200
+
+		scope:saboteur_rival = {
+			add_opinion = {
+				target = root
+				modifier = rivalry_opinion
+				opinion = -65
+			}
+			remove_short_term_gold = 250
+		}
+
+		add_gold = 150
+
+		stress_impact = {
+			just = medium_stress_impact_gain
+			honest = minor_stress_impact_gain
+		}
+
+		custom_tooltip = mt_rivalry.0022.c.tt
+
+		ai_chance = {
+			base = 20
+
+			modifier = {
+				add = 50
+				has_trait = vengeful
+			}
+
+			modifier = {
+				add = 40
+				intrigue >= 14
+			}
+		}
+	}
+}
+
+# 0023: Counter-sabotage opportunity discovered
+mt_rivalry.0023 = {
+	type = character_event
+	title = mt_rivalry.0023.t
+	desc = mt_rivalry.0023.desc
+	theme = intrigue
+
+	left_portrait = {
+		character = root
+		animation = scheme
+	}
+
+	right_portrait = {
+		character = scope:vulnerable_rival
+		animation = worry
+	}
+
+	trigger = {
+		OR = {
+			has_trait = trade_post_owner
+			has_trait = trading_company_head
+			has_trait = merchant_prince
+		}
+		any_courtier = {
+			has_relation_rival = root
+		}
+		intrigue >= 12
+	}
+
+	immediate = {
+		random_courtier = {
+			limit = {
+				has_relation_rival = root
+			}
+			save_scope_as = vulnerable_rival
+		}
+	}
+
+	# Strike decisively
+	option = {
+		name = mt_rivalry.0023.a
+
+		remove_short_term_gold = 150
+
+		scope:vulnerable_rival = {
+			add_opinion = {
+				target = root
+				modifier = rivalry_opinion
+				opinion = -80
+			}
+			remove_short_term_gold = 350
+			add_prestige = -75
+		}
+
+		add_gold = 300
+		add_prestige = 75
+
+		stress_impact = {
+			compassionate = minor_stress_impact_gain
+		}
+
+		custom_tooltip = mt_rivalry.0023.a.tt
+
+		ai_chance = {
+			base = 40
+
+			modifier = {
+				add = 40
+				has_trait = ambitious
+			}
+
+			modifier = {
+				add = 30
+				intrigue >= 16
+			}
+		}
+	}
+
+	# Use it as leverage for peace
+	option = {
+		name = mt_rivalry.0023.b
+
+		scope:vulnerable_rival = {
+			remove_relation_rival = root
+			add_opinion = {
+				target = root
+				modifier = grateful_opinion
+				opinion = 30
+			}
+		}
+
+		add_gold = 150
+		add_prestige = 50
+
+		remove_character_modifier = mt_route_feud
+		remove_character_modifier = mt_sabotage_war
+		remove_character_modifier = mt_rumor_war
+
+		custom_tooltip = mt_rivalry.0023.b.tt
+
+		ai_chance = {
+			base = 40
+
+			modifier = {
+				add = 40
+				has_trait = forgiving
+			}
+
+			modifier = {
+				add = 30
+				has_trait = just
+			}
+		}
+	}
+
+	# Ignore it - too risky
+	option = {
+		name = mt_rivalry.0023.c
+
+		add_prestige = 25
+
+		stress_impact = {
+			ambitious = minor_stress_impact_gain
+		}
+
+		custom_tooltip = mt_rivalry.0023.c.tt
+
+		ai_chance = {
+			base = 20
+
+			modifier = {
+				add = 40
+				has_trait = craven
+			}
+
+			modifier = {
+				add = 30
+				has_trait = content
+			}
+		}
+	}
+}
+
+# 0024: Sabotage backfires - caught red-handed
+mt_rivalry.0024 = {
+	type = character_event
+	title = mt_rivalry.0024.t
+	desc = mt_rivalry.0024.desc
+	theme = intrigue
+
+	left_portrait = {
+		character = root
+		animation = disbelief
+	}
+
+	trigger = {
+		OR = {
+			has_character_modifier = mt_route_feud
+			has_character_modifier = mt_sabotage_war
+		}
+		intrigue < 14
+	}
+
+	# Pay heavy fines
+	option = {
+		name = mt_rivalry.0024.a
+
+		remove_short_term_gold = 400
+		add_prestige = -100
+
+		remove_character_modifier = mt_route_feud
+		remove_character_modifier = mt_sabotage_war
+
+		random_courtier = {
+			limit = {
+				has_relation_rival = root
+			}
+			add_prestige = 75
+		}
+
+		custom_tooltip = mt_rivalry.0024.a.tt
+
+		ai_chance = {
+			base = 50
+
+			modifier = {
+				add = 40
+				gold >= 800
+			}
+
+			modifier = {
+				add = -30
+				gold < 400
+			}
+		}
+	}
+
+	# Try to talk your way out
+	option = {
+		name = mt_rivalry.0024.b
+
+		duel = {
+			skill = diplomacy
+			target = root
+
+			40 = { # Successfully smooth it over
+				desc = mt_rivalry.0024.b.success
+
+				remove_short_term_gold = 200
+				add_prestige = -50
+
+				custom_tooltip = mt_rivalry.0024.b.success.tt
+			}
+
+			60 = { # Makes it worse
+				desc = mt_rivalry.0024.b.failure
+
+				remove_short_term_gold = 500
+				add_prestige = -150
+
+				add_character_modifier = {
+					modifier = mt_known_saboteur
+					years = 5
+				}
+
+				custom_tooltip = mt_rivalry.0024.b.failure.tt
+			}
+		}
+
+		ai_chance = {
+			base = 30
+
+			modifier = {
+				add = 40
+				diplomacy >= 14
+			}
+
+			modifier = {
+				add = -30
+				gold < 300
+			}
+		}
+	}
+
+	# Blame it on someone else
+	option = {
+		name = mt_rivalry.0024.c
+
+		duel = {
+			skill = intrigue
+			target = root
+
+			35 = { # Get away with it
+				desc = mt_rivalry.0024.c.success
+
+				remove_short_term_gold = 100
+				add_prestige = -25
+
+				custom_tooltip = mt_rivalry.0024.c.success.tt
+			}
+
+			65 = { # Exposed as liar too
+				desc = mt_rivalry.0024.c.failure
+
+				remove_short_term_gold = 600
+				add_prestige = -200
+
+				add_character_modifier = {
+					modifier = mt_disgraced_merchant
+					years = 10
+				}
+
+				custom_tooltip = mt_rivalry.0024.c.failure.tt
+			}
+		}
+
+		stress_impact = {
+			honest = major_stress_impact_gain
+			just = medium_stress_impact_gain
+		}
+
+		ai_chance = {
+			base = 20
+
+			modifier = {
+				add = 50
+				has_trait = deceitful
+			}
+
+			modifier = {
+				add = -60
+				has_trait = honest
+			}
+		}
+	}
+}
+
+# 0025: Sabotage feud ends - reconciliation or permanent enmity
+mt_rivalry.0025 = {
+	type = character_event
+	title = mt_rivalry.0025.t
+	desc = mt_rivalry.0025.desc
+	theme = diplomacy
+
+	left_portrait = {
+		character = root
+		animation = personality_rational
+	}
+
+	right_portrait = {
+		character = scope:feud_rival
+		animation = personality_rational
+	}
+
+	trigger = {
+		OR = {
+			has_character_modifier = mt_route_feud
+			has_character_modifier = mt_sabotage_war
+		}
+		any_courtier = {
+			has_relation_rival = root
+		}
+	}
+
+	immediate = {
+		random_courtier = {
+			limit = {
+				has_relation_rival = root
+			}
+			save_scope_as = feud_rival
+		}
+	}
+
+	# Propose formal peace
+	option = {
+		name = mt_rivalry.0025.a
+
+		scope:feud_rival = {
+			remove_relation_rival = root
+			add_opinion = {
+				target = root
+				modifier = grateful_opinion
+				opinion = 40
+			}
+		}
+
+		remove_character_modifier = mt_route_feud
+		remove_character_modifier = mt_sabotage_war
+
+		add_prestige = 75
+		add_gold = 100
+
+		stress_impact = {
+			vengeful = medium_stress_impact_gain
+			wrathful = minor_stress_impact_gain
+		}
+
+		custom_tooltip = mt_rivalry.0025.a.tt
+
+		ai_chance = {
+			base = 40
+
+			modifier = {
+				add = 50
+				has_trait = forgiving
+			}
+
+			modifier = {
+				add = 40
+				has_trait = compassionate
+			}
+
+			modifier = {
+				add = -50
+				has_trait = vengeful
+			}
+		}
+	}
+
+	# Agree to cold peace - stay away from each other
+	option = {
+		name = mt_rivalry.0025.b
+
+		scope:feud_rival = {
+			remove_relation_rival = root
+		}
+
+		remove_character_modifier = mt_route_feud
+		remove_character_modifier = mt_sabotage_war
+
+		add_character_modifier = {
+			modifier = mt_cold_peace
+			years = 10
+		}
+
+		add_prestige = 25
+
+		custom_tooltip = mt_rivalry.0025.b.tt
+
+		ai_chance = {
+			base = 35
+
+			modifier = {
+				add = 30
+				has_trait = patient
+			}
+
+			modifier = {
+				add = 20
+				has_trait = content
+			}
+		}
+	}
+
+	# Swear permanent enmity
+	option = {
+		name = mt_rivalry.0025.c
+
+		scope:feud_rival = {
+			set_relation_nemesis = root
+			add_opinion = {
+				target = root
+				modifier = rivalry_opinion
+				opinion = -100
+			}
+		}
+
+		add_prestige = 50
+
+		add_character_modifier = {
+			modifier = mt_sworn_enemy
+			years = 20
+		}
+
+		stress_impact = {
+			forgiving = medium_stress_impact_gain
+			compassionate = minor_stress_impact_gain
+		}
+
+		custom_tooltip = mt_rivalry.0025.c.tt
+
+		ai_chance = {
+			base = 25
+
+			modifier = {
+				add = 60
+				has_trait = vengeful
+			}
+
+			modifier = {
+				add = 50
+				has_trait = wrathful
+			}
+
+			modifier = {
+				add = -50
+				has_trait = forgiving
+			}
+		}
+	}
+}
+
+####################################
+# ESPIONAGE (0026-0035)
+####################################
+
+# 0026: Rival's employee offers to spy for you - trust or trap?
+mt_rivalry.0026 = {
+	type = character_event
+	title = mt_rivalry.0026.t
+	desc = mt_rivalry.0026.desc
+	theme = intrigue
+
+	left_portrait = {
+		character = root
+		animation = personality_rational
+	}
+
+	right_portrait = {
+		character = scope:spying_rival
+		animation = worry
+	}
+
+	trigger = {
+		OR = {
+			has_trait = trade_post_owner
+			has_trait = trading_company_head
+			has_trait = merchant_prince
+		}
+		any_courtier = {
+			has_relation_rival = root
+		}
+		gold >= 100
+	}
+
+	immediate = {
+		random_courtier = {
+			limit = {
+				has_relation_rival = root
+			}
+			save_scope_as = spying_rival
+		}
+	}
+
+	# Hire the spy
+	option = {
+		name = mt_rivalry.0026.a
+
+		remove_short_term_gold = 150
+
+		random = {
+			chance = 60
+			compare_value = {
+				value = intrigue
+				multiplier = 2
+			}
+
+			add_gold = 300
+			add_prestige = 50
+
+			add_character_modifier = {
+				modifier = mt_inside_information
+				years = 2
+			}
+
+			scope:spying_rival = {
+				add_prestige = -50
+			}
+
+			custom_tooltip = mt_rivalry.0026.a.success.tt
+		}
+
+		random = {
+			chance = 40
+			compare_value = {
+				value = intrigue
+				multiplier = -2
+			}
+
+			remove_short_term_gold = 200
+			add_prestige = -75
+
+			scope:spying_rival = {
+				add_prestige = 75
+				add_opinion = {
+					target = root
+					modifier = rivalry_opinion
+					opinion = -50
+				}
+			}
+
+			custom_tooltip = mt_rivalry.0026.a.failure.tt
+		}
+
+		ai_chance = {
+			base = 45
+
+			modifier = {
+				add = 40
+				intrigue >= 14
+			}
+
+			modifier = {
+				add = -40
+				has_trait = trusting
+			}
+		}
+	}
+
+	# Test them first with false information
+	option = {
+		name = mt_rivalry.0026.b
+
+		remove_short_term_gold = 100
+
+		duel = {
+			skill = intrigue
+			target = scope:spying_rival
+
+			70 = { # They're genuine
+				desc = mt_rivalry.0026.b.success
+
+				add_gold = 250
+				add_prestige = 75
+
+				add_character_modifier = {
+					modifier = mt_verified_spy
+					years = 3
+				}
+
+				custom_tooltip = mt_rivalry.0026.b.success.tt
+			}
+
+			30 = { # It's a trap
+				desc = mt_rivalry.0026.b.failure
+
+				add_prestige = -25
+
+				scope:spying_rival = {
+					add_prestige = 50
+				}
+
+				custom_tooltip = mt_rivalry.0026.b.failure.tt
+			}
+		}
+
+		ai_chance = {
+			base = 40
+
+			modifier = {
+				add = 50
+				has_trait = paranoid
+			}
+
+			modifier = {
+				add = 40
+				intrigue >= 16
+			}
+		}
+	}
+
+	# Refuse - too risky
+	option = {
+		name = mt_rivalry.0026.c
+
+		add_prestige = 25
+
+		stress_impact = {
+			ambitious = minor_stress_impact_gain
+		}
+
+		custom_tooltip = mt_rivalry.0026.c.tt
+
+		ai_chance = {
+			base = 15
+
+			modifier = {
+				add = 40
+				has_trait = craven
+			}
+
+			modifier = {
+				add = 30
+				has_trait = content
+			}
+		}
+	}
+}
+
+# 0027: Discover rival knows your secrets - you have a leak
+mt_rivalry.0027 = {
+	type = character_event
+	title = mt_rivalry.0027.t
+	desc = mt_rivalry.0027.desc
+	theme = intrigue
+
+	left_portrait = {
+		character = root
+		animation = shock
+	}
+
+	right_portrait = {
+		character = scope:informed_rival
+		animation = scheme
+	}
+
+	trigger = {
+		OR = {
+			has_trait = trade_post_owner
+			has_trait = trading_company_head
+			has_trait = merchant_prince
+		}
+		any_courtier = {
+			has_relation_rival = root
+			intrigue >= 12
+		}
+	}
+
+	immediate = {
+		random_courtier = {
+			limit = {
+				has_relation_rival = root
+				intrigue >= 12
+			}
+			save_scope_as = informed_rival
+		}
+	}
+
+	# Conduct internal investigation
+	option = {
+		name = mt_rivalry.0027.a
+
+		remove_short_term_gold = 200
+
+		duel = {
+			skill = intrigue
+			target = root
+
+			55 = { # Find the leak
+				desc = mt_rivalry.0027.a.success
+
+				add_prestige = 75
+
+				add_character_modifier = {
+					modifier = mt_secure_operations
+					years = 5
+				}
+
+				scope:informed_rival = {
+					add_prestige = -50
+				}
+
+				custom_tooltip = mt_rivalry.0027.a.success.tt
+			}
+
+			45 = { # Leak continues
+				desc = mt_rivalry.0027.a.failure
+
+				remove_short_term_gold = 150
+				add_prestige = -50
+
+				scope:informed_rival = {
+					add_gold = 200
+					add_prestige = 50
+				}
+
+				custom_tooltip = mt_rivalry.0027.a.failure.tt
+			}
+		}
+
+		ai_chance = {
+			base = 50
+
+			modifier = {
+				add = 40
+				intrigue >= 14
+			}
+
+			modifier = {
+				add = 30
+				has_trait = paranoid
+			}
+		}
+	}
+
+	# Feed false information to the spy
+	option = {
+		name = mt_rivalry.0027.b
+
+		remove_short_term_gold = 100
+
+		scope:informed_rival = {
+			remove_short_term_gold = 250
+			add_prestige = -75
+			add_opinion = {
+				target = root
+				modifier = rivalry_opinion
+				opinion = -50
+			}
+		}
+
+		add_prestige = 100
+		add_gold = 200
+
+		add_character_modifier = {
+			modifier = mt_counter_intelligence
+			years = 3
+		}
+
+		custom_tooltip = mt_rivalry.0027.b.tt
+
+		ai_chance = {
+			base = 35
+
+			modifier = {
+				add = 50
+				intrigue >= 16
+			}
+
+			modifier = {
+				add = 40
+				has_trait = deceitful
+			}
+		}
+	}
+
+	# Change all your operations
+	option = {
+		name = mt_rivalry.0027.c
+
+		remove_short_term_gold = 300
+
+		add_character_modifier = {
+			modifier = mt_complete_reorganization
+			months = 18
+		}
+
+		add_stewardship = 1
+
+		stress_impact = {
+			lazy = medium_stress_impact_gain
+		}
+
+		custom_tooltip = mt_rivalry.0027.c.tt
+
+		ai_chance = {
+			base = 15
+
+			modifier = {
+				add = 40
+				has_trait = diligent
+			}
+
+			modifier = {
+				add = 30
+				gold >= 800
+			}
+		}
+	}
+}
+
+# 0028: Successfully steal rival's trade route information
+mt_rivalry.0028 = {
+	type = character_event
+	title = mt_rivalry.0028.t
+	desc = mt_rivalry.0028.desc
+	theme = intrigue
+
+	left_portrait = {
+		character = root
+		animation = scheme
+	}
+
+	trigger = {
+		OR = {
+			has_trait = trade_post_owner
+			has_trait = trading_company_head
+			has_trait = merchant_prince
+		}
+		any_courtier = {
+			has_relation_rival = root
+		}
+		intrigue >= 12
+		gold >= 100
+	}
+
+	immediate = {
+		random_courtier = {
+			limit = {
+				has_relation_rival = root
+			}
+			save_scope_as = targeted_rival
+		}
+	}
+
+	# Use information to undercut them completely
+	option = {
+		name = mt_rivalry.0028.a
+
+		remove_short_term_gold = 100
+
+		add_gold = 400
+		add_prestige = 75
+
+		scope:targeted_rival = {
+			remove_short_term_gold = 300
+			add_prestige = -75
+			add_opinion = {
+				target = root
+				modifier = rivalry_opinion
+				opinion = -60
+			}
+		}
+
+		custom_tooltip = mt_rivalry.0028.a.tt
+
+		ai_chance = {
+			base = 45
+
+			modifier = {
+				add = 40
+				has_trait = greedy
+			}
+
+			modifier = {
+				add = 30
+				has_trait = ambitious
+			}
+		}
+	}
+
+	# Copy their successful routes
+	option = {
+		name = mt_rivalry.0028.b
+
+		remove_short_term_gold = 200
+
+		add_gold = 500
+		add_prestige = 50
+
+		add_character_modifier = {
+			modifier = mt_copied_routes
+			years = 3
+		}
+
+		scope:targeted_rival = {
+			add_opinion = {
+				target = root
+				modifier = rivalry_opinion
+				opinion = -40
+			}
+		}
+
+		custom_tooltip = mt_rivalry.0028.b.tt
+
+		ai_chance = {
+			base = 40
+
+			modifier = {
+				add = 40
+				stewardship >= 14
+			}
+
+			modifier = {
+				add = 30
+				has_trait = diligent
+			}
+		}
+	}
+
+	# Sell the information to others
+	option = {
+		name = mt_rivalry.0028.c
+
+		add_gold = 300
+		add_prestige = -25
+
+		scope:targeted_rival = {
+			remove_short_term_gold = 200
+			add_prestige = -100
+			add_opinion = {
+				target = root
+				modifier = rivalry_opinion
+				opinion = -100
+			}
+		}
+
+		stress_impact = {
+			honest = medium_stress_impact_gain
+			just = minor_stress_impact_gain
+		}
+
+		custom_tooltip = mt_rivalry.0028.c.tt
+
+		ai_chance = {
+			base = 15
+
+			modifier = {
+				add = 50
+				has_trait = greedy
+			}
+
+			modifier = {
+				add = -60
+				has_trait = honest
+			}
+		}
+	}
+}
+
+# 0029: Caught spying on rival - consequences
+mt_rivalry.0029 = {
+	type = character_event
+	title = mt_rivalry.0029.t
+	desc = mt_rivalry.0029.desc
+	theme = intrigue
+
+	left_portrait = {
+		character = root
+		animation = shame
+	}
+
+	right_portrait = {
+		character = scope:catching_rival
+		animation = rage
+	}
+
+	trigger = {
+		OR = {
+			has_trait = trade_post_owner
+			has_trait = trading_company_head
+			has_trait = merchant_prince
+		}
+		any_courtier = {
+			has_relation_rival = root
+		}
+		intrigue < 15
+	}
+
+	immediate = {
+		random_courtier = {
+			limit = {
+				has_relation_rival = root
+			}
+			save_scope_as = catching_rival
+		}
+	}
+
+	# Bribe them to keep quiet
+	option = {
+		name = mt_rivalry.0029.a
+
+		remove_short_term_gold = 350
+
+		scope:catching_rival = {
+			add_opinion = {
+				target = root
+				modifier = blackmailed_opinion
+				opinion = -40
+			}
+		}
+
+		add_prestige = -25
+
+		custom_tooltip = mt_rivalry.0029.a.tt
+
+		ai_chance = {
+			base = 40
+
+			modifier = {
+				add = 40
+				gold >= 800
+			}
+
+			modifier = {
+				add = -40
+				gold < 400
+			}
+		}
+	}
+
+	# Deny everything
+	option = {
+		name = mt_rivalry.0029.b
+
+		duel = {
+			skill = diplomacy
+			target = scope:catching_rival
+
+			35 = { # They believe you
+				desc = mt_rivalry.0029.b.success
+
+				add_prestige = -10
+
+				scope:catching_rival = {
+					add_opinion = {
+						target = root
+						modifier = rivalry_opinion
+						opinion = -25
+					}
+				}
+
+				custom_tooltip = mt_rivalry.0029.b.success.tt
+			}
+
+			65 = { # Nobody believes you
+				desc = mt_rivalry.0029.b.failure
+
+				remove_short_term_gold = 300
+				add_prestige = -125
+
+				scope:catching_rival = {
+					add_prestige = 100
+					add_opinion = {
+						target = root
+						modifier = rivalry_opinion
+						opinion = -75
+					}
+				}
+
+				custom_tooltip = mt_rivalry.0029.b.failure.tt
+			}
+		}
+
+		stress_impact = {
+			honest = medium_stress_impact_gain
+		}
+
+		ai_chance = {
+			base = 35
+
+			modifier = {
+				add = 50
+				has_trait = deceitful
+			}
+
+			modifier = {
+				add = -50
+				has_trait = honest
+			}
+		}
+	}
+
+	# Admit it and apologize
+	option = {
+		name = mt_rivalry.0029.c
+
+		remove_short_term_gold = 200
+		add_prestige = -75
+
+		scope:catching_rival = {
+			add_opinion = {
+				target = root
+				modifier = grateful_opinion
+				opinion = 15
+			}
+		}
+
+		stress_impact = {
+			deceitful = minor_stress_impact_gain
+			ambitious = minor_stress_impact_gain
+		}
+
+		custom_tooltip = mt_rivalry.0029.c.tt
+
+		ai_chance = {
+			base = 25
+
+			modifier = {
+				add = 60
+				has_trait = honest
+			}
+
+			modifier = {
+				add = 50
+				has_trait = humble
+			}
+
+			modifier = {
+				add = -40
+				has_trait = ambitious
+			}
+		}
+	}
+}
+
+# 0030: Industrial espionage - rival stole your business methods
+mt_rivalry.0030 = {
+	type = character_event
+	title = mt_rivalry.0030.t
+	desc = mt_rivalry.0030.desc
+	theme = intrigue
+
+	left_portrait = {
+		character = root
+		animation = anger
+	}
+
+	right_portrait = {
+		character = scope:copying_rival
+		animation = schadenfreude
+	}
+
+	trigger = {
+		OR = {
+			has_trait = trade_post_owner
+			has_trait = trading_company_head
+			has_trait = merchant_prince
+		}
+		any_courtier = {
+			has_relation_rival = root
+			intrigue >= 13
+		}
+		stewardship >= 14
+	}
+
+	immediate = {
+		random_courtier = {
+			limit = {
+				has_relation_rival = root
+				intrigue >= 13
+			}
+			save_scope_as = copying_rival
+		}
+	}
+
+	# Innovate faster - stay ahead
+	option = {
+		name = mt_rivalry.0030.a
+
+		remove_short_term_gold = 300
+
+		add_stewardship = 1
+		add_prestige = 100
+
+		add_character_modifier = {
+			modifier = mt_constant_innovation
+			years = 5
+		}
+
+		custom_tooltip = mt_rivalry.0030.a.tt
+
+		ai_chance = {
+			base = 45
+
+			modifier = {
+				add = 40
+				stewardship >= 16
+			}
+
+			modifier = {
+				add = 30
+				has_trait = diligent
+			}
+		}
+	}
+
+	# Legal action against them
+	option = {
+		name = mt_rivalry.0030.b
+
+		remove_short_term_gold = 250
+
+		duel = {
+			skill = learning
+			target = scope:copying_rival
+
+			55 = { # Win the case
+				desc = mt_rivalry.0030.b.success
+
+				add_prestige = 125
+				add_gold = 400
+
+				scope:copying_rival = {
+					add_prestige = -100
+					remove_short_term_gold = 400
+					add_opinion = {
+						target = root
+						modifier = rivalry_opinion
+						opinion = -75
+					}
+				}
+
+				custom_tooltip = mt_rivalry.0030.b.success.tt
+			}
+
+			45 = { # Lose the case
+				desc = mt_rivalry.0030.b.failure
+
+				add_prestige = -50
+
+				scope:copying_rival = {
+					add_prestige = 75
+					add_gold = 200
+				}
+
+				custom_tooltip = mt_rivalry.0030.b.failure.tt
+			}
+		}
+
+		ai_chance = {
+			base = 35
+
+			modifier = {
+				add = 50
+				has_trait = just
+			}
+
+			modifier = {
+				add = 40
+				learning >= 14
+			}
+		}
+	}
+
+	# Sabotage their implementation
+	option = {
+		name = mt_rivalry.0030.c
+
+		remove_short_term_gold = 200
+
+		scope:copying_rival = {
+			remove_short_term_gold = 350
+			add_prestige = -75
+			add_opinion = {
+				target = root
+				modifier = rivalry_opinion
+				opinion = -80
+			}
+		}
+
+		add_gold = 250
+		add_prestige = 50
+
+		stress_impact = {
+			just = medium_stress_impact_gain
+			honest = minor_stress_impact_gain
+		}
+
+		custom_tooltip = mt_rivalry.0030.c.tt
+
+		ai_chance = {
+			base = 20
+
+			modifier = {
+				add = 50
+				has_trait = vengeful
+			}
+
+			modifier = {
+				add = 40
+				intrigue >= 14
+			}
+
+			modifier = {
+				add = -60
+				has_trait = just
+			}
+		}
+	}
+}
+
+# 0031: Double agent discovered - who do they really work for?
+mt_rivalry.0031 = {
+	type = character_event
+	title = mt_rivalry.0031.t
+	desc = mt_rivalry.0031.desc
+	theme = intrigue
+
+	left_portrait = {
+		character = root
+		animation = disbelief
+	}
+
+	trigger = {
+		OR = {
+			has_character_modifier = mt_inside_information
+			has_character_modifier = mt_verified_spy
+		}
+		any_courtier = {
+			has_relation_rival = root
+		}
+	}
+
+	immediate = {
+		random_courtier = {
+			limit = {
+				has_relation_rival = root
+			}
+			save_scope_as = double_rival
+		}
+	}
+
+	# Execute the double agent
+	option = {
+		name = mt_rivalry.0031.a
+
+		remove_character_modifier = mt_inside_information
+		remove_character_modifier = mt_verified_spy
+
+		add_prestige = 50
+
+		remove_short_term_gold = 100
+
+		custom_tooltip = mt_rivalry.0031.a.tt
+
+		ai_chance = {
+			base = 35
+
+			modifier = {
+				add = 40
+				has_trait = wrathful
+			}
+
+			modifier = {
+				add = 30
+				has_trait = vengeful
+			}
+		}
+	}
+
+	# Try to flip them back
+	option = {
+		name = mt_rivalry.0031.b
+
+		remove_short_term_gold = 250
+
+		duel = {
+			skill = intrigue
+			target = root
+
+			45 = { # Successfully flip them
+				desc = mt_rivalry.0031.b.success
+
+				add_gold = 300
+				add_prestige = 75
+
+				scope:double_rival = {
+					remove_short_term_gold = 200
+					add_prestige = -50
+				}
+
+				custom_tooltip = mt_rivalry.0031.b.success.tt
+			}
+
+			55 = { # They remain loyal to rival
+				desc = mt_rivalry.0031.b.failure
+
+				remove_character_modifier = mt_inside_information
+				remove_character_modifier = mt_verified_spy
+
+				remove_short_term_gold = 150
+				add_prestige = -50
+
+				scope:double_rival = {
+					add_prestige = 50
+				}
+
+				custom_tooltip = mt_rivalry.0031.b.failure.tt
+			}
+		}
+
+		ai_chance = {
+			base = 40
+
+			modifier = {
+				add = 40
+				intrigue >= 16
+			}
+
+			modifier = {
+				add = 30
+				gold >= 800
+			}
+		}
+	}
+
+	# Use them to feed false information
+	option = {
+		name = mt_rivalry.0031.c
+
+		remove_short_term_gold = 150
+
+		scope:double_rival = {
+			remove_short_term_gold = 300
+			add_prestige = -100
+			add_opinion = {
+				target = root
+				modifier = rivalry_opinion
+				opinion = -75
+			}
+		}
+
+		add_gold = 250
+		add_prestige = 100
+
+		remove_character_modifier = mt_inside_information
+		remove_character_modifier = mt_verified_spy
+
+		custom_tooltip = mt_rivalry.0031.c.tt
+
+		ai_chance = {
+			base = 25
+
+			modifier = {
+				add = 50
+				has_trait = deceitful
+			}
+
+			modifier = {
+				add = 40
+				intrigue >= 18
+			}
+		}
+	}
+}
+
+# 0032: Counterintelligence success - catch rival's spy
+mt_rivalry.0032 = {
+	type = character_event
+	title = mt_rivalry.0032.t
+	desc = mt_rivalry.0032.desc
+	theme = intrigue
+
+	left_portrait = {
+		character = root
+		animation = personality_bold
+	}
+
+	right_portrait = {
+		character = scope:caught_rival
+		animation = worry
+	}
+
+	trigger = {
+		OR = {
+			has_trait = trade_post_owner
+			has_trait = trading_company_head
+			has_trait = merchant_prince
+		}
+		any_courtier = {
+			has_relation_rival = root
+		}
+		intrigue >= 14
+	}
+
+	immediate = {
+		random_courtier = {
+			limit = {
+				has_relation_rival = root
+			}
+			save_scope_as = caught_rival
+		}
+	}
+
+	# Publicly expose them
+	option = {
+		name = mt_rivalry.0032.a
+
+		scope:caught_rival = {
+			add_prestige = -100
+			remove_short_term_gold = 300
+			add_opinion = {
+				target = root
+				modifier = rivalry_opinion
+				opinion = -75
+			}
+		}
+
+		add_prestige = 125
+		add_gold = 200
+
+		custom_tooltip = mt_rivalry.0032.a.tt
+
+		ai_chance = {
+			base = 45
+
+			modifier = {
+				add = 40
+				has_trait = just
+			}
+
+			modifier = {
+				add = 30
+				has_trait = zealous
+			}
+		}
+	}
+
+	# Blackmail them for ongoing payments
+	option = {
+		name = mt_rivalry.0032.b
+
+		scope:caught_rival = {
+			add_opinion = {
+				target = root
+				modifier = blackmailed_opinion
+				opinion = -60
+			}
+		}
+
+		add_character_modifier = {
+			modifier = mt_blackmail_income
+			years = 10
+		}
+
+		add_gold = 500
+
+		stress_impact = {
+			just = medium_stress_impact_gain
+			honest = minor_stress_impact_gain
+		}
+
+		custom_tooltip = mt_rivalry.0032.b.tt
+
+		ai_chance = {
+			base = 35
+
+			modifier = {
+				add = 50
+				has_trait = greedy
+			}
+
+			modifier = {
+				add = 40
+				intrigue >= 16
+			}
+
+			modifier = {
+				add = -60
+				has_trait = just
+			}
+		}
+	}
+
+	# Turn them into your own spy
+	option = {
+		name = mt_rivalry.0032.c
+
+		remove_short_term_gold = 150
+
+		scope:caught_rival = {
+			add_opinion = {
+				target = root
+				modifier = terrified_opinion
+				opinion = -50
+			}
+		}
+
+		add_character_modifier = {
+			modifier = mt_turned_spy
+			years = 5
+		}
+
+		add_gold = 350
+		add_prestige = 50
+
+		custom_tooltip = mt_rivalry.0032.c.tt
+
+		ai_chance = {
+			base = 20
+
+			modifier = {
+				add = 50
+				intrigue >= 18
+			}
+
+			modifier = {
+				add = 40
+				has_trait = deceitful
+			}
+		}
+	}
+}
+
+# 0033: Spy network established - long-term advantage
+mt_rivalry.0033 = {
+	type = character_event
+	title = mt_rivalry.0033.t
+	desc = mt_rivalry.0033.desc
+	theme = intrigue
+
+	left_portrait = {
+		character = root
+		animation = happiness
+	}
+
+	trigger = {
+		OR = {
+			has_character_modifier = mt_inside_information
+			has_character_modifier = mt_verified_spy
+			has_character_modifier = mt_turned_spy
+		}
+		intrigue >= 16
+		gold >= 300
+	}
+
+	# Expand the network extensively
+	option = {
+		name = mt_rivalry.0033.a
+
+		remove_short_term_gold = 500
+
+		add_character_modifier = {
+			modifier = mt_spy_network
+			years = 10
+		}
+
+		add_prestige = 150
+		add_intrigue = 1
+
+		custom_tooltip = mt_rivalry.0033.a.tt
+
+		ai_chance = {
+			base = 45
+
+			modifier = {
+				add = 40
+				gold >= 1200
+			}
+
+			modifier = {
+				add = 30
+				has_trait = ambitious
+			}
+		}
+	}
+
+	# Focus network on primary rival
+	option = {
+		name = mt_rivalry.0033.b
+
+		remove_short_term_gold = 300
+
+		random_courtier = {
+			limit = {
+				has_relation_rival = root
+			}
+			add_opinion = {
+				target = root
+				modifier = rivalry_opinion
+				opinion = -50
+			}
+			add_prestige = -75
+			remove_short_term_gold = 250
+		}
+
+		add_gold = 400
+		add_prestige = 100
+
+		custom_tooltip = mt_rivalry.0033.b.tt
+
+		ai_chance = {
+			base = 40
+
+			modifier = {
+				add = 40
+				has_trait = vengeful
+			}
+
+			modifier = {
+				add = 30
+				intrigue >= 18
+			}
+		}
+	}
+
+	# Keep it modest and secure
+	option = {
+		name = mt_rivalry.0033.c
+
+		remove_short_term_gold = 200
+
+		add_character_modifier = {
+			modifier = mt_discrete_network
+			years = 7
+		}
+
+		add_gold = 250
+		add_prestige = 50
+
+		custom_tooltip = mt_rivalry.0033.c.tt
+
+		ai_chance = {
+			base = 15
+
+			modifier = {
+				add = 40
+				has_trait = paranoid
+			}
+
+			modifier = {
+				add = 30
+				has_trait = patient
+			}
+		}
+	}
+}
+
+# 0034: Espionage arms race - both sides escalating
+mt_rivalry.0034 = {
+	type = character_event
+	title = mt_rivalry.0034.t
+	desc = mt_rivalry.0034.desc
+	theme = intrigue
+
+	left_portrait = {
+		character = root
+		animation = stress
+	}
+
+	right_portrait = {
+		character = scope:spy_rival
+		animation = stress
+	}
+
+	trigger = {
+		OR = {
+			has_character_modifier = mt_spy_network
+			has_character_modifier = mt_discrete_network
+			has_character_modifier = mt_turned_spy
+		}
+		any_courtier = {
+			has_relation_rival = root
+			intrigue >= 14
+		}
+	}
+
+	immediate = {
+		random_courtier = {
+			limit = {
+				has_relation_rival = root
+				intrigue >= 14
+			}
+			save_scope_as = spy_rival
+		}
+	}
+
+	# Escalate further - total intelligence war
+	option = {
+		name = mt_rivalry.0034.a
+
+		remove_short_term_gold = 400
+
+		duel = {
+			skill = intrigue
+			target = scope:spy_rival
+
+			50 = { # Win the spy war
+				desc = mt_rivalry.0034.a.success
+
+				add_prestige = 150
+				add_gold = 600
+
+				scope:spy_rival = {
+					add_prestige = -125
+					remove_short_term_gold = 500
+				}
+
+				custom_tooltip = mt_rivalry.0034.a.success.tt
+			}
+
+			50 = { # Lose the spy war
+				desc = mt_rivalry.0034.a.failure
+
+				add_prestige = -125
+				remove_short_term_gold = 300
+
+				scope:spy_rival = {
+					add_prestige = 150
+					add_gold = 400
+				}
+
+				remove_character_modifier = mt_spy_network
+				remove_character_modifier = mt_discrete_network
+
+				custom_tooltip = mt_rivalry.0034.a.failure.tt
+			}
+		}
+
+		ai_chance = {
+			base = 35
+
+			modifier = {
+				add = 50
+				intrigue >= 18
+			}
+
+			modifier = {
+				add = 40
+				has_trait = ambitious
+			}
+		}
+	}
+
+	# Propose mutual de-escalation
+	option = {
+		name = mt_rivalry.0034.b
+
+		scope:spy_rival = {
+			add_opinion = {
+				target = root
+				modifier = grateful_opinion
+				opinion = 30
+			}
+		}
+
+		remove_character_modifier = mt_spy_network
+		remove_character_modifier = mt_discrete_network
+		remove_character_modifier = mt_turned_spy
+
+		add_gold = 300
+		add_prestige = 50
+
+		stress_impact = {
+			ambitious = minor_stress_impact_gain
+			paranoid = medium_stress_impact_gain
+		}
+
+		custom_tooltip = mt_rivalry.0034.b.tt
+
+		ai_chance = {
+			base = 40
+
+			modifier = {
+				add = 50
+				has_trait = content
+			}
+
+			modifier = {
+				add = 40
+				has_trait = trusting
+			}
+
+			modifier = {
+				add = -50
+				has_trait = paranoid
+			}
+		}
+	}
+
+	# Maintain current level - Cold War
+	option = {
+		name = mt_rivalry.0034.c
+
+		remove_short_term_gold = 250
+
+		add_character_modifier = {
+			modifier = mt_cold_war_espionage
+			years = 5
+		}
+
+		add_prestige = 25
+
+		custom_tooltip = mt_rivalry.0034.c.tt
+
+		ai_chance = {
+			base = 25
+
+			modifier = {
+				add = 40
+				has_trait = patient
+			}
+
+			modifier = {
+				add = 30
+				has_trait = paranoid
+			}
+		}
+	}
+}
+
+# 0035: Master spy recruited - game-changing asset
+mt_rivalry.0035 = {
+	type = character_event
+	title = mt_rivalry.0035.t
+	desc = mt_rivalry.0035.desc
+	theme = intrigue
+
+	left_portrait = {
+		character = root
+		animation = personality_bold
+	}
+
+	trigger = {
+		OR = {
+			has_character_modifier = mt_spy_network
+			has_character_modifier = mt_discrete_network
+		}
+		intrigue >= 18
+		gold >= 500
+	}
+
+	# Hire the master spy
+	option = {
+		name = mt_rivalry.0035.a
+
+		remove_short_term_gold = 600
+
+		add_character_modifier = {
+			modifier = mt_master_spy
+			years = 10
+		}
+
+		add_prestige = 175
+		add_intrigue = 2
+
+		random_courtier = {
+			limit = {
+				has_relation_rival = root
+			}
+			add_prestige = -100
+			remove_short_term_gold = 300
+		}
+
+		custom_tooltip = mt_rivalry.0035.a.tt
+
+		ai_chance = {
+			base = 50
+
+			modifier = {
+				add = 40
+				gold >= 1500
+			}
+
+			modifier = {
+				add = 30
+				has_trait = ambitious
+			}
+		}
+	}
+
+	# Verify their credentials first
+	option = {
+		name = mt_rivalry.0035.b
+
+		remove_short_term_gold = 300
+
+		duel = {
+			skill = intrigue
+			target = root
+
+			70 = { # They're legitimate
+				desc = mt_rivalry.0035.b.success
+
+				add_character_modifier = {
+					modifier = mt_verified_master_spy
+					years = 15
+				}
+
+				add_prestige = 200
+				add_intrigue = 2
+
+				random_courtier = {
+					limit = {
+						has_relation_rival = root
+					}
+					add_prestige = -125
+					remove_short_term_gold = 400
+				}
+
+				custom_tooltip = mt_rivalry.0035.b.success.tt
+			}
+
+			30 = { # It's a trap
+				desc = mt_rivalry.0035.b.failure
+
+				remove_short_term_gold = 400
+				add_prestige = -100
+
+				remove_character_modifier = mt_spy_network
+				remove_character_modifier = mt_discrete_network
+
+				random_courtier = {
+					limit = {
+						has_relation_rival = root
+					}
+					add_prestige = 150
+					add_gold = 500
+				}
+
+				custom_tooltip = mt_rivalry.0035.b.failure.tt
+			}
+		}
+
+		ai_chance = {
+			base = 35
+
+			modifier = {
+				add = 60
+				has_trait = paranoid
+			}
+
+			modifier = {
+				add = 40
+				intrigue >= 20
+			}
+		}
+	}
+
+	# Decline - too risky
+	option = {
+		name = mt_rivalry.0035.c
+
+		add_prestige = 25
+
+		stress_impact = {
+			ambitious = medium_stress_impact_gain
+		}
+
+		custom_tooltip = mt_rivalry.0035.c.tt
+
+		ai_chance = {
+			base = 15
+
+			modifier = {
+				add = 40
+				has_trait = craven
+			}
+
+			modifier = {
+				add = -40
+				gold >= 1500
+			}
+		}
+	}
+}
+
+####################################
+# HOSTILE TAKEOVERS (0036-0040)
+####################################
+
+# 0036: Rival merchant wants to buy you out - generous offer or retire
+mt_rivalry.0036 = {
+	type = character_event
+	title = mt_rivalry.0036.t
+	desc = mt_rivalry.0036.desc
+	theme = stewardship
+
+	left_portrait = {
+		character = root
+		animation = personality_rational
+	}
+
+	right_portrait = {
+		character = scope:buyer_rival
+		animation = personality_bold
+	}
+
+	trigger = {
+		OR = {
+			has_trait = trade_post_owner
+			has_trait = trading_company_head
+			has_trait = merchant_prince
+		}
+		any_courtier = {
+			has_relation_rival = root
+			gold >= 1000
+		}
+	}
+
+	immediate = {
+		random_courtier = {
+			limit = {
+				has_relation_rival = root
+				gold >= 1000
+			}
+			save_scope_as = buyer_rival
+		}
+	}
+
+	# Accept the buyout - retire wealthy
+	option = {
+		name = mt_rivalry.0036.a
+
+		scope:buyer_rival = {
+			remove_relation_rival = root
+			add_opinion = {
+				target = root
+				modifier = grateful_opinion
+				opinion = 50
+			}
+		}
+
+		add_gold = 1500
+		add_prestige = -50
+
+		remove_trait = trade_post_owner
+		remove_trait = trading_company_head
+		remove_trait = merchant_prince
+
+		add_character_modifier = {
+			modifier = mt_retired_merchant
+			years = 20
+		}
+
+		stress_impact = {
+			ambitious = major_stress_impact_gain
+			greedy = medium_stress_impact_gain
+		}
+
+		custom_tooltip = mt_rivalry.0036.a.tt
+
+		ai_chance = {
+			base = 20
+
+			modifier = {
+				add = 50
+				age >= 60
+			}
+
+			modifier = {
+				add = 40
+				has_trait = content
+			}
+
+			modifier = {
+				add = -60
+				has_trait = ambitious
+			}
+		}
+	}
+
+	# Refuse and continue competing
+	option = {
+		name = mt_rivalry.0036.b
+
+		scope:buyer_rival = {
+			add_opinion = {
+				target = root
+				modifier = rivalry_opinion
+				opinion = -35
+			}
+		}
+
+		add_prestige = 75
+
+		custom_tooltip = mt_rivalry.0036.b.tt
+
+		ai_chance = {
+			base = 60
+
+			modifier = {
+				add = 40
+				has_trait = ambitious
+			}
+
+			modifier = {
+				add = 30
+				age < 45
+			}
+		}
+	}
+
+	# Counter-offer - buy THEM out instead
+	option = {
+		name = mt_rivalry.0036.c
+
+		trigger = {
+			gold >= 1200
+		}
+
+		remove_short_term_gold = 1200
+
+		scope:buyer_rival = {
+			remove_relation_rival = root
+			remove_trait = trade_post_owner
+			remove_trait = trading_company_head
+			add_opinion = {
+				target = root
+				modifier = grateful_opinion
+				opinion = 30
+			}
+		}
+
+		add_gold = 1800
+		add_prestige = 150
+
+		add_character_modifier = {
+			modifier = mt_expanded_empire
+			years = 10
+		}
+
+		custom_tooltip = mt_rivalry.0036.c.tt
+
+		ai_chance = {
+			base = 20
+
+			modifier = {
+				add = 50
+				has_trait = ambitious
+			}
+
+			modifier = {
+				add = 40
+				gold >= 2000
+			}
+		}
+	}
+}
+
+# 0037: You can buy struggling rival's business - expand empire
+mt_rivalry.0037 = {
+	type = character_event
+	title = mt_rivalry.0037.t
+	desc = mt_rivalry.0037.desc
+	theme = stewardship
+
+	left_portrait = {
+		character = root
+		animation = scheme
+	}
+
+	right_portrait = {
+		character = scope:struggling_rival
+		animation = sadness
+	}
+
+	trigger = {
+		OR = {
+			has_trait = trade_post_owner
+			has_trait = trading_company_head
+			has_trait = merchant_prince
+		}
+		any_courtier = {
+			has_relation_rival = root
+			gold < 200
+		}
+		gold >= 800
+	}
+
+	immediate = {
+		random_courtier = {
+			limit = {
+				has_relation_rival = root
+				gold < 200
+			}
+			save_scope_as = struggling_rival
+		}
+	}
+
+	# Buy them out completely
+	option = {
+		name = mt_rivalry.0037.a
+
+		remove_short_term_gold = 800
+
+		scope:struggling_rival = {
+			remove_relation_rival = root
+			add_opinion = {
+				target = root
+				modifier = grateful_opinion
+				opinion = 25
+			}
+			remove_trait = trade_post_owner
+			remove_trait = trading_company_head
+			add_gold = 600
+		}
+
+		add_gold = 1200
+		add_prestige = 125
+
+		add_character_modifier = {
+			modifier = mt_acquired_rival
+			years = 5
+		}
+
+		custom_tooltip = mt_rivalry.0037.a.tt
+
+		ai_chance = {
+			base = 55
+
+			modifier = {
+				add = 40
+				has_trait = ambitious
+			}
+
+			modifier = {
+				add = 30
+				gold >= 1500
+			}
+		}
+	}
+
+	# Offer a partnership instead
+	option = {
+		name = mt_rivalry.0037.b
+
+		remove_short_term_gold = 400
+
+		scope:struggling_rival = {
+			remove_relation_rival = root
+			add_opinion = {
+				target = root
+				modifier = grateful_opinion
+				opinion = 50
+			}
+			add_gold = 400
+		}
+
+		add_gold = 600
+		add_prestige = 75
+
+		add_character_modifier = {
+			modifier = mt_merchant_partner
+			years = 10
+		}
+
+		stress_impact = {
+			greedy = minor_stress_impact_gain
+		}
+
+		custom_tooltip = mt_rivalry.0037.b.tt
+
+		ai_chance = {
+			base = 30
+
+			modifier = {
+				add = 50
+				has_trait = compassionate
+			}
+
+			modifier = {
+				add = 40
+				has_trait = gregarious
+			}
+		}
+	}
+
+	# Let them fail - eliminate competition
+	option = {
+		name = mt_rivalry.0037.c
+
+		scope:struggling_rival = {
+			add_opinion = {
+				target = root
+				modifier = callous_opinion
+				opinion = -50
+			}
+			add_prestige = -100
+		}
+
+		add_prestige = 50
+		add_gold = 300
+
+		stress_impact = {
+			compassionate = medium_stress_impact_gain
+			just = minor_stress_impact_gain
+		}
+
+		custom_tooltip = mt_rivalry.0037.c.tt
+
+		ai_chance = {
+			base = 15
+
+			modifier = {
+				add = 60
+				has_trait = callous
+			}
+
+			modifier = {
+				add = 50
+				has_trait = greedy
+			}
+
+			modifier = {
+				add = -60
+				has_trait = compassionate
+			}
+		}
+	}
+}
+
+# 0038: Hostile takeover attempt - fight or negotiate
+mt_rivalry.0038 = {
+	type = character_event
+	title = mt_rivalry.0038.t
+	desc = mt_rivalry.0038.desc
+	theme = intrigue
+
+	left_portrait = {
+		character = root
+		animation = worry
+	}
+
+	right_portrait = {
+		character = scope:hostile_rival
+		animation = personality_bold
+	}
+
+	trigger = {
+		OR = {
+			has_trait = trade_post_owner
+			has_trait = trading_company_head
+			has_trait = merchant_prince
+		}
+		any_courtier = {
+			has_relation_rival = root
+			gold >= 1200
+			OR = {
+				has_trait = ambitious
+				has_trait = greedy
+			}
+		}
+	}
+
+	immediate = {
+		random_courtier = {
+			limit = {
+				has_relation_rival = root
+				gold >= 1200
+				OR = {
+					has_trait = ambitious
+					has_trait = greedy
+				}
+			}
+			save_scope_as = hostile_rival
+		}
+	}
+
+	# Fight the takeover legally
+	option = {
+		name = mt_rivalry.0038.a
+
+		remove_short_term_gold = 500
+
+		duel = {
+			skill = learning
+			target = scope:hostile_rival
+
+			55 = { # Successfully defend
+				desc = mt_rivalry.0038.a.success
+
+				add_prestige = 150
+				add_gold = 400
+
+				scope:hostile_rival = {
+					add_prestige = -100
+					remove_short_term_gold = 600
+					add_opinion = {
+						target = root
+						modifier = rivalry_opinion
+						opinion = -75
+					}
+				}
+
+				custom_tooltip = mt_rivalry.0038.a.success.tt
+			}
+
+			45 = { # Lose the fight
+				desc = mt_rivalry.0038.a.failure
+
+				add_prestige = -100
+				remove_short_term_gold = 400
+
+				scope:hostile_rival = {
+					add_prestige = 100
+					add_gold = 500
+				}
+
+				add_character_modifier = {
+					modifier = mt_vulnerable_to_takeover
+					years = 2
+				}
+
+				custom_tooltip = mt_rivalry.0038.a.failure.tt
+			}
+		}
+
+		ai_chance = {
+			base = 45
+
+			modifier = {
+				add = 50
+				learning >= 14
+			}
+
+			modifier = {
+				add = 40
+				gold >= 1000
+			}
+		}
+	}
+
+	# Negotiate a compromise
+	option = {
+		name = mt_rivalry.0038.b
+
+		remove_short_term_gold = 300
+
+		scope:hostile_rival = {
+			add_opinion = {
+				target = root
+				modifier = trade_partner_opinion
+				opinion = 25
+			}
+			remove_relation_rival = root
+			add_gold = 300
+		}
+
+		add_character_modifier = {
+			modifier = mt_shared_venture
+			years = 5
+		}
+
+		custom_tooltip = mt_rivalry.0038.b.tt
+
+		ai_chance = {
+			base = 35
+
+			modifier = {
+				add = 40
+				diplomacy >= 14
+			}
+
+			modifier = {
+				add = 30
+				has_trait = patient
+			}
+		}
+	}
+
+	# Counter with your own hostile takeover
+	option = {
+		name = mt_rivalry.0038.c
+
+		trigger = {
+			gold >= 1000
+		}
+
+		remove_short_term_gold = 1000
+
+		duel = {
+			skill = intrigue
+			target = scope:hostile_rival
+
+			50 = { # Successfully take them over
+				desc = mt_rivalry.0038.c.success
+
+				scope:hostile_rival = {
+					remove_relation_rival = root
+					remove_trait = trade_post_owner
+					remove_trait = trading_company_head
+					add_prestige = -150
+				}
+
+				add_prestige = 200
+				add_gold = 1500
+
+				add_character_modifier = {
+					modifier = mt_hostile_takeover_master
+					years = 10
+				}
+
+				custom_tooltip = mt_rivalry.0038.c.success.tt
+			}
+
+			50 = { # They counter-counter
+				desc = mt_rivalry.0038.c.failure
+
+				remove_short_term_gold = 500
+				add_prestige = -125
+
+				scope:hostile_rival = {
+					add_prestige = 150
+					add_gold = 800
+					add_opinion = {
+						target = root
+						modifier = rivalry_opinion
+						opinion = -100
+					}
+				}
+
+				custom_tooltip = mt_rivalry.0038.c.failure.tt
+			}
+		}
+
+		ai_chance = {
+			base = 20
+
+			modifier = {
+				add = 50
+				has_trait = ambitious
+			}
+
+			modifier = {
+				add = 40
+				intrigue >= 16
+			}
+
+			modifier = {
+				add = 30
+				gold >= 2000
+			}
+		}
+	}
+}
+
+# 0039: Rivals form coalition against you - threatened by your success
+mt_rivalry.0039 = {
+	type = character_event
+	title = mt_rivalry.0039.t
+	desc = mt_rivalry.0039.desc
+	theme = diplomacy
+
+	left_portrait = {
+		character = root
+		animation = disbelief
+	}
+
+	trigger = {
+		OR = {
+			has_trait = trading_company_head
+			has_trait = merchant_prince
+		}
+		OR = {
+			has_character_modifier = mt_acquired_rival
+			has_character_modifier = mt_expanded_empire
+			has_character_modifier = mt_hostile_takeover_master
+		}
+		count_courtier = {
+			limit = {
+				has_relation_rival = root
+			}
+			count >= 2
+		}
+	}
+
+	# Break the coalition through diplomacy
+	option = {
+		name = mt_rivalry.0039.a
+
+		remove_short_term_gold = 600
+
+		duel = {
+			skill = diplomacy
+			target = root
+
+			55 = { # Successfully break coalition
+				desc = mt_rivalry.0039.a.success
+
+				add_prestige = 150
+
+				every_courtier = {
+					limit = {
+						has_relation_rival = root
+					}
+					remove_relation_rival = root
+					add_opinion = {
+						target = root
+						modifier = grateful_opinion
+						opinion = 30
+					}
+				}
+
+				custom_tooltip = mt_rivalry.0039.a.success.tt
+			}
+
+			45 = { # Coalition holds
+				desc = mt_rivalry.0039.a.failure
+
+				add_prestige = -75
+
+				every_courtier = {
+					limit = {
+						has_relation_rival = root
+					}
+					add_opinion = {
+						target = root
+						modifier = rivalry_opinion
+						opinion = -25
+					}
+				}
+
+				custom_tooltip = mt_rivalry.0039.a.failure.tt
+			}
+		}
+
+		ai_chance = {
+			base = 40
+
+			modifier = {
+				add = 50
+				diplomacy >= 16
+			}
+
+			modifier = {
+				add = 40
+				gold >= 1500
+			}
+		}
+	}
+
+	# Consolidate power and face them down
+	option = {
+		name = mt_rivalry.0039.b
+
+		remove_short_term_gold = 800
+
+		add_prestige = 100
+
+		add_character_modifier = {
+			modifier = mt_facing_coalition
+			years = 5
+		}
+
+		stress_impact = {
+			craven = medium_stress_impact_gain
+		}
+
+		custom_tooltip = mt_rivalry.0039.b.tt
+
+		ai_chance = {
+			base = 35
+
+			modifier = {
+				add = 50
+				has_trait = brave
+			}
+
+			modifier = {
+				add = 40
+				has_trait = stubborn
+			}
+
+			modifier = {
+				add = 30
+				gold >= 2000
+			}
+		}
+	}
+
+	# Strategic retreat - reduce your profile
+	option = {
+		name = mt_rivalry.0039.c
+
+		remove_character_modifier = mt_acquired_rival
+		remove_character_modifier = mt_expanded_empire
+		remove_character_modifier = mt_hostile_takeover_master
+
+		add_gold = 500
+		add_prestige = -100
+
+		every_courtier = {
+			limit = {
+				has_relation_rival = root
+			}
+			remove_relation_rival = root
+		}
+
+		stress_impact = {
+			ambitious = major_stress_impact_gain
+			brave = medium_stress_impact_gain
+		}
+
+		custom_tooltip = mt_rivalry.0039.c.tt
+
+		ai_chance = {
+			base = 25
+
+			modifier = {
+				add = 50
+				has_trait = craven
+			}
+
+			modifier = {
+				add = -50
+				has_trait = ambitious
+			}
+		}
+	}
+}
+
+# 0040: Merger proposal - combine forces or stay independent
+mt_rivalry.0040 = {
+	type = character_event
+	title = mt_rivalry.0040.t
+	desc = mt_rivalry.0040.desc
+	theme = diplomacy
+
+	left_portrait = {
+		character = root
+		animation = personality_rational
+	}
+
+	right_portrait = {
+		character = scope:merger_rival
+		animation = personality_rational
+	}
+
+	trigger = {
+		OR = {
+			has_trait = trading_company_head
+			has_trait = merchant_prince
+		}
+		any_courtier = {
+			has_relation_rival = root
+			OR = {
+				has_trait = trading_company_head
+				has_trait = merchant_prince
+			}
+		}
+	}
+
+	immediate = {
+		random_courtier = {
+			limit = {
+				has_relation_rival = root
+				OR = {
+					has_trait = trading_company_head
+					has_trait = merchant_prince
+				}
+			}
+			save_scope_as = merger_rival
+		}
+	}
+
+	# Accept equal merger
+	option = {
+		name = mt_rivalry.0040.a
+
+		scope:merger_rival = {
+			remove_relation_rival = root
+			add_opinion = {
+				target = root
+				modifier = trade_partner_opinion
+				opinion = 75
+			}
+		}
+
+		add_gold = 800
+		add_prestige = 125
+
+		add_character_modifier = {
+			modifier = mt_merged_company
+			years = 20
+		}
+
+		custom_tooltip = mt_rivalry.0040.a.tt
+
+		ai_chance = {
+			base = 40
+
+			modifier = {
+				add = 40
+				has_trait = trusting
+			}
+
+			modifier = {
+				add = 30
+				age >= 55
+			}
+		}
+	}
+
+	# Demand senior position in merger
+	option = {
+		name = mt_rivalry.0040.b
+
+		duel = {
+			skill = diplomacy
+			target = scope:merger_rival
+
+			50 = { # They agree
+				desc = mt_rivalry.0040.b.success
+
+				scope:merger_rival = {
+					remove_relation_rival = root
+					add_opinion = {
+						target = root
+						modifier = grateful_opinion
+						opinion = 40
+					}
+				}
+
+				add_gold = 1200
+				add_prestige = 175
+
+				add_character_modifier = {
+					modifier = mt_senior_partner
+					years = 20
+				}
+
+				custom_tooltip = mt_rivalry.0040.b.success.tt
+			}
+
+			50 = { # They refuse
+				desc = mt_rivalry.0040.b.failure
+
+				scope:merger_rival = {
+					add_opinion = {
+						target = root
+						modifier = rivalry_opinion
+						opinion = -50
+					}
+				}
+
+				add_prestige = -50
+
+				custom_tooltip = mt_rivalry.0040.b.failure.tt
+			}
+		}
+
+		ai_chance = {
+			base = 35
+
+			modifier = {
+				add = 50
+				has_trait = ambitious
+			}
+
+			modifier = {
+				add = 40
+				diplomacy >= 16
+			}
+		}
+	}
+
+	# Refuse - stay independent
+	option = {
+		name = mt_rivalry.0040.c
+
+		scope:merger_rival = {
+			add_opinion = {
+				target = root
+				modifier = disappointed_opinion
+				opinion = -20
+			}
+		}
+
+		add_prestige = 50
+
+		add_character_modifier = {
+			modifier = mt_proudly_independent
+			years = 10
+		}
+
+		custom_tooltip = mt_rivalry.0040.c.tt
+
+		ai_chance = {
+			base = 25
+
+			modifier = {
+				add = 50
+				has_trait = stubborn
+			}
+
+			modifier = {
+				add = 40
+				has_trait = arrogant
+			}
+		}
+	}
+}
+
+####################################
+# REPUTATION BATTLES (0041-0050)
+####################################
+
+# 0041: Rival publicly questions your honesty - reputation at stake
+mt_rivalry.0041 = {
+	type = character_event
+	title = mt_rivalry.0041.t
+	desc = mt_rivalry.0041.desc
+	theme = diplomacy
+
+	left_portrait = {
+		character = root
+		animation = rage
+	}
+
+	right_portrait = {
+		character = scope:accusing_rival
+		animation = dismissal
+	}
+
+	trigger = {
+		OR = {
+			has_trait = trade_post_owner
+			has_trait = trading_company_head
+			has_trait = merchant_prince
+		}
+		any_courtier = {
+			has_relation_rival = root
+			diplomacy >= 12
+		}
+	}
+
+	immediate = {
+		random_courtier = {
+			limit = {
+				has_relation_rival = root
+				diplomacy >= 12
+			}
+			save_scope_as = accusing_rival
+		}
+	}
+
+	# Challenge them to public debate
+	option = {
+		name = mt_rivalry.0041.a
+
+		duel = {
+			skill = diplomacy
+			target = scope:accusing_rival
+
+			60 = { # Win the debate
+				desc = mt_rivalry.0041.a.success
+
+				add_prestige = 150
+				add_gold = 200
+
+				scope:accusing_rival = {
+					add_prestige = -100
+					add_opinion = {
+						target = root
+						modifier = rivalry_opinion
+						opinion = -60
+					}
+				}
+
+				custom_tooltip = mt_rivalry.0041.a.success.tt
+			}
+
+			40 = { # Lose the debate
+				desc = mt_rivalry.0041.a.failure
+
+				add_prestige = -100
+				remove_short_term_gold = 150
+
+				scope:accusing_rival = {
+					add_prestige = 100
+				}
+
+				add_character_modifier = {
+					modifier = mt_damaged_reputation
+					years = 3
+				}
+
+				custom_tooltip = mt_rivalry.0041.a.failure.tt
+			}
+		}
+
+		ai_chance = {
+			base = 45
+
+			modifier = {
+				add = 40
+				diplomacy >= 16
+			}
+
+			modifier = {
+				add = 30
+				has_trait = brave
+			}
+		}
+	}
+
+	# Provide proof of your honesty
+	option = {
+		name = mt_rivalry.0041.b
+
+		remove_short_term_gold = 250
+
+		add_prestige = 125
+
+		scope:accusing_rival = {
+			add_prestige = -75
+			add_opinion = {
+				target = root
+				modifier = rivalry_opinion
+				opinion = -40
+			}
+		}
+
+		custom_tooltip = mt_rivalry.0041.b.tt
+
+		ai_chance = {
+			base = 40
+
+			modifier = {
+				add = 50
+				has_trait = honest
+			}
+
+			modifier = {
+				add = 40
+				gold >= 800
+			}
+		}
+	}
+
+	# Ignore it - above such petty attacks
+	option = {
+		name = mt_rivalry.0041.c
+
+		add_prestige = -50
+
+		add_character_modifier = {
+			modifier = mt_above_the_fray
+			years = 2
+		}
+
+		stress_impact = {
+			wrathful = medium_stress_impact_gain
+			vengeful = minor_stress_impact_gain
+		}
+
+		custom_tooltip = mt_rivalry.0041.c.tt
+
+		ai_chance = {
+			base = 15
+
+			modifier = {
+				add = 40
+				has_trait = patient
+			}
+
+			modifier = {
+				add = -40
+				has_trait = wrathful
+			}
+		}
+	}
+}
+
+# 0042: You expose rival's fraud - destroy their reputation
+mt_rivalry.0042 = {
+	type = character_event
+	title = mt_rivalry.0042.t
+	desc = mt_rivalry.0042.desc
+	theme = intrigue
+
+	left_portrait = {
+		character = root
+		animation = personality_bold
+	}
+
+	right_portrait = {
+		character = scope:fraud_rival
+		animation = shame
+	}
+
+	trigger = {
+		OR = {
+			has_trait = trade_post_owner
+			has_trait = trading_company_head
+			has_trait = merchant_prince
+		}
+		any_courtier = {
+			has_relation_rival = root
+			OR = {
+				has_trait = deceitful
+				has_trait = greedy
+			}
+		}
+		intrigue >= 14
+	}
+
+	immediate = {
+		random_courtier = {
+			limit = {
+				has_relation_rival = root
+				OR = {
+					has_trait = deceitful
+					has_trait = greedy
+				}
+			}
+			save_scope_as = fraud_rival
+		}
+	}
+
+	# Expose them publicly and completely
+	option = {
+		name = mt_rivalry.0042.a
+
+		scope:fraud_rival = {
+			add_prestige = -200
+			remove_short_term_gold = 500
+			add_opinion = {
+				target = root
+				modifier = rivalry_opinion
+				opinion = -100
+			}
+
+			add_character_modifier = {
+				modifier = mt_exposed_fraud
+				years = 20
+			}
+		}
+
+		add_prestige = 200
+		add_gold = 400
+
+		custom_tooltip = mt_rivalry.0042.a.tt
+
+		ai_chance = {
+			base = 55
+
+			modifier = {
+				add = 40
+				has_trait = just
+			}
+
+			modifier = {
+				add = 30
+				has_trait = zealous
+			}
+		}
+	}
+
+	# Use it as leverage for their business
+	option = {
+		name = mt_rivalry.0042.b
+
+		remove_short_term_gold = 400
+
+		scope:fraud_rival = {
+			remove_relation_rival = root
+			remove_trait = trade_post_owner
+			remove_trait = trading_company_head
+			add_prestige = -150
+		}
+
+		add_gold = 1000
+		add_prestige = 150
+
+		add_character_modifier = {
+			modifier = mt_leveraged_scandal
+			years = 10
+		}
+
+		stress_impact = {
+			just = minor_stress_impact_gain
+		}
+
+		custom_tooltip = mt_rivalry.0042.b.tt
+
+		ai_chance = {
+			base = 30
+
+			modifier = {
+				add = 50
+				has_trait = greedy
+			}
+
+			modifier = {
+				add = 40
+				has_trait = ambitious
+			}
+		}
+	}
+
+	# Give them a chance to make amends privately
+	option = {
+		name = mt_rivalry.0042.c
+
+		scope:fraud_rival = {
+			remove_relation_rival = root
+			add_opinion = {
+				target = root
+				modifier = grateful_opinion
+				opinion = 60
+			}
+			add_gold = 300
+		}
+
+		add_prestige = 75
+		add_gold = 200
+
+		stress_impact = {
+			just = minor_stress_impact_gain
+			vengeful = medium_stress_impact_gain
+		}
+
+		custom_tooltip = mt_rivalry.0042.c.tt
+
+		ai_chance = {
+			base = 15
+
+			modifier = {
+				add = 60
+				has_trait = compassionate
+			}
+
+			modifier = {
+				add = 50
+				has_trait = forgiving
+			}
+
+			modifier = {
+				add = -60
+				has_trait = vengeful
+			}
+		}
+	}
+}
+
+# 0043: Competing for prestigious contract - winner gains prestige
+mt_rivalry.0043 = {
+	type = character_event
+	title = mt_rivalry.0043.t
+	desc = mt_rivalry.0043.desc
+	theme = stewardship
+
+	left_portrait = {
+		character = root
+		animation = personality_bold
+	}
+
+	right_portrait = {
+		character = scope:contract_rival
+		animation = personality_bold
+	}
+
+	trigger = {
+		OR = {
+			has_trait = trading_company_head
+			has_trait = merchant_prince
+		}
+		any_courtier = {
+			has_relation_rival = root
+			OR = {
+				has_trait = trading_company_head
+				has_trait = merchant_prince
+			}
+		}
+	}
+
+	immediate = {
+		random_courtier = {
+			limit = {
+				has_relation_rival = root
+				OR = {
+					has_trait = trading_company_head
+					has_trait = merchant_prince
+				}
+			}
+			save_scope_as = contract_rival
+		}
+	}
+
+	# Bid aggressively - underbid them
+	option = {
+		name = mt_rivalry.0043.a
+
+		remove_short_term_gold = 400
+
+		duel = {
+			skill = stewardship
+			target = scope:contract_rival
+
+			55 = { # Win the contract
+				desc = mt_rivalry.0043.a.success
+
+				add_prestige = 200
+				add_gold = 800
+
+				scope:contract_rival = {
+					add_prestige = -75
+					add_opinion = {
+						target = root
+						modifier = rivalry_opinion
+						opinion = -50
+					}
+				}
+
+				add_character_modifier = {
+					modifier = mt_prestigious_contract
+					years = 5
+				}
+
+				custom_tooltip = mt_rivalry.0043.a.success.tt
+			}
+
+			45 = { # Lose the contract
+				desc = mt_rivalry.0043.a.failure
+
+				add_prestige = -75
+
+				scope:contract_rival = {
+					add_prestige = 150
+					add_gold = 600
+				}
+
+				custom_tooltip = mt_rivalry.0043.a.failure.tt
+			}
+		}
+
+		ai_chance = {
+			base = 45
+
+			modifier = {
+				add = 40
+				stewardship >= 16
+			}
+
+			modifier = {
+				add = 30
+				gold >= 1000
+			}
+		}
+	}
+
+	# Emphasize quality over price
+	option = {
+		name = mt_rivalry.0043.b
+
+		remove_short_term_gold = 500
+
+		duel = {
+			skill = diplomacy
+			target = scope:contract_rival
+
+			60 = { # Win with quality
+				desc = mt_rivalry.0043.b.success
+
+				add_prestige = 250
+				add_gold = 1000
+
+				scope:contract_rival = {
+					add_prestige = -100
+				}
+
+				add_character_modifier = {
+					modifier = mt_quality_reputation
+					years = 10
+				}
+
+				custom_tooltip = mt_rivalry.0043.b.success.tt
+			}
+
+			40 = { # Price wins out
+				desc = mt_rivalry.0043.b.failure
+
+				add_prestige = -50
+
+				scope:contract_rival = {
+					add_prestige = 125
+					add_gold = 700
+				}
+
+				custom_tooltip = mt_rivalry.0043.b.failure.tt
+			}
+		}
+
+		ai_chance = {
+			base = 35
+
+			modifier = {
+				add = 50
+				diplomacy >= 16
+			}
+
+			modifier = {
+				add = 40
+				gold >= 1200
+			}
+		}
+	}
+
+	# Propose joint bid - share the contract
+	option = {
+		name = mt_rivalry.0043.c
+
+		remove_short_term_gold = 300
+
+		scope:contract_rival = {
+			remove_relation_rival = root
+			add_opinion = {
+				target = root
+				modifier = trade_partner_opinion
+				opinion = 50
+			}
+		}
+
+		add_prestige = 150
+		add_gold = 500
+
+		add_character_modifier = {
+			modifier = mt_joint_venture
+			years = 5
+		}
+
+		custom_tooltip = mt_rivalry.0043.c.tt
+
+		ai_chance = {
+			base = 20
+
+			modifier = {
+				add = 50
+				has_trait = gregarious
+			}
+
+			modifier = {
+				add = 40
+				has_trait = trusting
+			}
+		}
+	}
+}
+
+# 0044: Rival accuses you of cheating - defend yourself publicly
+mt_rivalry.0044 = {
+	type = character_event
+	title = mt_rivalry.0044.t
+	desc = mt_rivalry.0044.desc
+	theme = intrigue
+
+	left_portrait = {
+		character = root
+		animation = disbelief
+	}
+
+	right_portrait = {
+		character = scope:accuser_rival
+		animation = anger
+	}
+
+	trigger = {
+		OR = {
+			has_trait = trade_post_owner
+			has_trait = trading_company_head
+			has_trait = merchant_prince
+		}
+		any_courtier = {
+			has_relation_rival = root
+		}
+	}
+
+	immediate = {
+		random_courtier = {
+			limit = {
+				has_relation_rival = root
+			}
+			save_scope_as = accuser_rival
+		}
+	}
+
+	# Demand formal investigation
+	option = {
+		name = mt_rivalry.0044.a
+
+		remove_short_term_gold = 300
+
+		duel = {
+			skill = learning
+			target = scope:accuser_rival
+
+			65 = { # Cleared of all charges
+				desc = mt_rivalry.0044.a.success
+
+				add_prestige = 175
+
+				scope:accuser_rival = {
+					add_prestige = -125
+					add_opinion = {
+						target = root
+						modifier = rivalry_opinion
+						opinion = -75
+					}
+					remove_short_term_gold = 400
+				}
+
+				custom_tooltip = mt_rivalry.0044.a.success.tt
+			}
+
+			35 = { # Investigation inconclusive
+				desc = mt_rivalry.0044.a.failure
+
+				add_prestige = -75
+
+				add_character_modifier = {
+					modifier = mt_under_suspicion
+					years = 2
+				}
+
+				custom_tooltip = mt_rivalry.0044.a.failure.tt
+			}
+		}
+
+		ai_chance = {
+			base = 50
+
+			modifier = {
+				add = 50
+				has_trait = honest
+			}
+
+			modifier = {
+				add = 40
+				learning >= 14
+			}
+		}
+	}
+
+	# Counter-accuse them of slander
+	option = {
+		name = mt_rivalry.0044.b
+
+		duel = {
+			skill = diplomacy
+			target = scope:accuser_rival
+
+			50 = { # Win public support
+				desc = mt_rivalry.0044.b.success
+
+				add_prestige = 125
+
+				scope:accuser_rival = {
+					add_prestige = -100
+					add_opinion = {
+						target = root
+						modifier = rivalry_opinion
+						opinion = -65
+					}
+				}
+
+				custom_tooltip = mt_rivalry.0044.b.success.tt
+			}
+
+			50 = { # Makes you look guilty
+				desc = mt_rivalry.0044.b.failure
+
+				add_prestige = -100
+
+				scope:accuser_rival = {
+					add_prestige = 75
+				}
+
+				add_character_modifier = {
+					modifier = mt_defensive_merchant
+					years = 3
+				}
+
+				custom_tooltip = mt_rivalry.0044.b.failure.tt
+			}
+		}
+
+		ai_chance = {
+			base = 30
+
+			modifier = {
+				add = 50
+				has_trait = wrathful
+			}
+
+			modifier = {
+				add = 40
+				diplomacy >= 16
+			}
+		}
+	}
+
+	# Quietly settle - pay them to drop it
+	option = {
+		name = mt_rivalry.0044.c
+
+		remove_short_term_gold = 500
+
+		scope:accuser_rival = {
+			add_opinion = {
+				target = root
+				modifier = blackmailed_opinion
+				opinion = -40
+			}
+		}
+
+		add_prestige = -50
+
+		stress_impact = {
+			honest = medium_stress_impact_gain
+			just = minor_stress_impact_gain
+		}
+
+		custom_tooltip = mt_rivalry.0044.c.tt
+
+		ai_chance = {
+			base = 20
+
+			modifier = {
+				add = 50
+				gold >= 1500
+			}
+
+			modifier = {
+				add = -60
+				has_trait = honest
+			}
+		}
+	}
+}
+
+# 0045: Public debate with rival - persuasion contest
+mt_rivalry.0045 = {
+	type = character_event
+	title = mt_rivalry.0045.t
+	desc = mt_rivalry.0045.desc
+	theme = diplomacy
+
+	left_portrait = {
+		character = root
+		animation = personality_bold
+	}
+
+	right_portrait = {
+		character = scope:debate_rival
+		animation = personality_bold
+	}
+
+	trigger = {
+		OR = {
+			has_trait = trade_post_owner
+			has_trait = trading_company_head
+			has_trait = merchant_prince
+		}
+		any_courtier = {
+			has_relation_rival = root
+			diplomacy >= 13
+		}
+		diplomacy >= 12
+	}
+
+	immediate = {
+		random_courtier = {
+			limit = {
+				has_relation_rival = root
+				diplomacy >= 13
+			}
+			save_scope_as = debate_rival
+		}
+	}
+
+	# Use logic and facts
+	option = {
+		name = mt_rivalry.0045.a
+
+		duel = {
+			skill = learning
+			target = scope:debate_rival
+
+			60 = { # Logic prevails
+				desc = mt_rivalry.0045.a.success
+
+				add_prestige = 150
+				add_gold = 250
+
+				scope:debate_rival = {
+					add_prestige = -100
+				}
+
+				add_learning = 1
+
+				custom_tooltip = mt_rivalry.0045.a.success.tt
+			}
+
+			40 = { # Too dry and boring
+				desc = mt_rivalry.0045.a.failure
+
+				add_prestige = -50
+
+				scope:debate_rival = {
+					add_prestige = 100
+				}
+
+				custom_tooltip = mt_rivalry.0045.a.failure.tt
+			}
+		}
+
+		ai_chance = {
+			base = 35
+
+			modifier = {
+				add = 50
+				learning >= 16
+			}
+
+			modifier = {
+				add = 40
+				has_trait = diligent
+			}
+		}
+	}
+
+	# Use emotion and passion
+	option = {
+		name = mt_rivalry.0045.b
+
+		duel = {
+			skill = diplomacy
+			target = scope:debate_rival
+
+			60 = { # Win hearts and minds
+				desc = mt_rivalry.0045.b.success
+
+				add_prestige = 175
+				add_gold = 300
+
+				scope:debate_rival = {
+					add_prestige = -125
+					add_opinion = {
+						target = root
+						modifier = rivalry_opinion
+						opinion = -50
+					}
+				}
+
+				add_diplomacy = 1
+
+				custom_tooltip = mt_rivalry.0045.b.success.tt
+			}
+
+			40 = { # Come across as manipulative
+				desc = mt_rivalry.0045.b.failure
+
+				add_prestige = -75
+
+				scope:debate_rival = {
+					add_prestige = 125
+				}
+
+				custom_tooltip = mt_rivalry.0045.b.failure.tt
+			}
+		}
+
+		ai_chance = {
+			base = 45
+
+			modifier = {
+				add = 50
+				diplomacy >= 16
+			}
+
+			modifier = {
+				add = 40
+				has_trait = gregarious
+			}
+		}
+	}
+
+	# Attack their character
+	option = {
+		name = mt_rivalry.0045.c
+
+		duel = {
+			skill = intrigue
+			target = scope:debate_rival
+
+			50 = { # Effectively undermine them
+				desc = mt_rivalry.0045.c.success
+
+				add_prestige = 125
+
+				scope:debate_rival = {
+					add_prestige = -150
+					add_opinion = {
+						target = root
+						modifier = rivalry_opinion
+						opinion = -75
+					}
+				}
+
+				custom_tooltip = mt_rivalry.0045.c.success.tt
+			}
+
+			50 = { # Backfires as petty attack
+				desc = mt_rivalry.0045.c.failure
+
+				add_prestige = -125
+
+				scope:debate_rival = {
+					add_prestige = 150
+				}
+
+				add_character_modifier = {
+					modifier = mt_petty_attacker
+					years = 2
+				}
+
+				custom_tooltip = mt_rivalry.0045.c.failure.tt
+			}
+		}
+
+		stress_impact = {
+			compassionate = minor_stress_impact_gain
+			just = minor_stress_impact_gain
+		}
+
+		ai_chance = {
+			base = 20
+
+			modifier = {
+				add = 50
+				has_trait = deceitful
+			}
+
+			modifier = {
+				add = 40
+				intrigue >= 16
+			}
+
+			modifier = {
+				add = -50
+				has_trait = honest
+			}
+		}
+	}
+}
+
+# 0046: Charity competition - who is more generous?
+mt_rivalry.0046 = {
+	type = character_event
+	title = mt_rivalry.0046.t
+	desc = mt_rivalry.0046.desc
+	theme = diplomacy
+
+	left_portrait = {
+		character = root
+		animation = personality_honorable
+	}
+
+	right_portrait = {
+		character = scope:charity_rival
+		animation = personality_honorable
+	}
+
+	trigger = {
+		OR = {
+			has_trait = trade_post_owner
+			has_trait = trading_company_head
+			has_trait = merchant_prince
+		}
+		any_courtier = {
+			has_relation_rival = root
+			gold >= 500
+		}
+		gold >= 400
+	}
+
+	immediate = {
+		random_courtier = {
+			limit = {
+				has_relation_rival = root
+				gold >= 500
+			}
+			save_scope_as = charity_rival
+		}
+	}
+
+	# Donate generously - win the PR battle
+	option = {
+		name = mt_rivalry.0046.a
+
+		remove_short_term_gold = 600
+
+		add_prestige = 200
+		add_piety = 100
+
+		scope:charity_rival = {
+			add_prestige = -50
+		}
+
+		custom_tooltip = mt_rivalry.0046.a.tt
+
+		ai_chance = {
+			base = 45
+
+			modifier = {
+				add = 40
+				has_trait = generous
+			}
+
+			modifier = {
+				add = 30
+				gold >= 1500
+			}
+		}
+	}
+
+	# Donate moderately - good balance
+	option = {
+		name = mt_rivalry.0046.b
+
+		remove_short_term_gold = 350
+
+		add_prestige = 100
+		add_piety = 75
+
+		custom_tooltip = mt_rivalry.0046.b.tt
+
+		ai_chance = {
+			base = 40
+
+			modifier = {
+				add = 40
+				has_trait = temperate
+			}
+
+			modifier = {
+				add = 30
+				gold >= 800
+			}
+		}
+	}
+
+	# Minimal donation - focus on business
+	option = {
+		name = mt_rivalry.0046.c
+
+		remove_short_term_gold = 150
+
+		add_prestige = 25
+		add_piety = 25
+
+		scope:charity_rival = {
+			add_prestige = 100
+			add_opinion = {
+				target = root
+				modifier = greedy_opinion
+				opinion = -30
+			}
+		}
+
+		stress_impact = {
+			generous = medium_stress_impact_gain
+		}
+
+		custom_tooltip = mt_rivalry.0046.c.tt
+
+		ai_chance = {
+			base = 15
+
+			modifier = {
+				add = 60
+				has_trait = greedy
+			}
+
+			modifier = {
+				add = -50
+				has_trait = generous
+			}
+		}
+	}
+}
+
+# 0047: Innovation showcase - who has the best new methods?
+mt_rivalry.0047 = {
+	type = character_event
+	title = mt_rivalry.0047.t
+	desc = mt_rivalry.0047.desc
+	theme = stewardship
+
+	left_portrait = {
+		character = root
+		animation = personality_bold
+	}
+
+	right_portrait = {
+		character = scope:innovation_rival
+		animation = personality_bold
+	}
+
+	trigger = {
+		OR = {
+			has_trait = trading_company_head
+			has_trait = merchant_prince
+		}
+		any_courtier = {
+			has_relation_rival = root
+			stewardship >= 14
+		}
+		stewardship >= 13
+	}
+
+	immediate = {
+		random_courtier = {
+			limit = {
+				has_relation_rival = root
+				stewardship >= 14
+			}
+			save_scope_as = innovation_rival
+		}
+	}
+
+	# Showcase revolutionary innovation
+	option = {
+		name = mt_rivalry.0047.a
+
+		remove_short_term_gold = 500
+
+		duel = {
+			skill = stewardship
+			target = scope:innovation_rival
+
+			60 = { # Innovation impresses everyone
+				desc = mt_rivalry.0047.a.success
+
+				add_prestige = 250
+				add_gold = 800
+
+				scope:innovation_rival = {
+					add_prestige = -125
+				}
+
+				add_character_modifier = {
+					modifier = mt_innovative_leader
+					years = 10
+				}
+
+				add_stewardship = 2
+
+				custom_tooltip = mt_rivalry.0047.a.success.tt
+			}
+
+			40 = { # Innovation fails to impress
+				desc = mt_rivalry.0047.a.failure
+
+				add_prestige = -75
+
+				scope:innovation_rival = {
+					add_prestige = 150
+				}
+
+				custom_tooltip = mt_rivalry.0047.a.failure.tt
+			}
+		}
+
+		ai_chance = {
+			base = 40
+
+			modifier = {
+				add = 50
+				stewardship >= 18
+			}
+
+			modifier = {
+				add = 40
+				gold >= 1500
+			}
+		}
+	}
+
+	# Present proven improvements
+	option = {
+		name = mt_rivalry.0047.b
+
+		remove_short_term_gold = 300
+
+		add_prestige = 150
+		add_gold = 500
+
+		add_character_modifier = {
+			modifier = mt_reliable_innovator
+			years = 5
+		}
+
+		custom_tooltip = mt_rivalry.0047.b.tt
+
+		ai_chance = {
+			base = 45
+
+			modifier = {
+				add = 40
+				has_trait = patient
+			}
+
+			modifier = {
+				add = 30
+				stewardship >= 16
+			}
+		}
+	}
+
+	# Copy rival's innovations
+	option = {
+		name = mt_rivalry.0047.c
+
+		remove_short_term_gold = 200
+
+		scope:innovation_rival = {
+			add_opinion = {
+				target = root
+				modifier = rivalry_opinion
+				opinion = -60
+			}
+		}
+
+		add_prestige = 50
+		add_gold = 300
+
+		stress_impact = {
+			honest = medium_stress_impact_gain
+		}
+
+		custom_tooltip = mt_rivalry.0047.c.tt
+
+		ai_chance = {
+			base = 15
+
+			modifier = {
+				add = 50
+				has_trait = deceitful
+			}
+
+			modifier = {
+				add = -60
+				has_trait = honest
+			}
+		}
+	}
+}
+
+# 0048: Customer service comparison - who treats clients better?
+mt_rivalry.0048 = {
+	type = character_event
+	title = mt_rivalry.0048.t
+	desc = mt_rivalry.0048.desc
+	theme = diplomacy
+
+	left_portrait = {
+		character = root
+		animation = personality_honorable
+	}
+
+	right_portrait = {
+		character = scope:service_rival
+		animation = personality_honorable
+	}
+
+	trigger = {
+		OR = {
+			has_trait = trade_post_owner
+			has_trait = trading_company_head
+			has_trait = merchant_prince
+		}
+		any_courtier = {
+			has_relation_rival = root
+			diplomacy >= 12
+		}
+	}
+
+	immediate = {
+		random_courtier = {
+			limit = {
+				has_relation_rival = root
+				diplomacy >= 12
+			}
+			save_scope_as = service_rival
+		}
+	}
+
+	# Invest heavily in customer experience
+	option = {
+		name = mt_rivalry.0048.a
+
+		remove_short_term_gold = 400
+
+		duel = {
+			skill = diplomacy
+			target = scope:service_rival
+
+			65 = { # Customers love you
+				desc = mt_rivalry.0048.a.success
+
+				add_prestige = 200
+				add_gold = 700
+
+				scope:service_rival = {
+					add_prestige = -100
+					remove_short_term_gold = 200
+				}
+
+				add_character_modifier = {
+					modifier = mt_excellent_service
+					years = 7
+				}
+
+				custom_tooltip = mt_rivalry.0048.a.success.tt
+			}
+
+			35 = { # Expensive but ineffective
+				desc = mt_rivalry.0048.a.failure
+
+				add_prestige = -50
+
+				scope:service_rival = {
+					add_prestige = 100
+				}
+
+				custom_tooltip = mt_rivalry.0048.a.failure.tt
+			}
+		}
+
+		ai_chance = {
+			base = 45
+
+			modifier = {
+				add = 50
+				diplomacy >= 16
+			}
+
+			modifier = {
+				add = 40
+				gold >= 1200
+			}
+		}
+	}
+
+	# Focus on efficiency and speed
+	option = {
+		name = mt_rivalry.0048.b
+
+		remove_short_term_gold = 250
+
+		add_prestige = 125
+		add_gold = 400
+
+		add_character_modifier = {
+			modifier = mt_efficient_service
+			years = 5
+		}
+
+		custom_tooltip = mt_rivalry.0048.b.tt
+
+		ai_chance = {
+			base = 40
+
+			modifier = {
+				add = 40
+				stewardship >= 16
+			}
+
+			modifier = {
+				add = 30
+				has_trait = diligent
+			}
+		}
+	}
+
+	# Minimum service - cheapest prices
+	option = {
+		name = mt_rivalry.0048.c
+
+		remove_short_term_gold = 100
+
+		add_prestige = 50
+		add_gold = 350
+
+		scope:service_rival = {
+			add_prestige = 75
+		}
+
+		add_character_modifier = {
+			modifier = mt_budget_service
+			years = 3
+		}
+
+		custom_tooltip = mt_rivalry.0048.c.tt
+
+		ai_chance = {
+			base = 15
+
+			modifier = {
+				add = 50
+				has_trait = greedy
+			}
+		}
+	}
+}
+
+# 0049: Reputation crisis - scandal threatens both rivals
+mt_rivalry.0049 = {
+	type = character_event
+	title = mt_rivalry.0049.t
+	desc = mt_rivalry.0049.desc
+	theme = intrigue
+
+	left_portrait = {
+		character = root
+		animation = worry
+	}
+
+	right_portrait = {
+		character = scope:crisis_rival
+		animation = worry
+	}
+
+	trigger = {
+		OR = {
+			has_trait = trade_post_owner
+			has_trait = trading_company_head
+			has_trait = merchant_prince
+		}
+		any_courtier = {
+			has_relation_rival = root
+		}
+	}
+
+	immediate = {
+		random_courtier = {
+			limit = {
+				has_relation_rival = root
+			}
+			save_scope_as = crisis_rival
+		}
+	}
+
+	# Work together to manage the crisis
+	option = {
+		name = mt_rivalry.0049.a
+
+		remove_short_term_gold = 300
+
+		scope:crisis_rival = {
+			remove_relation_rival = root
+			add_opinion = {
+				target = root
+				modifier = grateful_opinion
+				opinion = 60
+			}
+		}
+
+		add_prestige = 100
+		add_gold = 200
+
+		add_character_modifier = {
+			modifier = mt_crisis_manager
+			years = 5
+		}
+
+		custom_tooltip = mt_rivalry.0049.a.tt
+
+		ai_chance = {
+			base = 45
+
+			modifier = {
+				add = 50
+				has_trait = trusting
+			}
+
+			modifier = {
+				add = 40
+				diplomacy >= 16
+			}
+		}
+	}
+
+	# Protect yourself, let rival take the fall
+	option = {
+		name = mt_rivalry.0049.b
+
+		remove_short_term_gold = 250
+
+		scope:crisis_rival = {
+			add_prestige = -200
+			remove_short_term_gold = 500
+			add_opinion = {
+				target = root
+				modifier = betrayed_opinion
+				opinion = -100
+			}
+		}
+
+		add_prestige = 150
+		add_gold = 400
+
+		stress_impact = {
+			compassionate = major_stress_impact_gain
+			just = medium_stress_impact_gain
+		}
+
+		custom_tooltip = mt_rivalry.0049.b.tt
+
+		ai_chance = {
+			base = 30
+
+			modifier = {
+				add = 60
+				has_trait = callous
+			}
+
+			modifier = {
+				add = 50
+				has_trait = deceitful
+			}
+
+			modifier = {
+				add = -60
+				has_trait = compassionate
+			}
+		}
+	}
+
+	# Ride it out independently
+	option = {
+		name = mt_rivalry.0049.c
+
+		remove_short_term_gold = 400
+
+		add_prestige = -50
+
+		scope:crisis_rival = {
+			add_prestige = -50
+		}
+
+		add_character_modifier = {
+			modifier = mt_weathered_scandal
+			years = 3
+		}
+
+		custom_tooltip = mt_rivalry.0049.c.tt
+
+		ai_chance = {
+			base = 25
+
+			modifier = {
+				add = 40
+				has_trait = patient
+			}
+
+			modifier = {
+				add = 30
+				gold >= 1000
+			}
+		}
+	}
+}
+
+# 0050: Final reckoning - ultimate rivalry resolution
+mt_rivalry.0050 = {
+	type = character_event
+	title = mt_rivalry.0050.t
+	desc = mt_rivalry.0050.desc
+	theme = diplomacy
+
+	left_portrait = {
+		character = root
+		animation = personality_rational
+	}
+
+	right_portrait = {
+		character = scope:final_rival
+		animation = personality_rational
+	}
+
+	trigger = {
+		OR = {
+			has_trait = trading_company_head
+			has_trait = merchant_prince
+		}
+		any_courtier = {
+			has_relation_rival = root
+		}
+		age >= 50
+	}
+
+	immediate = {
+		random_courtier = {
+			limit = {
+				has_relation_rival = root
+			}
+			save_scope_as = final_rival
+		}
+	}
+
+	# Make peace - become friends
+	option = {
+		name = mt_rivalry.0050.a
+
+		scope:final_rival = {
+			remove_relation_rival = root
+			set_relation_friend = root
+			add_opinion = {
+				target = root
+				modifier = grateful_opinion
+				opinion = 75
+			}
+		}
+
+		add_prestige = 150
+		add_gold = 500
+
+		add_character_modifier = {
+			modifier = mt_honored_elder
+			years = 20
+		}
+
+		stress_impact = {
+			vengeful = major_stress_impact_gain
+			wrathful = medium_stress_impact_gain
+		}
+
+		custom_tooltip = mt_rivalry.0050.a.tt
+
+		ai_chance = {
+			base = 40
+
+			modifier = {
+				add = 60
+				has_trait = forgiving
+			}
+
+			modifier = {
+				add = 50
+				has_trait = compassionate
+			}
+
+			modifier = {
+				add = 40
+				age >= 60
+			}
+
+			modifier = {
+				add = -70
+				has_trait = vengeful
+			}
+		}
+	}
+
+	# One final competition - settle it once and for all
+	option = {
+		name = mt_rivalry.0050.b
+
+		remove_short_term_gold = 600
+
+		duel = {
+			skill = stewardship
+			target = scope:final_rival
+
+			50 = { # Win decisively
+				desc = mt_rivalry.0050.b.success
+
+				scope:final_rival = {
+					remove_relation_rival = root
+					add_opinion = {
+						target = root
+						modifier = defeated_opinion
+						opinion = -50
+					}
+					remove_trait = trade_post_owner
+					remove_trait = trading_company_head
+					add_prestige = -200
+				}
+
+				add_prestige = 300
+				add_gold = 1500
+
+				add_character_modifier = {
+					modifier = mt_legendary_merchant
+					years = 30
+				}
+
+				custom_tooltip = mt_rivalry.0050.b.success.tt
+			}
+
+			50 = { # Lose decisively
+				desc = mt_rivalry.0050.b.failure
+
+				scope:final_rival = {
+					add_prestige = 300
+					add_gold = 1200
+				}
+
+				add_prestige = -200
+				remove_short_term_gold = 500
+
+				add_character_modifier = {
+					modifier = mt_defeated_legacy
+					years = 20
+				}
+
+				custom_tooltip = mt_rivalry.0050.b.failure.tt
+			}
+		}
+
+		ai_chance = {
+			base = 35
+
+			modifier = {
+				add = 50
+				has_trait = brave
+			}
+
+			modifier = {
+				add = 40
+				has_trait = ambitious
+			}
+
+			modifier = {
+				add = 30
+				stewardship >= 18
+			}
+		}
+	}
+
+	# Accept mutual respect - agree to disagree
+	option = {
+		name = mt_rivalry.0050.c
+
+		scope:final_rival = {
+			remove_relation_rival = root
+			add_opinion = {
+				target = root
+				modifier = respect_opinion
+				opinion = 50
+			}
+		}
+
+		add_prestige = 200
+
+		add_character_modifier = {
+			modifier = mt_respected_veteran
+			years = 25
+		}
+
+		custom_tooltip = mt_rivalry.0050.c.tt
+
+		ai_chance = {
+			base = 25
+
+			modifier = {
+				add = 50
+				has_trait = humble
+			}
+
+			modifier = {
+				add = 40
+				has_trait = patient
+			}
+
+			modifier = {
+				add = 30
+				age >= 65
+			}
+		}
+	}
+}
