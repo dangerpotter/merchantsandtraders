@@ -14,6 +14,38 @@
 #
 ####################################
 
+# BASE TRAIT: Merchant
+# This is the base trait that marks someone as a merchant
+# Anyone with wandering_merchant, trade_post_owner, trading_company_head, or merchant_prince should also have this
+mt_merchant = {
+	index = 50
+	category = lifestyle
+
+	# Small baseline bonuses
+	diplomacy = 1
+
+	# Opinion modifiers
+	same_opinion = 5
+
+	# Visual
+	icon = "trait_wandering_merchant.dds"
+
+	desc = {
+		first_valid = {
+			triggered_desc = {
+				trigger = { always = yes }
+				desc = mt_merchant_desc
+			}
+		}
+	}
+
+	# Improves trading
+	ai_greed = 5
+
+	# Automatically added when gaining merchant tier traits
+	can_have_children = yes
+}
+
 # TIER 1: Wandering Merchant
 # Entry-level merchant who travels with goods
 # Requirements: Start merchant career or meet basic conditions

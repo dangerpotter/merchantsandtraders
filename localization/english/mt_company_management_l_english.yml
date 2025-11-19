@@ -1,0 +1,226 @@
+l_english:
+
+ ####################################
+ # Company Management Events
+ ####################################
+
+ # Hiring Events (0001-0005)
+ mt_company_management_events.1.t:0 "Hiring New Staff"
+ mt_company_management_events.1.desc:0 "My merchant company needs skilled employees to manage the growing enterprise. What role should I hire for?"
+ mt_company_management_events.1.a:0 "Hire a Route Manager to optimize our trade routes"
+ mt_company_management_events.1.b:0 "Hire an Accountant to manage our finances"
+ mt_company_management_events.1.c:0 "Hire a Guard Captain to protect our caravans"
+ mt_company_management_events.1.d:0 "Hire a Scout to find new opportunities"
+ mt_company_management_events.1.e:0 "Hire a Negotiator to secure better deals"
+ mt_company_management_events.1.f:0 "Not now, perhaps later"
+
+ mt_company_management_events.2.t:0 "Quality of Hire"
+ mt_company_management_events.2.desc:0 "An impressive candidate has applied for the position. They come highly recommended, but demand a premium wage. What quality of employee should I hire?"
+ mt_company_management_events.2.a:0 "Hire a Master - the best money can buy (100 gold)"
+ mt_company_management_events.2.b:0 "Hire an Expert - well worth the cost"
+ mt_company_management_events.2.c:0 "Hire Experienced - a budget-conscious choice"
+ mt_company_management_events.2.d:0 "Hire a Novice - cheap but unproven"
+
+ mt_company_management_events.3.t:0 "Young and Eager"
+ mt_company_management_events.3.desc:0 "A young applicant with little experience but great enthusiasm has applied. They're willing to work for low wages. Should I give them a chance?"
+ mt_company_management_events.3.a:0 "Give them an opportunity"
+ mt_company_management_events.3.b:0 "Too risky for my company"
+
+ mt_company_management_events.4.t:0 "Defector from a Rival"
+ mt_company_management_events.4.desc:0 "An employee from a competitor wishes to defect to my company, bringing trade secrets with them. This could give us an advantage, but is it honorable?"
+ mt_company_management_events.4.a:0 "Hire them - intelligence is valuable"
+ mt_company_management_events.4.b:0 "Refuse - maintain our honor"
+
+ mt_company_management_events.5.t:0 "Family Favor"
+ mt_company_management_events.5.desc:0 "[family_applicant.GetTitledFirstName] has asked for a position in my merchant company. Hiring family can be... complicated."
+ mt_company_management_events.5.a:0 "Of course, family comes first"
+ mt_company_management_events.5.b:0 "Politely decline this request"
+
+ # Performance Events (0006-0015)
+ mt_company_management_events.6.t:0 "Exceptional Performance"
+ mt_company_management_events.6.desc:0 "[excellent_manager.GetTitledFirstName] has exceeded all expectations, bringing in massive profits through brilliant route management!"
+ mt_company_management_events.6.a:0 "Reward them generously with a large bonus"
+ mt_company_management_events.6.b:0 "Thank them for their excellent work"
+ mt_company_management_events.6.c:0 "Take credit for the success myself"
+
+ mt_company_management_events.7.t:0 "Clever Accounting"
+ mt_company_management_events.7.desc:0 "[brilliant_accountant.GetTitledFirstName] has discovered a tax strategy that could save us a fortune. The question is whether it crosses any ethical lines..."
+ mt_company_management_events.7.a:0 "Use the legal tax savings"
+ mt_company_management_events.7.b:0 "Use the questionable but legal strategy"
+ mt_company_management_events.7.c:0 "Too risky - play it safe"
+
+ mt_company_management_events.8.t:0 "Guards Save the Day"
+ mt_company_management_events.8.desc:0 "[heroic_captain.GetTitledFirstName] has thwarted a bandit attack on our caravan, saving valuable goods and possibly lives!"
+ mt_company_management_events.8.a:0 "Give them a large bonus"
+ mt_company_management_events.8.b:0 "Provide a modest reward"
+ mt_company_management_events.8.c:0 "Thank them with words alone"
+
+ mt_company_management_events.9.t:0 "Golden Opportunity"
+ mt_company_management_events.9.desc:0 "[clever_scout.GetTitledFirstName] has discovered an incredible trading opportunity that could make us rich!"
+ mt_company_management_events.9.a:0 "Exploit this opportunity fully"
+ mt_company_management_events.9.b:0 "Share with partners for mutual benefit"
+
+ mt_company_management_events.10.t:0 "Masterful Negotiation"
+ mt_company_management_events.10.desc:0 "[skilled_negotiator.GetTitledFirstName] has secured an incredible deal with favorable terms that will benefit us for years!"
+ mt_company_management_events.10.a:0 "Celebrate this achievement!"
+
+ mt_company_management_events.11.t:0 "Costly Mistake"
+ mt_company_management_events.11.desc:0 "[incompetent_manager.GetTitledFirstName] has made a serious error that has cost us dearly. How should I respond?"
+ mt_company_management_events.11.a:0 "Fire them immediately"
+ mt_company_management_events.11.b:0 "Give them a stern warning"
+ mt_company_management_events.11.c:0 "Everyone makes mistakes sometimes"
+
+ mt_company_management_events.12.t:0 "Missed Fraud"
+ mt_company_management_events.12.desc:0 "[negligent_accountant.GetTitledFirstName] failed to detect a major fraud scheme, costing us a fortune!"
+ mt_company_management_events.12.a:0 "Fire them for incompetence"
+ mt_company_management_events.12.b:0 "Demote and punish them"
+
+ mt_company_management_events.13.t:0 "Guards Failed"
+ mt_company_management_events.13.desc:0 "[failed_captain.GetTitledFirstName] and their guards were unable to protect our caravan from bandits. Valuable goods were lost!"
+ mt_company_management_events.13.a:0 "Fire them for failure"
+ mt_company_management_events.13.b:0 "Give them a second chance"
+
+ mt_company_management_events.14.t:0 "Bad Intelligence"
+ mt_company_management_events.14.desc:0 "[bad_scout.GetTitledFirstName]'s information led us into a terrible deal. We've lost money because of this."
+ mt_company_management_events.14.a:0 "Fire them"
+ mt_company_management_events.14.b:0 "Reprimand them sternly"
+ mt_company_management_events.14.c:0 "Laugh it off - we'll do better next time"
+
+ mt_company_management_events.15.t:0 "Negotiator Outsmarted"
+ mt_company_management_events.15.desc:0 "[fooled_negotiator.GetTitledFirstName] was completely swindled in their latest deal. This is embarrassing and costly!"
+ mt_company_management_events.15.a:0 "Fire them for incompetence"
+ mt_company_management_events.15.b:0 "Final warning - no more mistakes"
+
+ # Loyalty Issues Events (0016-0025)
+ mt_company_management_events.16.t:0 "Request for a Raise"
+ mt_company_management_events.16.desc:0 "[requesting_employee.GetTitledFirstName] has been with us for a while and is asking for a raise. They've performed well, but do they deserve it?"
+ mt_company_management_events.16.a:0 "Grant the raise they've earned"
+ mt_company_management_events.16.b:0 "Refuse - they're paid fairly"
+ mt_company_management_events.16.c:0 "Counter with a smaller raise"
+
+ mt_company_management_events.17.t:0 "Workplace Complaints"
+ mt_company_management_events.17.desc:0 "[unhappy_employee.GetTitledFirstName] is upset about their working conditions. Other employees may feel the same way."
+ mt_company_management_events.17.a:0 "Improve conditions for everyone"
+ mt_company_management_events.17.b:0 "Tell them to deal with it"
+
+ mt_company_management_events.18.t:0 "Personal Crisis"
+ mt_company_management_events.18.desc:0 "[distressed_employee.GetTitledFirstName] is dealing with a family emergency and needs time off. Business is busy right now..."
+ mt_company_management_events.18.a:0 "Grant paid leave - family comes first"
+ mt_company_management_events.18.b:0 "Grant unpaid leave"
+ mt_company_management_events.18.c:0 "Deny the request - we're too busy"
+
+ mt_company_management_events.19.t:0 "Considering Other Offers"
+ mt_company_management_events.19.desc:0 "[wavering_employee.GetTitledFirstName] has received offers from competitors. Should I try to keep them?"
+ mt_company_management_events.19.a:0 "Make a generous counter-offer"
+ mt_company_management_events.19.b:0 "Let them go if they want"
+
+ mt_company_management_events.20.t:0 "Caught Stealing"
+ mt_company_management_events.20.desc:0 "[thieving_employee.GetTitledFirstName] has been caught stealing from the company! It's a small amount, but theft is theft."
+ mt_company_management_events.20.a:0 "Fire and prosecute them publicly"
+ mt_company_management_events.20.b:0 "Fire them quietly"
+ mt_company_management_events.20.c:0 "Give them a second chance"
+
+ mt_company_management_events.21.t:0 "Major Embezzlement"
+ mt_company_management_events.21.desc:0 "[embezzler.GetTitledFirstName] has confessed to embezzling a significant sum. This is a serious crime!"
+ mt_company_management_events.21.a:0 "Prosecute to the fullest extent"
+ mt_company_management_events.21.b:0 "Accept a repayment plan"
+
+ mt_company_management_events.22.t:0 "Blackmail Attempt"
+ mt_company_management_events.22.desc:0 "[blackmailer.GetTitledFirstName] is attempting to blackmail me! They threaten to reveal damaging information unless I pay."
+ mt_company_management_events.22.a:0 "Pay to make this go away"
+ mt_company_management_events.22.b:0 "Refuse and fire them"
+ mt_company_management_events.22.c:0 "Counter-threaten them"
+
+ mt_company_management_events.23.t:0 "Partnership Request"
+ mt_company_management_events.23.desc:0 "[ambitious_employee.GetTitledFirstName] is one of my best employees and wants to become a partner in the business. This would mean sharing profits..."
+ mt_company_management_events.23.a:0 "Grant them partnership"
+ mt_company_management_events.23.b:0 "Refuse - I keep full control"
+
+ mt_company_management_events.24.t:0 "Threatening to Quit"
+ mt_company_management_events.24.desc:0 "[threatening_employee.GetTitledFirstName] is threatening to quit if their demands aren't met. Can I afford to lose them?"
+ mt_company_management_events.24.a:0 "Try to keep them with concessions"
+ mt_company_management_events.24.b:0 "Let them quit"
+
+ mt_company_management_events.25.t:0 "Devoted Loyalty"
+ mt_company_management_events.25.desc:0 "[devoted_employee.GetTitledFirstName] has proven to be incredibly loyal and dedicated to our success. They truly care about this company."
+ mt_company_management_events.25.a:0 "Reward their loyalty handsomely"
+ mt_company_management_events.25.b:0 "Thank them sincerely"
+
+ # Delegation Events (0026-0033)
+ mt_company_management_events.26.t:0 "Initiative or Overreach?"
+ mt_company_management_events.26.desc:0 "[proactive_manager.GetTitledFirstName] handled a crisis without consulting me first. It worked out, but should they have asked permission?"
+ mt_company_management_events.26.a:0 "Praise their initiative"
+ mt_company_management_events.26.b:0 "Reprimand the overreach"
+
+ mt_company_management_events.27.t:0 "Major Restructuring Proposal"
+ mt_company_management_events.27.desc:0 "[strategic_accountant.GetTitledFirstName] recommends a major restructuring of our operations. It could be profitable, but it's risky."
+ mt_company_management_events.27.a:0 "Implement the changes"
+ mt_company_management_events.27.b:0 "Too risky - reject it"
+
+ mt_company_management_events.28.t:0 "Request for More Guards"
+ mt_company_management_events.28.desc:0 "[concerned_captain.GetTitledFirstName] wants to hire more guards. They cite security concerns, but guards are expensive."
+ mt_company_management_events.28.a:0 "Approve the expansion"
+ mt_company_management_events.28.b:0 "Deny - we can't afford it"
+
+ mt_company_management_events.29.t:0 "Risky Venture"
+ mt_company_management_events.29.desc:0 "[daring_scout.GetTitledFirstName] has found a risky but potentially very profitable opportunity. Should we take the chance?"
+ mt_company_management_events.29.a:0 "Take the risk!"
+ mt_company_management_events.29.b:0 "Play it safe"
+
+ mt_company_management_events.30.t:0 "Unauthorized Deal"
+ mt_company_management_events.30.desc:0 "[independent_negotiator.GetTitledFirstName] made a deal without my approval. Fortunately, it's a good one..."
+ mt_company_management_events.30.a:0 "It's a good deal - well done"
+ mt_company_management_events.30.b:0 "Reprimand them for acting alone"
+
+ mt_company_management_events.31.t:0 "Staff Conflict"
+ mt_company_management_events.31.desc:0 "Two of my employees are feuding, creating tension in the workplace. I need to resolve this."
+ mt_company_management_events.31.a:0 "Mediate and resolve the conflict"
+ mt_company_management_events.31.b:0 "Fire both of them"
+ mt_company_management_events.31.c:0 "Ignore it - they'll work it out"
+
+ mt_company_management_events.32.t:0 "Perfect Teamwork"
+ mt_company_management_events.32.desc:0 "My team is working together brilliantly! Their cooperation has led to outstanding results."
+ mt_company_management_events.32.a:0 "Celebrate our success together!"
+
+ mt_company_management_events.33.t:0 "Morale Crisis"
+ mt_company_management_events.33.desc:0 "Staff morale is dangerously low. Multiple employees are unhappy, and something must be done."
+ mt_company_management_events.33.a:0 "Address their concerns seriously"
+ mt_company_management_events.33.b:0 "Demand they shape up"
+
+ # Company Culture Events (0034-0040)
+ mt_company_management_events.34.t:0 "Toxic Workplace"
+ mt_company_management_events.34.desc:0 "My company culture has become toxic. Employees are quitting, and our reputation is suffering."
+ mt_company_management_events.34.a:0 "Major culture overhaul needed"
+ mt_company_management_events.34.b:0 "Clean house - start fresh"
+
+ mt_company_management_events.35.t:0 "Attracting Top Talent"
+ mt_company_management_events.35.desc:0 "Our positive company culture is attracting exceptional talent! A master-level candidate wants to join us."
+ mt_company_management_events.35.a:0 "Hire this talented person"
+ mt_company_management_events.35.b:0 "Keep the team small and tight-knit"
+
+ mt_company_management_events.36.t:0 "Company Celebration"
+ mt_company_management_events.36.desc:0 "It's time for a company party to build morale and team spirit. How elaborate should it be?"
+ mt_company_management_events.36.a:0 "Throw a lavish celebration!"
+ mt_company_management_events.36.b:0 "Simple gathering - nothing fancy"
+ mt_company_management_events.36.c:0 "Skip it - waste of time and money"
+
+ mt_company_management_events.37.t:0 "Public Scandal"
+ mt_company_management_events.37.desc:0 "[scandalous_employee.GetTitledFirstName] has been involved in a public scandal that's damaging our company's reputation!"
+ mt_company_management_events.37.a:0 "Fire them immediately"
+ mt_company_management_events.37.b:0 "Support them through this"
+
+ mt_company_management_events.38.t:0 "Charity Initiative"
+ mt_company_management_events.38.desc:0 "[charitable_employee.GetTitledFirstName] wants to start a charitable project using company resources. Should I support this?"
+ mt_company_management_events.38.a:0 "Support and fund their charity work"
+ mt_company_management_events.38.b:0 "Allow it but don't provide funding"
+ mt_company_management_events.38.c:0 "Forbid it - stay focused on business"
+
+ mt_company_management_events.39.t:0 "Revolutionary Innovation"
+ mt_company_management_events.39.desc:0 "[innovative_employee.GetTitledFirstName] has a revolutionary idea that could transform our business! But it requires significant investment."
+ mt_company_management_events.39.a:0 "Invest in this innovation!"
+ mt_company_management_events.39.b:0 "Too risky - reject it"
+
+ mt_company_management_events.40.t:0 "Company Milestone"
+ mt_company_management_events.40.desc:0 "We've achieved a major milestone! My company is thriving with over 1000 gold in reserves. This calls for celebration!"
+ mt_company_management_events.40.a:0 "Grand celebration for everyone!"
+ mt_company_management_events.40.b:0 "Modest celebration is sufficient"

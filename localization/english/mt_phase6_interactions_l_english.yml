@@ -1,0 +1,60 @@
+l_english:
+
+ ####################################
+ # Phase 6 Interactions - Auto-generated
+ ####################################
+
+ # Accuse Of Espionage
+ accuse_of_espionage_interaction:0 "Accuse Of Espionage"
+ accuse_of_espionage_interaction_desc:0 "Interact with this character regarding accuse of espionage."
+ accuse_of_espionage_interaction_tooltip:0 "Accuse Of Espionage"
+ accuse_of_espionage_interaction_notification:0 "[actor.GetTitledFirstName] has initiated accuse of espionage"
+ # Bribe Spy
+ bribe_spy_interaction:0 "Bribe Spy"
+ bribe_spy_interaction_desc:0 "Interact with this character regarding bribe spy."
+ bribe_spy_interaction_tooltip:0 "Bribe Spy"
+ bribe_spy_interaction_notification:0 "[actor.GetTitledFirstName] has initiated bribe spy"
+ # Demand Espionage Compensation
+ demand_espionage_compensation_interaction:0 "Demand Espionage Compensation"
+ demand_espionage_compensation_interaction_desc:0 "Interact with this character regarding demand espionage compensation."
+ demand_espionage_compensation_interaction_tooltip:0 "Demand Espionage Compensation"
+ demand_espionage_compensation_interaction_notification:0 "[actor.GetTitledFirstName] has initiated demand espionage compensation"
+ # Hire Caravan Guard
+ hire_caravan_guard_interaction_tooltip:0 "Hire Caravan Guard"
+ hire_caravan_guard_interaction_notification:0 "[actor.GetTitledFirstName] has initiated hire caravan guard"
+ # Negotiate Trade Deal
+ negotiate_trade_deal_interaction_tooltip:0 "Negotiate Trade Deal"
+ negotiate_trade_deal_interaction_notification:0 "[actor.GetTitledFirstName] has initiated negotiate trade deal"
+ # Offer Merchant Protection
+ offer_merchant_protection_interaction_tooltip:0 "Offer Merchant Protection"
+ offer_merchant_protection_interaction_notification:0 "[actor.GetTitledFirstName] has initiated offer merchant protection"
+ # Propose Joint Espionage
+ propose_joint_espionage_interaction:0 "Propose Joint Espionage"
+ propose_joint_espionage_interaction_desc:0 "Interact with this character regarding propose joint espionage."
+ propose_joint_espionage_interaction_tooltip:0 "Propose Joint Espionage"
+ propose_joint_espionage_interaction_notification:0 "[actor.GetTitledFirstName] has initiated propose joint espionage"
+ # Propose Trade Agreement
+ propose_trade_agreement_interaction:0 "Propose Trade Agreement"
+ propose_trade_agreement_interaction_desc:0 "Interact with this character regarding propose trade agreement."
+ propose_trade_agreement_interaction_tooltip:0 "Propose Trade Agreement"
+ propose_trade_agreement_interaction_notification:0 "[actor.GetTitledFirstName] has initiated propose trade agreement"
+ # Request Contract Extension
+ request_contract_extension_interaction:0 "Request Contract Extension"
+ request_contract_extension_interaction_desc:0 "Interact with this character regarding request contract extension."
+ request_contract_extension_interaction_tooltip:0 "Request Contract Extension"
+ request_contract_extension_interaction_notification:0 "[actor.GetTitledFirstName] has initiated request contract extension"
+ # Request Trade Rights
+ request_trade_rights_interaction_tooltip:0 "Request Trade Rights"
+ # Seize Merchant Assets
+ seize_merchant_assets_interaction_tooltip:0 "Seize Merchant Assets"
+ seize_merchant_assets_interaction_notification:0 "[actor.GetTitledFirstName] has initiated seize merchant assets"
+ # Share Intelligence
+ share_intelligence_interaction:0 "Share Intelligence"
+ share_intelligence_interaction_desc:0 "Interact with this character regarding share intelligence."
+ share_intelligence_interaction_tooltip:0 "Share Intelligence"
+ share_intelligence_interaction_notification:0 "[actor.GetTitledFirstName] has initiated share intelligence"
+ # Sue For Breach
+ sue_for_breach_interaction:0 "Sue For Breach"
+ sue_for_breach_interaction_desc:0 "Interact with this character regarding sue for breach."
+ sue_for_breach_interaction_tooltip:0 "Sue For Breach"
+ sue_for_breach_interaction_notification:0 "[actor.GetTitledFirstName] has initiated sue for breach"
