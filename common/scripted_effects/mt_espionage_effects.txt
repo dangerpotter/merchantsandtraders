@@ -1,0 +1,677 @@
+# Trade Espionage System - Scripted Effects
+# Effects for recruiting spies, assigning missions, and handling espionage
+
+# Recruit a spy to work for you
+recruit_spy_effect = {
+	# Cost: 50 gold upfront + 3 gold/month salary
+	remove_short_term_gold = 50
+
+	# Generate spy quality: Amateur (1), Competent (2), Expert (3)
+	random_list = {
+		50 = {
+			set_variable = {
+				name = spy_quality
+				value = 1
+			}
+			set_variable = {
+				name = spy_success_chance
+				value = 30
+			}
+			set_variable = {
+				name = spy_salary
+				value = 3
+			}
+		}
+		35 = {
+			set_variable = {
+				name = spy_quality
+				value = 2
+			}
+			set_variable = {
+				name = spy_success_chance
+				value = 60
+			}
+			set_variable = {
+				name = spy_salary
+				value = 5
+			}
+		}
+		15 = {
+			set_variable = {
+				name = spy_quality
+				value = 3
+			}
+			set_variable = {
+				name = spy_success_chance
+				value = 85
+			}
+			set_variable = {
+				name = spy_salary
+				value = 8
+			}
+		}
+	}
+
+	# Set initial loyalty (60-100)
+	random = {
+		chance = 100
+		set_variable = {
+			name = spy_loyalty
+			value = {
+				integer_range = {
+					min = 60
+					max = 100
+				}
+			}
+		}
+	}
+
+	# Mark as having active spy
+	set_variable = {
+		name = has_active_spy
+		value = yes
+	}
+
+	# Track number of spies
+	if = {
+		limit = { NOT = { has_variable = spy_count } }
+		set_variable = {
+			name = spy_count
+			value = 1
+		}
+	}
+	else = {
+		change_variable = {
+			name = spy_count
+			add = 1
+		}
+	}
+}
+
+# Assign a spy to a specific mission
+assign_spy_mission_effect = {
+	# $TARGET$ = character to spy on
+	# $MISSION_TYPE$ = steal_route_info, discover_prices, sabotage, counter_espionage
+
+	# Set mission variables
+	set_variable = {
+		name = spy_target
+		value = $TARGET$
+	}
+
+	set_variable = {
+		name = spy_mission_type
+		value = flag:$MISSION_TYPE$
+	}
+
+	# Calculate mission difficulty based on target's security
+	if = {
+		limit = {
+			$TARGET$ = { has_variable = counter_espionage_active }
+		}
+		set_variable = {
+			name = mission_difficulty_modifier
+			value = -30
+		}
+	}
+	else = {
+		set_variable = {
+			name = mission_difficulty_modifier
+			value = 0
+		}
+	}
+
+	# Set mission duration (30-90 days)
+	random = {
+		chance = 100
+		set_variable = {
+			name = mission_duration
+			value = {
+				integer_range = {
+					min = 30
+					max = 90
+				}
+			}
+		}
+	}
+
+	# Mark mission as active
+	set_variable = {
+		name = spy_mission_active
+		value = yes
+	}
+
+	# Trigger mission completion event after duration
+	trigger_event = {
+		id = mt_espionage.100
+		days = var:mission_duration
+	}
+}
+
+# Spy returns with mission report
+spy_report_effect = {
+	# Calculate final success chance
+	set_variable = {
+		name = final_success_chance
+		value = var:spy_success_chance
+	}
+
+	change_variable = {
+		name = final_success_chance
+		add = var:mission_difficulty_modifier
+	}
+
+	# Check spy loyalty for double agent risk
+	if = {
+		limit = {
+			var:spy_loyalty < 40
+		}
+		change_variable = {
+			name = final_success_chance
+			subtract = 50
+		}
+	}
+
+	# Determine outcome
+	random = {
+		chance = var:final_success_chance
+
+		# SUCCESS
+		modifier = {
+			add = 20
+			intrigue >= 15
+		}
+		modifier = {
+			add = 10
+			has_trait = shrewd
+		}
+		modifier = {
+			subtract = 10
+			has_trait = trusting
+		}
+
+		# Mission successful
+		trigger_event = mt_espionage.101
+	}
+
+	# Check for critical failure (spy caught)
+	random = {
+		chance = 15
+		modifier = {
+			add = 10
+			var:spy_loyalty < 40
+		}
+		modifier = {
+			add = 15
+			scope:spy_target = { has_variable = counter_espionage_active }
+		}
+		modifier = {
+			subtract = 10
+			var:spy_quality = 3
+		}
+
+		# Critical failure - spy caught
+		trigger_event = mt_espionage.102
+	}
+
+	# Otherwise partial success or neutral outcome
+	if = {
+		limit = {
+			NOT = { has_variable = mission_outcome_determined }
+		}
+		trigger_event = mt_espionage.103
+	}
+
+	# Clean up mission variables
+	remove_variable = spy_mission_active
+	remove_variable = spy_target
+	remove_variable = spy_mission_type
+}
+
+# Activate counter-espionage measures
+counter_espionage_effect = {
+	# Cost: 30 gold for security measures
+	remove_short_term_gold = 30
+
+	# Set counter-espionage as active
+	set_variable = {
+		name = counter_espionage_active
+		value = yes
+		days = 180
+	}
+
+	# Increase security level
+	if = {
+		limit = { NOT = { has_variable = security_level } }
+		set_variable = {
+			name = security_level
+			value = 1
+		}
+	}
+	else = {
+		change_variable = {
+			name = security_level
+			add = 1
+		}
+	}
+
+	# Chance to detect existing enemy spies
+	random = {
+		chance = 40
+		modifier = {
+			add = 20
+			intrigue >= 15
+		}
+		modifier = {
+			add = 15
+			has_trait = paranoid
+		}
+
+		# Detected enemy spy
+		trigger_event = mt_espionage.201
+	}
+
+	# Add security modifier
+	add_character_modifier = {
+		modifier = mt_counter_espionage_active
+		days = 180
+	}
+}
+
+# Steal trade secrets successfully
+steal_trade_secrets_effect = {
+	# $TARGET$ = character to steal from
+
+	# Learn their most profitable routes
+	if = {
+		limit = {
+			$TARGET$ = { has_variable = most_profitable_route }
+		}
+		set_variable = {
+			name = stolen_route_info
+			value = $TARGET$.var:most_profitable_route
+		}
+
+		# Gain prestige for clever espionage
+		add_prestige = 50
+	}
+
+	# Copy their business methods (+5% trade efficiency)
+	add_character_modifier = {
+		modifier = mt_stolen_trade_methods
+		years = 5
+	}
+
+	# Gold bonus from information
+	add_gold = {
+		integer_range = {
+			min = 100
+			max = 300
+		}
+	}
+
+	# Discover their vulnerabilities
+	random_list = {
+		25 = {
+			set_variable = {
+				name = target_vulnerability
+				value = flag:financial_weakness
+			}
+		}
+		25 = {
+			set_variable = {
+				name = target_vulnerability
+				value = flag:rival_conflict
+			}
+		}
+		25 = {
+			set_variable = {
+				name = target_vulnerability
+				value = flag:route_exposure
+			}
+		}
+		25 = {
+			set_variable = {
+				name = target_vulnerability
+				value = flag:supply_shortage
+			}
+		}
+	}
+
+	# Mark as having stolen secrets
+	set_variable = {
+		name = has_stolen_secrets
+		value = yes
+	}
+
+	# Track relationship impact
+	add_opinion = {
+		target = $TARGET$
+		modifier = suspicious_opinion
+		opinion = -20
+	}
+}
+
+# Catch an enemy spy
+catch_enemy_spy_effect = {
+	# $SPYMASTER$ = character who sent the spy
+
+	# Store spy master reference
+	set_variable = {
+		name = caught_spy_master
+		value = $SPYMASTER$
+	}
+
+	# Mark spy as caught
+	set_variable = {
+		name = enemy_spy_caught
+		value = yes
+	}
+
+	# Gain prestige for security success
+	add_prestige = 75
+
+	# Damage relations with spy master
+	add_opinion = {
+		target = $SPYMASTER$
+		modifier = caught_spying_opinion
+		opinion = -50
+	}
+
+	reverse_add_opinion = {
+		target = $SPYMASTER$
+		modifier = embarrassed_caught_opinion
+		opinion = -30
+	}
+
+	# Trigger event to decide spy's fate
+	trigger_event = mt_espionage.202
+}
+
+# Turn spy into double agent
+turn_double_agent_effect = {
+	# $ORIGINAL_MASTER$ = spy's original employer
+
+	# Cost to bribe spy
+	remove_short_term_gold = 75
+
+	# Set double agent variables
+	set_variable = {
+		name = has_double_agent
+		value = yes
+	}
+
+	set_variable = {
+		name = double_agent_target
+		value = $ORIGINAL_MASTER$
+	}
+
+	# Now receive information about original master
+	add_character_modifier = {
+		modifier = mt_double_agent_intel
+		years = 2
+	}
+
+	# Improve intrigue from managing double agent
+	add_intrigue_skill = 1
+}
+
+# Pay spy monthly salary
+pay_spy_salary_effect = {
+	# Deduct salary based on spy count and quality
+	if = {
+		limit = { has_variable = spy_count }
+
+		# Calculate total salary
+		set_variable = {
+			name = total_spy_salary
+			value = 0
+		}
+
+		# Add salary for each spy quality level
+		if = {
+			limit = { has_variable = spy_salary }
+			change_variable = {
+				name = total_spy_salary
+				add = var:spy_salary
+			}
+		}
+
+		# Deduct from gold
+		if = {
+			limit = {
+				short_term_gold >= var:total_spy_salary
+			}
+			remove_short_term_gold = var:total_spy_salary
+		}
+		else = {
+			# Can't pay - spy loyalty drops
+			change_variable = {
+				name = spy_loyalty
+				subtract = 20
+			}
+
+			# Risk of spy defection
+			if = {
+				limit = { var:spy_loyalty < 30 }
+				trigger_event = mt_espionage.110
+			}
+		}
+	}
+}
+
+# Sell stolen secrets
+sell_secrets_effect = {
+	# $BUYER$ = character buying the information (optional)
+
+	# Calculate value based on quality
+	random = {
+		chance = 100
+
+		# Base payment
+		add_gold = {
+			integer_range = {
+				min = 150
+				max = 400
+			}
+		}
+
+		modifier = {
+			factor = 1.5
+			has_variable = target_vulnerability
+		}
+	}
+
+	# Remove secret
+	remove_variable = has_stolen_secrets
+	remove_variable = stolen_route_info
+	remove_variable = target_vulnerability
+
+	# Reputation consequences
+	random_list = {
+		60 = {
+			# Word gets out - lose honor
+			add_character_modifier = {
+				modifier = mt_known_information_broker
+				years = 3
+			}
+		}
+		40 = {
+			# Discrete sale - no consequences
+		}
+	}
+
+	# Make enemies
+	if = {
+		limit = { has_variable = caught_spy_master }
+		add_opinion = {
+			target = var:caught_spy_master
+			modifier = sold_my_secrets_opinion
+			opinion = -75
+		}
+	}
+}
+
+# Expose spy publicly
+expose_spy_effect = {
+	# $SPYMASTER$ = character who sent the spy
+
+	# Public accusation - major prestige gain
+	add_prestige = 150
+
+	# Damage spy master's reputation
+	$SPYMASTER$ = {
+		add_character_modifier = {
+			modifier = mt_exposed_spymaster
+			years = 5
+		}
+		add_prestige = -200
+	}
+
+	# Major opinion penalty
+	add_opinion = {
+		target = $SPYMASTER$
+		modifier = exposed_espionage_opinion
+		opinion = -100
+	}
+
+	# Remove caught spy
+	remove_variable = enemy_spy_caught
+	remove_variable = caught_spy_master
+}
+
+# Ransom captured spy
+ransom_spy_effect = {
+	# $SPYMASTER$ = character who sent the spy
+
+	# Demand ransom
+	random = {
+		chance = 100
+		add_gold = {
+			integer_range = {
+				min = 75
+				max = 150
+			}
+		}
+	}
+
+	$SPYMASTER$ = {
+		remove_short_term_gold = 100
+	}
+
+	# Moderate opinion impact
+	add_opinion = {
+		target = $SPYMASTER$
+		modifier = ransomed_spy_opinion
+		opinion = -30
+	}
+
+	# Clean up
+	remove_variable = enemy_spy_caught
+	remove_variable = caught_spy_master
+}
+
+# Execute captured spy
+execute_spy_effect = {
+	# $SPYMASTER$ = character who sent the spy
+
+	# Gain dread
+	add_dread = 15
+
+	# Severe opinion penalty
+	add_opinion = {
+		target = $SPYMASTER$
+		modifier = executed_my_spy_opinion
+		opinion = -75
+	}
+
+	# Honor impact depends on traits
+	if = {
+		limit = { has_trait = just }
+		add_stress = 25
+	}
+
+	if = {
+		limit = { has_trait = cruel }
+		add_prestige = 50
+	}
+
+	# Clean up
+	remove_variable = enemy_spy_caught
+	remove_variable = caught_spy_master
+}
+
+# Release captured spy (merciful)
+release_spy_effect = {
+	# $SPYMASTER$ = character who sent the spy
+
+	# Gain compassionate reputation
+	add_character_modifier = {
+		modifier = mt_merciful_to_spies
+		years = 2
+	}
+
+	# Minor opinion improvement
+	add_opinion = {
+		target = $SPYMASTER$
+		modifier = released_spy_opinion
+		opinion = 10
+	}
+
+	# Clean up
+	remove_variable = enemy_spy_caught
+	remove_variable = caught_spy_master
+}
+
+# Bribe enemy spy to turn
+bribe_enemy_spy_effect = {
+	# $SPY_LOYALTY$ = loyalty value
+	# $BRIBE_AMOUNT$ = gold offered
+
+	remove_short_term_gold = $BRIBE_AMOUNT$
+
+	# Calculate success chance based on loyalty and bribe
+	set_variable = {
+		name = bribe_success_chance
+		value = 50
+	}
+
+	# Higher bribe increases chance
+	if = {
+		limit = { always = $BRIBE_AMOUNT$ >= 100 }
+		change_variable = {
+			name = bribe_success_chance
+			add = 30
+		}
+	}
+
+	# Low loyalty makes bribery easier
+	if = {
+		limit = { always = $SPY_LOYALTY$ < 50 }
+		change_variable = {
+			name = bribe_success_chance
+			add = 25
+		}
+	}
+
+	# Attempt to turn spy
+	random = {
+		chance = var:bribe_success_chance
+
+		# Success - create double agent
+		set_variable = {
+			name = successfully_turned_spy
+			value = yes
+		}
+
+		trigger_event = mt_espionage.220
+	}
+
+	# If failed, spy reports bribery attempt
+	if = {
+		limit = { NOT = { has_variable = successfully_turned_spy } }
+		trigger_event = mt_espionage.221
+	}
+
+	remove_variable = bribe_success_chance
+}

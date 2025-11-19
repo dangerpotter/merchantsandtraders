@@ -1,0 +1,751 @@
+# Trade Espionage System - Character Interactions
+# Interactions for espionage activities between characters
+
+# Accuse someone of spying on you
+accuse_of_espionage_interaction = {
+	category = interaction_category_hostile
+	common_interaction = yes
+	interface_priority = 50
+
+	desc = accuse_of_espionage_interaction_desc
+
+	greeting = positive
+	notification_text = ACCUSE_ESPIONAGE_NOTIFICATION
+
+	is_shown = {
+		NOT = { scope:recipient = scope:actor }
+		scope:actor = {
+			is_adult = yes
+		}
+		scope:recipient = {
+			is_adult = yes
+		}
+	}
+
+	is_valid_showing_failures_only = {
+		scope:actor = {
+			# Must have some evidence of spying
+			OR = {
+				has_variable = enemy_spy_caught
+				has_character_modifier = mt_counter_espionage_active
+				trigger_if = {
+					limit = { has_variable = caught_spy_master }
+					var:caught_spy_master = scope:recipient
+				}
+			}
+		}
+
+		# Can't accuse allies
+		NOT = {
+			scope:actor = {
+				has_relation_friend = scope:recipient
+			}
+		}
+	}
+
+	on_accept = {
+		scope:actor = {
+			send_interface_toast = {
+				title = accuse_of_espionage_interaction_notification
+				left_icon = scope:actor
+				right_icon = scope:recipient
+
+				# Recipient must respond
+				scope:recipient = {
+					trigger_event = mt_espionage.601
+				}
+			}
+		}
+
+		# Opinion impact
+		scope:recipient = {
+			add_opinion = {
+				target = scope:actor
+				modifier = accused_me_of_spying_opinion
+				opinion = -50
+			}
+		}
+
+		# If accusation is true (have evidence), prestige gain
+		if = {
+			limit = {
+				scope:actor = {
+					has_variable = caught_spy_master
+					var:caught_spy_master = scope:recipient
+				}
+			}
+			scope:actor = {
+				add_prestige = 100
+			}
+			scope:recipient = {
+				add_prestige = -150
+			}
+		}
+		# If false accusation, backfires
+		else = {
+			scope:actor = {
+				add_prestige = -75
+				add_stress = 30
+			}
+			scope:recipient = {
+				add_prestige = 50
+			}
+		}
+	}
+
+	on_decline = {
+		# Automatic - recipient is forced to respond
+	}
+
+	ai_accept = {
+		base = 100 # Automatic response via event
+	}
+
+	ai_potential = {
+		is_adult = yes
+		has_variable = enemy_spy_caught
+	}
+
+	ai_will_do = {
+		base = 20
+
+		modifier = {
+			factor = 3
+			has_variable = caught_spy_master
+			var:caught_spy_master = scope:recipient
+		}
+
+		modifier = {
+			factor = 2
+			has_trait = vengeful
+		}
+
+		modifier = {
+			factor = 0.5
+			has_trait = forgiving
+		}
+
+		modifier = {
+			factor = 0
+			has_relation_friend = scope:recipient
+		}
+	}
+
+	auto_accept = yes
+}
+
+# Bribe enemy spy to become double agent
+bribe_spy_interaction = {
+	category = interaction_category_hostile
+	common_interaction = yes
+	interface_priority = 45
+
+	desc = bribe_spy_interaction_desc
+
+	greeting = negative
+	notification_text = BRIBE_SPY_NOTIFICATION
+
+	is_shown = {
+		NOT = { scope:recipient = scope:actor }
+		scope:actor = {
+			is_adult = yes
+			gold >= 75
+		}
+		scope:recipient = {
+			is_adult = yes
+			has_variable = has_active_spy
+		}
+	}
+
+	is_valid_showing_failures_only = {
+		scope:actor = {
+			gold >= 75
+			# Must have counter-espionage active or caught a spy
+			OR = {
+				has_variable = counter_espionage_active
+				has_variable = enemy_spy_caught
+			}
+		}
+		scope:recipient = {
+			has_variable = has_active_spy
+		}
+	}
+
+	on_accept = {
+		scope:actor = {
+			# Attempt to bribe spy
+			hidden_effect = {
+				# Get recipient's spy loyalty if available
+				if = {
+					limit = {
+						scope:recipient = { has_variable = spy_loyalty }
+					}
+					bribe_enemy_spy_effect = {
+						SPY_LOYALTY = scope:recipient.var:spy_loyalty
+						BRIBE_AMOUNT = 75
+					}
+				}
+				else = {
+					# Assume average loyalty
+					bribe_enemy_spy_effect = {
+						SPY_LOYALTY = 60
+						BRIBE_AMOUNT = 75
+					}
+				}
+			}
+
+			send_interface_toast = {
+				title = bribe_spy_interaction_notification
+				left_icon = scope:actor
+				right_icon = scope:recipient
+
+				custom_tooltip = bribe_spy_interaction_effect_tooltip
+			}
+		}
+
+		# Opinion penalty if bribery discovered
+		random = {
+			chance = 40
+			scope:recipient = {
+				add_opinion = {
+					target = scope:actor
+					modifier = tried_to_bribe_my_spy_opinion
+					opinion = -40
+				}
+			}
+		}
+	}
+
+	on_decline = {
+		# Cannot be declined - hidden attempt
+	}
+
+	ai_accept = {
+		base = 100 # Always happens in background
+	}
+
+	ai_potential = {
+		is_adult = yes
+		gold >= 150
+		intrigue >= 12
+		has_variable = counter_espionage_active
+	}
+
+	ai_will_do = {
+		base = 15
+
+		modifier = {
+			factor = 2
+			intrigue >= 16
+		}
+
+		modifier = {
+			factor = 2
+			has_trait = schemer
+		}
+
+		modifier = {
+			factor = 3
+			has_relation_rival = scope:recipient
+		}
+
+		modifier = {
+			factor = 0
+			gold < 150
+		}
+	}
+
+	auto_accept = yes
+}
+
+# Demand compensation for espionage
+demand_espionage_compensation_interaction = {
+	category = interaction_category_hostile
+	common_interaction = yes
+	interface_priority = 45
+
+	desc = demand_espionage_compensation_interaction_desc
+
+	greeting = negative
+	notification_text = DEMAND_ESPIONAGE_COMPENSATION_NOTIFICATION
+
+	is_shown = {
+		NOT = { scope:recipient = scope:actor }
+		scope:actor = {
+			is_adult = yes
+			has_variable = caught_spy_master
+		}
+		scope:recipient = {
+			is_adult = yes
+		}
+	}
+
+	is_valid_showing_failures_only = {
+		scope:actor = {
+			has_variable = caught_spy_master
+			var:caught_spy_master = scope:recipient
+		}
+		scope:recipient = {
+			gold >= 100
+		}
+	}
+
+	on_accept = {
+		# Transfer gold as compensation
+		scope:recipient = {
+			pay_short_term_gold = {
+				target = scope:actor
+				gold = 100
+			}
+		}
+
+		# Improve relations slightly
+		scope:actor = {
+			add_opinion = {
+				target = scope:recipient
+				modifier = paid_compensation_opinion
+				opinion = 15
+			}
+		}
+
+		scope:actor = {
+			send_interface_toast = {
+				title = demand_espionage_compensation_interaction_accept
+				left_icon = scope:actor
+				right_icon = scope:recipient
+
+				add_gold = 100
+			}
+
+			# Release the spy
+			remove_variable = enemy_spy_caught
+			remove_variable = caught_spy_master
+		}
+	}
+
+	on_decline = {
+		scope:actor = {
+			send_interface_toast = {
+				title = demand_espionage_compensation_interaction_decline
+				left_icon = scope:recipient
+
+				custom_tooltip = demand_espionage_compensation_decline_tooltip
+			}
+
+			# Worsen relations
+			add_opinion = {
+				target = scope:recipient
+				modifier = refused_compensation_opinion
+				opinion = -30
+			}
+		}
+
+		# Can now expose spy publicly
+		scope:actor = {
+			trigger_event = mt_espionage.610
+		}
+	}
+
+	ai_accept = {
+		base = 30
+
+		modifier = {
+			add = 30
+			scope:actor = {
+				prestige >= scope:recipient.prestige
+			}
+		}
+
+		modifier = {
+			add = 20
+			scope:recipient = {
+				gold >= 300
+			}
+		}
+
+		modifier = {
+			add = 20
+			scope:recipient = {
+				has_trait = craven
+			}
+		}
+
+		modifier = {
+			add = -50
+			scope:recipient = {
+				has_trait = arrogant
+			}
+		}
+
+		modifier = {
+			add = -30
+			scope:recipient = {
+				has_trait = greedy
+			}
+		}
+
+		modifier = {
+			add = 40
+			scope:recipient = {
+				has_trait = generous
+			}
+		}
+	}
+
+	ai_potential = {
+		is_adult = yes
+		has_variable = caught_spy_master
+	}
+
+	ai_will_do = {
+		base = 40
+
+		modifier = {
+			factor = 2
+			gold < 100
+		}
+
+		modifier = {
+			factor = 1.5
+			NOT = { has_trait = vengeful }
+		}
+
+		modifier = {
+			factor = 0.5
+			has_trait = vengeful
+		}
+	}
+
+	auto_accept = no
+}
+
+# Share intelligence (cooperative espionage)
+share_intelligence_interaction = {
+	category = interaction_category_friendly
+	common_interaction = yes
+	interface_priority = 40
+
+	desc = share_intelligence_interaction_desc
+
+	greeting = positive
+	notification_text = SHARE_INTELLIGENCE_NOTIFICATION
+
+	is_shown = {
+		NOT = { scope:recipient = scope:actor }
+		scope:actor = {
+			is_adult = yes
+			has_variable = has_stolen_secrets
+		}
+		scope:recipient = {
+			is_adult = yes
+		}
+	}
+
+	is_valid_showing_failures_only = {
+		scope:actor = {
+			has_variable = has_stolen_secrets
+			# Must be friends or allies
+			OR = {
+				has_relation_friend = scope:recipient
+				is_allied_to = scope:recipient
+			}
+		}
+	}
+
+	on_accept = {
+		scope:actor = {
+			send_interface_toast = {
+				title = share_intelligence_interaction_notification
+				left_icon = scope:actor
+				right_icon = scope:recipient
+
+				add_prestige = 50
+			}
+
+			# Share intelligence
+			if = {
+				limit = { has_variable = stolen_route_info }
+				scope:recipient = {
+					set_variable = {
+						name = shared_intelligence
+						value = root.var:stolen_route_info
+					}
+				}
+			}
+
+			# Boost friendship
+			add_opinion = {
+				target = scope:recipient
+				modifier = shared_secrets_opinion
+				opinion = 30
+			}
+		}
+
+		scope:recipient = {
+			add_opinion = {
+				target = scope:actor
+				modifier = shared_secrets_with_me_opinion
+				opinion = 40
+			}
+
+			# Small prestige gain
+			add_prestige = 30
+		}
+	}
+
+	on_decline = {
+		scope:actor = {
+			add_opinion = {
+				target = scope:recipient
+				modifier = refused_intelligence_opinion
+				opinion = -10
+			}
+		}
+	}
+
+	ai_accept = {
+		base = 50
+
+		modifier = {
+			add = 40
+			scope:recipient = {
+				has_relation_friend = scope:actor
+			}
+		}
+
+		modifier = {
+			add = 30
+			scope:recipient = {
+				opinion = {
+					target = scope:actor
+					value >= 50
+				}
+			}
+		}
+
+		modifier = {
+			add = -30
+			scope:recipient = {
+				has_trait = paranoid
+			}
+		}
+
+		modifier = {
+			add = 20
+			scope:recipient = {
+				has_trait = trusting
+			}
+		}
+	}
+
+	ai_potential = {
+		is_adult = yes
+		has_variable = has_stolen_secrets
+	}
+
+	ai_will_do = {
+		base = 25
+
+		modifier = {
+			factor = 3
+			has_relation_friend = scope:recipient
+		}
+
+		modifier = {
+			factor = 2
+			opinion = {
+				target = scope:recipient
+				value >= 60
+			}
+		}
+
+		modifier = {
+			factor = 0
+			has_trait = paranoid
+		}
+	}
+
+	auto_accept = no
+}
+
+# Propose joint espionage operation
+propose_joint_espionage_interaction = {
+	category = interaction_category_friendly
+	common_interaction = yes
+	interface_priority = 40
+
+	desc = propose_joint_espionage_interaction_desc
+
+	greeting = positive
+	notification_text = PROPOSE_JOINT_ESPIONAGE_NOTIFICATION
+
+	is_shown = {
+		NOT = { scope:recipient = scope:actor }
+		scope:actor = {
+			is_adult = yes
+			has_variable = has_active_spy
+			gold >= 50
+		}
+		scope:recipient = {
+			is_adult = yes
+			has_variable = has_active_spy
+		}
+	}
+
+	is_valid_showing_failures_only = {
+		scope:actor = {
+			has_variable = has_active_spy
+			gold >= 50
+			# Must have common rival
+			any_relation = {
+				type = rival
+				save_temporary_scope_as = common_rival
+				scope:recipient = {
+					has_relation_rival = scope:common_rival
+				}
+			}
+		}
+		scope:recipient = {
+			has_variable = has_active_spy
+		}
+	}
+
+	cost = {
+		gold = 50
+	}
+
+	on_accept = {
+		scope:actor = {
+			send_interface_toast = {
+				title = propose_joint_espionage_interaction_accept
+				left_icon = scope:actor
+				right_icon = scope:recipient
+
+				custom_tooltip = propose_joint_espionage_accept_tooltip
+			}
+
+			# Set up joint operation
+			set_variable = {
+				name = joint_espionage_partner
+				value = scope:recipient
+			}
+		}
+
+		scope:recipient = {
+			remove_short_term_gold = 50
+
+			set_variable = {
+				name = joint_espionage_partner
+				value = scope:actor
+			}
+
+			# Improve relations
+			add_opinion = {
+				target = scope:actor
+				modifier = espionage_partners_opinion
+				opinion = 25
+			}
+		}
+
+		scope:actor = {
+			add_opinion = {
+				target = scope:recipient
+				modifier = espionage_partners_opinion
+				opinion = 25
+			}
+		}
+
+		# Trigger joint operation event
+		scope:actor = {
+			trigger_event = {
+				id = mt_espionage.700
+				days = 30
+			}
+		}
+	}
+
+	on_decline = {
+		scope:actor = {
+			add_opinion = {
+				target = scope:recipient
+				modifier = refused_cooperation_opinion
+				opinion = -5
+			}
+		}
+	}
+
+	ai_accept = {
+		base = 40
+
+		modifier = {
+			add = 30
+			scope:recipient = {
+				opinion = {
+					target = scope:actor
+					value >= 40
+				}
+			}
+		}
+
+		modifier = {
+			add = 40
+			scope:recipient = {
+				has_relation_friend = scope:actor
+			}
+		}
+
+		modifier = {
+			add = 20
+			scope:recipient = {
+				intrigue >= 15
+			}
+		}
+
+		modifier = {
+			add = -40
+			scope:recipient = {
+				has_trait = paranoid
+			}
+		}
+
+		modifier = {
+			add = -20
+			scope:recipient = {
+				gold < 100
+			}
+		}
+	}
+
+	ai_potential = {
+		is_adult = yes
+		has_variable = has_active_spy
+		gold >= 100
+	}
+
+	ai_will_do = {
+		base = 20
+
+		modifier = {
+			factor = 2
+			has_relation_friend = scope:recipient
+		}
+
+		modifier = {
+			factor = 3
+			any_relation = {
+				type = rival
+				save_temporary_scope_as = common_rival
+				scope:recipient = {
+					has_relation_rival = scope:common_rival
+				}
+			}
+		}
+
+		modifier = {
+			factor = 0
+			has_trait = paranoid
+		}
+	}
+
+	auto_accept = no
+}
