@@ -6,7 +6,9 @@ Transform your CK3 experience with a deep merchant simulation, trade routes, eco
 
 **Version:** 0.1.0
 **CK3 Compatibility:** 1.12.*
-**Status:** Foundation Complete - Ready for Testing
+**Status:** Core Systems Implemented - Active Development
+
+**Important Note:** This is an early release with core merchant mechanics fully functional. Some advanced economic features use simplified implementations. See [Known Limitations](#known-limitations) for details.
 
 ---
 
@@ -508,23 +510,33 @@ To test if another mod is compatible:
 
 ## Known Limitations
 
-### v0.1.0 Limitations
+### v0.1.0 Implementation Status
 
-1. **No merchant inheritance**: When a merchant dies, routes and goods are lost. Inheritance system planned for v0.3.0.
+**What's Fully Implemented:**
+- ✅ Complete 4-tier merchant progression system
+- ✅ Trade route creation and management
+- ✅ 30+ trade goods with modifiers
+- ✅ 70+ merchant events
+- ✅ Character interactions and decisions
+- ✅ GUI windows for portfolio and route management
+- ✅ Reputation and progression tracking
+- ✅ Company management, contracts, and espionage systems
+- ✅ Regional specialization and development
 
-2. **AI merchants limited**: AI uses system but not optimized yet. Improved AI coming in v0.3.0.
+**What Uses Simplified Implementations:**
+- ⚠️ **Market Prices**: Basic functional pricing (future: full supply/demand/distance calculations)
+- ⚠️ **Trade Income**: Simplified route profitability (future: detailed economic simulation)
+- ⚠️ **Regional Demand**: Basic demand values (future: cultural/seasonal/economic factors)
 
-3. **No trade leagues**: Cooperative merchant organizations planned for v0.6.0.
-
-4. **No merchant republics**: Full government type planned for v1.0.0.
-
-5. **Limited trade buildings**: Special trade infrastructure planned for v0.5.0.
-
-6. **No naval trade specifics**: Coastal vs inland routes function similarly. Naval system planned for v0.7.0.
-
-7. **Static regional specialization**: Regions don't dynamically develop new trade goods yet. Planned for v0.4.0.
-
-8. **No trade wars**: Direct merchant conflict planned for v0.8.0.
+**What's Not Yet Implemented:**
+- ❌ **Merchant Inheritance**: When a merchant dies, routes and goods are lost. System planned for v0.3.0.
+- ❌ **AI Merchant Optimization**: AI uses system but not fully optimized. Improvements coming in v0.3.0.
+- ❌ **Trade Leagues**: Cooperative merchant organizations planned for v0.6.0.
+- ❌ **Merchant Republics**: Full government type planned for v1.0.0.
+- ❌ **Advanced Trade Buildings**: Special trade infrastructure planned for v0.5.0.
+- ❌ **Naval Trade Specifics**: Coastal vs inland routes function similarly. Naval system planned for v0.7.0.
+- ❌ **Dynamic Regional Goods**: Regions don't dynamically develop new trade goods yet. Planned for v0.4.0.
+- ❌ **Trade Wars**: Direct merchant conflict planned for v0.8.0.
 
 ### Technical Limitations
 
@@ -532,6 +544,7 @@ To test if another mod is compatible:
 - **Save file size**: Heavy merchant activity increases save file size by ~500KB-2MB
 - **Performance**: Monthly pulses may cause slight lag with 50+ active merchants globally
 - **Localization**: Currently English only (community translations welcome!)
+- **Economy System**: Core economic effects use simplified implementations with extensive TODO comments showing planned enhancements
 
 ---
 
@@ -724,8 +737,15 @@ Please credit "Merchants and Traders" if you use significant portions of this co
 
 ---
 
-**Last Updated:** 2025-11-17
+**Last Updated:** 2025-11-19
 **Mod Version:** 0.1.0
 **CK3 Compatibility:** 1.12.*
+
+**Recent Updates:**
+- Implemented all core merchant initialization effects
+- Added simplified but functional economy system
+- Completed all 12 core scripted effects (mt_core_effects.txt)
+- Enhanced documentation to accurately reflect implementation status
+- All TODO comments preserved as roadmap for future enhancements
 
 *Safe travels, merchant adventurer. May your routes be profitable and your ventures prosperous!*

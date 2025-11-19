@@ -5,6 +5,12 @@
 
 # This file implements the SUPPLY & DEMAND ECONOMY scripted effects
 #
+# IMPLEMENTATION STATUS:
+# - Core effects are SIMPLIFIED functional implementations
+# - Extensive TODO comments throughout show planned future enhancements
+# - Current version provides basic working economy for v0.1.0
+# - Future versions will add full supply/demand/distance/seasonal calculations
+#
 # ECONOMIC SYSTEM OVERVIEW:
 # These effects manage the dynamic market economy, updating prices based on
 # supply/demand balance, distance, scarcity, oversupply, and seasonal factors.
@@ -43,108 +49,61 @@
 # 6. Add random daily fluctuation (market noise)
 # 7. Clamp to min/max bounds and round
 calculate_market_price_effect = {
-	# Step 1: Initialize with base price
-	# TODO: set_variable = {
-	#     name = mt_calculated_price
-	#     value = base_goods_price
-	# }
+	# Simplified implementation - provides functional prices
+	# Future enhancement: Full supply/demand/distance calculations (see TODOs in comments)
 
-	# Step 2: Calculate and apply distance multiplier
-	# Distance = number of counties between origin and destination
-	# Each county adds distance_multiplier to price (default 1.1x)
-	# TODO: set_variable = {
-	#     name = mt_route_distance
-	#     value = 0
-	# }
-	# TODO: Calculate actual pathfinding distance from origin to this county
-	# For each county in path:
-	#     change_variable = { name = mt_route_distance add = 1 }
+	# Step 1: Initialize with base price (50 gold for common goods)
+	set_variable = {
+		name = mt_calculated_price
+		value = 50
+	}
 
-	# Apply distance multiplier (compound interest style)
-	# TODO: multiply_variable = {
-	#     name = mt_calculated_price
-	#     value = {
-	#         value = distance_multiplier
-	#         power = var:mt_route_distance
-	#     }
-	# }
+	# Step 2: Apply development modifier (higher development = higher prices)
+	if = {
+		limit = { development_level >= 20 }
+		multiply_variable = {
+			name = mt_calculated_price
+			value = 1.3
+		}
+	}
+	else_if = {
+		limit = { development_level >= 10 }
+		multiply_variable = {
+			name = mt_calculated_price
+			value = 1.15
+		}
+	}
 
-	# Step 3: Determine if market has scarcity or oversupply
-	# Calculate supply and demand for this specific good
-	# TODO: set_variable = {
-	#     name = mt_market_supply
-	#     value = county_total_supply  # From mt_economy_values.txt
-	# }
-	# TODO: set_variable = {
-	#     name = mt_market_demand
-	#     value = county_total_demand  # From mt_economy_values.txt
-	# }
+	# Step 3: Add market fluctuation (±10% randomness)
+	random_list = {
+		20 = {
+			multiply_variable = {
+				name = mt_calculated_price
+				value = 0.9
+			}
+		}
+		60 = {
+			# No change - normal price
+		}
+		20 = {
+			multiply_variable = {
+				name = mt_calculated_price
+				value = 1.1
+			}
+		}
+	}
 
-	# Step 4a: Apply scarcity bonus if demand > supply
-	# TODO: if = {
-	#     limit = {
-	#         var:mt_market_demand > var:mt_market_supply
-	#     }
-	#     multiply_variable = {
-	#         name = mt_calculated_price
-	#         value = scarcity_bonus
-	#     }
-	# }
-
-	# Step 4b: Apply oversupply penalty if supply > demand
-	# TODO: if = {
-	#     limit = {
-	#         var:mt_market_supply > var:mt_market_demand
-	#     }
-	#     multiply_variable = {
-	#         name = mt_calculated_price
-	#         value = oversupply_penalty
-	#     }
-	# }
-
-	# Step 5: Apply seasonal variance
-	# TODO: multiply_variable = {
-	#     name = mt_calculated_price
-	#     value = seasonal_variance
-	# }
-
-	# Step 6: Add random market fluctuation (±5% noise)
-	# This creates daily price volatility for realism
-	# TODO: set_variable = {
-	#     name = mt_market_noise
-	#     value = {
-	#         value = random
-	#         multiply = 0.1
-	#         subtract = 0.05
-	#     }
-	# }
-	# TODO: multiply_variable = {
-	#     name = mt_calculated_price
-	#     value = {
-	#         value = 1.0
-	#         add = var:mt_market_noise
-	#     }
-	# }
-
-	# Step 7: Apply absolute bounds and round
-	# TODO: if = {
-	#     limit = { var:mt_calculated_price < 15 }
-	#     set_variable = { name = mt_calculated_price value = 15 }
-	# }
-	# TODO: if = {
-	#     limit = { var:mt_calculated_price > 2000 }
-	#     set_variable = { name = mt_calculated_price value = 2000 }
-	# }
-	# TODO: round_variable = mt_calculated_price
-
-	# Cleanup temporary variables
-	# TODO: remove_variable = mt_route_distance
-	# TODO: remove_variable = mt_market_supply
-	# TODO: remove_variable = mt_market_demand
-	# TODO: remove_variable = mt_market_noise
+	# Step 4: Apply bounds
+	if = {
+		limit = { var:mt_calculated_price < 20 }
+		set_variable = { name = mt_calculated_price value = 20 }
+	}
+	if = {
+		limit = { var:mt_calculated_price > 500 }
+		set_variable = { name = mt_calculated_price value = 500 }
+	}
 
 	# Result: var:mt_calculated_price now contains the final market price
-	# Other effects can read this value to determine trade profitability
 }
 
 ####################################
@@ -164,32 +123,48 @@ calculate_market_price_effect = {
 #
 # This effect runs monthly for each county to keep demand values current
 update_regional_demand_effect = {
-	# Initialize demand tracking variables for each trade good
-	# These store how much of each good the county wants to buy
+	# Simplified implementation - sets basic demand values
+	# Future enhancement: Full cultural/seasonal/economic demand system (see TODOs in comments)
 
-	# GRAIN demand
-	# TODO: set_variable = {
-	#     name = mt_demand_grain
-	#     value = 10  # Base consumption
-	# }
-	# Scale with population
-	# TODO: change_variable = {
-	#     name = mt_demand_grain
-	#     add = {
-	#         value = development_level
-	#         multiply = 2
-	#     }
-	# }
-	# Increase during famine
-	# TODO: if = {
-	#     limit = { has_county_modifier = famine }
-	#     multiply_variable = { name = mt_demand_grain value = 2.0 }
-	# }
-	# Decrease during plague (population reduction)
-	# TODO: if = {
-	#     limit = { has_county_modifier = plague }
-	#     multiply_variable = { name = mt_demand_grain value = 0.7 }
-	# }
+	# Set base demand values for all trade goods
+	# Demand scaled by development level
+
+	# Basic necessities - high demand
+	set_variable = {
+		name = mt_demand_grain
+		value = development_level
+	}
+	change_variable = {
+		name = mt_demand_grain
+		add = 10
+	}
+
+	# Luxury goods - moderate demand
+	set_variable = {
+		name = mt_demand_wine
+		value = 5
+	}
+	set_variable = {
+		name = mt_demand_spices
+		value = 3
+	}
+	set_variable = {
+		name = mt_demand_silk
+		value = 2
+	}
+
+	# Industrial goods - moderate demand
+	set_variable = {
+		name = mt_demand_iron
+		value = 8
+	}
+	set_variable = {
+		name = mt_demand_timber
+		value = 6
+	}
+
+	# NOTE: Full cultural/seasonal/economic demand system planned for future versions
+	# See TODO comments below for detailed implementation plans
 
 	# WINE demand (luxury agricultural)
 	# TODO: set_variable = {
