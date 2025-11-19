@@ -1,0 +1,361 @@
+####################################
+# MERCHANTS AND TRADERS MOD
+# Contract System Modifiers
+# Version: 0.2.0
+####################################
+#
+# This file contains all modifiers related to the contract system:
+# - Contract states and obligations
+# - Payment disputes and issues
+# - Exclusive agreements
+# - Contract performance rewards/penalties
+#
+####################################
+
+####################################
+# CONTRACT STATE MODIFIERS
+####################################
+
+mt_high_stakes_contract = {
+	icon = "gfx/interface/icons/modifiers/trade.dds"
+	monthly_character_income_mult = 0.20
+	monthly_prestige = 0.50
+	stress_gain_mult = 0.20
+}
+
+mt_highly_profitable_contract = {
+	icon = "gfx/interface/icons/modifiers/trade.dds"
+	monthly_character_income_mult = 0.25
+	monthly_prestige = 0.40
+}
+
+mt_prestigious_contract = {
+	icon = "gfx/interface/icons/modifiers/prestige.dds"
+	monthly_prestige = 0.75
+	general_opinion = 15
+	monthly_character_income_mult = 0.10
+}
+
+mt_unprofitable_contract = {
+	icon = "gfx/interface/icons/modifiers/stress.dds"
+	monthly_character_income_mult = -0.15
+	stress_gain_mult = 0.15
+}
+
+mt_contract_suspended_war = {
+	icon = "gfx/interface/icons/modifiers/stress.dds"
+	monthly_character_income_mult = -0.25
+	stress_gain_mult = 0.10
+}
+
+####################################
+# CONTRACT DISPUTES & ISSUES
+####################################
+
+mt_contract_dispute = {
+	icon = "gfx/interface/icons/modifiers/stress.dds"
+	general_opinion = -20
+	stress_gain_mult = 0.25
+	monthly_prestige = -0.30
+}
+
+mt_contract_payment_dispute = {
+	icon = "gfx/interface/icons/modifiers/stress.dds"
+	monthly_character_income_mult = -0.10
+	stress_gain_mult = 0.20
+	general_opinion = -15
+}
+
+mt_contract_payment_overdue = {
+	icon = "gfx/interface/icons/modifiers/stress.dds"
+	monthly_character_expenses = 0.15
+	stress_gain_mult = 0.20
+	general_opinion = -25
+}
+
+mt_contract_debt_outstanding = {
+	icon = "gfx/interface/icons/modifiers/stress.dds"
+	monthly_character_expenses = 0.20
+	stress_gain_mult = 0.30
+	general_opinion = -30
+}
+
+mt_lawsuit_pending = {
+	icon = "gfx/interface/icons/modifiers/stress.dds"
+	monthly_character_expenses = 0.10
+	stress_gain_mult = 0.35
+	general_opinion = -20
+	monthly_prestige = -0.50
+}
+
+mt_considering_contract_breach = {
+	icon = "gfx/interface/icons/modifiers/intrigue.dds"
+	stress_gain_mult = 0.25
+	general_opinion = -10
+	intrigue = 1
+}
+
+mt_notorious_contract_breaker = {
+	icon = "gfx/interface/icons/modifiers/stress.dds"
+	general_opinion = -50
+	monthly_prestige = -1.00
+	monthly_character_income_mult = -0.20
+	same_opinion = -40
+}
+
+mt_scammed_by_contract = {
+	icon = "gfx/interface/icons/modifiers/stress.dds"
+	monthly_character_income_mult = -0.20
+	stress_gain_mult = 0.30
+	learning = -1
+}
+
+####################################
+# EXCLUSIVE AGREEMENTS
+####################################
+
+mt_exclusive_partnership = {
+	icon = "gfx/interface/icons/modifiers/diplomacy.dds"
+	monthly_character_income_mult = 0.18
+	diplomacy = 2
+	general_opinion = -10
+}
+
+mt_exclusive_supplier = {
+	icon = "gfx/interface/icons/modifiers/trade.dds"
+	monthly_character_income_mult = 0.15
+	monthly_prestige = 0.30
+}
+
+mt_exclusive_purchase_buyer = {
+	icon = "gfx/interface/icons/modifiers/trade.dds"
+	monthly_character_income_mult = 0.12
+	stewardship = 1
+}
+
+mt_exclusive_purchase_restriction = {
+	icon = "gfx/interface/icons/modifiers/stress.dds"
+	monthly_character_income_mult = -0.10
+	stress_gain_mult = 0.10
+}
+
+mt_exclusive_supply_obligation = {
+	icon = "gfx/interface/icons/modifiers/stress.dds"
+	monthly_character_expenses = 0.08
+	stress_gain_mult = 0.12
+}
+
+mt_exclusive_trader = {
+	icon = "gfx/interface/icons/modifiers/trade.dds"
+	monthly_character_income_mult = 0.20
+	monthly_prestige = 0.50
+	general_opinion = -15
+}
+
+mt_exclusive_knowledge = {
+	icon = "gfx/interface/icons/modifiers/learning.dds"
+	monthly_character_income_mult = 0.10
+	learning = 2
+	intrigue = 1
+}
+
+####################################
+# CONTRACT PERFORMANCE
+####################################
+
+mt_contract_fulfilled_successfully = {
+	icon = "gfx/interface/icons/modifiers/prestige.dds"
+	monthly_prestige = 0.60
+	general_opinion = 25
+	monthly_character_income_mult = 0.10
+}
+
+mt_contract_extension_granted = {
+	icon = "gfx/interface/icons/modifiers/diplomacy.dds"
+	monthly_character_income_mult = 0.08
+	diplomacy = 1
+}
+
+mt_contract_windfall = {
+	icon = "gfx/interface/icons/modifiers/trade.dds"
+	monthly_character_income_mult = 0.30
+	monthly_prestige = 0.70
+}
+
+mt_performance_bonus_contract = {
+	icon = "gfx/interface/icons/modifiers/trade.dds"
+	monthly_character_income_mult = 0.15
+	stewardship = 1
+}
+
+mt_penalty_clause_contract = {
+	icon = "gfx/interface/icons/modifiers/stress.dds"
+	stress_gain_mult = 0.20
+	monthly_character_income_mult = 0.05
+}
+
+####################################
+# CONTRACT EXPERTISE & REPUTATION
+####################################
+
+mt_master_of_contracts = {
+	icon = "gfx/interface/icons/modifiers/diplomacy.dds"
+	monthly_character_income_mult = 0.20
+	diplomacy = 3
+	stewardship = 2
+	monthly_prestige = 0.80
+}
+
+mt_legendary_contractor = {
+	icon = "gfx/interface/icons/modifiers/prestige.dds"
+	monthly_character_income_mult = 0.25
+	monthly_prestige = 1.00
+	general_opinion = 30
+	diplomacy = 3
+}
+
+mt_reliable_contractor = {
+	icon = "gfx/interface/icons/modifiers/diplomacy.dds"
+	general_opinion = 20
+	monthly_prestige = 0.40
+	monthly_character_income_mult = 0.10
+}
+
+mt_master_dealmaker = {
+	icon = "gfx/interface/icons/modifiers/diplomacy.dds"
+	diplomacy = 3
+	monthly_character_income_mult = 0.18
+	monthly_prestige = 0.60
+}
+
+mt_contract_master_renown = {
+	icon = "gfx/interface/icons/modifiers/prestige.dds"
+	monthly_prestige = 0.90
+	general_opinion = 25
+	diplomacy = 2
+}
+
+mt_contract_network_master = {
+	icon = "gfx/interface/icons/modifiers/diplomacy.dds"
+	monthly_character_income_mult = 0.22
+	diplomacy = 3
+	general_opinion = 20
+}
+
+mt_inflexible_contractor = {
+	icon = "gfx/interface/icons/modifiers/stress.dds"
+	general_opinion = -15
+	stress_gain_mult = 0.15
+	monthly_character_income_mult = -0.05
+}
+
+####################################
+# SUPPLY CHAIN & LOGISTICS
+####################################
+
+mt_reliable_supply_chain = {
+	icon = "gfx/interface/icons/modifiers/stewardship.dds"
+	monthly_character_income_mult = 0.12
+	stewardship = 2
+}
+
+mt_diverse_suppliers = {
+	icon = "gfx/interface/icons/modifiers/stewardship.dds"
+	monthly_character_income_mult = 0.08
+	stewardship = 1
+}
+
+mt_supply_contract_supplier = {
+	icon = "gfx/interface/icons/modifiers/trade.dds"
+	monthly_character_income_mult = 0.10
+	monthly_prestige = 0.25
+}
+
+mt_volume_commitment_buyer = {
+	icon = "gfx/interface/icons/modifiers/trade.dds"
+	monthly_character_income_mult = 0.10
+	stewardship = 1
+}
+
+mt_volume_discount_pricing = {
+	icon = "gfx/interface/icons/modifiers/stewardship.dds"
+	monthly_character_income_mult = 0.15
+	general_opinion = 10
+}
+
+####################################
+# FINANCIAL MODIFIERS
+####################################
+
+mt_extended_credit = {
+	icon = "gfx/interface/icons/modifiers/stewardship.dds"
+	monthly_character_income_mult = 0.12
+	monthly_character_expenses = 0.05
+	stewardship = 1
+}
+
+mt_credit_risk = {
+	icon = "gfx/interface/icons/modifiers/stress.dds"
+	monthly_character_income_mult = 0.08
+	stress_gain_mult = 0.25
+}
+
+mt_restructured_debt = {
+	icon = "gfx/interface/icons/modifiers/stewardship.dds"
+	monthly_character_expenses = -0.10
+	stress_gain_mult = -0.15
+}
+
+mt_merciful_creditor = {
+	icon = "gfx/interface/icons/modifiers/piety.dds"
+	monthly_piety = 0.40
+	general_opinion = 20
+	monthly_character_income_mult = -0.05
+}
+
+####################################
+# CONTRACT FLEXIBILITY
+####################################
+
+mt_flexible_contracts = {
+	icon = "gfx/interface/icons/modifiers/diplomacy.dds"
+	diplomacy = 2
+	general_opinion = 15
+	monthly_character_income_mult = 0.08
+}
+
+mt_contract_free_merchant = {
+	icon = "gfx/interface/icons/modifiers/prestige.dds"
+	monthly_prestige = 0.40
+	monthly_character_income_mult = 0.12
+}
+
+####################################
+# LEVERAGE & MANIPULATION
+####################################
+
+mt_contract_leverage = {
+	icon = "gfx/interface/icons/modifiers/intrigue.dds"
+	intrigue = 2
+	monthly_character_income_mult = 0.10
+	general_opinion = -10
+}
+
+mt_hidden_dealings = {
+	icon = "gfx/interface/icons/modifiers/intrigue.dds"
+	intrigue = 2
+	general_opinion = -15
+	monthly_character_income_mult = 0.12
+}
+
+mt_leveraged_scandal = {
+	icon = "gfx/interface/icons/modifiers/intrigue.dds"
+	intrigue = 3
+	monthly_character_income_mult = 0.15
+	general_opinion = -25
+	monthly_piety = -0.30
+}
+
+####################################
+# END OF FILE
+####################################

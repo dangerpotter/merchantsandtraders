@@ -1,0 +1,271 @@
+####################################
+# MERCHANTS AND TRADERS MOD
+# Additional Opinion Modifiers
+# Version: 0.2.0
+####################################
+#
+# This file contains additional opinion modifiers for merchant relationships
+# Note: Basic opinion modifiers are in mt_event_modifiers.txt
+# This file contains merchant-specific opinion modifiers
+#
+####################################
+
+####################################
+# MERCHANT RELATIONSHIP OPINIONS
+####################################
+
+mt_business_partner_opinion = {
+	opinion = {
+		who = this
+		value = 30
+	}
+}
+
+mt_trusted_partner_opinion = {
+	opinion = {
+		who = this
+		value = 35
+	}
+}
+
+mt_reliable_partner_opinion = {
+	opinion = {
+		who = this
+		value = 25
+	}
+}
+
+mt_loyal_partner_opinion = {
+	opinion = {
+		who = this
+		value = 40
+	}
+}
+
+mt_family_business_partner_opinion = {
+	opinion = {
+		who = this
+		value = 45
+	}
+}
+
+mt_allied_merchant_opinion = {
+	opinion = {
+		who = this
+		value = 30
+	}
+}
+
+mt_diplomatic_merchant_opinion = {
+	opinion = {
+		who = this
+		value = 25
+	}
+}
+
+####################################
+# EMPLOYER OPINIONS
+####################################
+
+mt_good_employer_opinion = {
+	opinion = {
+		who = this
+		value = 25
+	}
+}
+
+mt_fair_employer_opinion = {
+	opinion = {
+		who = this
+		value = 20
+	}
+}
+
+mt_bad_employer_opinion = {
+	opinion = {
+		who = this
+		value = -30
+	}
+}
+
+mt_merciful_employer_opinion = {
+	opinion = {
+		who = this
+		value = 30
+	}
+}
+
+####################################
+# MERCHANT BEHAVIOR OPINIONS
+####################################
+
+mt_honest_merchant_opinion = {
+	opinion = {
+		who = this
+		value = 30
+	}
+}
+
+mt_fair_merchant_opinion = {
+	opinion = {
+		who = this
+		value = 25
+	}
+}
+
+mt_generous_patron_opinion = {
+	opinion = {
+		who = this
+		value = 40
+	}
+}
+
+mt_grateful_merchant_opinion = {
+	opinion = {
+		who = this
+		value = 35
+	}
+}
+
+mt_humble_merchant_opinion = {
+	opinion = {
+		who = this
+		value = 20
+	}
+}
+
+mt_arrogant_merchant_opinion = {
+	opinion = {
+		who = this
+		value = -25
+	}
+}
+
+mt_greedy_merchant_opinion = {
+	opinion = {
+		who = this
+		value = -30
+	}
+}
+
+mt_dishonest_merchant_opinion = {
+	opinion = {
+		who = this
+		value = -40
+	}
+}
+
+mt_exploitative_merchant_opinion = {
+	opinion = {
+		who = this
+		value = -45
+	}
+}
+
+mt_ruthless_competitor_opinion = {
+	opinion = {
+		who = this
+		value = -35
+	}
+}
+
+####################################
+# TRANSACTION OPINIONS
+####################################
+
+mt_reliable_buyer_opinion = {
+	opinion = {
+		who = this
+		value = 25
+	}
+}
+
+mt_impressed_by_skill_opinion = {
+	opinion = {
+		who = this
+		value = 30
+	}
+}
+
+mt_helped_in_need_opinion = {
+	opinion = {
+		who = this
+		value = 40
+	}
+}
+
+mt_charmed_opinion = {
+	opinion = {
+		who = this
+		value = 20
+	}
+}
+
+####################################
+# NEGATIVE EVENT OPINIONS
+####################################
+
+mt_contract_breaker_opinion = {
+	opinion = {
+		who = this
+		value = -50
+	}
+}
+
+mt_caught_embezzler_opinion = {
+	opinion = {
+		who = this
+		value = -60
+	}
+}
+
+mt_exposed_liar_opinion = {
+	opinion = {
+		who = this
+		value = -45
+	}
+}
+
+mt_foiled_plot_opinion = {
+	opinion = {
+		who = this
+		value = -40
+	}
+}
+
+####################################
+# SPECIAL RELATIONSHIP MODIFIERS
+# These combine opinion with other effects
+####################################
+
+mt_loyal_following = {
+	icon = "gfx/interface/icons/modifiers/diplomacy.dds"
+	general_opinion = 25
+	monthly_prestige = 0.50
+	diplomacy = 2
+}
+
+mt_married_business_partners = {
+	icon = "gfx/interface/icons/modifiers/diplomacy.dds"
+	monthly_character_income_mult = 0.15
+	diplomacy = 2
+	general_opinion = 20
+}
+
+mt_renowned_for_loyalty = {
+	icon = "gfx/interface/icons/modifiers/prestige.dds"
+	general_opinion = 30
+	monthly_prestige = 0.70
+	diplomacy = 2
+}
+
+mt_reliable_innovator = {
+	icon = "gfx/interface/icons/modifiers/learning.dds"
+	general_opinion = 20
+	learning = 2
+	monthly_prestige = 0.50
+}
+
+####################################
+# END OF FILE
+####################################

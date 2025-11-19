@@ -1,0 +1,560 @@
+####################################
+# MERCHANTS AND TRADERS MOD
+# Regional Development Modifiers
+# Version: 0.2.0
+####################################
+#
+# This file contains all modifiers related to regional development:
+# - Production bonuses (agriculture, mining, textiles, etc.)
+# - Natural disasters and weather events
+# - Guild memberships and associations
+# - Infrastructure and improvements
+#
+####################################
+
+####################################
+# AGRICULTURE & FARMING
+####################################
+
+mt_grain_production = {
+	icon = "gfx/interface/icons/modifiers/trade.dds"
+	monthly_character_income_mult = 0.08
+	stewardship = 1
+}
+
+mt_advanced_agriculture = {
+	icon = "gfx/interface/icons/modifiers/stewardship.dds"
+	monthly_character_income_mult = 0.15
+	stewardship = 2
+	monthly_prestige = 0.30
+}
+
+mt_experimental_agriculture = {
+	icon = "gfx/interface/icons/modifiers/learning.dds"
+	monthly_character_income_mult = 0.12
+	learning = 2
+	monthly_prestige = 0.40
+}
+
+mt_improved_farming = {
+	icon = "gfx/interface/icons/modifiers/stewardship.dds"
+	monthly_character_income_mult = 0.10
+	stewardship = 1
+}
+
+mt_livestock_care = {
+	icon = "gfx/interface/icons/modifiers/stewardship.dds"
+	monthly_character_income_mult = 0.08
+	stewardship = 1
+}
+
+mt_bumper_crop = {
+	icon = "gfx/interface/icons/modifiers/trade.dds"
+	monthly_character_income_mult = 0.20
+	monthly_prestige = 0.40
+}
+
+mt_grain_reserves = {
+	icon = "gfx/interface/icons/modifiers/stewardship.dds"
+	monthly_character_income_mult = 0.10
+	monthly_character_expenses = 0.05
+}
+
+mt_grain_importer = {
+	icon = "gfx/interface/icons/modifiers/trade.dds"
+	monthly_character_income_mult = 0.12
+	diplomacy = 1
+}
+
+mt_reliable_grain_supplier = {
+	icon = "gfx/interface/icons/modifiers/trade.dds"
+	monthly_character_income_mult = 0.15
+	general_opinion = 20
+	monthly_prestige = 0.35
+}
+
+mt_agricultural_patron = {
+	icon = "gfx/interface/icons/modifiers/piety.dds"
+	monthly_piety = 0.40
+	general_opinion = 15
+	monthly_prestige = 0.30
+}
+
+####################################
+# TEXTILE & SILK PRODUCTION
+####################################
+
+mt_textile_production = {
+	icon = "gfx/interface/icons/modifiers/trade.dds"
+	monthly_character_income_mult = 0.10
+	stewardship = 1
+}
+
+mt_advanced_textile_production = {
+	icon = "gfx/interface/icons/modifiers/trade.dds"
+	monthly_character_income_mult = 0.18
+	stewardship = 2
+	monthly_prestige = 0.40
+}
+
+mt_silk_production = {
+	icon = "gfx/interface/icons/modifiers/trade.dds"
+	monthly_character_income_mult = 0.15
+	monthly_prestige = 0.50
+}
+
+mt_silk_artisan_quarter = {
+	icon = "gfx/interface/icons/modifiers/prestige.dds"
+	monthly_character_income_mult = 0.20
+	monthly_prestige = 0.60
+	learning = 1
+}
+
+mt_silk_industry_support = {
+	icon = "gfx/interface/icons/modifiers/trade.dds"
+	monthly_character_income_mult = 0.12
+	general_opinion = 15
+}
+
+mt_silk_patron = {
+	icon = "gfx/interface/icons/modifiers/prestige.dds"
+	monthly_prestige = 0.70
+	general_opinion = 20
+	monthly_character_income_mult = 0.10
+}
+
+mt_weavers_guild = {
+	icon = "gfx/interface/icons/modifiers/trade.dds"
+	monthly_character_income_mult = 0.12
+	general_opinion = 10
+}
+
+####################################
+# MINING & METALLURGY
+####################################
+
+mt_iron_production = {
+	icon = "gfx/interface/icons/modifiers/trade.dds"
+	monthly_character_income_mult = 0.10
+	martial = 1
+}
+
+mt_deep_mining = {
+	icon = "gfx/interface/icons/modifiers/stewardship.dds"
+	monthly_character_income_mult = 0.15
+	stewardship = 2
+	monthly_character_expenses = 0.10
+}
+
+mt_mining_investment = {
+	icon = "gfx/interface/icons/modifiers/stewardship.dds"
+	monthly_character_income_mult = 0.12
+	monthly_character_expenses = 0.08
+}
+
+mt_steel_production = {
+	icon = "gfx/interface/icons/modifiers/trade.dds"
+	monthly_character_income_mult = 0.18
+	monthly_prestige = 0.50
+}
+
+mt_steel_production_basic = {
+	icon = "gfx/interface/icons/modifiers/trade.dds"
+	monthly_character_income_mult = 0.12
+	martial = 1
+}
+
+mt_steel_forges = {
+	icon = "gfx/interface/icons/modifiers/trade.dds"
+	monthly_character_income_mult = 0.20
+	martial = 2
+	monthly_prestige = 0.60
+}
+
+mt_salt_production = {
+	icon = "gfx/interface/icons/modifiers/trade.dds"
+	monthly_character_income_mult = 0.10
+	stewardship = 1
+}
+
+mt_salt_production_basic = {
+	icon = "gfx/interface/icons/modifiers/trade.dds"
+	monthly_character_income_mult = 0.08
+}
+
+mt_salt_mines = {
+	icon = "gfx/interface/icons/modifiers/trade.dds"
+	monthly_character_income_mult = 0.15
+	monthly_prestige = 0.35
+}
+
+####################################
+# FISHING & MARITIME
+####################################
+
+mt_fish_production = {
+	icon = "gfx/interface/icons/modifiers/trade.dds"
+	monthly_character_income_mult = 0.08
+}
+
+mt_fishing_fleet = {
+	icon = "gfx/interface/icons/modifiers/trade.dds"
+	monthly_character_income_mult = 0.12
+	monthly_prestige = 0.30
+}
+
+mt_deep_sea_fishing = {
+	icon = "gfx/interface/icons/modifiers/trade.dds"
+	monthly_character_income_mult = 0.15
+	martial = 1
+}
+
+####################################
+# LUXURY GOODS
+####################################
+
+mt_spice_production = {
+	icon = "gfx/interface/icons/modifiers/trade.dds"
+	monthly_character_income_mult = 0.18
+	monthly_prestige = 0.50
+}
+
+mt_exotic_spice_provider = {
+	icon = "gfx/interface/icons/modifiers/prestige.dds"
+	monthly_character_income_mult = 0.22
+	monthly_prestige = 0.70
+	general_opinion = 15
+}
+
+mt_spice_gardens = {
+	icon = "gfx/interface/icons/modifiers/trade.dds"
+	monthly_character_income_mult = 0.15
+	learning = 1
+	monthly_prestige = 0.40
+}
+
+mt_fur_production = {
+	icon = "gfx/interface/icons/modifiers/trade.dds"
+	monthly_character_income_mult = 0.12
+	monthly_prestige = 0.30
+}
+
+mt_exotic_furs = {
+	icon = "gfx/interface/icons/modifiers/prestige.dds"
+	monthly_character_income_mult = 0.18
+	monthly_prestige = 0.50
+}
+
+mt_fur_trappers = {
+	icon = "gfx/interface/icons/modifiers/trade.dds"
+	monthly_character_income_mult = 0.10
+	martial = 1
+}
+
+mt_wine_production = {
+	icon = "gfx/interface/icons/modifiers/trade.dds"
+	monthly_character_income_mult = 0.12
+	monthly_prestige = 0.35
+}
+
+mt_wine_connoisseur = {
+	icon = "gfx/interface/icons/modifiers/prestige.dds"
+	monthly_prestige = 0.60
+	diplomacy = 2
+	general_opinion = 15
+}
+
+####################################
+# CRAFTS & ARTISANS
+####################################
+
+mt_glass_production = {
+	icon = "gfx/interface/icons/modifiers/trade.dds"
+	monthly_character_income_mult = 0.12
+	learning = 1
+}
+
+mt_glass_production_center = {
+	icon = "gfx/interface/icons/modifiers/prestige.dds"
+	monthly_character_income_mult = 0.18
+	monthly_prestige = 0.50
+	learning = 2
+}
+
+mt_pottery_production = {
+	icon = "gfx/interface/icons/modifiers/trade.dds"
+	monthly_character_income_mult = 0.08
+}
+
+mt_potters_guild = {
+	icon = "gfx/interface/icons/modifiers/trade.dds"
+	monthly_character_income_mult = 0.10
+	general_opinion = 10
+}
+
+mt_artisan_support = {
+	icon = "gfx/interface/icons/modifiers/piety.dds"
+	monthly_piety = 0.30
+	general_opinion = 15
+	monthly_prestige = 0.40
+}
+
+####################################
+# ADVANCED TECHNOLOGY
+####################################
+
+mt_gunpowder_production = {
+	icon = "gfx/interface/icons/modifiers/trade.dds"
+	monthly_character_income_mult = 0.20
+	martial = 2
+	monthly_prestige = 0.60
+}
+
+mt_gunpowder_production_center = {
+	icon = "gfx/interface/icons/modifiers/prestige.dds"
+	monthly_character_income_mult = 0.25
+	martial = 3
+	monthly_prestige = 0.80
+}
+
+mt_gunpowder_pioneer = {
+	icon = "gfx/interface/icons/modifiers/learning.dds"
+	learning = 3
+	monthly_prestige = 1.00
+	monthly_character_income_mult = 0.22
+}
+
+mt_secret_gunpowder = {
+	icon = "gfx/interface/icons/modifiers/intrigue.dds"
+	intrigue = 3
+	monthly_character_income_mult = 0.25
+	general_opinion = -15
+}
+
+mt_printing_press = {
+	icon = "gfx/interface/icons/modifiers/learning.dds"
+	learning = 3
+	monthly_prestige = 1.00
+	general_opinion = 20
+}
+
+mt_printing_culture = {
+	icon = "gfx/interface/icons/modifiers/learning.dds"
+	learning = 2
+	monthly_prestige = 0.60
+	general_opinion = 15
+}
+
+mt_innovative_method = {
+	icon = "gfx/interface/icons/modifiers/learning.dds"
+	learning = 2
+	monthly_character_income_mult = 0.12
+	monthly_prestige = 0.40
+}
+
+####################################
+# GUILDS & ASSOCIATIONS
+####################################
+
+mt_guild_member_protected = {
+	icon = "gfx/interface/icons/modifiers/diplomacy.dds"
+	general_opinion = 15
+	advantage = 5
+}
+
+mt_guild_associate_member = {
+	icon = "gfx/interface/icons/modifiers/diplomacy.dds"
+	general_opinion = 10
+	monthly_character_income_mult = 0.08
+}
+
+mt_guild_exclusive_obligations = {
+	icon = "gfx/interface/icons/modifiers/stress.dds"
+	monthly_character_expenses = 0.10
+	stress_gain_mult = 0.10
+}
+
+mt_guild_opposition = {
+	icon = "gfx/interface/icons/modifiers/stress.dds"
+	general_opinion = -20
+	monthly_character_income_mult = -0.15
+	stress_gain_mult = 0.20
+}
+
+####################################
+# NATURAL DISASTERS
+####################################
+
+mt_drought_grain_loss = {
+	icon = "gfx/interface/icons/modifiers/stress.dds"
+	monthly_character_income_mult = -0.30
+	stress_gain_mult = 0.25
+}
+
+mt_flood_damage = {
+	icon = "gfx/interface/icons/modifiers/stress.dds"
+	monthly_character_income_mult = -0.25
+	monthly_character_expenses = 0.15
+}
+
+mt_flood_defenses = {
+	icon = "gfx/interface/icons/modifiers/stewardship.dds"
+	monthly_character_expenses = 0.10
+	general_opinion = 15
+}
+
+mt_harsh_winter = {
+	icon = "gfx/interface/icons/modifiers/stress.dds"
+	monthly_character_income_mult = -0.15
+	monthly_character_expenses = 0.10
+}
+
+mt_winter_imports = {
+	icon = "gfx/interface/icons/modifiers/trade.dds"
+	monthly_character_income_mult = 0.15
+	diplomacy = 1
+}
+
+mt_frost_damage = {
+	icon = "gfx/interface/icons/modifiers/stress.dds"
+	monthly_character_income_mult = -0.20
+}
+
+mt_storm_damage = {
+	icon = "gfx/interface/icons/modifiers/stress.dds"
+	monthly_character_income_mult = -0.18
+	monthly_character_expenses = 0.12
+}
+
+mt_volcanic_winter = {
+	icon = "gfx/interface/icons/modifiers/stress.dds"
+	monthly_character_income_mult = -0.40
+	stress_gain_mult = 0.30
+	health = -0.5
+}
+
+mt_grain_rationing = {
+	icon = "gfx/interface/icons/modifiers/stress.dds"
+	general_opinion = -15
+	monthly_piety = 0.30
+}
+
+mt_reduced_livestock = {
+	icon = "gfx/interface/icons/modifiers/stress.dds"
+	monthly_character_income_mult = -0.15
+}
+
+mt_emergency_food_program = {
+	icon = "gfx/interface/icons/modifiers/piety.dds"
+	monthly_piety = 0.60
+	general_opinion = 25
+	monthly_character_expenses = 0.20
+}
+
+mt_savior_of_the_people = {
+	icon = "gfx/interface/icons/modifiers/prestige.dds"
+	monthly_prestige = 1.00
+	general_opinion = 40
+	monthly_piety = 0.50
+}
+
+####################################
+# INFRASTRUCTURE & DEVELOPMENT
+####################################
+
+mt_timber_production = {
+	icon = "gfx/interface/icons/modifiers/trade.dds"
+	monthly_character_income_mult = 0.10
+}
+
+mt_managed_forests = {
+	icon = "gfx/interface/icons/modifiers/stewardship.dds"
+	monthly_character_income_mult = 0.12
+	stewardship = 2
+	monthly_prestige = 0.30
+}
+
+mt_deforested = {
+	icon = "gfx/interface/icons/modifiers/stress.dds"
+	monthly_character_income_mult = -0.15
+	general_opinion = -10
+}
+
+mt_master_builder = {
+	icon = "gfx/interface/icons/modifiers/stewardship.dds"
+	stewardship = 3
+	monthly_prestige = 0.70
+	general_opinion = 20
+}
+
+mt_patron_of_arts = {
+	icon = "gfx/interface/icons/modifiers/prestige.dds"
+	monthly_prestige = 0.80
+	general_opinion = 25
+	learning = 2
+}
+
+mt_cathedral_patron = {
+	icon = "gfx/interface/icons/modifiers/piety.dds"
+	monthly_piety = 0.80
+	general_opinion = 30
+	monthly_prestige = 0.60
+}
+
+mt_rapid_reconstruction = {
+	icon = "gfx/interface/icons/modifiers/stewardship.dds"
+	stewardship = 2
+	monthly_prestige = 0.50
+	general_opinion = 20
+}
+
+mt_reconstruction_boom = {
+	icon = "gfx/interface/icons/modifiers/trade.dds"
+	monthly_character_income_mult = 0.20
+	stewardship = 2
+	monthly_prestige = 0.50
+}
+
+####################################
+# WAR & CONFLICT
+####################################
+
+mt_scorched_earth = {
+	icon = "gfx/interface/icons/modifiers/stress.dds"
+	monthly_character_income_mult = -0.40
+	general_opinion = -30
+	monthly_piety = -0.50
+}
+
+mt_scorched_earth_victim = {
+	icon = "gfx/interface/icons/modifiers/stress.dds"
+	monthly_character_income_mult = -0.35
+	stress_gain_mult = 0.40
+}
+
+mt_damaged_production = {
+	icon = "gfx/interface/icons/modifiers/stress.dds"
+	monthly_character_income_mult = -0.25
+	stress_gain_mult = 0.20
+}
+
+####################################
+# LABOR & WORKFORCE
+####################################
+
+mt_foreign_workers = {
+	icon = "gfx/interface/icons/modifiers/diplomacy.dds"
+	monthly_character_income_mult = 0.10
+	general_opinion = -10
+}
+
+mt_refugee_artisans = {
+	icon = "gfx/interface/icons/modifiers/piety.dds"
+	monthly_piety = 0.40
+	learning = 1
+	monthly_character_income_mult = 0.12
+}
+
+####################################
+# END OF FILE
+####################################
