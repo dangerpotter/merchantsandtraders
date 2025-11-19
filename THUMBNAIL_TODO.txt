@@ -1,0 +1,22 @@
+THUMBNAIL REQUIRED FOR STEAM WORKSHOP / PARADOX MODS
+=====================================================
+
+Before uploading this mod to Steam Workshop or Paradox Mods, you need to create a thumbnail.png file.
+
+Requirements:
+- Steam Workshop: 1:1 ratio, recommended 600x600 pixels, PNG format, 1MB max
+- Paradox Mods: Minimum 900x500 pixels, PNG or JPG format, 1MB max
+
+Suggestions:
+- Use the mod's theme: medieval trade, merchants, caravans, trade routes
+- Include the mod name: "Merchants and Traders"
+- Use colors that stand out: gold/bronze for wealth, medieval colors
+- Keep text readable at small sizes
+
+Tools you can use:
+- GIMP (free): https://www.gimp.org/
+- Photoshop
+- Canva (online, free tier available)
+- Any image editor
+
+Place the file as: thumbnail.png in the mod's root directory
