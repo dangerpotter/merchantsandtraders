@@ -1,0 +1,784 @@
+# Merchants and Traders - Regional Development Effects
+# Dynamic regional specialization system
+
+# County develops new good production based on terrain, culture, tech, etc.
+develop_new_good_production_effect = {
+	# Check terrain suitability for different goods
+
+	# TIMBER - Forest/Taiga terrain
+	if = {
+		limit = {
+			OR = {
+				terrain = forest
+				terrain = taiga
+			}
+			NOT = { has_variable = produces_timber }
+			random_percent < value:base_development_chance
+		}
+		set_variable = {
+			name = produces_timber
+			value = yes
+		}
+		add_county_modifier = {
+			modifier = mt_timber_production
+			years = -1
+		}
+		holder = {
+			trigger_event = mt_regional_development.0002 # Timber discovered
+		}
+	}
+
+	# FISH - Coastal counties
+	else_if = {
+		limit = {
+			is_coastal_county = yes
+			NOT = { has_variable = produces_fish }
+			random_percent < value:base_development_chance
+		}
+		set_variable = {
+			name = produces_fish
+			value = yes
+		}
+		add_county_modifier = {
+			modifier = mt_fish_production
+			years = -1
+		}
+		holder = {
+			trigger_event = mt_regional_development.0004
+		}
+	}
+
+	# IRON - Mountains/Hills with mining tech
+	else_if = {
+		limit = {
+			OR = {
+				terrain = mountains
+				terrain = hills
+			}
+			NOT = { has_variable = produces_iron }
+			culture = {
+				has_innovation = innovation_currency_03 # Represents mining advancement
+			}
+			random_percent < value:base_development_chance
+		}
+		set_variable = {
+			name = produces_iron
+			value = yes
+		}
+		add_county_modifier = {
+			modifier = mt_iron_production
+			years = -1
+		}
+		holder = {
+			trigger_event = mt_regional_development.0002 # Mining discovered
+		}
+	}
+
+	# WINE - Suitable climate (Mediterranean, Farmlands)
+	else_if = {
+		limit = {
+			OR = {
+				terrain = farmlands
+				terrain = hills
+			}
+			NOT = { has_variable = produces_wine }
+			development_level >= 10
+			random_percent < value:base_development_chance
+		}
+		set_variable = {
+			name = produces_wine
+			value = yes
+		}
+		add_county_modifier = {
+			modifier = mt_wine_production
+			years = -1
+		}
+		holder = {
+			trigger_event = mt_regional_development.0006
+		}
+	}
+
+	# FURS - Northern climates
+	else_if = {
+		limit = {
+			OR = {
+				terrain = taiga
+				terrain = tundra
+			}
+			NOT = { has_variable = produces_furs }
+			random_percent < value:base_development_chance
+		}
+		set_variable = {
+			name = produces_furs
+			value = yes
+		}
+		add_county_modifier = {
+			modifier = mt_fur_production
+			years = -1
+		}
+		holder = {
+			trigger_event = mt_regional_development.0007
+		}
+	}
+
+	# SALT - Coastal or special terrain
+	else_if = {
+		limit = {
+			OR = {
+				is_coastal_county = yes
+				terrain = desert
+				terrain = mountains
+			}
+			NOT = { has_variable = produces_salt }
+			random_percent < value:base_development_chance
+		}
+		set_variable = {
+			name = produces_salt
+			value = yes
+		}
+		add_county_modifier = {
+			modifier = mt_salt_production
+			years = -1
+		}
+		holder = {
+			trigger_event = mt_regional_development.0008
+		}
+	}
+
+	# POTTERY/CLAY - Rivers and farmlands
+	else_if = {
+		limit = {
+			terrain = farmlands
+			NOT = { has_variable = produces_pottery }
+			development_level >= 8
+			random_percent < value:base_development_chance
+		}
+		set_variable = {
+			name = produces_pottery
+			value = yes
+		}
+		add_county_modifier = {
+			modifier = mt_pottery_production
+			years = -1
+		}
+		holder = {
+			trigger_event = mt_regional_development.0005
+		}
+	}
+
+	# GRAIN - Agricultural regions
+	else_if = {
+		limit = {
+			OR = {
+				terrain = farmlands
+				terrain = plains
+				terrain = floodplains
+			}
+			NOT = { has_variable = produces_grain }
+			random_percent < value:base_development_chance
+		}
+		set_variable = {
+			name = produces_grain
+			value = yes
+		}
+		add_county_modifier = {
+			modifier = mt_grain_production
+			years = -1
+		}
+		holder = {
+			trigger_event = mt_regional_development.0003
+		}
+	}
+}
+
+# Technology unlocks new production possibilities
+technology_unlocks_production_effect = {
+	# SILK - Requires specific innovation and climate
+	if = {
+		limit = {
+			culture = {
+				has_innovation = innovation_royal_prerogative # High-tier innovation
+			}
+			OR = {
+				terrain = farmlands
+				terrain = hills
+			}
+			NOT = { has_variable = produces_silk }
+			holder = { has_realm_law = crown_authority_2 } # Represents organization
+		}
+		random = {
+			chance = 5
+			set_variable = {
+				name = produces_silk
+				value = yes
+			}
+			add_county_modifier = {
+				modifier = mt_silk_production
+				years = -1
+			}
+			holder = {
+				trigger_event = mt_regional_development.0001 # Silk cultivation discovered
+			}
+		}
+	}
+
+	# GUNPOWDER - Late game only
+	if = {
+		limit = {
+			culture = {
+				has_innovation = innovation_royal_prerogative
+				has_innovation = innovation_currency_03
+			}
+			NOT = { has_variable = produces_gunpowder }
+			current_year >= 1300
+		}
+		random = {
+			chance = 3
+			set_variable = {
+				name = produces_gunpowder
+				value = yes
+			}
+			add_county_modifier = {
+				modifier = mt_gunpowder_production
+				years = -1
+			}
+			holder = {
+				trigger_event = mt_regional_development.0015
+			}
+		}
+	}
+
+	# ADVANCED TEXTILES - Innovation dependent
+	if = {
+		limit = {
+			culture = {
+				has_innovation = innovation_guilds
+			}
+			NOT = { has_variable = produces_advanced_textiles }
+			development_level >= 15
+		}
+		random = {
+			chance = 8
+			set_variable = {
+				name = produces_advanced_textiles
+				value = yes
+			}
+			add_county_modifier = {
+				modifier = mt_advanced_textile_production
+				years = -1
+			}
+			holder = {
+				trigger_event = mt_regional_development.0011
+			}
+		}
+	}
+
+	# STEEL - Advanced metallurgy
+	if = {
+		limit = {
+			has_variable = produces_iron
+			culture = {
+				has_innovation = innovation_currency_03
+			}
+			NOT = { has_variable = produces_steel }
+		}
+		random = {
+			chance = 6
+			remove_variable = produces_iron
+			set_variable = {
+				name = produces_steel
+				value = yes
+			}
+			remove_county_modifier = mt_iron_production
+			add_county_modifier = {
+				modifier = mt_steel_production
+				years = -1
+			}
+			holder = {
+				trigger_event = mt_regional_development.0017
+			}
+		}
+	}
+
+	# GLASSMAKING - High development and innovation
+	if = {
+		limit = {
+			culture = {
+				has_innovation = innovation_guilds
+			}
+			development_level >= 20
+			NOT = { has_variable = produces_glass }
+		}
+		random = {
+			chance = 4
+			set_variable = {
+				name = produces_glass
+				value = yes
+			}
+			add_county_modifier = {
+				modifier = mt_glass_production
+				years = -1
+			}
+			holder = {
+				trigger_event = mt_regional_development.0018
+			}
+		}
+	}
+}
+
+# Climate affects production - both positive and negative
+climate_affects_production_effect = {
+	# DROUGHT - Devastates grain production
+	if = {
+		limit = {
+			has_variable = produces_grain
+			NOT = { has_variable = drought_damage }
+		}
+		random = {
+			chance = 1 # 1% chance per year
+			set_variable = {
+				name = drought_damage
+				value = yes
+				years = 3
+			}
+			add_county_modifier = {
+				modifier = mt_drought_grain_loss
+				years = 3
+			}
+			holder = {
+				trigger_event = mt_regional_development.0019 # Drought event
+			}
+		}
+	}
+
+	# PERFECT GROWING SEASON - Bumper crop
+	if = {
+		limit = {
+			OR = {
+				has_variable = produces_grain
+				has_variable = produces_wine
+			}
+			NOT = { has_variable = drought_damage }
+			NOT = { has_variable = bumper_crop }
+		}
+		random = {
+			chance = 2 # 2% chance
+			set_variable = {
+				name = bumper_crop
+				value = yes
+				years = 1
+			}
+			add_county_modifier = {
+				modifier = mt_bumper_crop
+				years = 1
+			}
+			holder = {
+				trigger_event = mt_regional_development.0020
+			}
+		}
+	}
+
+	# FROST KILLS EXOTIC PLANTS - Silk, spices
+	if = {
+		limit = {
+			OR = {
+				has_variable = produces_silk
+				has_variable = produces_spices
+			}
+			NOT = { has_variable = frost_damage }
+		}
+		random = {
+			chance = 1
+			set_variable = {
+				name = frost_damage
+				value = yes
+				years = 2
+			}
+			add_county_modifier = {
+				modifier = mt_frost_damage
+				years = 2
+			}
+			holder = {
+				trigger_event = mt_regional_development.0021
+			}
+		}
+	}
+
+	# FLOODING - Destroys infrastructure
+	if = {
+		limit = {
+			OR = {
+				terrain = floodplains
+				terrain = farmlands
+			}
+			NOT = { has_variable = flood_damage }
+		}
+		random = {
+			chance = 1
+			set_variable = {
+				name = flood_damage
+				value = yes
+				years = 2
+			}
+			add_county_modifier = {
+				modifier = mt_flood_damage
+				years = 2
+			}
+			holder = {
+				trigger_event = mt_regional_development.0022
+			}
+		}
+	}
+
+	# STORM DAMAGE - Coastal fishing
+	if = {
+		limit = {
+			has_variable = produces_fish
+			is_coastal_county = yes
+			NOT = { has_variable = storm_damage }
+		}
+		random = {
+			chance = 2
+			set_variable = {
+				name = storm_damage
+				value = yes
+				years = 1
+			}
+			add_county_modifier = {
+				modifier = mt_storm_damage
+				years = 1
+			}
+			holder = {
+				trigger_event = mt_regional_development.0024
+			}
+		}
+	}
+}
+
+# War destroys production capabilities
+war_destroys_production_effect = {
+	# Randomly damage or destroy a production facility
+	if = {
+		limit = {
+			OR = {
+				has_variable = produces_timber
+				has_variable = produces_fish
+				has_variable = produces_iron
+				has_variable = produces_wine
+				has_variable = produces_grain
+				has_variable = produces_silk
+				has_variable = produces_pottery
+				has_variable = produces_salt
+				has_variable = produces_furs
+			}
+		}
+
+		random_list = {
+			20 = { # Timber destroyed
+				trigger = { has_variable = produces_timber }
+				set_variable = {
+					name = production_damaged_timber
+					value = yes
+					years = 5
+				}
+				add_county_modifier = {
+					modifier = mt_damaged_production
+					years = 5
+				}
+				holder = {
+					trigger_event = mt_regional_development.0027
+				}
+			}
+			20 = { # Fish production damaged
+				trigger = { has_variable = produces_fish }
+				set_variable = {
+					name = production_damaged_fish
+					value = yes
+					years = 5
+				}
+				add_county_modifier = {
+					modifier = mt_damaged_production
+					years = 5
+				}
+				holder = {
+					trigger_event = mt_regional_development.0027
+				}
+			}
+			25 = { # Iron/mining destroyed
+				trigger = { has_variable = produces_iron }
+				set_variable = {
+					name = production_damaged_iron
+					value = yes
+					years = 7
+				}
+				add_county_modifier = {
+					modifier = mt_damaged_production
+					years = 7
+				}
+				holder = {
+					trigger_event = mt_regional_development.0027
+				}
+			}
+			20 = { # Wine production damaged
+				trigger = { has_variable = produces_wine }
+				set_variable = {
+					name = production_damaged_wine
+					value = yes
+					years = 4
+				}
+				add_county_modifier = {
+					modifier = mt_damaged_production
+					years = 4
+				}
+				holder = {
+					trigger_event = mt_regional_development.0027
+				}
+			}
+			15 = { # Grain production damaged
+				trigger = { has_variable = produces_grain }
+				set_variable = {
+					name = production_damaged_grain
+					value = yes
+					years = 3
+				}
+				add_county_modifier = {
+					modifier = mt_damaged_production
+					years = 3
+				}
+				holder = {
+					trigger_event = mt_regional_development.0027
+				}
+			}
+		}
+	}
+}
+
+# Scorched earth - total destruction
+war_scorched_earth_effect = {
+	# Remove ALL production from county
+	if = { limit = { has_variable = produces_timber } remove_variable = produces_timber remove_county_modifier = mt_timber_production }
+	if = { limit = { has_variable = produces_fish } remove_variable = produces_fish remove_county_modifier = mt_fish_production }
+	if = { limit = { has_variable = produces_iron } remove_variable = produces_iron remove_county_modifier = mt_iron_production }
+	if = { limit = { has_variable = produces_wine } remove_variable = produces_wine remove_county_modifier = mt_wine_production }
+	if = { limit = { has_variable = produces_grain } remove_variable = produces_grain remove_county_modifier = mt_grain_production }
+	if = { limit = { has_variable = produces_silk } remove_variable = produces_silk remove_county_modifier = mt_silk_production }
+	if = { limit = { has_variable = produces_pottery } remove_variable = produces_pottery remove_county_modifier = mt_pottery_production }
+	if = { limit = { has_variable = produces_salt } remove_variable = produces_salt remove_county_modifier = mt_salt_production }
+	if = { limit = { has_variable = produces_furs } remove_variable = produces_furs remove_county_modifier = mt_fur_production }
+
+	add_county_modifier = {
+		modifier = mt_scorched_earth
+		years = 10
+	}
+
+	holder = {
+		trigger_event = mt_regional_development.0029
+	}
+}
+
+# Immigration brings new production knowledge
+immigration_brings_goods_effect = {
+	# Refugees bring silk production
+	if = {
+		limit = {
+			NOT = { has_variable = produces_silk }
+			OR = {
+				terrain = farmlands
+				terrain = hills
+			}
+			development_level >= 12
+		}
+		random = {
+			chance = 3
+			set_variable = {
+				name = produces_silk
+				value = yes
+			}
+			add_county_modifier = {
+				modifier = mt_silk_production
+				years = -1
+			}
+			holder = {
+				trigger_event = mt_regional_development.0034 # Refugee artisans
+			}
+		}
+	}
+
+	# Merchants teach spice cultivation
+	if = {
+		limit = {
+			NOT = { has_variable = produces_spices }
+			OR = {
+				terrain = farmlands
+				terrain = jungle
+				terrain = oasis
+			}
+			development_level >= 10
+		}
+		random = {
+			chance = 2
+			set_variable = {
+				name = produces_spices
+				value = yes
+			}
+			add_county_modifier = {
+				modifier = mt_spice_production
+				years = -1
+			}
+			holder = {
+				trigger_event = mt_regional_development.0033 # Foreign merchant teaches
+			}
+		}
+	}
+
+	# Cultural exchange spreads production methods
+	if = {
+		limit = {
+			development_level >= 15
+		}
+		random = {
+			chance = 4
+			holder = {
+				trigger_event = mt_regional_development.0035 # Cultural exchange
+			}
+		}
+	}
+}
+
+# Trade diffusion - active trade spreads knowledge
+trade_diffusion_effect = {
+	# Requires high-volume trade routes and time
+	if = {
+		limit = {
+			has_variable = mt_major_trade_route
+			has_variable = mt_trade_route_age
+			variable:mt_trade_route_age >= 50 # 50+ years of trade
+			NOT = { has_variable = trade_knowledge_received }
+		}
+		random = {
+			chance = 1 # 1% per year after 50 years
+
+			# Gain a random new production type based on what traders bring
+			random_list = {
+				30 = { # Silk knowledge spreads (historical: Byzantium)
+					trigger = { NOT = { has_variable = produces_silk } }
+					set_variable = {
+						name = produces_silk
+						value = yes
+					}
+					add_county_modifier = {
+						modifier = mt_silk_production
+						years = -1
+					}
+				}
+				25 = { # Spice cultivation
+					trigger = { NOT = { has_variable = produces_spices } }
+					set_variable = {
+						name = produces_spices
+						value = yes
+					}
+					add_county_modifier = {
+						modifier = mt_spice_production
+						years = -1
+					}
+				}
+				20 = { # Advanced textiles
+					trigger = { NOT = { has_variable = produces_advanced_textiles } }
+					set_variable = {
+						name = produces_advanced_textiles
+						value = yes
+					}
+					add_county_modifier = {
+						modifier = mt_advanced_textile_production
+						years = -1
+					}
+				}
+				25 = { # Glassmaking
+					trigger = { NOT = { has_variable = produces_glass } }
+					set_variable = {
+						name = produces_glass
+						value = yes
+					}
+					add_county_modifier = {
+						modifier = mt_glass_production
+						years = -1
+					}
+				}
+			}
+
+			set_variable = {
+				name = trade_knowledge_received
+				value = yes
+			}
+
+			holder = {
+				trigger_event = mt_regional_development.0038 # Trade contact spreads innovation
+			}
+		}
+	}
+}
+
+# Post-war recovery
+war_recovery_effect = {
+	# Slowly recover damaged production (10% per year)
+	if = {
+		limit = {
+			OR = {
+				has_variable = production_damaged_timber
+				has_variable = production_damaged_fish
+				has_variable = production_damaged_iron
+				has_variable = production_damaged_wine
+				has_variable = production_damaged_grain
+			}
+		}
+		random = {
+			chance = 10 # 10% per year
+
+			# Remove damage variables and modifiers
+			if = { limit = { has_variable = production_damaged_timber } remove_variable = production_damaged_timber }
+			if = { limit = { has_variable = production_damaged_fish } remove_variable = production_damaged_fish }
+			if = { limit = { has_variable = production_damaged_iron } remove_variable = production_damaged_iron }
+			if = { limit = { has_variable = production_damaged_wine } remove_variable = production_damaged_wine }
+			if = { limit = { has_variable = production_damaged_grain } remove_variable = production_damaged_grain }
+
+			remove_county_modifier = mt_damaged_production
+
+			holder = {
+				trigger_event = mt_regional_development.0031 # Recovery complete
+			}
+		}
+	}
+}
+
+# Player invests in developing new production
+player_invest_production_effect = {
+	# Costs gold and development, but guarantees new production
+	holder = {
+		add_gold = -150
+	}
+
+	change_development_level = 1
+
+	# Force development of a suitable good
+	develop_new_good_production_effect = yes
+
+	# If that didn't work, try technology unlock
+	if = {
+		limit = {
+			NOT = {
+				OR = {
+					has_variable = produces_timber
+					has_variable = produces_fish
+					has_variable = produces_iron
+					has_variable = produces_wine
+					has_variable = produces_grain
+					has_variable = produces_silk
+					has_variable = produces_pottery
+					has_variable = produces_salt
+					has_variable = produces_furs
+				}
+			}
+		}
+		technology_unlocks_production_effect = yes
+	}
+}

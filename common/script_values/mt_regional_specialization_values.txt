@@ -1,0 +1,558 @@
+# Merchants and Traders - Regional Specialization Values
+# Calculates development chances for new production
+
+# Base chance for any county to develop new production (2% per year)
+base_development_chance = {
+	value = 2
+
+	# Technology multiplier (up to 3x with right innovations)
+	if = {
+		limit = {
+			culture = { has_innovation = innovation_guilds }
+		}
+		multiply = 1.5
+	}
+
+	if = {
+		limit = {
+			culture = { has_innovation = innovation_currency_03 }
+		}
+		multiply = 1.3
+	}
+
+	if = {
+		limit = {
+			culture = { has_innovation = innovation_royal_prerogative }
+		}
+		multiply = 1.2
+	}
+
+	# Climate/terrain suitability (0.5x to 2x)
+	# Forest terrain great for timber
+	if = {
+		limit = {
+			OR = {
+				terrain = forest
+				terrain = taiga
+			}
+			NOT = { has_variable = produces_timber }
+		}
+		multiply = 2.0
+	}
+
+	# Coastal perfect for fish
+	if = {
+		limit = {
+			is_coastal_county = yes
+			NOT = { has_variable = produces_fish }
+		}
+		multiply = 1.8
+	}
+
+	# Mountains for mining
+	if = {
+		limit = {
+			terrain = mountains
+			NOT = { has_variable = produces_iron }
+		}
+		multiply = 1.6
+	}
+
+	# Farmlands for agriculture
+	if = {
+		limit = {
+			OR = {
+				terrain = farmlands
+				terrain = floodplains
+			}
+			NOT = { has_variable = produces_grain }
+		}
+		multiply = 1.7
+	}
+
+	# Poor terrain reduces chances
+	if = {
+		limit = {
+			OR = {
+				terrain = desert
+				terrain = desert_mountains
+				terrain = steppe
+			}
+		}
+		multiply = 0.5
+	}
+
+	# Cultural affinity (+50% for certain culture/good combinations)
+	# Byzantine/Greek cultures better at silk
+	if = {
+		limit = {
+			culture = {
+				OR = {
+					has_cultural_pillar = heritage_byzantine
+					has_cultural_pillar = heritage_greek
+				}
+			}
+			NOT = { has_variable = produces_silk }
+		}
+		multiply = 1.5
+	}
+
+	# Norse cultures better at timber and furs
+	if = {
+		limit = {
+			culture = {
+				has_cultural_pillar = heritage_north_germanic
+			}
+			OR = {
+				AND = {
+					terrain = forest
+					NOT = { has_variable = produces_timber }
+				}
+				AND = {
+					terrain = taiga
+					NOT = { has_variable = produces_furs }
+				}
+			}
+		}
+		multiply = 1.5
+	}
+
+	# Arabic/Persian cultures better at spices
+	if = {
+		limit = {
+			culture = {
+				OR = {
+					has_cultural_pillar = heritage_arabic
+					has_cultural_pillar = heritage_iranian
+				}
+			}
+			NOT = { has_variable = produces_spices }
+		}
+		multiply = 1.5
+	}
+
+	# Trade contact bonus (+1% per major trade route)
+	if = {
+		limit = { has_variable = mt_major_trade_route }
+		add = 1
+	}
+
+	if = {
+		limit = { has_variable = mt_secondary_trade_route }
+		add = 0.5
+	}
+
+	# Capital bonus (+100% development chance)
+	if = {
+		limit = {
+			holder = {
+				capital_county = prev
+			}
+		}
+		multiply = 2.0
+	}
+
+	# Development level bonus
+	if = {
+		limit = { development_level >= 20 }
+		multiply = 1.4
+	}
+	else_if = {
+		limit = { development_level >= 15 }
+		multiply = 1.2
+	}
+	else_if = {
+		limit = { development_level >= 10 }
+		multiply = 1.1
+	}
+
+	# Penalty for low development
+	if = {
+		limit = { development_level < 5 }
+		multiply = 0.6
+	}
+
+	# Stewardship of holder matters
+	if = {
+		limit = {
+			holder = {
+				stewardship >= 20
+			}
+		}
+		multiply = 1.3
+	}
+	else_if = {
+		limit = {
+			holder = {
+				stewardship >= 15
+			}
+		}
+		multiply = 1.15
+	}
+
+	# Peace bonus - development happens more in peacetime
+	if = {
+		limit = {
+			holder = {
+				is_at_war = no
+			}
+		}
+		multiply = 1.2
+	}
+
+	# War penalty
+	if = {
+		limit = {
+			holder = {
+				is_at_war = yes
+			}
+		}
+		multiply = 0.5
+	}
+
+	# Already damaged production reduces new development
+	if = {
+		limit = {
+			OR = {
+				has_variable = production_damaged_timber
+				has_variable = production_damaged_fish
+				has_variable = production_damaged_iron
+				has_variable = production_damaged_wine
+				has_variable = production_damaged_grain
+			}
+		}
+		multiply = 0.3
+	}
+
+	# Prosperity bonus
+	if = {
+		limit = {
+			has_county_modifier = county_modifier_prosperity_01
+		}
+		multiply = 1.3
+	}
+
+	# Maximum and minimum caps
+	max = 15 # Never more than 15% per year
+	min = 0.1 # Never less than 0.1% (always a tiny chance)
+}
+
+# Technology multiplier for specific goods
+technology_multiplier = {
+	value = 1
+
+	# Silk requires high innovation
+	if = {
+		limit = {
+			NOT = { has_variable = produces_silk }
+			culture = {
+				has_innovation = innovation_royal_prerogative
+			}
+		}
+		multiply = 3.0
+	}
+
+	# Gunpowder very tech dependent
+	if = {
+		limit = {
+			NOT = { has_variable = produces_gunpowder }
+			current_year >= 1300
+			culture = {
+				has_innovation = innovation_currency_03
+			}
+		}
+		multiply = 2.5
+	}
+
+	# Steel needs metallurgy
+	if = {
+		limit = {
+			has_variable = produces_iron
+			NOT = { has_variable = produces_steel }
+			culture = {
+				has_innovation = innovation_currency_03
+			}
+		}
+		multiply = 2.0
+	}
+
+	# Advanced textiles need guilds
+	if = {
+		limit = {
+			NOT = { has_variable = produces_advanced_textiles }
+			culture = {
+				has_innovation = innovation_guilds
+			}
+		}
+		multiply = 1.8
+	}
+
+	# Glassmaking needs high development
+	if = {
+		limit = {
+			NOT = { has_variable = produces_glass }
+			development_level >= 20
+		}
+		multiply = 1.6
+	}
+}
+
+# Climate suitability modifier
+climate_suitability = {
+	value = 1.0
+
+	# Perfect conditions
+	if = {
+		limit = {
+			terrain = farmlands
+			OR = {
+				NOT = { has_variable = produces_grain }
+				NOT = { has_variable = produces_wine }
+			}
+		}
+		value = 2.0
+	}
+
+	# Good conditions
+	else_if = {
+		limit = {
+			OR = {
+				AND = {
+					terrain = forest
+					NOT = { has_variable = produces_timber }
+				}
+				AND = {
+					is_coastal_county = yes
+					NOT = { has_variable = produces_fish }
+				}
+				AND = {
+					terrain = mountains
+					NOT = { has_variable = produces_iron }
+				}
+			}
+		}
+		value = 1.5
+	}
+
+	# Poor conditions
+	else_if = {
+		limit = {
+			OR = {
+				terrain = desert
+				terrain = desert_mountains
+				terrain = tundra
+			}
+		}
+		value = 0.5
+	}
+}
+
+# Cultural affinity for specific goods
+cultural_affinity = {
+	value = 1.0
+
+	# Silk - Byzantine, Chinese, Persian
+	if = {
+		limit = {
+			NOT = { has_variable = produces_silk }
+			culture = {
+				OR = {
+					has_cultural_pillar = heritage_byzantine
+					has_cultural_pillar = heritage_chinese
+					has_cultural_pillar = heritage_iranian
+				}
+			}
+		}
+		add = 0.5
+	}
+
+	# Wine - Latin, French, Italian
+	if = {
+		limit = {
+			NOT = { has_variable = produces_wine }
+			culture = {
+				OR = {
+					has_cultural_pillar = heritage_latin
+					has_cultural_pillar = heritage_frankish
+				}
+			}
+		}
+		add = 0.5
+	}
+
+	# Furs - Nordic, Slavic
+	if = {
+		limit = {
+			NOT = { has_variable = produces_furs }
+			culture = {
+				OR = {
+					has_cultural_pillar = heritage_north_germanic
+					has_cultural_pillar = heritage_east_slavic
+				}
+			}
+		}
+		add = 0.5
+	}
+
+	# Spices - Arabic, Indian
+	if = {
+		limit = {
+			NOT = { has_variable = produces_spices }
+			culture = {
+				OR = {
+					has_cultural_pillar = heritage_arabic
+					has_cultural_pillar = heritage_dravidian
+					has_cultural_pillar = heritage_indo_aryan
+				}
+			}
+		}
+		add = 0.5
+	}
+}
+
+# Trade contact bonus
+trade_contact_bonus = {
+	value = 0
+
+	# Major trade route
+	if = {
+		limit = { has_variable = mt_major_trade_route }
+		add = 1
+	}
+
+	# Secondary trade route
+	if = {
+		limit = { has_variable = mt_secondary_trade_route }
+		add = 0.5
+	}
+
+	# Multiple routes
+	if = {
+		limit = {
+			has_variable = mt_major_trade_route
+			has_variable = mt_secondary_trade_route
+		}
+		add = 0.5 # Bonus for being a trade hub
+	}
+
+	# Long-standing trade relationships
+	if = {
+		limit = {
+			has_variable = mt_trade_route_age
+			variable:mt_trade_route_age >= 50
+		}
+		add = 1
+	}
+
+	# Trade post in county
+	if = {
+		limit = {
+			has_variable = mt_trade_post_present
+		}
+		add = 1.5
+	}
+}
+
+# Capital development bonus
+capital_bonus = {
+	value = 0
+
+	if = {
+		limit = {
+			holder = {
+				capital_county = prev
+			}
+		}
+		value = 100 # +100% chance
+	}
+
+	# Realm capital gets even more
+	if = {
+		limit = {
+			holder = {
+				capital_county = prev
+				is_independent_ruler = yes
+			}
+		}
+		add = 50 # Additional +50% for being realm capital
+	}
+}
+
+# War damage chance
+war_damage_chance = {
+	value = 30 # Base 30% on successful siege
+
+	# Longer sieges cause more damage
+	if = {
+		limit = {
+			has_variable = siege_duration
+			variable:siege_duration > 12 # More than a year
+		}
+		add = 20
+	}
+
+	# Attacker's martial skill
+	if = {
+		limit = {
+			scope:attacker = {
+				martial >= 15
+			}
+		}
+		add = 10
+	}
+
+	# Defensive buildings reduce damage
+	if = {
+		limit = {
+			has_building_or_higher = curtain_walls_03
+		}
+		add = -15
+	}
+
+	max = 80
+	min = 10
+}
+
+# Recovery chance per year
+recovery_chance = {
+	value = 10 # Base 10% per year
+
+	# Peace accelerates recovery
+	if = {
+		limit = {
+			holder = {
+				is_at_war = no
+			}
+		}
+		add = 5
+	}
+
+	# High stewardship helps
+	if = {
+		limit = {
+			holder = {
+				stewardship >= 15
+			}
+		}
+		add = 5
+	}
+
+	# High development helps
+	if = {
+		limit = {
+			development_level >= 15
+		}
+		add = 5
+	}
+
+	# Investment can speed recovery
+	if = {
+		limit = {
+			has_variable = invested_in_recovery
+		}
+		add = 15
+	}
+
+	max = 50
+	min = 5
+}

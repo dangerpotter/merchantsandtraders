@@ -1,0 +1,436 @@
+# Merchants and Traders - Regional Development On Actions
+# Triggers for dynamic regional specialization system
+
+# Yearly pulse - check for development opportunities
+on_yearly_pulse = {
+	on_actions = {
+		mt_regional_development_yearly_check
+	}
+}
+
+mt_regional_development_yearly_check = {
+	trigger = {
+		is_ruler = yes
+		is_landed = yes
+	}
+
+	effect = {
+		# Check each county for development opportunities
+		every_held_title = {
+			limit = {
+				tier = tier_county
+			}
+
+			# Base development check (2% chance for new production)
+			random_list = {
+				2 = {
+					# Try to develop new good
+					develop_new_good_production_effect = yes
+				}
+				98 = {
+					# No development this year
+				}
+			}
+
+			# Technology unlock checks
+			random_list = {
+				5 = {
+					modifier = {
+						add = 5
+						holder = {
+							culture = {
+								has_innovation = innovation_guilds
+							}
+						}
+					}
+					# Check for technology-driven development
+					technology_unlocks_production_effect = yes
+				}
+				95 = {
+					# No tech unlock this year
+				}
+			}
+
+			# Climate event chances (1% per year)
+			random_list = {
+				1 = {
+					# Climate event occurs
+					climate_affects_production_effect = yes
+				}
+				99 = {
+					# No climate event
+				}
+			}
+
+			# Trade diffusion check
+			if = {
+				limit = {
+					has_variable = mt_major_trade_route
+				}
+				random_list = {
+					1 = {
+						modifier = {
+							add = 1
+							has_variable = mt_trade_route_age
+							variable:mt_trade_route_age >= 50
+						}
+						# Trade spreads knowledge
+						trade_diffusion_effect = yes
+					}
+					99 = {
+						# No diffusion this year
+					}
+				}
+			}
+
+			# Immigration/diffusion events (rare)
+			random_list = {
+				2 = {
+					modifier = {
+						add = 3
+						development_level >= 15
+					}
+					modifier = {
+						add = 2
+						holder = {
+							culture = {
+								has_innovation = innovation_guilds
+							}
+						}
+					}
+					# Immigration brings new goods
+					immigration_brings_goods_effect = yes
+				}
+				98 = {
+					# No immigration this year
+				}
+			}
+
+			# Recovery from war damage (10% per year)
+			if = {
+				limit = {
+					NOT = { holder = { is_at_war = yes } }
+				}
+				war_recovery_effect = yes
+			}
+
+			# Increment trade route age
+			if = {
+				limit = {
+					has_variable = mt_trade_route_age
+				}
+				change_variable = {
+					name = mt_trade_route_age
+					add = 1
+				}
+			}
+		}
+
+		# Random chance for various development events
+		random_list = {
+			1 = {
+				# Foreign merchant arrives (event 0033)
+				modifier = {
+					add = 2
+					capital_county = {
+						has_variable = mt_major_trade_route
+					}
+				}
+				trigger_event = mt_regional_development.0033
+			}
+			1 = {
+				# Traveled merchant returns (event 0036)
+				modifier = {
+					add = 2
+					diplomacy >= 12
+				}
+				trigger_event = mt_regional_development.0036
+			}
+			1 = {
+				# Imported goods inspire production (event 0039)
+				modifier = {
+					add = 2
+					gold >= 100
+				}
+				trigger_event = mt_regional_development.0039
+			}
+			1 = {
+				# Merchant sponsored settlement (event 0040)
+				modifier = {
+					add = 3
+					capital_county = {
+						is_coastal_county = yes
+					}
+				}
+				modifier = {
+					add = 2
+					prestige_level >= 3
+				}
+				trigger_event = mt_regional_development.0040
+			}
+			96 = {
+				# No special event
+			}
+		}
+	}
+}
+
+# When siege is successful, chance to damage production
+on_siege_won_against = {
+	on_actions = {
+		mt_regional_development_siege_damage
+	}
+}
+
+mt_regional_development_siege_damage = {
+	trigger = {
+		scope:county = {
+			OR = {
+				has_variable = produces_timber
+				has_variable = produces_fish
+				has_variable = produces_iron
+				has_variable = produces_wine
+				has_variable = produces_grain
+				has_variable = produces_silk
+				has_variable = produces_pottery
+				has_variable = produces_salt
+				has_variable = produces_furs
+			}
+		}
+	}
+
+	effect = {
+		scope:county = {
+			# 30% base chance to damage production
+			random = {
+				chance = value:war_damage_chance
+
+				# Apply damage
+				war_destroys_production_effect = yes
+			}
+
+			# Small chance (5%) of total destruction if siege was brutal
+			random = {
+				chance = 5
+				modifier = {
+					add = 10
+					scope:attacker = {
+						has_trait = sadistic
+					}
+				}
+				modifier = {
+					add = 10
+					scope:attacker = {
+						has_trait = wrathful
+					}
+				}
+
+				# Scorched earth
+				war_scorched_earth_effect = yes
+			}
+		}
+	}
+}
+
+# After war ends, trigger recovery events
+on_war_ended = {
+	on_actions = {
+		mt_regional_development_post_war
+	}
+}
+
+mt_regional_development_post_war = {
+	trigger = {
+		is_ruler = yes
+		any_held_title = {
+			tier = tier_county
+			OR = {
+				has_variable = production_damaged_timber
+				has_variable = production_damaged_fish
+				has_variable = production_damaged_iron
+				has_variable = production_damaged_wine
+				has_variable = production_damaged_grain
+			}
+		}
+	}
+
+	effect = {
+		# Trigger recovery event with small delay
+		trigger_event = {
+			id = mt_regional_development.0031
+			days = { 30 90 }
+		}
+
+		# Chance for refugees to arrive with new skills
+		random = {
+			chance = 25
+			trigger_event = {
+				id = mt_regional_development.0032
+				days = { 60 180 }
+			}
+		}
+	}
+}
+
+# When occupying enemy county, chance to raid warehouses
+on_county_occupied = {
+	on_actions = {
+		mt_regional_development_occupation_raid
+	}
+}
+
+mt_regional_development_occupation_raid = {
+	trigger = {
+		scope:county = {
+			OR = {
+				has_variable = produces_timber
+				has_variable = produces_fish
+				has_variable = produces_iron
+				has_variable = produces_wine
+				has_variable = produces_grain
+				has_variable = produces_silk
+				has_variable = produces_pottery
+				has_variable = produces_salt
+				has_variable = produces_furs
+			}
+		}
+	}
+
+	effect = {
+		scope:attacker = {
+			# 40% chance to raid warehouses
+			random = {
+				chance = 40
+				modifier = {
+					add = 20
+					has_trait = greedy
+				}
+				modifier = {
+					add = 15
+					gold < 50
+				}
+
+				trigger_event = mt_regional_development.0028
+			}
+		}
+	}
+}
+
+# Cultural exchange through diplomatic events
+on_alliance_formed = {
+	on_actions = {
+		mt_regional_development_cultural_exchange
+	}
+}
+
+mt_regional_development_cultural_exchange = {
+	trigger = {
+		is_ruler = yes
+	}
+
+	effect = {
+		# Small chance for cultural exchange event
+		random = {
+			chance = 10
+			modifier = {
+				add = 10
+				learning >= 12
+			}
+
+			trigger_event = {
+				id = mt_regional_development.0035
+				days = { 90 365 }
+			}
+		}
+	}
+}
+
+# Diplomatic gifts can include production knowledge
+on_gift_received = {
+	on_actions = {
+		mt_regional_development_diplomatic_gift
+	}
+}
+
+mt_regional_development_diplomatic_gift = {
+	trigger = {
+		is_ruler = yes
+		scope:gift_value >= 50 # Significant gift
+	}
+
+	effect = {
+		# 15% chance gift includes production knowledge
+		random = {
+			chance = 15
+			modifier = {
+				add = 10
+				scope:giver = {
+					culture = {
+						NOT = { this = root.culture }
+					}
+				}
+			}
+
+			trigger_event = {
+				id = mt_regional_development.0037
+				days = { 7 30 }
+			}
+		}
+	}
+}
+
+# Technology innovations can unlock new production
+on_innovation_gained = {
+	on_actions = {
+		mt_regional_development_innovation_unlock
+	}
+}
+
+mt_regional_development_innovation_unlock = {
+	trigger = {
+		is_ruler = yes
+	}
+
+	effect = {
+		capital_county = {
+			# 20% chance new innovation unlocks production
+			random = {
+				chance = 20
+				modifier = {
+					add = 15
+					development_level >= 15
+				}
+
+				technology_unlocks_production_effect = yes
+			}
+		}
+	}
+}
+
+# Population growth can trigger new development
+on_county_development_level_increased = {
+	on_actions = {
+		mt_regional_development_growth
+	}
+}
+
+mt_regional_development_growth = {
+	trigger = {
+		is_ruler = yes
+	}
+
+	effect = {
+		scope:county = {
+			# 10% chance increased development brings new industry
+			random = {
+				chance = 10
+				modifier = {
+					add = 10
+					development_level >= 20
+				}
+
+				develop_new_good_production_effect = yes
+			}
+		}
+	}
+}
