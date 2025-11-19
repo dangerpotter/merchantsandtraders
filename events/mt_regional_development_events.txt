@@ -1,0 +1,2589 @@
+# Merchants and Traders - Regional Development Events
+# Dynamic regional specialization events
+
+namespace = mt_regional_development
+
+##################################################
+# NEW PRODUCTION DISCOVERED (0001-0010)
+##################################################
+
+# 0001 - Silk Cultivation Discovered
+mt_regional_development.0001 = {
+	type = character_event
+	title = mt_regional_development.0001.t
+	desc = mt_regional_development.0001.desc
+	theme = stewardship
+
+	left_portrait = {
+		character = root
+		animation = personality_rational
+	}
+
+	trigger = {
+		is_ruler = yes
+	}
+
+	immediate = {
+		# Already handled in effect
+	}
+
+	option = { # Excellent! Support this industry
+		name = mt_regional_development.0001.a
+
+		add_gold = -50
+		add_prestige = 100
+
+		capital_county = {
+			add_county_modifier = {
+				modifier = mt_silk_industry_support
+				years = 10
+			}
+		}
+
+		ai_chance = {
+			base = 75
+			modifier = {
+				add = 25
+				gold >= 100
+			}
+		}
+	}
+
+	option = { # Interesting development
+		name = mt_regional_development.0001.b
+
+		add_prestige = 50
+
+		ai_chance = {
+			base = 25
+		}
+	}
+}
+
+# 0002 - Mining/Iron Deposits Found
+mt_regional_development.0002 = {
+	type = character_event
+	title = mt_regional_development.0002.t
+	desc = mt_regional_development.0002.desc
+	theme = stewardship
+
+	left_portrait = {
+		character = root
+		animation = personality_bold
+	}
+
+	trigger = {
+		is_ruler = yes
+	}
+
+	option = { # Invest in mining operations
+		name = mt_regional_development.0002.a
+
+		add_gold = -75
+		capital_county = {
+			add_county_modifier = {
+				modifier = mt_mining_investment
+				years = 15
+			}
+			change_development_level = 1
+		}
+
+		ai_chance = {
+			base = 60
+			modifier = {
+				add = 30
+				gold >= 150
+			}
+		}
+	}
+
+	option = { # Let private enterprise handle it
+		name = mt_regional_development.0002.b
+
+		add_gold = 25
+		add_prestige = 25
+
+		ai_chance = {
+			base = 40
+		}
+	}
+}
+
+# 0003 - Agricultural Innovation Creates New Crop
+mt_regional_development.0003 = {
+	type = character_event
+	title = mt_regional_development.0003.t
+	desc = mt_regional_development.0003.desc
+	theme = stewardship
+
+	left_portrait = {
+		character = root
+		animation = happiness
+	}
+
+	trigger = {
+		is_ruler = yes
+	}
+
+	option = { # Reward the innovative farmer
+		name = mt_regional_development.0003.a
+
+		add_gold = -30
+		add_piety = 50
+
+		random_list = {
+			50 = {
+				add_character_modifier = {
+					modifier = mt_agricultural_patron
+					years = 10
+				}
+			}
+			50 = {
+				capital_county = {
+					add_county_modifier = {
+						modifier = mt_improved_farming
+						years = 15
+					}
+				}
+			}
+		}
+
+		ai_chance = {
+			base = 70
+		}
+	}
+
+	option = { # Simply acknowledge their work
+		name = mt_regional_development.0003.b
+
+		add_prestige = 25
+
+		ai_chance = {
+			base = 30
+		}
+	}
+}
+
+# 0004 - Coastal Fishing Techniques Improve
+mt_regional_development.0004 = {
+	type = character_event
+	title = mt_regional_development.0004.t
+	desc = mt_regional_development.0004.desc
+	theme = stewardship
+
+	left_portrait = {
+		character = root
+		animation = personality_rational
+	}
+
+	trigger = {
+		is_ruler = yes
+		capital_county = {
+			is_coastal_county = yes
+		}
+	}
+
+	option = { # Commission better boats
+		name = mt_regional_development.0004.a
+
+		add_gold = -60
+		capital_county = {
+			add_county_modifier = {
+				modifier = mt_fishing_fleet
+				years = 20
+			}
+		}
+
+		ai_chance = {
+			base = 65
+			modifier = {
+				add = 25
+				gold >= 150
+			}
+		}
+	}
+
+	option = { # Let fishermen organize themselves
+		name = mt_regional_development.0004.b
+
+		add_prestige = 30
+		add_gold = 20
+
+		ai_chance = {
+			base = 35
+		}
+	}
+}
+
+# 0005 - Pottery/Clay Industry Develops
+mt_regional_development.0005 = {
+	type = character_event
+	title = mt_regional_development.0005.t
+	desc = mt_regional_development.0005.desc
+	theme = stewardship
+
+	left_portrait = {
+		character = root
+		animation = personality_rational
+	}
+
+	trigger = {
+		is_ruler = yes
+	}
+
+	option = { # Establish potters' guild
+		name = mt_regional_development.0005.a
+
+		add_gold = -40
+		capital_county = {
+			add_county_modifier = {
+				modifier = mt_potters_guild
+				years = 25
+			}
+		}
+		add_prestige = 75
+
+		ai_chance = {
+			base = 60
+		}
+	}
+
+	option = { # Tax the pottery trade
+		name = mt_regional_development.0005.b
+
+		add_gold = 50
+		add_tyranny = 10
+
+		ai_chance = {
+			base = 40
+			modifier = {
+				add = 30
+				gold < 50
+			}
+		}
+	}
+}
+
+# 0006 - Wine Making Tradition Begins
+mt_regional_development.0006 = {
+	type = character_event
+	title = mt_regional_development.0006.t
+	desc = mt_regional_development.0006.desc
+	theme = stewardship
+
+	left_portrait = {
+		character = root
+		animation = feast
+	}
+
+	trigger = {
+		is_ruler = yes
+	}
+
+	option = { # Plant royal vineyards
+		name = mt_regional_development.0006.a
+
+		add_gold = -80
+		capital_county = {
+			add_county_modifier = {
+				modifier = mt_royal_vineyards
+				years = -1 # Permanent
+			}
+			change_development_level = 1
+		}
+		add_prestige = 100
+
+		ai_chance = {
+			base = 70
+			modifier = {
+				add = 20
+				gold >= 200
+			}
+		}
+	}
+
+	option = { # Sample the first vintage
+		name = mt_regional_development.0006.b
+
+		add_prestige = 50
+		add_stress = -25
+
+		random_list = {
+			80 = {
+				# Good wine!
+				add_character_modifier = {
+					modifier = mt_wine_connoisseur
+					years = 5
+				}
+			}
+			20 = {
+				# Too much wine...
+				add_stress = 50
+			}
+		}
+
+		ai_chance = {
+			base = 30
+		}
+	}
+}
+
+# 0007 - Fur Trapping Becomes Viable
+mt_regional_development.0007 = {
+	type = character_event
+	title = mt_regional_development.0007.t
+	desc = mt_regional_development.0007.desc
+	theme = stewardship
+
+	left_portrait = {
+		character = root
+		animation = personality_bold
+	}
+
+	trigger = {
+		is_ruler = yes
+	}
+
+	option = { # Organize trapper expeditions
+		name = mt_regional_development.0007.a
+
+		add_gold = -50
+		capital_county = {
+			add_county_modifier = {
+				modifier = mt_fur_trappers
+				years = 20
+			}
+		}
+
+		# Chance to get exotic furs
+		random_list = {
+			30 = {
+				add_character_modifier = {
+					modifier = mt_exotic_furs
+					years = 10
+				}
+				add_prestige = 50
+			}
+			70 = {
+				add_prestige = 25
+			}
+		}
+
+		ai_chance = {
+			base = 65
+		}
+	}
+
+	option = { # Establish fur monopoly
+		name = mt_regional_development.0007.b
+
+		add_gold = 75
+		add_tyranny = 15
+		add_prestige = -25
+
+		ai_chance = {
+			base = 35
+			modifier = {
+				add = 30
+				gold < 50
+			}
+		}
+	}
+}
+
+# 0008 - Salt Mining Discovered
+mt_regional_development.0008 = {
+	type = character_event
+	title = mt_regional_development.0008.t
+	desc = mt_regional_development.0008.desc
+	theme = stewardship
+
+	left_portrait = {
+		character = root
+		animation = personality_rational
+	}
+
+	trigger = {
+		is_ruler = yes
+	}
+
+	option = { # "White gold" - invest heavily
+		name = mt_regional_development.0008.a
+
+		add_gold = -100
+		capital_county = {
+			add_county_modifier = {
+				modifier = mt_salt_mines
+				years = -1 # Permanent - salt mines last forever
+			}
+			change_development_level = 2
+		}
+		add_prestige = 100
+
+		ai_chance = {
+			base = 75
+			modifier = {
+				add = 20
+				gold >= 200
+			}
+		}
+	}
+
+	option = { # Moderate investment
+		name = mt_regional_development.0008.b
+
+		add_gold = -50
+		capital_county = {
+			add_county_modifier = {
+				modifier = mt_salt_production_basic
+				years = 25
+			}
+		}
+
+		ai_chance = {
+			base = 25
+		}
+	}
+}
+
+# 0009 - Timber Industry Expands
+mt_regional_development.0009 = {
+	type = character_event
+	title = mt_regional_development.0009.t
+	desc = mt_regional_development.0009.desc
+	theme = stewardship
+
+	left_portrait = {
+		character = root
+		animation = personality_rational
+	}
+
+	trigger = {
+		is_ruler = yes
+		capital_county = {
+			OR = {
+				terrain = forest
+				terrain = taiga
+			}
+		}
+	}
+
+	option = { # Sustainable forestry
+		name = mt_regional_development.0009.a
+
+		add_gold = -60
+		capital_county = {
+			add_county_modifier = {
+				modifier = mt_managed_forests
+				years = -1
+			}
+		}
+		add_prestige = 75
+		add_piety = 50
+
+		ai_chance = {
+			base = 60
+			modifier = {
+				add = 30
+				trait = patient
+			}
+		}
+	}
+
+	option = { # Clear-cutting for maximum profit
+		name = mt_regional_development.0009.b
+
+		add_gold = 150
+		capital_county = {
+			add_county_modifier = {
+				modifier = mt_deforested
+				years = 30
+			}
+			change_development_level = -1
+		}
+		add_prestige = -50
+
+		ai_chance = {
+			base = 40
+			modifier = {
+				add = 40
+				gold < 50
+			}
+			modifier = {
+				add = -50
+				trait = patient
+			}
+		}
+	}
+}
+
+# 0010 - Spice Gardens Cultivated
+mt_regional_development.0010 = {
+	type = character_event
+	title = mt_regional_development.0010.t
+	desc = mt_regional_development.0010.desc
+	theme = stewardship
+
+	left_portrait = {
+		character = root
+		animation = personality_rational
+	}
+
+	trigger = {
+		is_ruler = yes
+	}
+
+	option = { # Expand spice cultivation
+		name = mt_regional_development.0010.a
+
+		add_gold = -120
+		capital_county = {
+			add_county_modifier = {
+				modifier = mt_spice_gardens
+				years = -1
+			}
+			change_development_level = 1
+		}
+		add_prestige = 150
+
+		# Spices attract foreign merchants
+		random_list = {
+			40 = {
+				trigger_event = {
+					id = mt_regional_development.0033
+					days = 90
+				}
+			}
+			60 = {
+				add_gold = 50
+			}
+		}
+
+		ai_chance = {
+			base = 70
+		}
+	}
+
+	option = { # Keep it small and exclusive
+		name = mt_regional_development.0010.b
+
+		add_gold = -50
+		add_character_modifier = {
+			modifier = mt_exotic_spice_provider
+			years = 15
+		}
+		add_prestige = 75
+
+		ai_chance = {
+			base = 30
+		}
+	}
+}
+
+##################################################
+# TECHNOLOGY-DRIVEN DEVELOPMENT (0011-0018)
+##################################################
+
+# 0011 - Innovation Unlocks Advanced Textile Production
+mt_regional_development.0011 = {
+	type = character_event
+	title = mt_regional_development.0011.t
+	desc = mt_regional_development.0011.desc
+	theme = stewardship
+
+	left_portrait = {
+		character = root
+		animation = personality_rational
+	}
+
+	trigger = {
+		is_ruler = yes
+		culture = {
+			has_innovation = innovation_guilds
+		}
+	}
+
+	option = { # Establish weavers' guild
+		name = mt_regional_development.0011.a
+
+		add_gold = -100
+		capital_county = {
+			add_county_modifier = {
+				modifier = mt_weavers_guild
+				years = -1
+			}
+			change_development_level = 2
+		}
+		add_prestige = 150
+
+		ai_chance = {
+			base = 75
+			modifier = {
+				add = 20
+				gold >= 200
+			}
+		}
+	}
+
+	option = { # Let artisans self-organize
+		name = mt_regional_development.0011.b
+
+		add_prestige = 75
+		capital_county = {
+			add_county_modifier = {
+				modifier = mt_textile_production
+				years = 20
+			}
+		}
+
+		ai_chance = {
+			base = 25
+		}
+	}
+}
+
+# 0012 - New Mining Techniques Access Deep Metals
+mt_regional_development.0012 = {
+	type = character_event
+	title = mt_regional_development.0012.t
+	desc = mt_regional_development.0012.desc
+	theme = stewardship
+
+	left_portrait = {
+		character = root
+		animation = personality_bold
+	}
+
+	trigger = {
+		is_ruler = yes
+		capital_county = {
+			OR = {
+				terrain = mountains
+				terrain = hills
+			}
+		}
+	}
+
+	option = { # Fund deep mining operations
+		name = mt_regional_development.0012.a
+
+		add_gold = -150
+		capital_county = {
+			add_county_modifier = {
+				modifier = mt_deep_mining
+				years = 25
+			}
+			change_development_level = 1
+		}
+
+		# Small chance of catastrophic collapse
+		random_list = {
+			90 = {
+				add_prestige = 100
+			}
+			10 = {
+				trigger_event = {
+					id = mt_regional_development.0030 # Mining disaster
+					days = 180
+				}
+			}
+		}
+
+		ai_chance = {
+			base = 60
+		}
+	}
+
+	option = { # Too risky
+		name = mt_regional_development.0012.b
+
+		add_prestige = -25
+
+		ai_chance = {
+			base = 40
+			modifier = {
+				add = 30
+				trait = craven
+			}
+		}
+	}
+}
+
+# 0013 - Improved Agriculture Yields More Grain
+mt_regional_development.0013 = {
+	type = character_event
+	title = mt_regional_development.0013.t
+	desc = mt_regional_development.0013.desc
+	theme = stewardship
+
+	left_portrait = {
+		character = root
+		animation = happiness
+	}
+
+	trigger = {
+		is_ruler = yes
+		capital_county = {
+			has_variable = produces_grain
+		}
+	}
+
+	option = { # Spread the new methods
+		name = mt_regional_development.0013.a
+
+		add_gold = -75
+		capital_county = {
+			add_county_modifier = {
+				modifier = mt_advanced_agriculture
+				years = -1
+			}
+		}
+		add_piety = 100 # Feeding the people is godly
+
+		# May trigger population growth
+		random_list = {
+			50 = {
+				capital_county = {
+					change_development_level = 1
+				}
+			}
+			50 = {
+				add_gold = 50
+			}
+		}
+
+		ai_chance = {
+			base = 80
+		}
+	}
+
+	option = { # Reward the innovator only
+		name = mt_regional_development.0013.b
+
+		add_prestige = 50
+
+		ai_chance = {
+			base = 20
+		}
+	}
+}
+
+# 0014 - Advanced Sailing Enables New Fishing Routes
+mt_regional_development.0014 = {
+	type = character_event
+	title = mt_regional_development.0014.t
+	desc = mt_regional_development.0014.desc
+	theme = stewardship
+
+	left_portrait = {
+		character = root
+		animation = personality_bold
+	}
+
+	trigger = {
+		is_ruler = yes
+		capital_county = {
+			is_coastal_county = yes
+		}
+	}
+
+	option = { # Build deep-sea fishing fleet
+		name = mt_regional_development.0014.a
+
+		add_gold = -120
+		capital_county = {
+			add_county_modifier = {
+				modifier = mt_deep_sea_fishing
+				years = 30
+			}
+		}
+		add_prestige = 100
+
+		# Opens new trade opportunities
+		random_list = {
+			40 = {
+				add_gold = 100
+				add_prestige = 50
+			}
+			60 = {
+				add_prestige = 50
+			}
+		}
+
+		ai_chance = {
+			base = 70
+		}
+	}
+
+	option = { # Stick to coastal fishing
+		name = mt_regional_development.0014.b
+
+		add_prestige = 25
+
+		ai_chance = {
+			base = 30
+		}
+	}
+}
+
+# 0015 - Gunpowder Production Begins (Late Game)
+mt_regional_development.0015 = {
+	type = character_event
+	title = mt_regional_development.0015.t
+	desc = mt_regional_development.0015.desc
+	theme = stewardship
+
+	left_portrait = {
+		character = root
+		animation = shock
+	}
+
+	trigger = {
+		is_ruler = yes
+		current_year >= 1300
+	}
+
+	option = { # This changes everything - invest heavily
+		name = mt_regional_development.0015.a
+
+		add_gold = -200
+		capital_county = {
+			add_county_modifier = {
+				modifier = mt_gunpowder_production_center
+				years = -1
+			}
+			change_development_level = 3
+		}
+		add_prestige = 300
+
+		# Massive military advantage
+		add_character_modifier = {
+			modifier = mt_gunpowder_pioneer
+			years = 20
+		}
+
+		ai_chance = {
+			base = 90
+			modifier = {
+				add = 10
+				gold >= 300
+			}
+		}
+	}
+
+	option = { # Keep it secret
+		name = mt_regional_development.0015.b
+
+		add_gold = -100
+		add_character_modifier = {
+			modifier = mt_secret_gunpowder
+			years = 10
+		}
+		add_intrigue = 1
+
+		ai_chance = {
+			base = 10
+			modifier = {
+				add = 20
+				trait = paranoid
+			}
+		}
+	}
+}
+
+# 0016 - Printing Press Creates Book Trade (Late Game)
+mt_regional_development.0016 = {
+	type = character_event
+	title = mt_regional_development.0016.t
+	desc = mt_regional_development.0016.desc
+	theme = learning
+
+	left_portrait = {
+		character = root
+		animation = personality_rational
+	}
+
+	trigger = {
+		is_ruler = yes
+		current_year >= 1350
+		learning >= 12
+	}
+
+	option = { # Revolutionary! Fund printing houses
+		name = mt_regional_development.0016.a
+
+		add_gold = -150
+		capital_county = {
+			add_county_modifier = {
+				modifier = mt_printing_press
+				years = -1
+			}
+			change_development_level = 2
+		}
+		add_prestige = 200
+		add_piety = 100 # More access to religious texts
+
+		# Spreads innovations faster
+		culture = {
+			add_culture_modifier = {
+				modifier = mt_printing_culture
+				years = 50
+			}
+		}
+
+		ai_chance = {
+			base = 80
+			modifier = {
+				add = 20
+				trait = scholar
+			}
+		}
+	}
+
+	option = { # Dangerous technology
+		name = mt_regional_development.0016.b
+
+		add_piety = -50
+		add_prestige = -100
+
+		ai_chance = {
+			base = 20
+			modifier = {
+				add = 30
+				trait = zealous
+			}
+		}
+	}
+}
+
+# 0017 - Advanced Metallurgy Enables Steel Production
+mt_regional_development.0017 = {
+	type = character_event
+	title = mt_regional_development.0017.t
+	desc = mt_regional_development.0017.desc
+	theme = stewardship
+
+	left_portrait = {
+		character = root
+		animation = personality_bold
+	}
+
+	trigger = {
+		is_ruler = yes
+		capital_county = {
+			has_variable = produces_iron
+		}
+	}
+
+	option = { # Build steel forges
+		name = mt_regional_development.0017.a
+
+		add_gold = -125
+		capital_county = {
+			add_county_modifier = {
+				modifier = mt_steel_forges
+				years = -1
+			}
+		}
+		add_prestige = 150
+
+		# Military benefits
+		add_character_modifier = {
+			modifier = mt_superior_arms
+			years = 25
+		}
+
+		ai_chance = {
+			base = 85
+		}
+	}
+
+	option = { # Gradual transition
+		name = mt_regional_development.0017.b
+
+		add_gold = -50
+		capital_county = {
+			add_county_modifier = {
+				modifier = mt_steel_production_basic
+				years = 20
+			}
+		}
+
+		ai_chance = {
+			base = 15
+		}
+	}
+}
+
+# 0018 - Glassmaking Techniques Perfected
+mt_regional_development.0018 = {
+	type = character_event
+	title = mt_regional_development.0018.t
+	desc = mt_regional_development.0018.desc
+	theme = stewardship
+
+	left_portrait = {
+		character = root
+		animation = personality_rational
+	}
+
+	trigger = {
+		is_ruler = yes
+		capital_county = {
+			development_level >= 20
+		}
+	}
+
+	option = { # Establish master glassmakers' workshop
+		name = mt_regional_development.0018.a
+
+		add_gold = -100
+		capital_county = {
+			add_county_modifier = {
+				modifier = mt_glass_production_center
+				years = -1
+			}
+		}
+		add_prestige = 175
+
+		# Beautiful glass attracts admiration
+		random_list = {
+			50 = {
+				add_character_modifier = {
+					modifier = mt_patron_of_arts
+					years = 15
+				}
+			}
+			50 = {
+				add_gold = 75
+			}
+		}
+
+		ai_chance = {
+			base = 75
+		}
+	}
+
+	option = { # Commission glass for personal use
+		name = mt_regional_development.0018.b
+
+		add_gold = -50
+		add_prestige = 100
+		add_stress = -30
+
+		ai_chance = {
+			base = 25
+			modifier = {
+				add = 20
+				trait = greedy
+			}
+		}
+	}
+}
+
+##################################################
+# CLIMATE EVENTS (0019-0026)
+##################################################
+
+# 0019 - Drought Devastates Grain Production
+mt_regional_development.0019 = {
+	type = character_event
+	title = mt_regional_development.0019.t
+	desc = mt_regional_development.0019.desc
+	theme = stewardship
+
+	left_portrait = {
+		character = root
+		animation = worry
+	}
+
+	trigger = {
+		is_ruler = yes
+		capital_county = {
+			has_variable = produces_grain
+		}
+	}
+
+	immediate = {
+		# Modifier already applied by effect
+	}
+
+	option = { # Import grain from elsewhere
+		name = mt_regional_development.0019.a
+
+		add_gold = -100
+		add_prestige = 50
+
+		# Maintains stability
+		add_character_modifier = {
+			modifier = mt_grain_importer
+			years = 3
+		}
+
+		ai_chance = {
+			base = 60
+			modifier = {
+				add = 30
+				gold >= 200
+			}
+		}
+	}
+
+	option = { # Ration grain strictly
+		name = mt_regional_development.0019.b
+
+		add_tyranny = 20
+		capital_county = {
+			add_county_modifier = {
+				modifier = mt_grain_rationing
+				years = 3
+			}
+		}
+
+		# Unrest but cheaper
+		random_list = {
+			40 = {
+				capital_county = {
+					change_development_level = -1
+				}
+			}
+			60 = {
+				add_prestige = -50
+			}
+		}
+
+		ai_chance = {
+			base = 40
+			modifier = {
+				add = 40
+				gold < 100
+			}
+		}
+	}
+
+	option = { # Pray for rain
+		name = mt_regional_development.0019.c
+
+		add_piety = 100
+		add_gold = -50
+
+		# Small chance it actually helps
+		random_list = {
+			20 = {
+				# Miracle! Early rains
+				remove_county_modifier = mt_drought_grain_loss
+				add_piety = 200
+			}
+			80 = {
+				# No divine intervention
+				add_stress = 25
+			}
+		}
+
+		ai_chance = {
+			base = 20
+			modifier = {
+				add = 40
+				trait = zealous
+			}
+		}
+	}
+}
+
+# 0020 - Perfect Growing Season - Bumper Crop
+mt_regional_development.0020 = {
+	type = character_event
+	title = mt_regional_development.0020.t
+	desc = mt_regional_development.0020.desc
+	theme = stewardship
+
+	left_portrait = {
+		character = root
+		animation = happiness
+	}
+
+	trigger = {
+		is_ruler = yes
+	}
+
+	option = { # Export the surplus for profit
+		name = mt_regional_development.0020.a
+
+		add_gold = 150
+		add_prestige = 75
+
+		# Foreign merchants take note
+		random_list = {
+			50 = {
+				trigger_event = {
+					id = mt_regional_development.0033
+					days = 60
+				}
+			}
+			50 = {
+				add_character_modifier = {
+					modifier = mt_reliable_grain_supplier
+					years = 5
+				}
+			}
+		}
+
+		ai_chance = {
+			base = 70
+			modifier = {
+				add = 20
+				trait = greedy
+			}
+		}
+	}
+
+	option = { # Store it for hard times
+		name = mt_regional_development.0020.b
+
+		capital_county = {
+			add_county_modifier = {
+				modifier = mt_grain_reserves
+				years = 5
+			}
+		}
+		add_piety = 50
+
+		ai_chance = {
+			base = 30
+			modifier = {
+				add = 30
+				trait = patient
+			}
+		}
+	}
+}
+
+# 0021 - Frost Kills Exotic Plants
+mt_regional_development.0021 = {
+	type = character_event
+	title = mt_regional_development.0021.t
+	desc = mt_regional_development.0021.desc
+	theme = stewardship
+
+	left_portrait = {
+		character = root
+		animation = sadness
+	}
+
+	trigger = {
+		is_ruler = yes
+		capital_county = {
+			OR = {
+				has_variable = produces_silk
+				has_variable = produces_spices
+			}
+		}
+	}
+
+	option = { # Try to rebuild cultivation
+		name = mt_regional_development.0021.a
+
+		add_gold = -80
+		add_prestige = 25
+
+		# Might recover faster
+		random_list = {
+			50 = {
+				capital_county = {
+					remove_county_modifier = mt_frost_damage
+					add_county_modifier = {
+						modifier = mt_frost_damage
+						years = 1 # Reduced from 2
+					}
+				}
+			}
+			50 = {
+				add_gold = -40
+			}
+		}
+
+		ai_chance = {
+			base = 60
+		}
+	}
+
+	option = { # Accept the loss
+		name = mt_regional_development.0021.b
+
+		add_prestige = -50
+		add_stress = 25
+
+		ai_chance = {
+			base = 40
+			modifier = {
+				add = 30
+				gold < 100
+			}
+		}
+	}
+}
+
+# 0022 - Flooding Destroys Infrastructure
+mt_regional_development.0022 = {
+	type = character_event
+	title = mt_regional_development.0022.t
+	desc = mt_regional_development.0022.desc
+	theme = stewardship
+
+	left_portrait = {
+		character = root
+		animation = worry
+	}
+
+	trigger = {
+		is_ruler = yes
+		capital_county = {
+			OR = {
+				terrain = floodplains
+				terrain = farmlands
+			}
+		}
+	}
+
+	option = { # Build flood defenses
+		name = mt_regional_development.0022.a
+
+		add_gold = -120
+		capital_county = {
+			add_county_modifier = {
+				modifier = mt_flood_defenses
+				years = -1 # Permanent
+			}
+			# Remove current flood damage early
+			remove_county_modifier = mt_flood_damage
+		}
+		add_prestige = 100
+
+		ai_chance = {
+			base = 70
+			modifier = {
+				add = 20
+				gold >= 200
+			}
+		}
+	}
+
+	option = { # Emergency repairs only
+		name = mt_regional_development.0022.b
+
+		add_gold = -50
+		add_prestige = 25
+
+		ai_chance = {
+			base = 30
+		}
+	}
+}
+
+# 0023 - Heat Wave Affects Livestock
+mt_regional_development.0023 = {
+	type = character_event
+	title = mt_regional_development.0023.t
+	desc = mt_regional_development.0023.desc
+	theme = stewardship
+
+	left_portrait = {
+		character = root
+		animation = worry
+	}
+
+	trigger = {
+		is_ruler = yes
+	}
+
+	option = { # Provide water and shade
+		name = mt_regional_development.0023.a
+
+		add_gold = -60
+		capital_county = {
+			add_county_modifier = {
+				modifier = mt_livestock_care
+				years = 5
+			}
+		}
+		add_piety = 50 # Caring for animals
+
+		ai_chance = {
+			base = 65
+		}
+	}
+
+	option = { # Slaughter weak animals
+		name = mt_regional_development.0023.b
+
+		add_gold = 40
+		add_prestige = -25
+
+		capital_county = {
+			add_county_modifier = {
+				modifier = mt_reduced_livestock
+				years = 3
+			}
+		}
+
+		ai_chance = {
+			base = 35
+			modifier = {
+				add = 30
+				gold < 50
+			}
+		}
+	}
+}
+
+# 0024 - Storm Damage to Coastal Fishing
+mt_regional_development.0024 = {
+	type = character_event
+	title = mt_regional_development.0024.t
+	desc = mt_regional_development.0024.desc
+	theme = stewardship
+
+	left_portrait = {
+		character = root
+		animation = worry
+	}
+
+	trigger = {
+		is_ruler = yes
+		capital_county = {
+			is_coastal_county = yes
+			has_variable = produces_fish
+		}
+	}
+
+	option = { # Rebuild the fishing fleet
+		name = mt_regional_development.0024.a
+
+		add_gold = -80
+		capital_county = {
+			# Remove storm damage immediately
+			remove_county_modifier = mt_storm_damage
+			add_county_modifier = {
+				modifier = mt_reinforced_boats
+				years = 10
+			}
+		}
+		add_prestige = 75
+
+		ai_chance = {
+			base = 75
+		}
+	}
+
+	option = { # Let fishermen rebuild themselves
+		name = mt_regional_development.0024.b
+
+		add_gold = -30
+		add_prestige = 25
+
+		ai_chance = {
+			base = 25
+		}
+	}
+}
+
+# 0025 - Volcanic Eruption "Year Without Summer" (Very Rare)
+mt_regional_development.0025 = {
+	type = character_event
+	title = mt_regional_development.0025.t
+	desc = mt_regional_development.0025.desc
+	theme = stewardship
+
+	left_portrait = {
+		character = root
+		animation = shock
+	}
+
+	trigger = {
+		is_ruler = yes
+	}
+
+	option = { # Emergency food distribution
+		name = mt_regional_development.0025.a
+
+		add_gold = -200
+		capital_county = {
+			add_county_modifier = {
+				modifier = mt_emergency_food_program
+				years = 2
+			}
+		}
+		add_prestige = 150
+		add_piety = 100
+
+		# Saves lives but expensive
+		random_list = {
+			60 = {
+				# Success - minimal population loss
+				add_character_modifier = {
+					modifier = mt_savior_of_the_people
+					years = 15
+				}
+			}
+			40 = {
+				# Partial success
+				capital_county = {
+					change_development_level = -1
+				}
+			}
+		}
+
+		ai_chance = {
+			base = 60
+			modifier = {
+				add = 30
+				gold >= 300
+			}
+		}
+	}
+
+	option = { # Ration and pray
+		name = mt_regional_development.0025.b
+
+		add_piety = 150
+		add_gold = -75
+
+		capital_county = {
+			add_county_modifier = {
+				modifier = mt_volcanic_winter
+				years = 2
+			}
+			change_development_level = -2
+		}
+
+		ai_chance = {
+			base = 40
+		}
+	}
+}
+
+# 0026 - Long Winter Reduces Agriculture
+mt_regional_development.0026 = {
+	type = character_event
+	title = mt_regional_development.0026.t
+	desc = mt_regional_development.0026.desc
+	theme = stewardship
+
+	left_portrait = {
+		character = root
+		animation = worry
+	}
+
+	trigger = {
+		is_ruler = yes
+		capital_county = {
+			OR = {
+				has_variable = produces_grain
+				has_variable = produces_wine
+			}
+		}
+	}
+
+	option = { # Import food and fuel
+		name = mt_regional_development.0026.a
+
+		add_gold = -90
+		add_prestige = 50
+
+		capital_county = {
+			add_county_modifier = {
+				modifier = mt_winter_imports
+				years = 2
+			}
+		}
+
+		ai_chance = {
+			base = 70
+		}
+	}
+
+	option = { # Endure the hardship
+		name = mt_regional_development.0026.b
+
+		add_piety = 75
+		capital_county = {
+			add_county_modifier = {
+				modifier = mt_harsh_winter
+				years = 2
+			}
+		}
+
+		# Small chance of unrest
+		random_list = {
+			30 = {
+				capital_county = {
+					change_development_level = -1
+				}
+			}
+			70 = {
+				add_prestige = 25
+			}
+		}
+
+		ai_chance = {
+			base = 30
+		}
+	}
+}
+
+##################################################
+# WAR IMPACTS (0027-0032)
+##################################################
+
+# 0027 - Siege Destroys Production Facilities
+mt_regional_development.0027 = {
+	type = character_event
+	title = mt_regional_development.0027.t
+	desc = mt_regional_development.0027.desc
+	theme = war
+
+	left_portrait = {
+		character = root
+		animation = sadness
+	}
+
+	trigger = {
+		is_ruler = yes
+	}
+
+	immediate = {
+		# Damage already applied by effect
+	}
+
+	option = { # Begin immediate repairs
+		name = mt_regional_development.0027.a
+
+		add_gold = -100
+		capital_county = {
+			add_county_modifier = {
+				modifier = mt_rapid_reconstruction
+				years = 3
+			}
+		}
+
+		# Speed up recovery
+		random_list = {
+			50 = {
+				# Faster recovery
+				capital_county = {
+					change_development_level = 1
+				}
+			}
+			50 = {
+				add_prestige = 50
+			}
+		}
+
+		ai_chance = {
+			base = 70
+			modifier = {
+				add = 20
+				gold >= 200
+			}
+		}
+	}
+
+	option = { # Accept the damage
+		name = mt_regional_development.0027.b
+
+		add_prestige = -50
+		add_stress = 25
+
+		ai_chance = {
+			base = 30
+		}
+	}
+
+	option = { # Seek compensation from the enemy
+		name = mt_regional_development.0027.c
+		trigger = {
+			any_war_enemy = {
+				gold >= 100
+			}
+		}
+
+		# Demand reparations
+		add_prestige = 25
+
+		random_list = {
+			40 = {
+				# They pay
+				add_gold = 100
+				add_prestige = 50
+			}
+			60 = {
+				# They refuse
+				add_prestige = -25
+				add_stress = 15
+			}
+		}
+
+		ai_chance = {
+			base = 20
+			modifier = {
+				add = 30
+				trait = vengeful
+			}
+		}
+	}
+}
+
+# 0028 - Occupying Army Raids Warehouses
+mt_regional_development.0028 = {
+	type = character_event
+	title = mt_regional_development.0028.t
+	desc = mt_regional_development.0028.desc
+	theme = war
+
+	left_portrait = {
+		character = root
+		animation = rage
+	}
+
+	trigger = {
+		is_ruler = yes
+		is_at_war = yes
+	}
+
+	option = { # Hide valuable goods
+		name = mt_regional_development.0028.a
+
+		add_intrigue = 1
+		add_gold = -50
+
+		random_list = {
+			60 = {
+				# Successfully hidden
+				add_gold = 75
+				add_prestige = 50
+			}
+			40 = {
+				# Found and confiscated anyway
+				add_gold = -50
+				add_stress = 25
+			}
+		}
+
+		ai_chance = {
+			base = 60
+			modifier = {
+				add = 20
+				intrigue >= 12
+			}
+		}
+	}
+
+	option = { # Let them take it
+		name = mt_regional_development.0028.b
+
+		add_gold = -100
+		capital_county = {
+			add_county_modifier = {
+				modifier = mt_raided_warehouses
+				years = 2
+			}
+		}
+
+		ai_chance = {
+			base = 40
+		}
+	}
+}
+
+# 0029 - Scorched Earth Policy - Everything Burned
+mt_regional_development.0029 = {
+	type = character_event
+	title = mt_regional_development.0029.t
+	desc = mt_regional_development.0029.desc
+	theme = war
+
+	left_portrait = {
+		character = root
+		animation = grief
+	}
+
+	trigger = {
+		is_ruler = yes
+	}
+
+	immediate = {
+		# All production destroyed by effect
+	}
+
+	option = { # This is catastrophic
+		name = mt_regional_development.0029.a
+
+		add_prestige = -100
+		add_stress = 50
+
+		# Long-term consequences
+		capital_county = {
+			change_development_level = -3
+		}
+
+		# Refugee flight
+		add_character_modifier = {
+			modifier = mt_scorched_earth_victim
+			years = 10
+		}
+
+		ai_chance = {
+			base = 70
+		}
+	}
+
+	option = { # Swear vengeance
+		name = mt_regional_development.0029.b
+
+		add_stress = -25
+		add_prestige = 50
+
+		add_character_modifier = {
+			modifier = mt_vengeful_rebuilder
+			years = 15
+		}
+
+		# Increased military focus
+		random_list = {
+			50 = {
+				add_martial = 1
+			}
+			50 = {
+				add_prowess = 2
+			}
+		}
+
+		ai_chance = {
+			base = 30
+			modifier = {
+				add = 40
+				trait = vengeful
+			}
+		}
+	}
+}
+
+# 0030 - Population Fled - No Workers
+mt_regional_development.0030 = {
+	type = character_event
+	title = mt_regional_development.0030.t
+	desc = mt_regional_development.0030.desc
+	theme = war
+
+	left_portrait = {
+		character = root
+		animation = worry
+	}
+
+	trigger = {
+		is_ruler = yes
+	}
+
+	option = { # Offer incentives to return
+		name = mt_regional_development.0030.a
+
+		add_gold = -120
+		capital_county = {
+			add_county_modifier = {
+				modifier = mt_resettlement_program
+				years = 5
+			}
+		}
+
+		# May succeed
+		random_list = {
+			60 = {
+				capital_county = {
+					change_development_level = 1
+				}
+				add_prestige = 75
+			}
+			40 = {
+				# Partial success
+				add_prestige = 25
+			}
+		}
+
+		ai_chance = {
+			base = 75
+		}
+	}
+
+	option = { # Import foreign workers
+		name = mt_regional_development.0030.b
+
+		add_gold = -80
+		capital_county = {
+			add_county_modifier = {
+				modifier = mt_foreign_workers
+				years = 10
+			}
+		}
+
+		# Cultural tensions but gets work done
+		add_character_modifier = {
+			modifier = mt_multicultural_workforce
+			years = 10
+		}
+
+		ai_chance = {
+			base = 25
+			modifier = {
+				add = 30
+				trait = tolerant
+			}
+		}
+	}
+}
+
+# 0031 - Post-War Recovery - Rebuilding Phase
+mt_regional_development.0031 = {
+	type = character_event
+	title = mt_regional_development.0031.t
+	desc = mt_regional_development.0031.desc
+	theme = stewardship
+
+	left_portrait = {
+		character = root
+		animation = personality_rational
+	}
+
+	trigger = {
+		is_ruler = yes
+		NOT = { is_at_war = yes }
+	}
+
+	option = { # Massive reconstruction effort
+		name = mt_regional_development.0031.a
+
+		add_gold = -150
+		capital_county = {
+			add_county_modifier = {
+				modifier = mt_reconstruction_boom
+				years = 10
+			}
+			change_development_level = 2
+		}
+		add_prestige = 150
+
+		# Economic boom from rebuilding
+		random_list = {
+			40 = {
+				add_gold = 100
+				trigger_event = {
+					id = mt_regional_development.0001 # New industry emerges
+					days = 180
+				}
+			}
+			60 = {
+				add_character_modifier = {
+					modifier = mt_master_builder
+					years = 15
+				}
+			}
+		}
+
+		ai_chance = {
+			base = 80
+			modifier = {
+				add = 15
+				gold >= 250
+			}
+		}
+	}
+
+	option = { # Gradual recovery
+		name = mt_regional_development.0031.b
+
+		add_gold = -75
+		capital_county = {
+			add_county_modifier = {
+				modifier = mt_slow_recovery
+				years = 15
+			}
+		}
+
+		ai_chance = {
+			base = 20
+		}
+	}
+}
+
+# 0032 - War Refugees Bring New Skills
+mt_regional_development.0032 = {
+	type = character_event
+	title = mt_regional_development.0032.t
+	desc = mt_regional_development.0032.desc
+	theme = stewardship
+
+	left_portrait = {
+		character = root
+		animation = personality_rational
+	}
+
+	trigger = {
+		is_ruler = yes
+	}
+
+	option = { # Welcome the refugees
+		name = mt_regional_development.0032.a
+
+		add_gold = -60
+		add_piety = 75
+
+		capital_county = {
+			add_county_modifier = {
+				modifier = mt_refugee_artisans
+				years = 20
+			}
+		}
+
+		# They bring knowledge
+		random_list = {
+			30 = {
+				# Silk production
+				trigger = { NOT = { capital_county = { has_variable = produces_silk } } }
+				capital_county = {
+					immigration_brings_goods_effect = yes
+				}
+			}
+			30 = {
+				# Advanced textiles
+				trigger = { NOT = { capital_county = { has_variable = produces_advanced_textiles } } }
+				capital_county = {
+					set_variable = {
+						name = produces_advanced_textiles
+						value = yes
+					}
+					add_county_modifier = {
+						modifier = mt_advanced_textile_production
+						years = -1
+					}
+				}
+			}
+			40 = {
+				# General skills boost
+				capital_county = {
+					change_development_level = 1
+				}
+			}
+		}
+
+		ai_chance = {
+			base = 75
+			modifier = {
+				add = 20
+				trait = compassionate
+			}
+		}
+	}
+
+	option = { # Turn them away
+		name = mt_regional_development.0032.b
+
+		add_piety = -50
+		add_prestige = -50
+
+		# Missed opportunity
+		add_character_modifier = {
+			modifier = mt_closed_borders
+			years = 10
+		}
+
+		ai_chance = {
+			base = 25
+			modifier = {
+				add = 30
+				trait = callous
+			}
+		}
+	}
+}
+
+##################################################
+# DIFFUSION & IMMIGRATION (0033-0040)
+##################################################
+
+# 0033 - Foreign Merchant Teaches Spice Cultivation
+mt_regional_development.0033 = {
+	type = character_event
+	title = mt_regional_development.0033.t
+	desc = mt_regional_development.0033.desc
+	theme = stewardship
+
+	left_portrait = {
+		character = root
+		animation = personality_rational
+	}
+
+	trigger = {
+		is_ruler = yes
+	}
+
+	option = { # Hire them as royal advisor
+		name = mt_regional_development.0033.a
+
+		add_gold = -100
+		capital_county = {
+			immigration_brings_goods_effect = yes
+		}
+		add_prestige = 100
+
+		# Long-term cultural exchange
+		add_character_modifier = {
+			modifier = mt_foreign_advisor
+			years = 20
+		}
+
+		ai_chance = {
+			base = 70
+			modifier = {
+				add = 20
+				trait = curious
+			}
+		}
+	}
+
+	option = { # Learn their secrets
+		name = mt_regional_development.0033.b
+
+		add_intrigue = 1
+		capital_county = {
+			immigration_brings_goods_effect = yes
+		}
+
+		# But they might not appreciate this
+		random_list = {
+			40 = {
+				add_prestige = -50
+				add_tyranny = 10
+			}
+			60 = {
+				add_gold = 50
+			}
+		}
+
+		ai_chance = {
+			base = 30
+			modifier = {
+				add = 30
+				trait = deceitful
+			}
+		}
+	}
+}
+
+# 0034 - Refugee Artisans Bring Silk Knowledge
+mt_regional_development.0034 = {
+	type = character_event
+	title = mt_regional_development.0034.t
+	desc = mt_regional_development.0034.desc
+	theme = stewardship
+
+	left_portrait = {
+		character = root
+		animation = happiness
+	}
+
+	trigger = {
+		is_ruler = yes
+	}
+
+	option = { # Grant them land and protection
+		name = mt_regional_development.0034.a
+
+		add_gold = -80
+		add_piety = 100
+		capital_county = {
+			# Already set by effect
+			add_county_modifier = {
+				modifier = mt_silk_artisan_quarter
+				years = -1
+			}
+		}
+
+		# Historical accuracy: how silk came to Byzantium
+		add_character_modifier = {
+			modifier = mt_silk_patron
+			years = 25
+		}
+
+		ai_chance = {
+			base = 80
+		}
+	}
+
+	option = { # Simply allow them to settle
+		name = mt_regional_development.0034.b
+
+		add_piety = 50
+		add_prestige = 50
+
+		ai_chance = {
+			base = 20
+		}
+	}
+}
+
+# 0035 - Cultural Exchange Spreads Production Methods
+mt_regional_development.0035 = {
+	type = character_event
+	title = mt_regional_development.0035.t
+	desc = mt_regional_development.0035.desc
+	theme = diplomacy
+
+	left_portrait = {
+		character = root
+		animation = personality_rational
+	}
+
+	trigger = {
+		is_ruler = yes
+	}
+
+	option = { # Encourage cultural exchange
+		name = mt_regional_development.0035.a
+
+		add_gold = -60
+		add_prestige = 100
+
+		capital_county = {
+			change_development_level = 1
+			add_county_modifier = {
+				modifier = mt_cosmopolitan_city
+				years = 25
+			}
+		}
+
+		# Innovation spreads faster
+		culture = {
+			add_culture_modifier = {
+				modifier = mt_cultural_exchange
+				years = 20
+			}
+		}
+
+		ai_chance = {
+			base = 75
+			modifier = {
+				add = 20
+				learning >= 12
+			}
+		}
+	}
+
+	option = { # Preserve traditional methods
+		name = mt_regional_development.0035.b
+
+		add_piety = 50
+		add_tyranny = -10 # Traditionalist approval
+
+		ai_chance = {
+			base = 25
+			modifier = {
+				add = 30
+				trait = zealous
+			}
+		}
+	}
+}
+
+# 0036 - Traveled Merchant Returns with Seeds/Techniques
+mt_regional_development.0036 = {
+	type = character_event
+	title = mt_regional_development.0036.t
+	desc = mt_regional_development.0036.desc
+	theme = stewardship
+
+	left_portrait = {
+		character = root
+		animation = personality_bold
+	}
+
+	trigger = {
+		is_ruler = yes
+	}
+
+	option = { # Fund experimental farming
+		name = mt_regional_development.0036.a
+
+		add_gold = -70
+		capital_county = {
+			add_county_modifier = {
+				modifier = mt_experimental_agriculture
+				years = 10
+			}
+		}
+
+		# May develop new crop
+		random_list = {
+			50 = {
+				capital_county = {
+					develop_new_good_production_effect = yes
+				}
+			}
+			50 = {
+				add_prestige = 50
+			}
+		}
+
+		ai_chance = {
+			base = 70
+		}
+	}
+
+	option = { # Too risky
+		name = mt_regional_development.0036.b
+
+		add_prestige = -25
+
+		ai_chance = {
+			base = 30
+			modifier = {
+				add = 30
+				trait = craven
+			}
+		}
+	}
+}
+
+# 0037 - Diplomatic Gift Includes Production Knowledge
+mt_regional_development.0037 = {
+	type = character_event
+	title = mt_regional_development.0037.t
+	desc = mt_regional_development.0037.desc
+	theme = diplomacy
+
+	left_portrait = {
+		character = root
+		animation = happiness
+	}
+
+	trigger = {
+		is_ruler = yes
+	}
+
+	option = { # Graciously accept and implement
+		name = mt_regional_development.0037.a
+
+		add_prestige = 75
+		capital_county = {
+			develop_new_good_production_effect = yes
+		}
+
+		# Improves diplomatic relations
+		add_character_modifier = {
+			modifier = mt_diplomatic_recipient
+			years = 10
+		}
+
+		ai_chance = {
+			base = 85
+		}
+	}
+
+	option = { # Accept but keep it exclusive
+		name = mt_regional_development.0037.b
+
+		add_prestige = 50
+		add_character_modifier = {
+			modifier = mt_exclusive_knowledge
+			years = 15
+		}
+
+		ai_chance = {
+			base = 15
+			modifier = {
+				add = 20
+				trait = greedy
+			}
+		}
+	}
+}
+
+# 0038 - Trade Contact Spreads Innovation (Historical: Silk Road)
+mt_regional_development.0038 = {
+	type = character_event
+	title = mt_regional_development.0038.t
+	desc = mt_regional_development.0038.desc
+	theme = stewardship
+
+	left_portrait = {
+		character = root
+		animation = personality_rational
+	}
+
+	trigger = {
+		is_ruler = yes
+		capital_county = {
+			has_variable = mt_major_trade_route
+		}
+	}
+
+	immediate = {
+		# Already handled by trade_diffusion_effect
+	}
+
+	option = { # Invest in expanding trade knowledge
+		name = mt_regional_development.0038.a
+
+		add_gold = -100
+		capital_county = {
+			add_county_modifier = {
+				modifier = mt_trade_knowledge_hub
+				years = -1
+			}
+			change_development_level = 2
+		}
+		add_prestige = 150
+
+		# Become center of innovation
+		add_character_modifier = {
+			modifier = mt_innovation_center
+			years = 25
+		}
+
+		ai_chance = {
+			base = 75
+		}
+	}
+
+	option = { # Benefit quietly
+		name = mt_regional_development.0038.b
+
+		add_prestige = 75
+		add_gold = 50
+
+		ai_chance = {
+			base = 25
+		}
+	}
+}
+
+# 0039 - Imported Goods Inspire Local Production
+mt_regional_development.0039 = {
+	type = character_event
+	title = mt_regional_development.0039.t
+	desc = mt_regional_development.0039.desc
+	theme = stewardship
+
+	left_portrait = {
+		character = root
+		animation = personality_rational
+	}
+
+	trigger = {
+		is_ruler = yes
+	}
+
+	option = { # Support local artisans to replicate
+		name = mt_regional_development.0039.a
+
+		add_gold = -85
+		capital_county = {
+			add_county_modifier = {
+				modifier = mt_artisan_support
+				years = 15
+			}
+		}
+
+		# Import substitution
+		random_list = {
+			60 = {
+				capital_county = {
+					develop_new_good_production_effect = yes
+				}
+				add_prestige = 100
+			}
+			40 = {
+				add_prestige = 50
+			}
+		}
+
+		ai_chance = {
+			base = 70
+		}
+	}
+
+	option = { # Continue importing
+		name = mt_regional_development.0039.b
+
+		add_gold = -40
+		add_prestige = 25
+
+		ai_chance = {
+			base = 30
+		}
+	}
+}
+
+# 0040 - Merchant Sponsored Settlement Brings New Good
+mt_regional_development.0040 = {
+	type = character_event
+	title = mt_regional_development.0040.t
+	desc = mt_regional_development.0040.desc
+	theme = stewardship
+
+	left_portrait = {
+		character = root
+		animation = happiness
+	}
+
+	trigger = {
+		is_ruler = yes
+	}
+
+	option = { # Grant charter and privileges
+		name = mt_regional_development.0040.a
+
+		add_gold = -50
+		capital_county = {
+			develop_new_good_production_effect = yes
+			add_county_modifier = {
+				modifier = mt_merchant_settlement
+				years = -1
+			}
+			change_development_level = 1
+		}
+		add_prestige = 125
+
+		# Historical: Venetian/Genoese trading posts, Hanseatic League
+		add_character_modifier = {
+			modifier = mt_merchant_friendly
+			years = 20
+		}
+
+		ai_chance = {
+			base = 80
+		}
+	}
+
+	option = { # Impose strict regulations
+		name = mt_regional_development.0040.b
+
+		add_gold = 75
+		capital_county = {
+			develop_new_good_production_effect = yes
+		}
+		add_tyranny = 15
+
+		# They settle anyway but relations strained
+		add_character_modifier = {
+			modifier = mt_merchant_restrictions
+			years = 15
+		}
+
+		ai_chance = {
+			base = 20
+			modifier = {
+				add = 30
+				trait = greedy
+			}
+		}
+	}
+}
