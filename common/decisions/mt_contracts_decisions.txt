@@ -1,0 +1,702 @@
+##############################################
+# MERCHANTS AND TRADERS - Contract Decisions
+# Author: Merchants and Traders Mod Team
+# Description: Trade contract and agreement decisions
+##############################################
+
+##############################################
+# NEGOTIATE SUPPLY CONTRACT
+# Create exclusive supply agreement with a buyer
+##############################################
+negotiate_supply_contract_decision = {
+	title = negotiate_supply_contract_decision_title
+	desc = negotiate_supply_contract_decision_desc
+	selection_tooltip = negotiate_supply_contract_decision_tooltip
+
+	picture = "gfx/interface/illustrations/decisions/decision_personal_religious.dds"
+
+	major = yes
+
+	is_shown = {
+		# Must be a merchant
+		is_any_merchant_trigger = yes
+
+		# Must not already have active supply contract
+		NOT = { has_variable = mt_supply_contract_active }
+
+		# Must have goods to supply
+		OR = {
+			has_variable = mt_trade_goods_owned
+			has_character_modifier = mt_trade_post_established
+		}
+	}
+
+	is_valid_showing_failures_only = {
+		is_imprisoned = no
+		is_incapable = no
+
+		# Must have decent reputation
+		custom_tooltip = {
+			text = mt_negotiate_contract_reputation_tt
+			OR = {
+				NOT = { has_variable = merchant_reputation }
+				var:merchant_reputation >= 25
+			}
+		}
+
+		# Must not be notorious contract breaker
+		custom_tooltip = {
+			text = mt_negotiate_contract_not_breaker_tt
+			NOT = { has_character_modifier = mt_notorious_contract_breaker }
+		}
+
+		# Must have at least one potential buyer
+		custom_tooltip = {
+			text = mt_negotiate_contract_has_buyers_tt
+			any_vassal_or_below = {
+				is_ruler = yes
+			}
+		}
+
+		# Can't have outstanding contract debts
+		custom_tooltip = {
+			text = mt_negotiate_contract_no_debt_tt
+			NOT = { has_character_modifier = mt_contract_debt_outstanding }
+		}
+	}
+
+	cost = {
+		gold = 50
+	}
+
+	effect = {
+		# Trigger event chain to select partner and negotiate terms
+		trigger_event = {
+			id = mt_contract_events.0001
+			days = 3
+		}
+
+		# Add negotiating modifier
+		add_character_modifier = {
+			modifier = mt_contract_negotiations_ongoing
+			months = 3
+		}
+	}
+
+	ai_potential = {
+		is_any_merchant_trigger = yes
+		gold >= 100
+	}
+
+	ai_will_do = {
+		base = 50
+
+		# More likely if wealthy
+		modifier = {
+			add = 30
+			gold >= 300
+		}
+
+		# More likely if good reputation
+		modifier = {
+			add = 20
+			has_variable = merchant_reputation
+			var:merchant_reputation >= 50
+		}
+
+		# Less likely if risky personality
+		modifier = {
+			add = -30
+			has_trait = reckless
+		}
+
+		# More likely if cautious
+		modifier = {
+			add = 20
+			has_trait = cautious
+		}
+	}
+}
+
+##############################################
+# OFFER EXCLUSIVE PURCHASE
+# Monopolize a supplier's production
+##############################################
+offer_exclusive_purchase_decision = {
+	title = offer_exclusive_purchase_decision_title
+	desc = offer_exclusive_purchase_decision_desc
+	selection_tooltip = offer_exclusive_purchase_decision_tooltip
+
+	picture = "gfx/interface/illustrations/decisions/decision_personal_religious.dds"
+
+	major = yes
+
+	is_shown = {
+		# Must be a merchant or wealthy ruler
+		OR = {
+			is_any_merchant_trigger = yes
+			AND = {
+				is_ruler = yes
+				gold >= 500
+			}
+		}
+
+		# Must not already have active purchase contract
+		NOT = { has_variable = mt_purchase_contract_active }
+	}
+
+	is_valid_showing_failures_only = {
+		is_imprisoned = no
+		is_incapable = no
+
+		# Must have substantial gold reserves
+		custom_tooltip = {
+			text = mt_exclusive_purchase_gold_tt
+			gold >= 200
+		}
+
+		# Must have potential suppliers available
+		custom_tooltip = {
+			text = mt_exclusive_purchase_has_suppliers_tt
+			OR = {
+				any_vassal = {
+					is_any_merchant_trigger = yes
+				}
+				any_courtier = {
+					is_any_merchant_trigger = yes
+				}
+				liege = {
+					any_vassal = {
+						is_any_merchant_trigger = yes
+					}
+				}
+			}
+		}
+
+		# Not a contract breaker
+		custom_tooltip = {
+			text = mt_exclusive_purchase_not_breaker_tt
+			NOT = { has_character_modifier = mt_notorious_contract_breaker }
+		}
+	}
+
+	cost = {
+		gold = 100
+		prestige = 50
+	}
+
+	effect = {
+		# Trigger event to select supplier and negotiate
+		trigger_event = {
+			id = mt_contract_events.0002
+			days = 5
+		}
+
+		# Add negotiating modifier
+		add_character_modifier = {
+			modifier = mt_contract_negotiations_ongoing
+			months = 3
+		}
+	}
+
+	ai_potential = {
+		OR = {
+			is_any_merchant_trigger = yes
+			AND = {
+				is_ruler = yes
+				gold >= 500
+			}
+		}
+	}
+
+	ai_will_do = {
+		base = 40
+
+		# More likely if wealthy
+		modifier = {
+			add = 40
+			gold >= 500
+		}
+
+		# More likely if ambitious
+		modifier = {
+			add = 20
+			has_trait = ambitious
+		}
+
+		# More likely if greedy
+		modifier = {
+			add = 15
+			has_trait = greedy
+		}
+
+		# Less likely if generous
+		modifier = {
+			add = -25
+			has_trait = generous
+		}
+	}
+}
+
+##############################################
+# REQUEST PRICE PROTECTION
+# Hedge against market volatility
+##############################################
+request_price_protection_decision = {
+	title = request_price_protection_decision_title
+	desc = request_price_protection_decision_desc
+	selection_tooltip = request_price_protection_decision_tooltip
+
+	picture = "gfx/interface/illustrations/decisions/decision_personal_religious.dds"
+
+	is_shown = {
+		# Must be a merchant
+		is_any_merchant_trigger = yes
+
+		# Must have active trade relationship
+		OR = {
+			has_variable = mt_supply_contract_active
+			has_variable = mt_purchase_contract_active
+			has_character_modifier = mt_granted_trade_rights
+		}
+
+		# Must not already have price guarantee
+		NOT = { has_variable = mt_price_guarantee_active }
+	}
+
+	is_valid_showing_failures_only = {
+		is_imprisoned = no
+		is_incapable = no
+
+		# Must have trading partner
+		custom_tooltip = {
+			text = mt_price_protection_has_partner_tt
+			OR = {
+				has_variable = mt_supply_contract_partner
+				has_variable = mt_purchase_contract_partner
+			}
+		}
+
+		# Must afford premium
+		custom_tooltip = {
+			text = mt_price_protection_afford_premium_tt
+			gold >= 100
+		}
+
+		# Partner must have good relations
+		custom_tooltip = {
+			text = mt_price_protection_good_relations_tt
+			any_relation = {
+				type = mt_business_partner
+				opinion = {
+					target = root
+					value >= 20
+				}
+			}
+		}
+	}
+
+	cost = {
+		gold = 100
+	}
+
+	effect = {
+		# Trigger negotiation event
+		trigger_event = {
+			id = mt_contract_events.0003
+			days = 7
+		}
+
+		add_character_modifier = {
+			modifier = mt_seeking_price_guarantee
+			months = 2
+		}
+	}
+
+	ai_potential = {
+		is_any_merchant_trigger = yes
+		gold >= 200
+	}
+
+	ai_will_do = {
+		base = 30
+
+		# More likely if cautious
+		modifier = {
+			add = 30
+			has_trait = cautious
+		}
+
+		# More likely if craven
+		modifier = {
+			add = 20
+			has_trait = craven
+		}
+
+		# Less likely if brave/reckless
+		modifier = {
+			add = -40
+			OR = {
+				has_trait = brave
+				has_trait = reckless
+			}
+		}
+
+		# More likely if market is volatile (high stress)
+		modifier = {
+			add = 25
+			stress >= 50
+		}
+	}
+}
+
+##############################################
+# RENEGOTIATE CONTRACT
+# Attempt to change contract terms mid-contract
+##############################################
+renegotiate_contract_decision = {
+	title = renegotiate_contract_decision_title
+	desc = renegotiate_contract_decision_desc
+	selection_tooltip = renegotiate_contract_decision_tooltip
+
+	picture = "gfx/interface/illustrations/decisions/decision_personal_religious.dds"
+
+	is_shown = {
+		# Must have active contract
+		OR = {
+			has_variable = mt_supply_contract_active
+			has_variable = mt_purchase_contract_active
+			has_variable = mt_volume_commitment_active
+		}
+	}
+
+	is_valid_showing_failures_only = {
+		is_imprisoned = no
+		is_incapable = no
+
+		# Must have valid partner
+		custom_tooltip = {
+			text = mt_renegotiate_has_partner_tt
+			OR = {
+				has_variable = mt_supply_contract_partner
+				has_variable = mt_purchase_contract_partner
+				has_variable = mt_volume_commitment_partner
+			}
+		}
+
+		# Must have decent relationship with partner
+		custom_tooltip = {
+			text = mt_renegotiate_good_relations_tt
+			any_relation = {
+				type = mt_business_partner
+				opinion = {
+					target = root
+					value >= 10
+				}
+			}
+		}
+
+		# Can't have recently renegotiated
+		custom_tooltip = {
+			text = mt_renegotiate_cooldown_tt
+			NOT = { has_character_modifier = mt_recently_renegotiated }
+		}
+
+		# Must have been in contract for at least 6 months
+		custom_tooltip = {
+			text = mt_renegotiate_minimum_duration_tt
+			OR = {
+				AND = {
+					has_variable = mt_contract_months_fulfilled
+					var:mt_contract_months_fulfilled >= 6
+				}
+				has_character_modifier = mt_market_conditions_changed
+			}
+		}
+	}
+
+	cost = {
+		gold = 50
+		prestige = 25
+	}
+
+	effect = {
+		# Trigger renegotiation event
+		trigger_event = {
+			id = mt_contract_events.0004
+			days = 10
+		}
+
+		# Add cooldown
+		add_character_modifier = {
+			modifier = mt_recently_renegotiated
+			years = 2
+		}
+	}
+
+	ai_potential = {
+		OR = {
+			has_variable = mt_supply_contract_active
+			has_variable = mt_purchase_contract_active
+		}
+	}
+
+	ai_will_do = {
+		base = 20
+
+		# More likely if losing money on contract
+		modifier = {
+			add = 50
+			has_character_modifier = mt_unprofitable_contract
+		}
+
+		# More likely if diplomatic
+		modifier = {
+			add = 20
+			diplomacy >= 12
+		}
+
+		# More likely if good relationship
+		modifier = {
+			add = 30
+			any_relation = {
+				type = mt_business_partner
+				opinion = {
+					target = root
+					value >= 50
+				}
+			}
+		}
+
+		# Less likely if proud
+		modifier = {
+			add = -30
+			has_trait = arrogant
+		}
+	}
+}
+
+##############################################
+# BREAK CONTRACT
+# Nuclear option: breach agreement with severe consequences
+##############################################
+break_contract_decision = {
+	title = break_contract_decision_title
+	desc = break_contract_decision_desc
+	selection_tooltip = break_contract_decision_tooltip
+	confirm_text = break_contract_decision_confirm
+
+	picture = "gfx/interface/illustrations/decisions/decision_personal_religious.dds"
+
+	major = yes
+
+	is_shown = {
+		# Must have active contract
+		OR = {
+			has_variable = mt_supply_contract_active
+			has_variable = mt_purchase_contract_active
+			has_variable = mt_volume_commitment_active
+			has_variable = mt_price_guarantee_active
+		}
+	}
+
+	is_valid_showing_failures_only = {
+		is_imprisoned = no
+		is_incapable = no
+
+		# Warning about consequences
+		custom_tooltip = {
+			text = mt_break_contract_warning_tt
+			always = yes
+		}
+
+		# Show penalty amount
+		custom_tooltip = {
+			text = mt_break_contract_penalty_tt
+			always = yes
+		}
+
+		# Show reputation loss
+		custom_tooltip = {
+			text = mt_break_contract_reputation_loss_tt
+			always = yes
+		}
+	}
+
+	cost = {
+		prestige = 300
+	}
+
+	effect = {
+		# Trigger breach event chain
+		trigger_event = {
+			id = mt_contract_events.0021
+		}
+
+		# Show dramatic notification
+		show_as_tooltip = {
+			# Apply breach effect
+			breach_contract_effect = yes
+		}
+	}
+
+	ai_potential = {
+		OR = {
+			has_variable = mt_supply_contract_active
+			has_variable = mt_purchase_contract_active
+		}
+	}
+
+	ai_will_do = {
+		base = 5
+
+		# Only if desperate
+		modifier = {
+			add = 30
+			gold < 50
+		}
+
+		# More likely if callous
+		modifier = {
+			add = 20
+			has_trait = callous
+		}
+
+		# More likely if contract is ruinous
+		modifier = {
+			add = 50
+			has_character_modifier = mt_ruinous_contract
+		}
+
+		# Less likely if honest
+		modifier = {
+			add = -100
+			has_trait = honest
+		}
+
+		# Less likely if just
+		modifier = {
+			add = -80
+			has_trait = just
+		}
+
+		# More likely if already low reputation
+		modifier = {
+			add = 30
+			has_variable = merchant_reputation
+			var:merchant_reputation < 10
+		}
+
+		# Much less likely if high reputation (too much to lose)
+		modifier = {
+			add = -100
+			has_variable = merchant_reputation
+			var:merchant_reputation >= 50
+		}
+	}
+}
+
+##############################################
+# VOLUME COMMITMENT DECISION
+# Promise minimum purchase volume for discounts
+##############################################
+create_volume_commitment_decision = {
+	title = create_volume_commitment_decision_title
+	desc = create_volume_commitment_decision_desc
+	selection_tooltip = create_volume_commitment_decision_tooltip
+
+	picture = "gfx/interface/illustrations/decisions/decision_personal_religious.dds"
+
+	is_shown = {
+		# Must be a merchant or ruler
+		OR = {
+			is_any_merchant_trigger = yes
+			is_ruler = yes
+		}
+
+		# Must not already have volume commitment
+		NOT = { has_variable = mt_volume_commitment_active }
+
+		# Must have trading relationships
+		OR = {
+			has_character_modifier = mt_granted_trade_rights
+			any_relation = {
+				type = mt_business_partner
+			}
+		}
+	}
+
+	is_valid_showing_failures_only = {
+		is_imprisoned = no
+		is_incapable = no
+
+		# Must have gold reserves
+		custom_tooltip = {
+			text = mt_volume_commitment_gold_tt
+			gold >= 300
+		}
+
+		# Must have suppliers
+		custom_tooltip = {
+			text = mt_volume_commitment_suppliers_tt
+			any_courtier = {
+				is_any_merchant_trigger = yes
+			}
+		}
+
+		# Warning about risk
+		custom_tooltip = {
+			text = mt_volume_commitment_risk_warning_tt
+			always = yes
+		}
+	}
+
+	cost = {
+		gold = 100
+	}
+
+	effect = {
+		# Trigger volume commitment negotiation
+		trigger_event = {
+			id = mt_contract_events.0005
+			days = 5
+		}
+
+		add_character_modifier = {
+			modifier = mt_contract_negotiations_ongoing
+			months = 2
+		}
+	}
+
+	ai_potential = {
+		gold >= 400
+	}
+
+	ai_will_do = {
+		base = 25
+
+		# More likely if very wealthy
+		modifier = {
+			add = 40
+			gold >= 800
+		}
+
+		# More likely if greedy (wants discount)
+		modifier = {
+			add = 25
+			has_trait = greedy
+		}
+
+		# More likely if high stewardship (can manage risk)
+		modifier = {
+			add = 20
+			stewardship >= 14
+		}
+
+		# Less likely if poor
+		modifier = {
+			add = -50
+			gold < 300
+		}
+	}
+}

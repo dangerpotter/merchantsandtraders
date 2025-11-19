@@ -1,0 +1,714 @@
+####################################
+# MERCHANTS AND TRADERS MOD
+# Trade Contracts - Scripted Effects
+# Version: 0.1.0
+####################################
+#
+# Effects for managing trade contracts and agreements
+# Includes supply contracts, exclusive purchases, volume commitments,
+# price guarantees, and contract breach/fulfillment
+#
+####################################
+
+####################################
+# SUPPLY CONTRACT CREATION
+####################################
+
+# Effect: Create exclusive supply contract
+# Scope: Character (supplier)
+# Usage: <character> = { create_supply_contract_effect = yes }
+# Parameters:
+#   - contract_partner (character scope)
+#   - contract_good (variable name)
+#   - contract_duration (years)
+#   - contract_price (gold per month)
+create_supply_contract_effect = {
+	# Store contract details
+	set_variable = {
+		name = mt_supply_contract_active
+		value = yes
+	}
+
+	set_variable = {
+		name = mt_supply_contract_partner
+		value = scope:contract_partner
+	}
+
+	set_variable = {
+		name = mt_supply_contract_good
+		value = scope:contract_good
+	}
+
+	set_variable = {
+		name = mt_supply_contract_monthly_payment
+		value = scope:contract_price
+	}
+
+	# Apply contract modifier
+	add_character_modifier = {
+		modifier = mt_supply_contract_supplier
+		years = scope:contract_duration
+	}
+
+	# Add exclusive supply restriction
+	add_character_modifier = {
+		modifier = mt_exclusive_supply_obligation
+		years = scope:contract_duration
+	}
+
+	# Set contract expiration timer
+	set_variable = {
+		name = mt_contract_end_date
+		value = {
+			value = current_date
+			add = {
+				years = scope:contract_duration
+			}
+		}
+	}
+
+	# Track contract performance
+	set_variable = {
+		name = mt_contract_months_fulfilled
+		value = 0
+	}
+
+	set_variable = {
+		name = mt_contract_months_total
+		value = {
+			value = scope:contract_duration
+			multiply = 12
+		}
+	}
+
+	# Improve relationship with partner
+	add_opinion = {
+		target = scope:contract_partner
+		modifier = mt_business_partner_opinion
+		opinion = 20
+	}
+
+	# Log for debugging
+	debug_log = "Supply contract created between supplier and partner"
+	debug_log_scopes = yes
+}
+
+####################################
+# EXCLUSIVE PURCHASE CONTRACT
+####################################
+
+# Effect: Create exclusive purchase contract (monopoly buyer)
+# Scope: Character (buyer)
+# Usage: <character> = { create_exclusive_purchase_contract_effect = yes }
+create_exclusive_purchase_contract_effect = {
+	# Store contract details
+	set_variable = {
+		name = mt_purchase_contract_active
+		value = yes
+	}
+
+	set_variable = {
+		name = mt_purchase_contract_partner
+		value = scope:contract_partner
+	}
+
+	set_variable = {
+		name = mt_purchase_contract_good
+		value = scope:contract_good
+	}
+
+	set_variable = {
+		name = mt_purchase_contract_monthly_cost
+		value = scope:contract_price
+	}
+
+	# Apply contract modifier - guaranteed supply
+	add_character_modifier = {
+		modifier = mt_exclusive_purchase_buyer
+		years = scope:contract_duration
+	}
+
+	# Add restriction: can't buy from competitors
+	add_character_modifier = {
+		modifier = mt_exclusive_purchase_restriction
+		years = scope:contract_duration
+	}
+
+	# Set contract expiration
+	set_variable = {
+		name = mt_purchase_contract_end_date
+		value = {
+			value = current_date
+			add = {
+				years = scope:contract_duration
+			}
+		}
+	}
+
+	# Track monthly volume received
+	set_variable = {
+		name = mt_contract_volume_received
+		value = 0
+	}
+
+	# Build relationship
+	add_opinion = {
+		target = scope:contract_partner
+		modifier = mt_business_partner_opinion
+		opinion = 20
+	}
+
+	# Give buyer reliable supply bonus
+	add_character_modifier = {
+		modifier = mt_reliable_supply_chain
+		years = scope:contract_duration
+	}
+
+	debug_log = "Exclusive purchase contract created"
+	debug_log_scopes = yes
+}
+
+####################################
+# VOLUME COMMITMENT CONTRACT
+####################################
+
+# Effect: Create volume commitment (minimum purchase promise)
+# Scope: Character (buyer committing to volume)
+# Usage: <character> = { create_volume_commitment_effect = yes }
+create_volume_commitment_effect = {
+	# Store commitment details
+	set_variable = {
+		name = mt_volume_commitment_active
+		value = yes
+	}
+
+	set_variable = {
+		name = mt_volume_commitment_partner
+		value = scope:contract_partner
+	}
+
+	set_variable = {
+		name = mt_volume_commitment_monthly_minimum
+		value = scope:monthly_volume
+	}
+
+	set_variable = {
+		name = mt_volume_commitment_penalty
+		value = scope:penalty_amount
+	}
+
+	# Apply volume commitment modifier
+	add_character_modifier = {
+		modifier = mt_volume_commitment_buyer
+		years = scope:contract_duration
+	}
+
+	# Receive discount for guaranteed volume
+	add_character_modifier = {
+		modifier = mt_volume_discount_pricing
+		years = scope:contract_duration
+	}
+
+	# Track monthly purchases
+	set_variable = {
+		name = mt_volume_this_month
+		value = 0
+	}
+
+	set_variable = {
+		name = mt_volume_commitment_failures
+		value = 0
+	}
+
+	# Set expiration
+	set_variable = {
+		name = mt_volume_commitment_end_date
+		value = {
+			value = current_date
+			add = {
+				years = scope:contract_duration
+			}
+		}
+	}
+
+	# Improve relationship due to commitment
+	add_opinion = {
+		target = scope:contract_partner
+		modifier = mt_reliable_buyer_opinion
+		opinion = 15
+	}
+
+	debug_log = "Volume commitment contract created"
+	debug_log_scopes = yes
+}
+
+####################################
+# PRICE GUARANTEE CONTRACT
+####################################
+
+# Effect: Lock in price guarantee (hedging against volatility)
+# Scope: Character
+# Usage: <character> = { create_price_guarantee_effect = yes }
+create_price_guarantee_effect = {
+	# Store guarantee details
+	set_variable = {
+		name = mt_price_guarantee_active
+		value = yes
+	}
+
+	set_variable = {
+		name = mt_price_guarantee_good
+		value = scope:contract_good
+	}
+
+	set_variable = {
+		name = mt_price_guarantee_fixed_price
+		value = scope:fixed_price
+	}
+
+	set_variable = {
+		name = mt_price_guarantee_partner
+		value = scope:contract_partner
+	}
+
+	# Apply fixed price modifier
+	add_character_modifier = {
+		modifier = mt_price_protection_active
+		years = scope:contract_duration
+	}
+
+	# Pay small premium for price guarantee
+	if = {
+		limit = { exists = scope:guarantee_premium }
+		remove_short_term_gold = scope:guarantee_premium
+
+		scope:contract_partner = {
+			add_gold = scope:guarantee_premium
+		}
+	}
+
+	# Track market movements vs locked price
+	set_variable = {
+		name = mt_locked_price
+		value = scope:fixed_price
+	}
+
+	set_variable = {
+		name = mt_price_guarantee_end_date
+		value = {
+			value = current_date
+			add = {
+				years = scope:contract_duration
+			}
+		}
+	}
+
+	# Add stability modifier (protected from volatility)
+	add_character_modifier = {
+		modifier = mt_price_stability_hedged
+		years = scope:contract_duration
+	}
+
+	debug_log = "Price guarantee contract created"
+	debug_log_scopes = yes
+}
+
+####################################
+# CONTRACT BREACH
+####################################
+
+# Effect: Break a contract (with severe consequences)
+# Scope: Character (breaching party)
+# Usage: <character> = { breach_contract_effect = yes }
+breach_contract_effect = {
+	# Calculate penalty (2x contract value or fixed amount)
+	if = {
+		limit = { exists = scope:contract_value }
+		set_variable = {
+			name = mt_breach_penalty
+			value = {
+				value = scope:contract_value
+				multiply = 2
+			}
+		}
+	}
+	else = {
+		set_variable = {
+			name = mt_breach_penalty
+			value = 500
+		}
+	}
+
+	# Pay the penalty if possible
+	if = {
+		limit = {
+			gold >= var:mt_breach_penalty
+		}
+		remove_short_term_gold = var:mt_breach_penalty
+
+		# Partner receives penalty payment
+		if = {
+			limit = { exists = scope:contract_partner }
+			scope:contract_partner = {
+				add_gold = root.var:mt_breach_penalty
+			}
+		}
+	}
+	else = {
+		# Can't afford full penalty - pay what you can
+		set_variable = {
+			name = mt_unpaid_penalty
+			value = {
+				value = var:mt_breach_penalty
+				subtract = gold
+			}
+		}
+
+		# Take all remaining gold
+		if = {
+			limit = { gold > 0 }
+			scope:contract_partner = {
+				add_gold = root.gold
+			}
+			remove_short_term_gold = gold
+		}
+
+		# Add debt modifier
+		add_character_modifier = {
+			modifier = mt_contract_debt_outstanding
+			years = 5
+		}
+	}
+
+	# MASSIVE reputation loss
+	if = {
+		limit = { has_variable = merchant_reputation }
+		change_variable = {
+			name = merchant_reputation
+			subtract = 100
+		}
+	}
+
+	# Severe relationship damage with partner
+	if = {
+		limit = { exists = scope:contract_partner }
+		add_opinion = {
+			target = scope:contract_partner
+			modifier = mt_contract_breaker_opinion
+			opinion = -100
+		}
+
+		reverse_add_opinion = {
+			target = scope:contract_partner
+			modifier = betrayed_opinion
+			opinion = -75
+		}
+	}
+
+	# Add infamous contract breaker modifier
+	add_character_modifier = {
+		modifier = mt_notorious_contract_breaker
+		years = 20
+	}
+
+	# Remove all contract modifiers
+	remove_character_modifier = mt_supply_contract_supplier
+	remove_character_modifier = mt_exclusive_purchase_buyer
+	remove_character_modifier = mt_volume_commitment_buyer
+	remove_character_modifier = mt_price_protection_active
+	remove_character_modifier = mt_exclusive_supply_obligation
+	remove_character_modifier = mt_exclusive_purchase_restriction
+
+	# Clear contract variables
+	remove_variable = mt_supply_contract_active
+	remove_variable = mt_purchase_contract_active
+	remove_variable = mt_volume_commitment_active
+	remove_variable = mt_price_guarantee_active
+
+	# Add stress from shame (if not callous/ambitious)
+	if = {
+		limit = {
+			NOR = {
+				has_trait = callous
+				has_trait = ambitious
+			}
+		}
+		add_stress = 50
+	}
+
+	# Lose prestige
+	add_prestige = -200
+
+	debug_log = "Contract breached - severe penalties applied"
+	debug_log_scopes = yes
+}
+
+####################################
+# CONTRACT FULFILLMENT
+####################################
+
+# Effect: Successfully complete a contract
+# Scope: Character
+# Usage: <character> = { contract_fulfilled_effect = yes }
+contract_fulfilled_effect = {
+	# Reputation gain
+	if = {
+		limit = { has_variable = merchant_reputation }
+		change_variable = {
+			name = merchant_reputation
+			add = 20
+		}
+	}
+	else = {
+		set_variable = {
+			name = merchant_reputation
+			value = 20
+		}
+	}
+
+	# Relationship bonus with partner
+	if = {
+		limit = { exists = scope:contract_partner }
+		add_opinion = {
+			target = scope:contract_partner
+			modifier = mt_reliable_partner_opinion
+			opinion = 30
+		}
+
+		reverse_add_opinion = {
+			target = scope:contract_partner
+			modifier = trust_opinion
+			opinion = 20
+		}
+	}
+
+	# Add prestigious completion modifier
+	add_character_modifier = {
+		modifier = mt_contract_fulfilled_successfully
+		years = 5
+	}
+
+	# Track successful contracts
+	if = {
+		limit = { has_variable = mt_contracts_completed }
+		change_variable = {
+			name = mt_contracts_completed
+			add = 1
+		}
+	}
+	else = {
+		set_variable = {
+			name = mt_contracts_completed
+			value = 1
+		}
+	}
+
+	# Milestone bonuses for multiple completions
+	if = {
+		limit = {
+			var:mt_contracts_completed = 5
+		}
+		add_character_modifier = {
+			modifier = mt_reliable_contractor
+			years = 10
+		}
+		add_prestige = 100
+	}
+
+	if = {
+		limit = {
+			var:mt_contracts_completed = 10
+		}
+		add_character_modifier = {
+			modifier = mt_master_of_contracts
+			years = 20
+		}
+		add_prestige = 200
+	}
+
+	# Prestige gain
+	add_prestige = 100
+
+	# Gold bonus from partner (satisfaction bonus)
+	if = {
+		limit = { exists = scope:bonus_payment }
+		add_gold = scope:bonus_payment
+	}
+	else = {
+		add_gold = 100
+	}
+
+	# Reduce stress from accomplishment
+	if = {
+		limit = { stress > 0 }
+		add_stress = -20
+	}
+
+	# Clean up contract modifiers
+	remove_character_modifier = mt_supply_contract_supplier
+	remove_character_modifier = mt_exclusive_purchase_buyer
+	remove_character_modifier = mt_volume_commitment_buyer
+	remove_character_modifier = mt_price_protection_active
+
+	debug_log = "Contract fulfilled successfully"
+	debug_log_scopes = yes
+}
+
+####################################
+# HELPER EFFECTS
+####################################
+
+# Effect: Monthly contract payment processing
+# Scope: Character
+# Usage: Called by on_action monthly pulse
+process_monthly_contract_payments_effect = {
+	# Process supply contract payments
+	if = {
+		limit = {
+			has_variable = mt_supply_contract_active
+			has_variable = mt_supply_contract_monthly_payment
+		}
+
+		# Receive monthly payment from buyer
+		add_gold = var:mt_supply_contract_monthly_payment
+
+		# Increment months fulfilled
+		change_variable = {
+			name = mt_contract_months_fulfilled
+			add = 1
+		}
+
+		# Check if near completion
+		if = {
+			limit = {
+				var:mt_contract_months_fulfilled >= var:mt_contract_months_total
+			}
+			# Contract completed - trigger fulfillment
+			contract_fulfilled_effect = yes
+		}
+	}
+
+	# Process purchase contract costs
+	if = {
+		limit = {
+			has_variable = mt_purchase_contract_active
+			has_variable = mt_purchase_contract_monthly_cost
+		}
+
+		# Pay monthly cost for exclusive supply
+		if = {
+			limit = {
+				gold >= var:mt_purchase_contract_monthly_cost
+			}
+			remove_short_term_gold = var:mt_purchase_contract_monthly_cost
+
+			# Receive goods (abstracted as economic bonus)
+			add_gold = {
+				value = var:mt_purchase_contract_monthly_cost
+				multiply = 1.2
+			}
+		}
+		else = {
+			# Can't afford payment - contract at risk
+			add_character_modifier = {
+				modifier = mt_contract_payment_overdue
+				months = 1
+			}
+		}
+	}
+
+	# Check volume commitments
+	if = {
+		limit = {
+			has_variable = mt_volume_commitment_active
+		}
+
+		# Check if monthly minimum met
+		if = {
+			limit = {
+				var:mt_volume_this_month < var:mt_volume_commitment_monthly_minimum
+			}
+
+			# Failed to meet commitment - penalty
+			change_variable = {
+				name = mt_volume_commitment_failures
+				add = 1
+			}
+
+			# Pay penalty
+			if = {
+				limit = {
+					gold >= var:mt_volume_commitment_penalty
+				}
+				remove_short_term_gold = var:mt_volume_commitment_penalty
+			}
+
+			# Damage relationship
+			if = {
+				limit = { exists = var:mt_volume_commitment_partner }
+				add_opinion = {
+					target = var:mt_volume_commitment_partner
+					modifier = disappointed_opinion
+					opinion = -10
+				}
+			}
+		}
+
+		# Reset monthly counter
+		set_variable = {
+			name = mt_volume_this_month
+			value = 0
+		}
+	}
+}
+
+# Effect: Check if character can enter new contracts
+# Scope: Character
+# Returns: yes/no via variable mt_can_contract
+check_contract_eligibility_effect = {
+	set_variable = {
+		name = mt_can_contract
+		value = yes
+	}
+
+	# Check if already has too many active contracts
+	if = {
+		limit = {
+			OR = {
+				has_variable = mt_supply_contract_active
+				has_variable = mt_purchase_contract_active
+			}
+			OR = {
+				has_variable = mt_volume_commitment_active
+				has_variable = mt_price_guarantee_active
+			}
+		}
+		# Already at max contracts
+		set_variable = {
+			name = mt_can_contract
+			value = no
+		}
+	}
+
+	# Check if notorious contract breaker
+	if = {
+		limit = {
+			has_character_modifier = mt_notorious_contract_breaker
+		}
+		set_variable = {
+			name = mt_can_contract
+			value = no
+		}
+	}
+
+	# Check if has outstanding debts
+	if = {
+		limit = {
+			has_character_modifier = mt_contract_debt_outstanding
+		}
+		set_variable = {
+			name = mt_can_contract
+			value = no
+		}
+	}
+}
