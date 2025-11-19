@@ -1,0 +1,303 @@
+l_english:
+ ####################################
+ # OPINION MODIFIERS
+ ####################################
+
+ grateful_opinion:0 "Grateful"
+ respectful_opinion:0 "Respectful"
+ loyal_opinion:0 "Loyal"
+ business_partner_opinion:0 "Business Partner"
+ cooperative_opinion:0 "Cooperative"
+ protective_opinion:0 "Protective"
+ friend_opinion:0 "Friend"
+ respect_opinion:0 "Respect"
+ celebrated_together_opinion:0 "Celebrated Together"
+ guild_brother_opinion:0 "Guild Brother"
+
+ disappointed_opinion:0 "Disappointed"
+ angry_opinion:0 "Angry"
+ annoyed_opinion:0 "Annoyed"
+ rival_opinion:0 "Rival"
+ nemesis_opinion:0 "Nemesis"
+ criminal_opinion:0 "Criminal"
+ fearful_opinion:0 "Fearful"
+
+ ####################################
+ # ESPIONAGE OPINION MODIFIERS
+ ####################################
+
+ trusted_with_espionage_opinion:0 "Trusted with Espionage"
+ trust_me_with_spying_opinion:0 "Trust Me with Spying"
+ invested_in_me_opinion:0 "Invested in Me"
+ protecting_you_opinion:0 "Protecting You"
+ disappointed_in_me_opinion:0 "Disappointed in Me"
+ fell_for_trap_opinion:0 "Fell for Trap"
+ foiled_my_plan_opinion:0 "Foiled My Plan"
+ honorable_conduct_opinion:0 "Honorable Conduct"
+ sold_my_secrets_opinion:0 "Sold My Secrets"
+ exploited_my_weakness_opinion:0 "Exploited My Weakness"
+ helped_in_crisis_opinion:0 "Helped in Crisis"
+ sabotaged_my_plans_opinion:0 "Sabotaged My Plans"
+ caught_spying_on_me_opinion:0 "Caught Spying on Me"
+ paid_ransom_for_spy_opinion:0 "Paid Ransom for Spy"
+ caught_your_spy_opinion:0 "Caught Your Spy"
+ resolved_peacefully_opinion:0 "Resolved Peacefully"
+ executed_your_spy_opinion:0 "Executed Your Spy"
+ fooled_you_opinion:0 "Fooled You"
+ murdered_my_spy_opinion:0 "Murdered My Spy"
+ showed_mercy_opinion:0 "Showed Mercy"
+ stole_my_spy_opinion:0 "Stole My Spy"
+ clever_opponent_opinion:0 "Clever Opponent"
+ thwarted_my_espionage_opinion:0 "Thwarted My Espionage"
+ deceived_you_opinion:0 "Deceived You"
+ exposed_spy_network_opinion:0 "Exposed Spy Network"
+ apologized_for_accusation_opinion:0 "Apologized for Accusation"
+ falsely_accused_opinion:0 "Falsely Accused"
+ dropped_accusation_opinion:0 "Dropped Accusation"
+ deceived_me_opinion:0 "Deceived Me"
+ struck_first_opinion:0 "Struck First"
+ confronted_peacefully_opinion:0 "Confronted Peacefully"
+ shut_down_network_opinion:0 "Shut Down Network"
+ protected_whistleblower_opinion:0 "Protected Whistleblower"
+ warned_of_spy_opinion:0 "Warned of Spy"
+
+ ####################################
+ # CONTRACT OPINION MODIFIERS
+ ####################################
+
+ broken_contract_opinion:0 "Broken Contract"
+ caught_spying_opinion:0 "Caught Spying"
+
+ ####################################
+ # TRADE ROUTE MODIFIERS
+ ####################################
+
+ mt_smooth_operations:0 "Smooth Operations"
+ mt_smooth_operations_desc:0 "This merchant has optimized their trade operations for maximum efficiency."
+
+ mt_weather_delayed:0 "Weather Delayed"
+ mt_weather_delayed_desc:0 "Adverse weather conditions have disrupted trade routes and delayed deliveries."
+
+ mt_protected_operations:0 "Protected Operations"
+ mt_protected_operations_desc:0 "This merchant has secured protection for their trade caravans."
+
+ mt_defended_caravan:0 "Defended Caravan"
+ mt_defended_caravan_desc:0 "Successfully defended a caravan from attackers, earning respect and prestige."
+
+ mt_efficient_routes:0 "Efficient Routes"
+ mt_efficient_routes_desc:0 "This merchant has discovered highly efficient trade routes."
+
+ mt_secret_routes:0 "Secret Routes"
+ mt_secret_routes_desc:0 "Knowledge of secret trade paths unknown to competitors."
+
+ mt_alternate_route:0 "Alternate Route"
+ mt_alternate_route_desc:0 "Using a less profitable alternate route due to disruptions on the main path."
+
+ mt_improved_preservation:0 "Improved Preservation"
+ mt_improved_preservation_desc:0 "Advanced methods for preserving goods during transport."
+
+ mt_damaged_reputation:0 "Damaged Reputation"
+ mt_damaged_reputation_desc:0 "Recent scandals or failures have tarnished this merchant's reputation."
+
+ mt_exotic_goods_trader:0 "Exotic Goods Trader"
+ mt_exotic_goods_trader_desc:0 "Specializes in rare and exotic goods from distant lands."
+
+ mt_war_disrupted_routes:0 "War-Disrupted Routes"
+ mt_war_disrupted_routes_desc:0 "Ongoing conflicts have severely disrupted trade operations."
+
+ mt_suspended_routes:0 "Suspended Routes"
+ mt_suspended_routes_desc:0 "Trade routes have been temporarily suspended due to extreme danger."
+
+ mt_bribed_safe_passage:0 "Bribed Safe Passage"
+ mt_bribed_safe_passage_desc:0 "Paying bribes to ensure safe passage through dangerous territories."
+
+ mt_plague_disruption:0 "Plague Disruption"
+ mt_plague_disruption_desc:0 "Disease outbreak has severely disrupted trade and commerce."
+
+ mt_generous_merchant:0 "Generous Merchant"
+ mt_generous_merchant_desc:0 "Known for generosity and charitable works during times of crisis."
+
+ mt_expanded_network:0 "Expanded Network"
+ mt_expanded_network_desc:0 "Successfully expanded trade network into new regions."
+
+ mt_infrastructure_patron:0 "Infrastructure Patron"
+ mt_infrastructure_patron_desc:0 "Invested in local infrastructure improvements."
+
+ mt_market_competition:0 "Market Competition"
+ mt_market_competition_desc:0 "Facing intense competition in local markets."
+
+ mt_competitive_pricing:0 "Competitive Pricing"
+ mt_competitive_pricing_desc:0 "Offering competitive prices to capture market share."
+
+ mt_merchant_partnership:0 "Merchant Partnership"
+ mt_merchant_partnership_desc:0 "Formed a profitable partnership with another merchant."
+
+ mt_premium_goods_reputation:0 "Premium Goods Reputation"
+ mt_premium_goods_reputation_desc:0 "Renowned for trading only the highest quality goods."
+
+ mt_pirate_threat:0 "Pirate Threat"
+ mt_pirate_threat_desc:0 "Maritime trade routes are threatened by piracy."
+
+ mt_naval_protection:0 "Naval Protection"
+ mt_naval_protection_desc:0 "Hired naval protection for sea routes."
+
+ mt_overland_routes:0 "Overland Routes"
+ mt_overland_routes_desc:0 "Shifted to overland routes to avoid maritime dangers."
+
+ mt_pirate_agreement:0 "Pirate Agreement"
+ mt_pirate_agreement_desc:0 "Reached an agreement with pirates for safe passage."
+
+ mt_merchant_fleet:0 "Merchant Fleet"
+ mt_merchant_fleet_desc:0 "Commands a private merchant fleet for protection and trade."
+
+ mt_favorable_partnership:0 "Favorable Partnership"
+ mt_favorable_partnership_desc:0 "Established a highly favorable business partnership."
+
+ mt_independent_reputation:0 "Independent Reputation"
+ mt_independent_reputation_desc:0 "Known for maintaining independence from larger merchant organizations."
+
+ mt_royal_contract:0 "Royal Contract"
+ mt_royal_contract_desc:0 "Secured a lucrative contract with royalty."
+
+ mt_flexible_contract:0 "Flexible Contract"
+ mt_flexible_contract_desc:0 "Negotiated favorable contract terms allowing for flexibility."
+
+ mt_new_market_access:0 "New Market Access"
+ mt_new_market_access_desc:0 "Gained access to previously untapped markets."
+
+ mt_local_partnerships:0 "Local Partnerships"
+ mt_local_partnerships_desc:0 "Formed strong partnerships with local merchants and guilds."
+
+ mt_higher_wages:0 "Higher Wages"
+ mt_higher_wages_desc:0 "Paying higher wages to attract and retain quality workers."
+
+ mt_agent_partnership:0 "Agent Partnership"
+ mt_agent_partnership_desc:0 "Partnered with a trusted agent for expanded operations."
+
+ mt_merchant_debt:0 "Merchant Debt"
+ mt_merchant_debt_desc:0 "Carrying significant debt from business ventures."
+
+ mt_excellent_management:0 "Excellent Management"
+ mt_excellent_management_desc:0 "Exceptional management skills have led to increased profits."
+
+ mt_elite_partnership:0 "Elite Partnership"
+ mt_elite_partnership_desc:0 "Partnership with elite merchants and nobility."
+
+ mt_renowned_quality:0 "Renowned Quality"
+ mt_renowned_quality_desc:0 "Reputation for consistently delivering exceptional quality goods."
+
+ mt_secret_leverage:0 "Secret Leverage"
+ mt_secret_leverage_desc:0 "Possesses secret information that provides business advantages."
+
+ mt_optimized_market_entry:0 "Optimized Market Entry"
+ mt_optimized_market_entry_desc:0 "Carefully planned and executed market entry strategy."
+
+ mt_understaffed:0 "Understaffed"
+ mt_understaffed_desc:0 "Operations are struggling due to lack of adequate staff."
+
+ mt_secure_route:0 "Secure Route"
+ mt_secure_route_desc:0 "Trade routes are well-protected and secure."
+
+ ####################################
+ # ESPIONAGE MODIFIERS
+ ####################################
+
+ mt_employs_criminals:0 "Employs Criminals"
+ mt_employs_criminals_desc:0 "Uses criminals for espionage and information gathering."
+
+ mt_infiltrated_rival:0 "Infiltrated Rival"
+ mt_infiltrated_rival_desc:0 "Successfully infiltrated a rival merchant's operation."
+
+ mt_stolen_route_knowledge:0 "Stolen Route Knowledge"
+ mt_stolen_route_knowledge_desc:0 "Acquired competitor's trade route secrets through espionage."
+
+ mt_exploiting_rival_weakness:0 "Exploiting Rival Weakness"
+ mt_exploiting_rival_weakness_desc:0 "Using intelligence to exploit a rival's weaknesses."
+
+ mt_stayed_ahead_of_rival:0 "Stayed Ahead of Rival"
+ mt_stayed_ahead_of_rival_desc:0 "Consistently outmaneuvered rivals through superior intelligence."
+
+ mt_honors_fallen_spies:0 "Honors Fallen Spies"
+ mt_honors_fallen_spies_desc:0 "Shows respect and honor to spies who died in service."
+
+ mt_spy_romance_intel:0 "Spy Romance Intel"
+ mt_spy_romance_intel_desc:0 "Gained valuable intelligence through a romantic relationship."
+
+ mt_knows_secret_alliances:0 "Knows Secret Alliances"
+ mt_knows_secret_alliances_desc:0 "Aware of secret alliances and agreements among rivals."
+
+ mt_forewarned_of_deals:0 "Forewarned of Deals"
+ mt_forewarned_of_deals_desc:0 "Intelligence network provides advance warning of competitor deals."
+
+ mt_multiple_informants:0 "Multiple Informants"
+ mt_multiple_informants_desc:0 "Maintains a network of multiple paid informants."
+
+ mt_strong_security:0 "Strong Security"
+ mt_strong_security_desc:0 "Invested heavily in security measures against espionage."
+
+ mt_double_agent_intel:0 "Double Agent Intel"
+ mt_double_agent_intel_desc:0 "Running a double agent in a rival's organization."
+
+ mt_paranoid_workplace:0 "Paranoid Workplace"
+ mt_paranoid_workplace_desc:0 "Excessive suspicion has created a toxic work environment."
+
+ mt_accusations_backfired:0 "Accusations Backfired"
+ mt_accusations_backfired_desc:0 "False accusations have damaged reputation and relationships."
+
+ mt_prepared_for_attack:0 "Prepared for Attack"
+ mt_prepared_for_attack_desc:0 "Intelligence has allowed preparation for an incoming attack."
+
+ mt_espionage_crackdown:0 "Espionage Crackdown"
+ mt_espionage_crackdown_desc:0 "Implementing harsh measures against suspected spies."
+
+ mt_information_network_member:0 "Information Network Member"
+ mt_information_network_member_desc:0 "Member of an exclusive information-sharing network."
+
+ mt_information_network_preferred:0 "Information Network Preferred"
+ mt_information_network_preferred_desc:0 "Preferred status within the information network."
+
+ mt_infiltrated_info_network:0 "Infiltrated Info Network"
+ mt_infiltrated_info_network_desc:0 "Successfully infiltrated a rival information network."
+
+ mt_fought_corruption:0 "Fought Corruption"
+ mt_fought_corruption_desc:0 "Took a stand against corruption in the merchant community."
+
+ mt_secrets_exposed:0 "Secrets Exposed"
+ mt_secrets_exposed_desc:0 "Damaging secrets have been exposed to the public."
+
+ mt_exploited_scandal:0 "Exploited Scandal"
+ mt_exploited_scandal_desc:0 "Profiting from a rival's scandal."
+
+ mt_elite_spymaster:0 "Elite Spymaster"
+ mt_elite_spymaster_desc:0 "Commands an elite espionage network."
+
+ mt_spymaster_services:0 "Spymaster Services"
+ mt_spymaster_services_desc:0 "Provides professional espionage services to others."
+
+ mt_information_cartel_member:0 "Information Cartel Member"
+ mt_information_cartel_member_desc:0 "Member of a powerful information cartel."
+
+ mt_opposed_cartel:0 "Opposed Cartel"
+ mt_opposed_cartel_desc:0 "Actively opposing the information cartel."
+
+ mt_independent_from_cartel:0 "Independent from Cartel"
+ mt_independent_from_cartel_desc:0 "Successfully maintained independence from the information cartel."
+
+ mt_major_security_breach:0 "Major Security Breach"
+ mt_major_security_breach_desc:0 "Suffered a major security breach compromising operations."
+
+ ####################################
+ # COMPANY MANAGEMENT MODIFIERS
+ ####################################
+
+ mt_excellent_deal:0 "Excellent Deal"
+ mt_excellent_deal_desc:0 "Negotiated an exceptionally profitable business deal."
+
+ mt_stolen_trade_secrets:0 "Stolen Trade Secrets"
+ mt_stolen_trade_secrets_desc:0 "Using stolen trade secrets to gain competitive advantage."
+
+ mt_restructured_company:0 "Restructured Company"
+ mt_restructured_company_desc:0 "Recently reorganized company operations for better efficiency."
+
+ mt_mentorship_approach:0 "Mentorship Approach"
+ mt_mentorship_approach_desc:0 "Takes time to mentor and develop junior merchants."

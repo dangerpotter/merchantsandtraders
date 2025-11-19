@@ -841,3 +841,130 @@ track_route_profitability_effect = {
 		}
 	}
 }
+
+# ==============================================================================
+# remove_all_trade_routes_effect
+# Closes all active trade routes for a character or within a county
+# Useful for major disruptions like merchant bans, sieges, or character death
+# ==============================================================================
+# SCOPE: Character or County
+# ==============================================================================
+remove_all_trade_routes_effect = {
+	# If called on a character, close all their routes
+	if = {
+		limit = { this = character }
+		save_temporary_scope_as = merchant_character
+
+		# Close all possible routes (0-4)
+		if = {
+			limit = { exists = var:mt_route_0_node_0 }
+			close_trade_route_effect = { route_id = 0 }
+		}
+		if = {
+			limit = { exists = var:mt_route_1_node_0 }
+			close_trade_route_effect = { route_id = 1 }
+		}
+		if = {
+			limit = { exists = var:mt_route_2_node_0 }
+			close_trade_route_effect = { route_id = 2 }
+		}
+		if = {
+			limit = { exists = var:mt_route_3_node_0 }
+			close_trade_route_effect = { route_id = 3 }
+		}
+		if = {
+			limit = { exists = var:mt_route_4_node_0 }
+			close_trade_route_effect = { route_id = 4 }
+		}
+
+		# Reset route counter to 0
+		set_variable = {
+			name = mt_active_route_count
+			value = 0
+		}
+
+		debug_log = "All trade routes removed for character"
+	}
+	# If called on a county, close all routes passing through
+	else_if = {
+		limit = { this = title }
+		save_temporary_scope_as = target_county
+
+		# Find all merchants with routes passing through this county
+		every_character_in_realm = {
+			limit = {
+				has_trait = mt_merchant
+				exists = var:mt_active_route_count
+				var:mt_active_route_count > 0
+			}
+
+			# Check each route to see if it passes through target county
+			# Route 0
+			if = {
+				limit = {
+					OR = {
+						var:mt_route_0_node_0 = scope:target_county
+						var:mt_route_0_node_1 = scope:target_county
+						var:mt_route_0_node_2 = scope:target_county
+						var:mt_route_0_node_3 = scope:target_county
+					}
+				}
+				close_trade_route_effect = { route_id = 0 }
+			}
+
+			# Route 1
+			if = {
+				limit = {
+					OR = {
+						var:mt_route_1_node_0 = scope:target_county
+						var:mt_route_1_node_1 = scope:target_county
+						var:mt_route_1_node_2 = scope:target_county
+						var:mt_route_1_node_3 = scope:target_county
+					}
+				}
+				close_trade_route_effect = { route_id = 1 }
+			}
+
+			# Route 2
+			if = {
+				limit = {
+					OR = {
+						var:mt_route_2_node_0 = scope:target_county
+						var:mt_route_2_node_1 = scope:target_county
+						var:mt_route_2_node_2 = scope:target_county
+						var:mt_route_2_node_3 = scope:target_county
+					}
+				}
+				close_trade_route_effect = { route_id = 2 }
+			}
+
+			# Route 3
+			if = {
+				limit = {
+					OR = {
+						var:mt_route_3_node_0 = scope:target_county
+						var:mt_route_3_node_1 = scope:target_county
+						var:mt_route_3_node_2 = scope:target_county
+						var:mt_route_3_node_3 = scope:target_county
+					}
+				}
+				close_trade_route_effect = { route_id = 3 }
+			}
+
+			# Route 4
+			if = {
+				limit = {
+					OR = {
+						var:mt_route_4_node_0 = scope:target_county
+						var:mt_route_4_node_1 = scope:target_county
+						var:mt_route_4_node_2 = scope:target_county
+						var:mt_route_4_node_3 = scope:target_county
+					}
+				}
+				close_trade_route_effect = { route_id = 4 }
+			}
+		}
+
+		debug_log = "All trade routes through county removed"
+	}
+}
