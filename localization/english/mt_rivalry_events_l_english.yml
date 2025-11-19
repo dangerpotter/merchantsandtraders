@@ -1,0 +1,508 @@
+l_english:
+ ####################################
+ # MERCHANT RIVALRY EVENTS LOCALIZATION
+ ####################################
+
+ ####################################
+ # DISCOVERING RIVALS (0001-0005)
+ ####################################
+
+ # Event 0001: A New Merchant Appears
+ mt_rivalry.0001.t:0 "A New Merchant Appears"
+ mt_rivalry.0001.desc:0 "[scope:new_rival.GetTitledFirstName] has recently established [scope:new_rival.GetHerselfHimself] as a merchant in my court. While there's room for multiple traders, I can't help but notice [scope:new_rival.GetSheHe] seems interested in the same markets I've cultivated. This could be the beginning of a profitable partnership... or a bitter rivalry."
+ mt_rivalry.0001.a:0 "Perhaps we can work together rather than compete."
+ mt_rivalry.0001.b:0 "I'll keep a close eye on this one."
+ mt_rivalry.0001.c:0 "A challenge! I'll show them who the superior merchant is."
+
+ # Event 0002: Encroaching on My Routes
+ mt_rivalry.0002.t:0 "Encroaching on My Routes"
+ mt_rivalry.0002.desc:0 "Word has reached me that [scope:rival_name.GetTitledFirstName] has been establishing contacts along my most profitable trade routes! The nerve of [scope:rival_name.GetHerHim] to poach my carefully cultivated relationships. If I don't act decisively, [scope:rival_name.GetSheHe] could undermine years of work."
+ mt_rivalry.0002.a:0 "Send a firm warning to stay away from my routes."
+ mt_rivalry.0002.b:0 "Propose we divide the routes between us."
+ mt_rivalry.0002.c:0 "Competition breeds excellence. Let the best merchant win."
+
+ # Event 0003: Trading in the Same Goods
+ mt_rivalry.0003.t:0 "Trading in the Same Goods"
+ mt_rivalry.0003.desc:0 "It seems [scope:rival_name.GetTitledFirstName] and I are now trading in identical goods. Every sale [scope:rival_name.GetSheHe] makes is one I don't, and vice versa. The market can only sustain so much before prices collapse and we both suffer. Perhaps it's time to address this directly."
+ mt_rivalry.0003.a:0 "Diversify my trade goods to avoid competition."
+ mt_rivalry.0003.b:0 "Try to drive [scope:rival_name.GetHerHim] out through aggressive pricing."
+ mt_rivalry.0003.c:0 "Suggest we coordinate prices to maximize profit."
+
+ # Event 0004: An Ambitious Merchant Threatens
+ mt_rivalry.0004.t:0 "An Ambitious Merchant's Challenge"
+ mt_rivalry.0004.desc:0 "[scope:rival_name.GetTitledFirstName] has been boasting at court about [scope:rival_name.GetHerHis] trading prowess, making thinly veiled comparisons to my own ventures. Some courtiers are starting to wonder if [scope:rival_name.GetSheHe] might indeed be the more skilled merchant. This upstart needs to be put in [scope:rival_name.GetHerHis] place!"
+ mt_rivalry.0004.a:0 "Challenge [scope:rival_name.GetHerHim] to a public contest of merchant skill."
+ mt_rivalry.0004.b:0 "Subtly undermine [scope:rival_name.GetHerHis] reputation."
+ mt_rivalry.0004.c:0 "Ignore the boasting. Results speak louder than words."
+
+ # Event 0005: A Friend Becomes a Rival
+ mt_rivalry.0005.t:0 "A Friend Becomes a Rival"
+ mt_rivalry.0005.desc:0 "I once considered [scope:rival_name.GetTitledFirstName] a friend and trusted ally in business. But [scope:rival_name.GetSheHe] has betrayed that trust, undercutting my deals and stealing my contacts. The sting of betrayal hurts worse than any business loss. Our friendship is clearly over, but what now?"
+ mt_rivalry.0005.a:0 "Try to salvage the friendship despite the business conflict."
+ mt_rivalry.0005.b:0 "If we must be rivals, so be it."
+ mt_rivalry.0005.c:0 "Friendship and business should never have mixed. Cut all ties."
+
+ ####################################
+ # PRICE WARS (0006-0015)
+ ####################################
+
+ # Event 0006: Undercutting Prices
+ mt_rivalry.0006.t:0 "Price War Begins"
+ mt_rivalry.0006.desc:0 "[scope:rival_name.GetTitledFirstName] has started selling goods at prices lower than mine! If this continues, I'll lose customers and profits. I must decide whether to match these prices, find another way to compete, or let [scope:rival_name.GetHerHim] have this victory while I focus elsewhere."
+ mt_rivalry.0006.a:0 "Match the prices and fight fire with fire."
+ mt_rivalry.0006.b:0 "Focus on quality over price."
+ mt_rivalry.0006.c:0 "Let [scope:rival_name.GetHerHim] have the low-price market. I'll aim higher."
+
+ # Event 0007: Discovering Rival's Strategy
+ mt_rivalry.0007.t:0 "Understanding the Competition"
+ mt_rivalry.0007.desc:0 "Through careful observation, I've discovered how [scope:rival_name.GetTitledFirstName] manages to undercut my prices. [scope:rival_name.GetSheHe] has made a deal with suppliers that I wasn't aware of. This knowledge could be valuable if I use it wisely."
+ mt_rivalry.0007.a:0 "Approach the same suppliers and negotiate better terms."
+ mt_rivalry.0007.b:0 "Find different suppliers entirely."
+ mt_rivalry.0007.c:0 "Share this information with [scope:rival_name.GetHerHim] and propose cooperation."
+
+ # Event 0008: Price War Escalation
+ mt_rivalry.0008.t:0 "The Price War Intensifies"
+ mt_rivalry.0008.desc:0 "The price war with [scope:rival_name.GetTitledFirstName] has escalated beyond reason! We're both selling at barely above cost, and neither of us can sustain this for long. Someone needs to back down, or we'll both be ruined. Pride and profit are at stake."
+ mt_rivalry.0008.a:0 "Hold firm! [scope:rival_name.GetFirstName] will break first."
+ mt_rivalry.0008.b:0 "Propose a truce and set reasonable prices together."
+ mt_rivalry.0008.c:0 "Concede this fight and withdraw from this market."
+
+ # Event 0009: Third Merchant Enters Price War
+ mt_rivalry.0009.t:0 "A Third Player Emerges"
+ mt_rivalry.0009.desc:0 "While [scope:rival_name.GetTitledFirstName] and I have been locked in our price war, a third merchant has swooped in with even lower prices! [scope:new_merchant.GetTitledFirstName] is taking advantage of our distraction. Perhaps my rival and I should work together against this common threat."
+ mt_rivalry.0009.a:0 "Ally with [scope:rival_name.GetFirstName] against this interloper."
+ mt_rivalry.0009.b:0 "Let them fight each other while I recover."
+ mt_rivalry.0009.c:0 "Join the price war and compete against both!"
+
+ # Event 0010: Price War Resolution
+ mt_rivalry.0010.t:0 "End of the Price War"
+ mt_rivalry.0010.desc:0 "The price war with [scope:rival_name.GetTitledFirstName] has finally reached its conclusion. We've both learned valuable lessons about the costs of unchecked competition. The question is: what relationship will we have going forward? Can we move past this, or has permanent damage been done?"
+ mt_rivalry.0010.a:0 "Propose a formal non-competition agreement."
+ mt_rivalry.0010.b:0 "Accept the rivalry but agree to keep it civil."
+ mt_rivalry.0010.c:0 "This was war. There will be no peace."
+
+ # Event 0011: Cartel Formation
+ mt_rivalry.0011.t:0 "Proposal for a Merchant Cartel"
+ mt_rivalry.0011.desc:0 "[scope:rival_name.GetTitledFirstName] has approached me with an interesting proposal: instead of competing, why not form a cartel? Together we could control prices and maximize profits. It's certainly tempting, but is it wise to trust a rival? And what of the ethics of price-fixing?"
+ mt_rivalry.0011.a:0 "Agree to form the cartel. Profit trumps competition."
+ mt_rivalry.0011.b:0 "Refuse. I won't stoop to price-fixing."
+ mt_rivalry.0011.c:0 "Pretend to agree, then betray the cartel for personal gain."
+
+ # Event 0012: Price Cut Backfires
+ mt_rivalry.0012.t:0 "A Strategy Backfires"
+ mt_rivalry.0012.desc:0 "My aggressive price cuts to undermine [scope:rival_name.GetTitledFirstName] have backfired spectacularly! Customers now question the quality of my goods, wondering why they're so cheap. Meanwhile, [scope:rival_name.GetSheHe] maintains premium prices and is seen as the more reputable merchant. I must salvage my reputation."
+ mt_rivalry.0012.a:0 "Raise prices immediately and emphasize quality."
+ mt_rivalry.0012.b:0 "Launch a campaign to explain my pricing strategy."
+ mt_rivalry.0012.c:0 "Double down on low prices and high volume sales."
+
+ # Event 0013: Exclusive Supply Deal
+ mt_rivalry.0013.t:0 "An Exclusive Opportunity"
+ mt_rivalry.0013.desc:0 "A major supplier has offered me an exclusive deal - but only if I can guarantee to purchase their entire output. This would lock [scope:rival_name.GetTitledFirstName] out of this market entirely! However, it's a significant financial commitment, and if demand doesn't meet expectations, I could be ruined."
+ mt_rivalry.0013.a:0 "Take the deal and monopolize this market."
+ mt_rivalry.0013.b:0 "Negotiate for partial exclusivity to reduce risk."
+ mt_rivalry.0013.c:0 "Decline. The risk is too great."
+
+ # Event 0014: Market Manipulation
+ mt_rivalry.0014.t:0 "Manipulating Market Perception"
+ mt_rivalry.0014.desc:0 "I've discovered that [scope:rival_name.GetTitledFirstName] is spreading rumors about supply shortages to drive up prices artificially. This market manipulation is clever but ethically questionable. Should I expose [scope:rival_name.GetHerHim], use the same tactics myself, or stay above such schemes?"
+ mt_rivalry.0014.a:0 "Expose [scope:rival_name.GetHerHis] manipulation publicly."
+ mt_rivalry.0014.b:0 "Counter with my own market manipulation."
+ mt_rivalry.0014.c:0 "Maintain honest business practices regardless."
+
+ # Event 0015: Premium Strategy
+ mt_rivalry.0015.t:0 "The Premium Approach"
+ mt_rivalry.0015.desc:0 "While [scope:rival_name.GetTitledFirstName] focuses on volume and low prices, I've decided to position myself as the premium merchant - higher prices, but superior quality and service. This strategy is starting to pay off with wealthier clients, but it means ceding the common market to my rival."
+ mt_rivalry.0015.a:0 "Fully commit to the premium market strategy."
+ mt_rivalry.0015.b:0 "Try to compete in both premium and common markets."
+ mt_rivalry.0015.c:0 "Reconsider and return to competing on price."
+
+ ####################################
+ # ROUTE SABOTAGE (0016-0025)
+ ####################################
+
+ # Event 0016: Bribed Officials
+ mt_rivalry.0016.t:0 "Officials Have Been Bribed"
+ mt_rivalry.0016.desc:0 "I've discovered that [scope:rival_name.GetTitledFirstName] has been bribing local officials to delay my caravans at checkpoints while [scope:rival_name.GetHerHis] pass through freely. This underhanded tactic is costing me time and money. How should I respond to this betrayal of fair competition?"
+ mt_rivalry.0016.a:0 "Offer larger bribes to the same officials."
+ mt_rivalry.0016.b:0 "Report this corruption to higher authorities."
+ mt_rivalry.0016.c:0 "Find alternative routes that avoid these checkpoints."
+
+ # Event 0017: Route Blocked
+ mt_rivalry.0017.t:0 "A Route Mysteriously Blocked"
+ mt_rivalry.0017.desc:0 "One of my most profitable trade routes has been suddenly blocked by what officials claim are 'safety concerns.' Yet [scope:rival_name.GetTitledFirstName]'s caravans continue to use a parallel route without issue. This is clearly sabotage, but proving it will be difficult."
+ mt_rivalry.0017.a:0 "Investigate who's really behind this blockage."
+ mt_rivalry.0017.b:0 "Use my influence to get the route reopened."
+ mt_rivalry.0017.c:0 "Sabotage one of [scope:rival_name.GetHerHis] routes in retaliation."
+
+ # Event 0018: Spreading Rumors About Routes
+ mt_rivalry.0018.t:0 "Rumors of Dangerous Routes"
+ mt_rivalry.0018.desc:0 "Someone has been spreading rumors that my trade routes are plagued by bandits and unsafe for merchants. Business has dropped significantly as traders avoid my caravans. I suspect [scope:rival_name.GetTitledFirstName] is behind this rumor campaign."
+ mt_rivalry.0018.a:0 "Launch a counter-campaign to restore my reputation."
+ mt_rivalry.0018.b:0 "Hire guards to prove my routes are safe."
+ mt_rivalry.0018.c:0 "Spread worse rumors about [scope:rival_name.GetHerHis] routes."
+
+ # Event 0019: Hired Bandits
+ mt_rivalry.0019.t:0 "Bandits Target My Caravans"
+ mt_rivalry.0019.desc:0 "My caravans have been repeatedly attacked by bandits, but only mine - [scope:rival_name.GetTitledFirstName]'s pass unmolested. A captured bandit revealed under questioning that they were hired to specifically target my goods. This is an outrageous escalation that cannot go unanswered!"
+ mt_rivalry.0019.a:0 "Hire mercenaries to protect my caravans and hunt these bandits."
+ mt_rivalry.0019.b:0 "Confront [scope:rival_name.GetFirstName] directly about this."
+ mt_rivalry.0019.c:0 "Fight fire with fire - hire my own bandits."
+
+ # Event 0020: Warehouse Arson
+ mt_rivalry.0020.t:0 "My Warehouse Burns"
+ mt_rivalry.0020.desc:0 "Fire has destroyed one of my warehouses! While there's no direct proof, I have strong suspicions that [scope:rival_name.GetTitledFirstName] arranged this 'accident.' The financial loss is devastating, but the personal violation cuts even deeper. This rivalry has crossed a dangerous line."
+ mt_rivalry.0020.a:0 "Seek revenge through similar means."
+ mt_rivalry.0020.b:0 "Gather evidence and prosecute."
+ mt_rivalry.0020.c:0 "Focus on rebuilding and improving security."
+
+ # Event 0021: Sabotage Escalates
+ mt_rivalry.0021.t:0 "The Sabotage Escalates"
+ mt_rivalry.0021.desc:0 "The conflict with [scope:rival_name.GetTitledFirstName] has spiraled into a full sabotage war. Routes are blocked, warehouses damaged, caravans attacked. We're both losing money and reputation, and innocent merchants are caught in the crossfire. This must end before it destroys us both."
+ mt_rivalry.0021.a:0 "Propose an immediate ceasefire."
+ mt_rivalry.0021.b:0 "Escalate further to force [scope:rival_name.GetHerHim] to surrender."
+ mt_rivalry.0021.c:0 "Appeal to our liege to intervene and stop this."
+
+ # Event 0022: Supplier Sabotage
+ mt_rivalry.0022.t:0 "Suppliers Turned Against Me"
+ mt_rivalry.0022.desc:0 "[scope:rival_name.GetTitledFirstName] has convinced several of my key suppliers to break their contracts with me. Without these goods, I cannot fulfill my obligations to customers. [scope:rival_name.GetSheHe] has struck at the heart of my business operations."
+ mt_rivalry.0022.a:0 "Offer suppliers better terms to win them back."
+ mt_rivalry.0022.b:0 "Find new suppliers, even if they're more expensive."
+ mt_rivalry.0022.c:0 "Sue the suppliers for breach of contract."
+
+ # Event 0023: Counter-Sabotage
+ mt_rivalry.0023.t:0 "An Opportunity for Counter-Sabotage"
+ mt_rivalry.0023.desc:0 "My spies have discovered a vulnerability in [scope:rival_name.GetTitledFirstName]'s operations. A simple act of sabotage could cripple [scope:rival_name.GetHerHis] business for months. But do I want to continue this destructive cycle, or be the one who rises above it?"
+ mt_rivalry.0023.a:0 "Strike hard and cripple [scope:rival_name.GetHerHis] operations."
+ mt_rivalry.0023.b:0 "Use this information as leverage for negotiations."
+ mt_rivalry.0023.c:0 "Refuse to engage in sabotage despite the opportunity."
+
+ # Event 0024: Sabotage Backfires
+ mt_rivalry.0024.t:0 "My Sabotage Backfires"
+ mt_rivalry.0024.desc:0 "My attempt to sabotage [scope:rival_name.GetTitledFirstName]'s operation has backfired disastrously! Not only did it fail, but now everyone knows I was behind it. My reputation has taken a serious hit, and [scope:rival_name.GetSheHe] has gained the moral high ground. I must contain this damage."
+ mt_rivalry.0024.a:0 "Apologize publicly and make restitution."
+ mt_rivalry.0024.b:0 "Deny everything and attack [scope:rival_name.GetHerHis] credibility."
+ mt_rivalry.0024.c:0 "Own it proudly - sabotage is part of competition."
+
+ # Event 0025: Feud Resolution
+ mt_rivalry.0025.t:0 "Time to End This Feud"
+ mt_rivalry.0025.desc:0 "The destructive rivalry with [scope:rival_name.GetTitledFirstName] has gone on too long. We've both suffered losses, damaged our reputations, and created enemies. It's time to decide: do we continue this self-destructive path, or find a way to coexist peacefully?"
+ mt_rivalry.0025.a:0 "Propose a permanent truce and mutual non-aggression."
+ mt_rivalry.0025.b:0 "Merge our operations into a partnership."
+ mt_rivalry.0025.c:0 "Never! This feud ends only when one of us is destroyed."
+
+ ####################################
+ # ESPIONAGE (0026-0035)
+ ####################################
+
+ # Event 0026: Spy Offers Services
+ mt_rivalry.0026.t:0 "A Spy Offers Their Services"
+ mt_rivalry.0026.desc:0 "A skilled informant has approached me with an offer: for the right price, they can infiltrate [scope:rival_name.GetTitledFirstName]'s organization and provide me with valuable intelligence about [scope:rival_name.GetHerHis] business operations, deals, and plans. The temptation is strong, but is this the path I want to take?"
+ mt_rivalry.0026.a:0 "Hire the spy. Knowledge is power."
+ mt_rivalry.0026.b:0 "Decline but keep their contact information."
+ mt_rivalry.0026.c:0 "Refuse and warn [scope:rival_name.GetFirstName] about this spy."
+
+ # Event 0027: Information Leak Discovered
+ mt_rivalry.0027.t:0 "A Spy in My Organization"
+ mt_rivalry.0027.desc:0 "I've discovered that someone in my organization has been leaking information to [scope:rival_name.GetTitledFirstName]! [scope:rival_name.GetSheHe] has been one step ahead of me for months, and now I know why. The question is: what should I do with this traitor?"
+ mt_rivalry.0027.a:0 "Feed false information through the spy to mislead [scope:rival_name.GetFirstName]."
+ mt_rivalry.0027.b:0 "Expose and punish the traitor publicly."
+ mt_rivalry.0027.c:0 "Turn the spy into a double agent working for me."
+
+ # Event 0028: Stealing Trade Secrets
+ mt_rivalry.0028.t:0 "An Opportunity to Steal Secrets"
+ mt_rivalry.0028.desc:0 "My spy has brought me incredible news: they've found a way to steal [scope:rival_name.GetTitledFirstName]'s most valuable trade secrets - supplier contacts, pricing strategies, and future plans. This information could give me an insurmountable advantage, but obtaining it carries significant risks."
+ mt_rivalry.0028.a:0 "Take the risk. Steal the secrets."
+ mt_rivalry.0028.b:0 "Only take the information about suppliers and pricing."
+ mt_rivalry.0028.c:0 "Too risky. Abandon this plan."
+
+ # Event 0029: Caught Spying
+ mt_rivalry.0029.t:0 "My Spy Has Been Caught!"
+ mt_rivalry.0029.desc:0 "Disaster! My spy has been caught in [scope:rival_name.GetTitledFirstName]'s organization. Even worse, [scope:rival_name.GetSheHe] has evidence linking the spy to me. [scope:rival_name.GetFirstName] is demanding compensation and a public apology. My reputation hangs in the balance."
+ mt_rivalry.0029.a:0 "Deny everything. It's [scope:rival_name.GetHerHis] word against mine."
+ mt_rivalry.0029.b:0 "Apologize and pay compensation to end this quietly."
+ mt_rivalry.0029.c:0 "Counter-accuse [scope:rival_name.GetFirstName] of spying on me too."
+
+ # Event 0030: Industrial Espionage Success
+ mt_rivalry.0030.t:0 "Espionage Pays Off"
+ mt_rivalry.0030.desc:0 "My investment in espionage has paid dividends! I now have detailed knowledge of [scope:rival_name.GetTitledFirstName]'s operations, upcoming deals, and business strategies. This advantage could be decisive in our competition. The question is: how best to use this information without revealing my source?"
+ mt_rivalry.0030.a:0 "Use it to undercut [scope:rival_name.GetHerHis] major deals."
+ mt_rivalry.0030.b:0 "Leverage it for strategic positioning in new markets."
+ mt_rivalry.0030.c:0 "Save it for a decisive future confrontation."
+
+ # Event 0031: Double Agent Revealed
+ mt_rivalry.0031.t:0 "The Double Agent"
+ mt_rivalry.0031.desc:0 "Shocking news: the spy I planted in [scope:rival_name.GetTitledFirstName]'s organization has been a double agent all along! [scope:rival_name.GetSheHe] knew about the spy from the start and has been feeding me false information. Worse, my secrets have been compromised. I've been played for a fool!"
+ mt_rivalry.0031.a:0 "Cut my losses and rebuild my intelligence network."
+ mt_rivalry.0031.b:0 "Try to turn the double agent back to my side with more gold."
+ mt_rivalry.0031.c:0 "Eliminate the double agent as a warning to others."
+
+ # Event 0032: Counterintelligence Success
+ mt_rivalry.0032.t:0 "Counterintelligence Victory"
+ mt_rivalry.0032.desc:0 "My counterintelligence efforts have paid off! I've identified all of [scope:rival_name.GetTitledFirstName]'s spies in my organization and neutralized them. Better yet, I've done so without [scope:rival_name.GetHerHim] knowing. Now I can control what information [scope:rival_name.GetSheHe] receives about my operations."
+ mt_rivalry.0032.a:0 "Feed [scope:rival_name.GetFirstName] false information to set a trap."
+ mt_rivalry.0032.b:0 "Expose the spies publicly to humiliate [scope:rival_name.GetFirstName]."
+ mt_rivalry.0032.c:0 "Keep them in place and use them to my advantage."
+
+ # Event 0033: Spy Network Expansion
+ mt_rivalry.0033.t:0 "Expanding the Spy Network"
+ mt_rivalry.0033.desc:0 "My espionage operations against [scope:rival_name.GetTitledFirstName] have been so successful that I'm considering expanding them. With more resources, I could have eyes and ears throughout [scope:rival_name.GetHerHis] entire operation. But this escalation requires significant investment and carries greater risks."
+ mt_rivalry.0033.a:0 "Invest heavily in expanding the network."
+ mt_rivalry.0033.b:0 "Maintain current operations at their current level."
+ mt_rivalry.0033.c:0 "Scale back espionage and focus on my own business."
+
+ # Event 0034: Espionage Arms Race
+ mt_rivalry.0034.t:0 "The Espionage Arms Race"
+ mt_rivalry.0034.desc:0 "The spy war with [scope:rival_name.GetTitledFirstName] has escalated into madness! We're both spending fortunes on spies, counter-spies, and security. More gold goes to espionage than to actual trade. This cannot continue - we're both bleeding resources for marginal advantages."
+ mt_rivalry.0034.a:0 "Propose mutual disarmament of spy networks."
+ mt_rivalry.0034.b:0 "Push for total intelligence dominance regardless of cost."
+ mt_rivalry.0034.c:0 "Unilaterally withdraw from espionage activities."
+
+ # Event 0035: Master Spy Achievement
+ mt_rivalry.0035.t:0 "The Master of Spies"
+ mt_rivalry.0035.desc:0 "Through careful cultivation of my intelligence network, I've achieved complete information superiority over [scope:rival_name.GetTitledFirstName]. I know [scope:rival_name.GetHerHis] plans before [scope:rival_name.GetSheHe] executes them, understand [scope:rival_name.GetHerHis] weaknesses, and can counter [scope:rival_name.GetHerHis] moves before they happen. The question is: how do I use this ultimate advantage?"
+ mt_rivalry.0035.a:0 "Use it to destroy [scope:rival_name.GetHerHis] business completely."
+ mt_rivalry.0035.b:0 "Leverage it for a very favorable partnership deal."
+ mt_rivalry.0035.c:0 "Demonstrate my superiority and offer generous peace terms."
+
+ ####################################
+ # HOSTILE TAKEOVERS (0036-0040)
+ ####################################
+
+ # Event 0036: Buyout Offer
+ mt_rivalry.0036.t:0 "A Buyout Offer"
+ mt_rivalry.0036.desc:0 "[scope:rival_name.GetTitledFirstName] has made me an offer: [scope:rival_name.GetSheHe] will buy out my entire merchant operation for a substantial sum of gold. It's a generous offer, certainly, but it would mean the end of my trading career and admitting defeat to my rival. Can I really accept this?"
+ mt_rivalry.0036.a:0 "Accept the offer. Time to retire wealthy."
+ mt_rivalry.0036.b:0 "Refuse. My business is not for sale."
+ mt_rivalry.0036.c:0 "Counter with an offer to buy [scope:rival_name.GetHerHim] out instead!"
+
+ # Event 0037: Struggling Rival
+ mt_rivalry.0037.t:0 "My Rival Struggles"
+ mt_rivalry.0037.desc:0 "[scope:rival_name.GetTitledFirstName] is in financial trouble! A series of bad deals and misfortunes have left [scope:rival_name.GetHerHim] vulnerable. This is my chance to make a buyout offer and eliminate my competition permanently. But is kicking someone when they're down the merchant I want to be?"
+ mt_rivalry.0037.a:0 "Make a lowball offer to buy out [scope:rival_name.GetHerHis] business."
+ mt_rivalry.0037.b:0 "Offer a fair partnership to help [scope:rival_name.GetHerHim] recover."
+ mt_rivalry.0037.c:0 "Let [scope:rival_name.GetHerHim] fail without my interference."
+
+ # Event 0038: Hostile Takeover Attempt
+ mt_rivalry.0038.t:0 "Hostile Takeover in Progress"
+ mt_rivalry.0038.desc:0 "[scope:rival_name.GetTitledFirstName] is attempting a hostile takeover of my business! [scope:rival_name.GetSheHe] is buying up my debts, poaching my employees, and stealing my clients. If I don't act quickly, [scope:rival_name.GetSheHe] will succeed in destroying everything I've built. This is corporate warfare at its most brutal."
+ mt_rivalry.0038.a:0 "Fight back with every resource I have."
+ mt_rivalry.0038.b:0 "Seek allies among other merchants to defend against this."
+ mt_rivalry.0038.c:0 "Negotiate a merger on equal terms before it's too late."
+
+ # Event 0039: Merchant Coalition Forms
+ mt_rivalry.0039.t:0 "A Coalition Against Takeovers"
+ mt_rivalry.0039.desc:0 "Concerned about the aggressive tactics both [scope:rival_name.GetTitledFirstName] and I have been using, other merchants have formed a coalition. They're threatening to boycott both of us unless we agree to stop hostile takeover attempts and compete fairly. This could seriously damage both our businesses."
+ mt_rivalry.0039.a:0 "Agree to their terms and compete fairly going forward."
+ mt_rivalry.0039.b:0 "Defy them. I don't need their approval."
+ mt_rivalry.0039.c:0 "Try to convince them that only [scope:rival_name.GetFirstName] is the problem."
+
+ # Event 0040: Merger Proposal
+ mt_rivalry.0040.t:0 "Proposal for a Merger"
+ mt_rivalry.0040.desc:0 "[scope:rival_name.GetTitledFirstName] has proposed something unexpected: instead of continuing our costly rivalry, why not merge our operations into a single powerful merchant enterprise? Together we'd dominate trade in the region. But can I really work alongside my longtime rival as an equal partner?"
+ mt_rivalry.0040.a:0 "Agree to the merger as equal partners."
+ mt_rivalry.0040.b:0 "Only if I'm the senior partner with majority control."
+ mt_rivalry.0040.c:0 "Refuse. I work alone or not at all."
+
+ ####################################
+ # REPUTATION BATTLES (0041-0050)
+ ####################################
+
+ # Event 0041: Public Questioning
+ mt_rivalry.0041.t:0 "Reputation Under Attack"
+ mt_rivalry.0041.desc:0 "At a public gathering, [scope:rival_name.GetTitledFirstName] has begun loudly questioning my business ethics and competence. [scope:rival_name.GetSheHe] stops short of direct accusations, but the implications are clear and damaging. Other merchants are listening, and my reputation is on the line."
+ mt_rivalry.0041.a:0 "Confront [scope:rival_name.GetFirstName] publicly and defend my honor."
+ mt_rivalry.0041.b:0 "Launch a counter-campaign highlighting [scope:rival_name.GetHerHis] flaws."
+ mt_rivalry.0041.c:0 "Take the high road and let my results speak for themselves."
+
+ # Event 0042: Exposing Fraud
+ mt_rivalry.0042.t:0 "Fraud Exposed!"
+ mt_rivalry.0042.desc:0 "I've discovered that [scope:rival_name.GetTitledFirstName] has been using false weights and measures to cheat customers! This is a serious crime that could destroy [scope:rival_name.GetHerHis] reputation permanently if exposed. The evidence is solid. The question is: what do I do with this information?"
+ mt_rivalry.0042.a:0 "Expose the fraud publicly and destroy [scope:rival_name.GetHerHis] reputation."
+ mt_rivalry.0042.b:0 "Use this information as leverage to force favorable terms."
+ mt_rivalry.0042.c:0 "Warn [scope:rival_name.GetFirstName] privately and give [scope:rival_name.GetHerHim] a chance to reform."
+
+ # Event 0043: Prestigious Contract
+ mt_rivalry.0043.t:0 "Competition for Prestige"
+ mt_rivalry.0043.desc:0 "A very prestigious contract has become available - supplying goods to a powerful noble's court. Both [scope:rival_name.GetTitledFirstName] and I are competing for it. Winning would bring enormous prestige and legitimacy, while losing would be a public embarrassment. I must make my best pitch."
+ mt_rivalry.0043.a:0 "Offer the best prices, even at a loss, to win."
+ mt_rivalry.0043.b:0 "Emphasize my superior quality and reliability."
+ mt_rivalry.0043.c:0 "Use my connections and influence to secure the contract."
+
+ # Event 0044: Cheating Accusations
+ mt_rivalry.0044.t:0 "Accused of Cheating!"
+ mt_rivalry.0044.desc:0 "[scope:rival_name.GetTitledFirstName] has publicly accused me of cheating in our business competition! The accusations are false, but they're spreading quickly and damaging my reputation. I need to respond carefully - an overreaction could make me look guilty, but silence might be taken as admission."
+ mt_rivalry.0044.a:0 "Demand a public trial to prove my innocence."
+ mt_rivalry.0044.b:0 "Ignore the accusations as beneath my dignity."
+ mt_rivalry.0044.c:0 "Counter-sue [scope:rival_name.GetFirstName] for defamation."
+
+ # Event 0045: Public Debate
+ mt_rivalry.0045.t:0 "The Great Merchant Debate"
+ mt_rivalry.0045.desc:0 "[scope:rival_name.GetTitledFirstName] has challenged me to a public debate about merchant practices and ethics! The entire merchant community will be watching. This is a chance to demonstrate my superior knowledge and wisdom, but also a risk if I perform poorly. The stakes for our reputations couldn't be higher."
+ mt_rivalry.0045.a:0 "Accept the challenge and prepare thoroughly."
+ mt_rivalry.0045.b:0 "Accept but plan to attack [scope:rival_name.GetHerHis] character instead."
+ mt_rivalry.0045.c:0 "Decline gracefully. This is beneath me."
+
+ # Event 0046: Charity Competition
+ mt_rivalry.0046.t:0 "Competing in Charity"
+ mt_rivalry.0046.desc:0 "[scope:rival_name.GetTitledFirstName] has made a large public donation to charity, clearly trying to enhance [scope:rival_name.GetHerHis] reputation at my expense. The implicit challenge is clear: can I match or exceed this generosity? My reputation among the common folk could depend on my response."
+ mt_rivalry.0046.a:0 "Make an even larger donation to outdo [scope:rival_name.GetHerHim]."
+ mt_rivalry.0046.b:0 "Match the donation and suggest we work together on charity."
+ mt_rivalry.0046.c:0 "Charity should be about helping people, not competition."
+
+ # Event 0047: Innovation Showcase
+ mt_rivalry.0047.t:0 "The Innovation Competition"
+ mt_rivalry.0047.desc:0 "[scope:rival_name.GetTitledFirstName] has unveiled a new innovative trading method that's impressing everyone! If I don't respond with my own innovation, [scope:rival_name.GetSheHe] will be seen as the forward-thinking merchant while I'm viewed as outdated. I need to demonstrate my own creativity and vision."
+ mt_rivalry.0047.a:0 "Unveil my own innovation I've been developing."
+ mt_rivalry.0047.b:0 "Copy and improve upon [scope:rival_name.GetHerHis] method."
+ mt_rivalry.0047.c:0 "Stick with proven methods. Innovation for its own sake is foolish."
+
+ # Event 0048: Customer Service Battle
+ mt_rivalry.0048.t:0 "The Service Excellence War"
+ mt_rivalry.0048.desc:0 "[scope:rival_name.GetTitledFirstName] has been going above and beyond in customer service, making me look neglectful by comparison. Customers are praising [scope:rival_name.GetHerHis] attentiveness and care. I need to demonstrate that I value my customers just as much, if not more!"
+ mt_rivalry.0048.a:0 "Launch an exceptional customer service initiative."
+ mt_rivalry.0048.b:0 "Offer special discounts and perks to loyal customers."
+ mt_rivalry.0048.c:0 "Focus on product quality instead of service theatrics."
+
+ # Event 0049: Reputation Crisis
+ mt_rivalry.0049.t:0 "A Crisis Affecting Both"
+ mt_rivalry.0049.desc:0 "A scandal has erupted that threatens both [scope:rival_name.GetTitledFirstName] and myself! A third merchant's fraud has tainted the reputation of all merchants in the region. We're both suffering from guilt by association. This is bigger than our rivalry - how we respond could define our legacies."
+ mt_rivalry.0049.a:0 "Work with [scope:rival_name.GetFirstName] to restore merchant reputation."
+ mt_rivalry.0049.b:0 "Distance myself from [scope:rival_name.GetFirstName] and the scandal."
+ mt_rivalry.0049.c:0 "Use this crisis to make myself look better than [scope:rival_name.GetFirstName]."
+
+ # Event 0050: The Final Reckoning
+ mt_rivalry.0050.t:0 "The Final Reckoning"
+ mt_rivalry.0050.desc:0 "After years of rivalry with [scope:rival_name.GetTitledFirstName], we've both reached a crossroads. The constant competition has shaped us both, for better or worse. Now, as we've grown older and perhaps wiser, it's time to decide the ultimate nature of our relationship. What legacy will this rivalry leave?"
+ mt_rivalry.0050.a:0 "Propose we end the rivalry and become true partners."
+ mt_rivalry.0050.b:0 "Acknowledge [scope:rival_name.GetFirstName] as a worthy equal opponent."
+ mt_rivalry.0050.c:0 "Accept that this rivalry has made us both better merchants."
+
+ ####################################
+ # CUSTOM TOOLTIPS
+ ####################################
+
+ mt_rivalry.0001.c.tt:0 "Your rivalry begins"
+ mt_rivalry.0002.a.tt:0 "You warn your rival to stay away"
+ mt_rivalry.0003.b.tt:0 "A price war begins"
+ mt_rivalry.0004.a.tt:0 "The outcome of the contest will depend on your skills"
+ mt_rivalry.0005.c.tt:0 "All ties are severed"
+ mt_rivalry.0006.a.tt:0 "The price war intensifies"
+ mt_rivalry.0007.a.tt:0 "You may gain better supplier terms"
+ mt_rivalry.0008.a.tt:0 "A risky strategy that could bankrupt either of you"
+ mt_rivalry.0009.a.tt:0 "You and your rival temporarily ally"
+ mt_rivalry.0010.a.tt:0 "The price war ends peacefully"
+ mt_rivalry.0011.a.tt:0 "You form an illegal cartel"
+ mt_rivalry.0011.c.tt:0 "A dangerous betrayal that could backfire"
+ mt_rivalry.0012.a.tt:0 "You must restore your premium image"
+ mt_rivalry.0013.a.tt:0 "A major financial commitment"
+ mt_rivalry.0014.a.tt:0 "Your rival's manipulation will be revealed"
+ mt_rivalry.0015.a.tt:0 "You commit to serving only the wealthy"
+ mt_rivalry.0016.a.tt:0 "The corruption escalates"
+ mt_rivalry.0017.c.tt:0 "Sabotage begets sabotage"
+ mt_rivalry.0018.c.tt:0 "You spread malicious rumors"
+ mt_rivalry.0019.c.tt:0 "You resort to criminal methods"
+ mt_rivalry.0020.a.tt:0 "Seek revenge through arson"
+ mt_rivalry.0021.a.tt:0 "Both sides agree to end hostilities"
+ mt_rivalry.0022.a.tt:0 "This will be expensive"
+ mt_rivalry.0023.a.tt:0 "You strike a devastating blow"
+ mt_rivalry.0024.a.tt:0 "Public apology and compensation"
+ mt_rivalry.0025.a.tt:0 "A lasting peace is established"
+ mt_rivalry.0026.a.tt:0 "You begin spying on your rival"
+ mt_rivalry.0026.c.tt:0 "An honorable but risky choice"
+ mt_rivalry.0027.a.tt:0 "You turn the situation to your advantage"
+ mt_rivalry.0028.a.tt:0 "A risky theft that could be discovered"
+ mt_rivalry.0029.b.tt:0 "You pay to make this go away"
+ mt_rivalry.0030.a.tt:0 "Use your intelligence advantage"
+ mt_rivalry.0031.a.tt:0 "Accept the setback and move on"
+ mt_rivalry.0032.a.tt:0 "Set an elaborate trap using false information"
+ mt_rivalry.0033.a.tt:0 "A major investment in espionage"
+ mt_rivalry.0034.a.tt:0 "Both sides agree to stop spying"
+ mt_rivalry.0035.a.tt:0 "Total business destruction"
+ mt_rivalry.0036.a.tt:0 "You retire from the merchant life"
+ mt_rivalry.0037.a.tt:0 "An opportunistic and ruthless move"
+ mt_rivalry.0038.a.tt:0 "Fight with everything you have"
+ mt_rivalry.0039.a.tt:0 "You agree to fair competition"
+ mt_rivalry.0040.a.tt:0 "Form a powerful merchant alliance"
+ mt_rivalry.0041.a.tt:0 "Publicly defend your reputation"
+ mt_rivalry.0042.a.tt:0 "Destroy your rival's reputation"
+ mt_rivalry.0043.c.tt:0 "Use influence and connections"
+ mt_rivalry.0044.a.tt:0 "Demand formal proceedings"
+ mt_rivalry.0045.a.tt:0 "The outcome depends on your learning"
+ mt_rivalry.0046.a.tt:0 "A costly display of generosity"
+ mt_rivalry.0047.a.tt:0 "Unveil your innovation"
+ mt_rivalry.0048.a.tt:0 "Focus on exceptional service"
+ mt_rivalry.0049.a.tt:0 "Work together for the greater good"
+ mt_rivalry.0050.a.tt:0 "End the rivalry permanently"
+ mt_rivalry.0050.c.tt:0 "Rivalry has forged excellence"
+
+ ####################################
+ # CHARACTER MODIFIERS
+ ####################################
+
+ mt_watching_rival:0 "Watching Rival Closely"
+ mt_watching_rival_desc:0 "This character is carefully monitoring their rival's business activities."
+
+ mt_price_war_matching:0 "Matching Prices"
+ mt_price_war_matching_desc:0 "This merchant is engaged in aggressive price matching with a rival."
+
+ mt_superior_quality:0 "Superior Quality Goods"
+ mt_superior_quality_desc:0 "This merchant has focused on quality over price, earning a premium reputation."
+
+ mt_exclusive_supplier:0 "Exclusive Supply Deal"
+ mt_exclusive_supplier_desc:0 "This merchant has secured exclusive rights to certain trade goods."
+
+ mt_route_protected:0 "Protected Trade Routes"
+ mt_route_protected_desc:0 "This merchant's trade routes are well-protected by mercenaries."
+
+ mt_warehouse_security:0 "Enhanced Warehouse Security"
+ mt_warehouse_security_desc:0 "Warehouses are protected with improved security measures."
+
+ mt_spy_network:0 "Spy Network"
+ mt_spy_network_desc:0 "This character maintains a network of spies providing valuable intelligence."
+
+ mt_being_spied_on:0 "Under Surveillance"
+ mt_being_spied_on_desc:0 "This character's operations are being monitored by rival spies."
+
+ mt_counterintelligence:0 "Counterintelligence Operations"
+ mt_counterintelligence_desc:0 "This character has effective defenses against espionage."
+
+ mt_hostile_takeover_target:0 "Takeover Target"
+ mt_hostile_takeover_target_desc:0 "This merchant's business is under threat from a hostile takeover."
+
+ mt_reputation_damaged:0 "Damaged Reputation"
+ mt_reputation_damaged_desc:0 "This character's reputation has been harmed by scandal or accusations."
+
+ mt_reputation_enhanced:0 "Enhanced Reputation"
+ mt_reputation_enhanced_desc:0 "This character has built an excellent reputation through good deeds."
+
+ mt_debate_victor:0 "Debate Champion"
+ mt_debate_victor_desc:0 "This character won a prestigious public debate on merchant practices."
+
+ mt_charitable_merchant:0 "Charitable Merchant"
+ mt_charitable_merchant_desc:0 "Known for generous donations to help the less fortunate."
+
+ mt_innovative_merchant:0 "Innovative Merchant"
+ mt_innovative_merchant_desc:0 "This merchant is recognized for introducing new trading methods."
+
+ mt_customer_focused:0 "Customer Service Excellence"
+ mt_customer_focused_desc:0 "This merchant is renowned for exceptional customer service."
+
+ mt_respected_veteran:0 "Respected Veteran Merchant"
+ mt_respected_veteran_desc:0 "A long career of honorable competition has earned great respect."
+
+ ####################################
+ # OPINION MODIFIERS
+ ####################################
+
+ rivalry_opinion:0 "Trade Rivalry"
+ bitter_rivalry_opinion:0 "Bitter Trade Rivalry"
+ betrayed_friendship_opinion:0 "Betrayed Friendship"
+ price_war_opinion:0 "Price War Animosity"
+ sabotage_victim_opinion:0 "Victim of Sabotage"
+ caught_spying_opinion:0 "Caught Spying"
+ blackmailed_opinion:0 "Being Blackmailed"
+ takeover_attempt_opinion:0 "Hostile Takeover Attempt"
+ respect_worthy_rival_opinion:0 "Respect for Worthy Rival"
+ former_rival_opinion:0 "Former Rival"
+ merchant_partnership_opinion:0 "Merchant Partnership"
+
