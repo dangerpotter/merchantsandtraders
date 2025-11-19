@@ -378,15 +378,7 @@ mt_dangerous_route = {
 }
 
 # Secure Route - Well-protected path
-mt_secure_route = {
-	icon = "gfx/interface/icons/modifiers/county_modifier_development.dds"
 
-	# Lower costs
-	# (Handled through script calculations)
-
-	# Peace of mind
-	stress_loss_mult = 0.05				# +5% stress loss
-}
 
 ####################################
 # SEASONAL TRADE MODIFIERS

@@ -117,12 +117,6 @@ mt_trade_secrets_stolen = {
 	icon = intrigue_negative
 }
 
-mt_stolen_trade_secrets = {
-	monthly_income_mult = 0.15
-	intrigue = 2
-	monthly_prestige_gain_mult = -0.05
-	icon = intrigue_positive
-}
 
 mt_embezzlement_repayment = {
 	monthly_income = 5
@@ -142,18 +136,6 @@ mt_profitable_venture = {
 	icon = stewardship_positive
 }
 
-mt_excellent_deal = {
-	monthly_income_mult = 0.10
-	diplomacy = 2
-	icon = diplomacy_positive
-}
-
-mt_restructured_company = {
-	monthly_income_mult = 0.15
-	stewardship = 2
-	stress_gain_mult = -0.05
-	icon = stewardship_positive
-}
 
 mt_expanded_guard_force = {
 	levy_size = 0.25
