@@ -1,0 +1,425 @@
+####################################
+# MERCHANTS AND TRADERS MOD
+# Market Manipulation - Scripted Effects
+# Version: 0.1.0
+####################################
+#
+# Effects for manipulating markets through various schemes
+# High risk, high reward mechanics
+#
+####################################
+
+####################################
+# MARKET CORNERING
+####################################
+
+# Effect: Attempt to monopolize a specific good
+# Scope: Character
+# Usage: <character> = { corner_market_effect = yes }
+# Requires: 80% of regional supply, massive gold investment (500-2000)
+# Effect: Control prices, set markup up to 200%
+# Risk: Regulatory backlash, rival merchants unite
+corner_market_effect = {
+	# Remove existing gold based on market size
+	remove_long_term_gold = 1000
+
+	# Apply monopoly control modifier
+	add_character_modifier = {
+		modifier = mt_market_monopoly_active
+		years = 5
+	}
+
+	# Add massive wealth from price control
+	add_gold = 2000
+
+	# Risk: Attract attention from authorities
+	random = {
+		chance = 40
+		# Trigger regulatory investigation
+		trigger_event = {
+			id = mt_manipulation.0001
+			days = { 180 360 }
+		}
+	}
+
+	# Risk: Rival merchants unite against you
+	random = {
+		chance = 30
+		trigger_event = {
+			id = mt_manipulation.0002
+			days = { 90 180 }
+		}
+	}
+
+	# Reputation hit for unethical practices
+	add_character_modifier = {
+		modifier = mt_known_market_manipulator
+		years = 10
+	}
+
+	# Market stress - maintain or lose control
+	trigger_event = {
+		id = mt_manipulation.0003
+		days = { 365 730 }
+	}
+}
+
+####################################
+# ARTIFICIAL SCARCITY
+####################################
+
+# Effect: Buy and hold strategy to inflate prices
+# Scope: Character
+# Usage: <character> = { price_inflation_effect = yes }
+# Creates artificial scarcity by withholding goods
+price_inflation_effect = {
+	# Initial investment to buy up goods
+	remove_long_term_gold = 500
+
+	# Add modifier tracking the scheme
+	add_character_modifier = {
+		modifier = mt_hoarding_goods
+		months = 18
+	}
+
+	# Track when to sell at peak
+	set_variable = {
+		name = hoarding_start_date
+		value = current_date
+	}
+
+	# Schedule peak sell opportunity
+	trigger_event = {
+		id = mt_manipulation.0012
+		days = { 180 365 }
+	}
+
+	# Risk: Goods spoil while holding
+	random = {
+		chance = 25
+		trigger_event = {
+			id = mt_manipulation.0013
+			days = { 120 240 }
+		}
+	}
+
+	# Risk: Ruler demands release during crisis
+	random = {
+		chance = 20
+		trigger_event = {
+			id = mt_manipulation.0015
+			days = { 90 180 }
+		}
+	}
+
+	# Risk: Competitors flood market while you hold
+	random = {
+		chance = 30
+		trigger_event = {
+			id = mt_manipulation.0014
+			days = { 150 300 }
+		}
+	}
+}
+
+####################################
+# MARKET FLOODING
+####################################
+
+# Effect: Crash a market intentionally to bankrupt competitors
+# Scope: Character
+# Usage: <character> = { dump_goods_effect = yes }
+# Sell massive quantities at loss to crash prices
+dump_goods_effect = {
+	# Take immediate loss from selling below cost
+	remove_long_term_gold = 300
+
+	# Apply market dumping modifier
+	add_character_modifier = {
+		modifier = mt_dumping_campaign_active
+		months = 12
+	}
+
+	# Reputation damage for predatory practices
+	add_character_modifier = {
+		modifier = mt_predatory_merchant
+		years = 5
+	}
+
+	# Track market crash
+	trigger_event = {
+		id = mt_manipulation.0017
+		days = 30
+	}
+
+	# Risk: Competitor retaliates with own dump
+	random = {
+		chance = 45
+		trigger_event = {
+			id = mt_manipulation.0019
+			days = { 60 120 }
+		}
+	}
+
+	# Risk: Price war spirals out of control
+	random = {
+		chance = 35
+		trigger_event = {
+			id = mt_manipulation.0020
+			days = { 90 150 }
+		}
+	}
+
+	# Risk: Regulatory intervention
+	random = {
+		chance = 40
+		trigger_event = {
+			id = mt_manipulation.0023
+			days = { 120 180 }
+		}
+	}
+
+	# Success path - competitor bankruptcy
+	random = {
+		chance = 50
+		trigger_event = {
+			id = mt_manipulation.0024
+			days = { 180 365 }
+		}
+	}
+}
+
+####################################
+# RUMOR SPREADING
+####################################
+
+# Effect: Market manipulation via misinformation
+# Scope: Character
+# Usage: <character> = { spread_rumors_effect = yes }
+# Success based on reputation and stewardship/intrigue
+spread_rumors_effect = {
+	# Small cost for spreading disinformation
+	remove_short_term_gold = 50
+
+	# Success check based on intrigue and reputation
+	if = {
+		limit = {
+			intrigue >= 14
+			OR = {
+				has_character_modifier = mt_reputation_renowned_trader
+				has_character_modifier = mt_reputation_merchant_magnate
+			}
+		}
+		# High success - rumors believed
+		trigger_event = mt_manipulation.0031
+
+		# Add temporary price manipulation
+		add_character_modifier = {
+			modifier = mt_rumor_manipulation_successful
+			months = 6
+		}
+
+		add_gold = 400
+	}
+	else_if = {
+		limit = {
+			intrigue >= 10
+		}
+		# Moderate success - some effect
+		random_list = {
+			70 = {
+				trigger_event = mt_manipulation.0031
+				add_gold = 200
+			}
+			30 = {
+				# Caught spreading lies
+				trigger_event = mt_manipulation.0028
+			}
+		}
+	}
+	else = {
+		# Low intrigue - likely to be caught
+		random_list = {
+			40 = {
+				trigger_event = mt_manipulation.0031
+				add_gold = 150
+			}
+			60 = {
+				# Exposed as liar
+				trigger_event = mt_manipulation.0028
+			}
+		}
+	}
+
+	# Risk: Competitor counter-campaign
+	random = {
+		chance = 25
+		trigger_event = {
+			id = mt_manipulation.0029
+			days = { 30 90 }
+		}
+	}
+}
+
+####################################
+# PRICE FIXING CARTEL
+####################################
+
+# Effect: Secret price-fixing agreement with other merchants
+# Scope: Character
+# Usage: <character> = { collusion_effect = yes }
+# Form cartel to maintain high prices
+collusion_effect = {
+	# Add cartel member modifier
+	add_character_modifier = {
+		modifier = mt_cartel_member
+		years = 3
+	}
+
+	# Initial cartel profits
+	add_gold = 300
+
+	# Schedule regular cartel profit events
+	trigger_event = {
+		id = mt_manipulation.0034
+		days = 180
+	}
+
+	# Risk: Member cheating on agreement
+	random = {
+		chance = 35
+		trigger_event = {
+			id = mt_manipulation.0035
+			days = { 365 730 }
+		}
+	}
+
+	# Risk: Betrayal to authorities
+	random = {
+		chance = 25
+		trigger_event = {
+			id = mt_manipulation.0036
+			days = { 540 1095 }
+		}
+	}
+
+	# Risk: Regulatory crackdown
+	random = {
+		chance = 30
+		trigger_event = {
+			id = mt_manipulation.0037
+			days = { 730 1460 }
+		}
+	}
+}
+
+####################################
+# SHORT SELLING (MEDIEVAL STYLE)
+####################################
+
+# Effect: Bet against market - promise future delivery at current price
+# Scope: Character
+# Usage: <character> = { short_selling_medieval_effect = yes }
+# Promise to deliver goods at current price, hope prices drop
+short_selling_medieval_effect = {
+	# Track the position
+	add_character_modifier = {
+		modifier = mt_short_position_active
+		months = 12
+	}
+
+	# Store current market conditions
+	set_variable = {
+		name = short_position_active
+		value = 1
+	}
+
+	# Outcome event - prices move
+	random_list = {
+		# Prices drop - profit
+		45 = {
+			trigger_event = {
+				id = mt_manipulation.0041
+				days = { 180 365 }
+			}
+		}
+		# Prices rise - loss
+		40 = {
+			trigger_event = {
+				id = mt_manipulation.0042
+				days = { 180 365 }
+			}
+		}
+		# Prices stable - small profit
+		15 = {
+			trigger_event = {
+				id = mt_manipulation.0043
+				days = { 180 365 }
+			}
+		}
+	}
+
+	# Risk: Market manipulation by others drives prices up
+	random = {
+		chance = 20
+		trigger_event = {
+			id = mt_manipulation.0044
+			days = { 90 180 }
+		}
+	}
+}
+
+####################################
+# CLEANUP AND UTILITY EFFECTS
+####################################
+
+# Effect: End market manipulation modifier
+# Scope: Character
+# Usage: <character> = { end_market_manipulation_effect = yes }
+end_market_manipulation_effect = {
+	if = {
+		limit = { has_character_modifier = mt_market_monopoly_active }
+		remove_character_modifier = mt_market_monopoly_active
+	}
+	if = {
+		limit = { has_character_modifier = mt_hoarding_goods }
+		remove_character_modifier = mt_hoarding_goods
+	}
+	if = {
+		limit = { has_character_modifier = mt_dumping_campaign_active }
+		remove_character_modifier = mt_dumping_campaign_active
+	}
+	if = {
+		limit = { has_character_modifier = mt_short_position_active }
+		remove_character_modifier = mt_short_position_active
+	}
+}
+
+# Effect: Regulatory punishment
+# Scope: Character
+# Usage: <character> = { market_manipulation_punishment_effect = yes }
+market_manipulation_punishment_effect = {
+	# Heavy fine
+	remove_long_term_gold = 500
+
+	# Reputation destroyed
+	add_character_modifier = {
+		modifier = mt_convicted_manipulator
+		years = 20
+	}
+
+	# Prestige hit
+	add_prestige = -200
+
+	# Possible imprisonment
+	random = {
+		chance = 30
+		imprison = {
+			target = root
+			type = dungeon
+		}
+	}
+
+	# End all active manipulations
+	end_market_manipulation_effect = yes
+}

@@ -1,0 +1,3811 @@
+####################################
+# MERCHANTS AND TRADERS MOD
+# Market Manipulation Events
+# Version: 0.1.0
+####################################
+#
+# Event namespace: mt_manipulation
+#
+# 0001-0008: Corner Market Attempts
+# 0009-0016: Artificial Scarcity
+# 0017-0024: Market Crashes
+# 0025-0032: Rumor Campaigns
+# 0033-0040: Cartels & Collusion
+#
+####################################
+
+namespace = mt_manipulation
+
+####################################
+# CORNER MARKET ATTEMPTS (0001-0008)
+####################################
+
+# 0001: Successfully corner silk market - control prices
+mt_manipulation.0001 = {
+	type = character_event
+	title = mt_manipulation.0001.t
+	desc = mt_manipulation.0001.desc
+	theme = stewardship
+
+	left_portrait = {
+		character = root
+		animation = personality_bold
+	}
+
+	trigger = {
+		has_character_modifier = mt_market_monopoly_active
+	}
+
+	weight_multiplier = {
+		base = 100
+	}
+
+	# Maximize profits - set markup to 200%
+	option = {
+		name = mt_manipulation.0001.a
+
+		add_gold = 800
+		add_prestige = 100
+
+		# Attract regulatory attention
+		random = {
+			chance = 50
+			add_character_flag = {
+				flag = under_market_investigation
+				years = 1
+			}
+		}
+
+		custom_tooltip = mt_manipulation.0001.a.tt
+
+		ai_chance = {
+			base = 70
+			modifier = {
+				add = 30
+				has_trait = greedy
+			}
+		}
+	}
+
+	# Moderate profits - set markup to 150%
+	option = {
+		name = mt_manipulation.0001.b
+
+		add_gold = 500
+		add_prestige = 50
+
+		# Less attention
+		random = {
+			chance = 25
+			add_character_flag = {
+				flag = under_market_investigation
+				months = 6
+			}
+		}
+
+		custom_tooltip = mt_manipulation.0001.b.tt
+
+		ai_chance = {
+			base = 30
+			modifier = {
+				add = 30
+				has_trait = just
+			}
+		}
+	}
+
+	# Release some control - avoid scrutiny
+	option = {
+		name = mt_manipulation.0001.c
+
+		add_gold = 300
+		add_piety = 50
+
+		# Gain reputation for mercy
+		add_character_modifier = {
+			modifier = mt_merciful_monopolist
+			years = 3
+		}
+
+		custom_tooltip = mt_manipulation.0001.c.tt
+
+		ai_chance = {
+			base = 10
+			modifier = {
+				add = 40
+				has_trait = compassionate
+			}
+		}
+	}
+}
+
+# 0002: Attempted corner fails - rivals unite against you
+mt_manipulation.0002 = {
+	type = character_event
+	title = mt_manipulation.0002.t
+	desc = mt_manipulation.0002.desc
+	theme = intrigue
+
+	left_portrait = {
+		character = root
+		animation = worry
+	}
+
+	right_portrait = {
+		character = scope:rival_merchant
+		animation = schadenfreude
+	}
+
+	trigger = {
+		has_character_modifier = mt_market_monopoly_active
+	}
+
+	immediate = {
+		# Find a rival merchant
+		random_living_character = {
+			limit = {
+				is_any_merchant_trigger = yes
+				NOT = { this = root }
+			}
+			save_scope_as = rival_merchant
+		}
+	}
+
+	weight_multiplier = {
+		base = 100
+	}
+
+	# Fight back - increase investment
+	option = {
+		name = mt_manipulation.0002.a
+
+		remove_long_term_gold = 500
+
+		# Risky - might succeed or fail catastrophically
+		random_list = {
+			50 = {
+				# Success - maintain monopoly
+				add_gold = 1000
+				custom_tooltip = mt_manipulation.0002.a.success
+			}
+			50 = {
+				# Failure - lose everything
+				remove_character_modifier = mt_market_monopoly_active
+				add_prestige = -200
+				custom_tooltip = mt_manipulation.0002.a.failure
+			}
+		}
+
+		ai_chance = {
+			base = 40
+			modifier = {
+				add = 30
+				has_trait = ambitious
+			}
+		}
+	}
+
+	# Negotiate with rivals - share the market
+	option = {
+		name = mt_manipulation.0002.b
+
+		remove_short_term_gold = 300
+
+		# Form cartel instead
+		remove_character_modifier = mt_market_monopoly_active
+		add_character_modifier = {
+			modifier = mt_cartel_member
+			years = 3
+		}
+
+		add_gold = 400
+
+		scope:rival_merchant = {
+			add_opinion = {
+				target = root
+				modifier = respect_opinion
+				opinion = 30
+			}
+		}
+
+		custom_tooltip = mt_manipulation.0002.b.tt
+
+		ai_chance = {
+			base = 40
+			modifier = {
+				add = 20
+				diplomacy >= 12
+			}
+		}
+	}
+
+	# Surrender - cut your losses
+	option = {
+		name = mt_manipulation.0002.c
+
+		remove_character_modifier = mt_market_monopoly_active
+		add_prestige = -100
+
+		# Avoid total ruin
+		add_gold = 200
+
+		if = {
+			limit = { has_trait = ambitious }
+			add_stress = 75
+		}
+
+		custom_tooltip = mt_manipulation.0002.c.tt
+
+		ai_chance = {
+			base = 20
+		}
+	}
+}
+
+# 0003: Maintain monopoly - fend off challengers
+mt_manipulation.0003 = {
+	type = character_event
+	title = mt_manipulation.0003.t
+	desc = mt_manipulation.0003.desc
+	theme = stewardship
+
+	left_portrait = {
+		character = root
+		animation = personality_greedy
+	}
+
+	trigger = {
+		has_character_modifier = mt_market_monopoly_active
+	}
+
+	weight_multiplier = {
+		base = 100
+	}
+
+	# Aggressive defense - crush competition
+	option = {
+		name = mt_manipulation.0003.a
+
+		remove_short_term_gold = 200
+
+		# Maintain monopoly
+		add_character_modifier = {
+			modifier = mt_market_monopoly_active
+			years = 2
+		}
+
+		add_gold = 600
+		add_prestige = -50  # Reputation for ruthlessness
+
+		if = {
+			limit = { has_trait = just }
+			add_stress = 50
+		}
+
+		custom_tooltip = mt_manipulation.0003.a.tt
+
+		ai_chance = {
+			base = 60
+			modifier = {
+				add = 30
+				has_trait = greedy
+			}
+		}
+	}
+
+	# Let some competitors in - reduce pressure
+	option = {
+		name = mt_manipulation.0003.b
+
+		# Partial profits but stable
+		add_gold = 400
+
+		# Reduce monopoly strength but maintain
+		custom_tooltip = mt_manipulation.0003.b.tt
+
+		ai_chance = {
+			base = 40
+		}
+	}
+}
+
+# 0004: Monopoly broken - new supplier enters market
+mt_manipulation.0004 = {
+	type = character_event
+	title = mt_manipulation.0004.t
+	desc = mt_manipulation.0004.desc
+	theme = intrigue
+
+	left_portrait = {
+		character = root
+		animation = sadness
+	}
+
+	right_portrait = {
+		character = scope:new_competitor
+		animation = personality_bold
+	}
+
+	trigger = {
+		has_character_modifier = mt_market_monopoly_active
+	}
+
+	immediate = {
+		# Create new competitor
+		random_living_character = {
+			limit = {
+				is_any_merchant_trigger = yes
+				NOT = { this = root }
+			}
+			save_scope_as = new_competitor
+		}
+	}
+
+	weight_multiplier = {
+		base = 100
+	}
+
+	# Try to buy them out
+	option = {
+		name = mt_manipulation.0004.a
+
+		remove_long_term_gold = 600
+
+		random_list = {
+			60 = {
+				# Success
+				add_gold = 300
+				custom_tooltip = mt_manipulation.0004.a.success
+
+				scope:new_competitor = {
+					add_opinion = {
+						target = root
+						modifier = grateful_opinion
+						opinion = 40
+					}
+				}
+			}
+			40 = {
+				# They refuse
+				custom_tooltip = mt_manipulation.0004.a.failure
+				remove_character_modifier = mt_market_monopoly_active
+				add_prestige = -100
+			}
+		}
+
+		ai_chance = {
+			base = 50
+			modifier = {
+				factor = 0
+				gold < 700
+			}
+		}
+	}
+
+	# Compete aggressively - price war
+	option = {
+		name = mt_manipulation.0004.b
+
+		# Initiate dumping campaign
+		dump_goods_effect = yes
+
+		scope:new_competitor = {
+			add_opinion = {
+				target = root
+				modifier = rival_opinion
+				opinion = -50
+			}
+		}
+
+		custom_tooltip = mt_manipulation.0004.b.tt
+
+		ai_chance = {
+			base = 30
+			modifier = {
+				add = 30
+				has_trait = vengeful
+			}
+		}
+	}
+
+	# Accept the competition
+	option = {
+		name = mt_manipulation.0004.c
+
+		remove_character_modifier = mt_market_monopoly_active
+
+		# Still profitable, just not monopoly profits
+		add_gold = 300
+		add_piety = 30
+
+		scope:new_competitor = {
+			add_opinion = {
+				target = root
+				modifier = respect_opinion
+				opinion = 20
+			}
+		}
+
+		if = {
+			limit = { has_trait = greedy }
+			add_stress = 50
+		}
+
+		custom_tooltip = mt_manipulation.0004.c.tt
+
+		ai_chance = {
+			base = 20
+			modifier = {
+				add = 30
+				has_trait = humble
+			}
+		}
+	}
+}
+
+# 0005: Government intervenes - forced to lower prices
+mt_manipulation.0005 = {
+	type = character_event
+	title = mt_manipulation.0005.t
+	desc = mt_manipulation.0005.desc
+	theme = stewardship
+
+	left_portrait = {
+		character = root
+		animation = worry
+	}
+
+	right_portrait = {
+		character = liege
+		animation = disapproval
+	}
+
+	trigger = {
+		has_character_modifier = mt_market_monopoly_active
+		has_character_flag = under_market_investigation
+		exists = liege
+	}
+
+	weight_multiplier = {
+		base = 100
+	}
+
+	# Comply with government order
+	option = {
+		name = mt_manipulation.0005.a
+
+		remove_character_modifier = mt_market_monopoly_active
+		remove_long_term_gold = 300
+
+		# Avoid worse punishment
+		remove_character_flag = under_market_investigation
+
+		reverse_add_opinion = {
+			target = liege
+			modifier = trust_opinion
+			opinion = 10
+		}
+
+		custom_tooltip = mt_manipulation.0005.a.tt
+
+		ai_chance = {
+			base = 60
+		}
+	}
+
+	# Bribe officials to look the other way
+	option = {
+		name = mt_manipulation.0005.b
+
+		remove_short_term_gold = 400
+
+		random_list = {
+			50 = {
+				# Bribe works
+				remove_character_flag = under_market_investigation
+				custom_tooltip = mt_manipulation.0005.b.success
+
+				# Maintain monopoly
+				add_gold = 500
+			}
+			50 = {
+				# Bribe exposed - scandal
+				trigger_event = mt_manipulation.0070
+				custom_tooltip = mt_manipulation.0005.b.failure
+			}
+		}
+
+		ai_chance = {
+			base = 20
+			modifier = {
+				add = 30
+				intrigue >= 12
+			}
+			modifier = {
+				add = -50
+				has_trait = just
+			}
+		}
+	}
+
+	# Defy the government
+	option = {
+		name = mt_manipulation.0005.c
+
+		# Severe consequences
+		reverse_add_opinion = {
+			target = liege
+			modifier = angry_opinion
+			opinion = -40
+		}
+
+		add_prestige = -200
+		remove_long_term_gold = 500
+
+		# Possible imprisonment
+		random = {
+			chance = 40
+			imprison = {
+				target = root
+				type = dungeon
+			}
+		}
+
+		if = {
+			limit = { has_trait = ambitious }
+			add_stress = -50
+		}
+
+		custom_tooltip = mt_manipulation.0005.c.tt
+
+		ai_chance = {
+			base = 10
+			modifier = {
+				add = 20
+				has_trait = arrogant
+			}
+		}
+	}
+}
+
+# 0006: Other merchants boycott you
+mt_manipulation.0006 = {
+	type = character_event
+	title = mt_manipulation.0006.t
+	desc = mt_manipulation.0006.desc
+	theme = diplomacy
+
+	left_portrait = {
+		character = root
+		animation = worry
+	}
+
+	trigger = {
+		has_character_modifier = mt_market_monopoly_active
+		any_living_character = {
+			is_any_merchant_trigger = yes
+			NOT = { this = root }
+		}
+	}
+
+	weight_multiplier = {
+		base = 100
+	}
+
+	immediate = {
+		every_living_character = {
+			limit = {
+				is_any_merchant_trigger = yes
+				NOT = { this = root }
+			}
+			add_opinion = {
+				target = root
+				modifier = monopolist_opinion
+				opinion = -30
+			}
+		}
+	}
+
+	# End monopoly to restore relations
+	option = {
+		name = mt_manipulation.0006.a
+
+		remove_character_modifier = mt_market_monopoly_active
+
+		every_living_character = {
+			limit = {
+				is_any_merchant_trigger = yes
+				has_opinion_modifier = {
+					target = root
+					modifier = monopolist_opinion
+				}
+			}
+			remove_opinion = {
+				target = root
+				modifier = monopolist_opinion
+			}
+			add_opinion = {
+				target = root
+				modifier = respect_opinion
+				opinion = 20
+			}
+		}
+
+		add_piety = 50
+
+		custom_tooltip = mt_manipulation.0006.a.tt
+
+		ai_chance = {
+			base = 40
+			modifier = {
+				add = 30
+				diplomacy >= 12
+			}
+		}
+	}
+
+	# Ignore the boycott
+	option = {
+		name = mt_manipulation.0006.b
+
+		# Continue profiting but isolated
+		add_gold = 400
+		add_prestige = -50
+
+		if = {
+			limit = { has_trait = gregarious }
+			add_stress = 50
+		}
+
+		custom_tooltip = mt_manipulation.0006.b.tt
+
+		ai_chance = {
+			base = 60
+			modifier = {
+				add = 30
+				has_trait = greedy
+			}
+		}
+	}
+}
+
+# 0007: Monopoly profits rolling in
+mt_manipulation.0007 = {
+	type = character_event
+	title = mt_manipulation.0007.t
+	desc = mt_manipulation.0007.desc
+	theme = stewardship
+
+	left_portrait = {
+		character = root
+		animation = happiness
+	}
+
+	trigger = {
+		has_character_modifier = mt_market_monopoly_active
+		NOT = { has_character_flag = under_market_investigation }
+	}
+
+	weight_multiplier = {
+		base = 100
+	}
+
+	# Celebrate your success
+	option = {
+		name = mt_manipulation.0007.a
+
+		add_gold = 1200
+		add_prestige = 100
+
+		if = {
+			limit = { has_trait = greedy }
+			add_stress = -50
+		}
+		if = {
+			limit = { has_trait = compassionate }
+			add_stress = 75
+		}
+
+		custom_tooltip = mt_manipulation.0007.a.tt
+
+		ai_chance = {
+			base = 100
+		}
+	}
+}
+
+# 0008: Must decide - Maintain or release control
+mt_manipulation.0008 = {
+	type = character_event
+	title = mt_manipulation.0008.t
+	desc = mt_manipulation.0008.desc
+	theme = stewardship
+
+	left_portrait = {
+		character = root
+		animation = thinking
+	}
+
+	trigger = {
+		has_character_modifier = mt_market_monopoly_active
+	}
+
+	weight_multiplier = {
+		base = 100
+	}
+
+	# Maintain monopoly - continue the scheme
+	option = {
+		name = mt_manipulation.0008.a
+
+		remove_short_term_gold = 200
+
+		# Extend monopoly
+		add_character_modifier = {
+			modifier = mt_market_monopoly_active
+			years = 3
+		}
+
+		add_gold = 800
+
+		# Increased risk
+		random = {
+			chance = 60
+			add_character_flag = {
+				flag = under_market_investigation
+				years = 1
+			}
+		}
+
+		custom_tooltip = mt_manipulation.0008.a.tt
+
+		ai_chance = {
+			base = 50
+			modifier = {
+				add = 30
+				has_trait = greedy
+			}
+		}
+	}
+
+	# Release control gracefully
+	option = {
+		name = mt_manipulation.0008.b
+
+		remove_character_modifier = mt_market_monopoly_active
+
+		# Final profit from position
+		add_gold = 500
+		add_prestige = 50
+		add_piety = 100
+
+		# Reputation boost for fairness
+		add_character_modifier = {
+			modifier = mt_fair_merchant
+			years = 5
+		}
+
+		custom_tooltip = mt_manipulation.0008.b.tt
+
+		ai_chance = {
+			base = 50
+			modifier = {
+				add = 30
+				has_trait = just
+			}
+			modifier = {
+				add = 20
+				has_trait = compassionate
+			}
+		}
+	}
+}
+
+####################################
+# ARTIFICIAL SCARCITY (0009-0016)
+####################################
+
+# 0009: Withheld grain during shortage - massive profits or backlash?
+mt_manipulation.0009 = {
+	type = character_event
+	title = mt_manipulation.0009.t
+	desc = mt_manipulation.0009.desc
+	theme = stewardship
+
+	left_portrait = {
+		character = root
+		animation = thinking
+	}
+
+	trigger = {
+		has_character_modifier = mt_hoarding_goods
+	}
+
+	weight_multiplier = {
+		base = 100
+	}
+
+	# Hold firm - wait for prices to peak
+	option = {
+		name = mt_manipulation.0009.a
+
+		# Will trigger peak price event later
+		custom_tooltip = mt_manipulation.0009.a.tt
+
+		if = {
+			limit = { has_trait = compassionate }
+			add_stress = 100
+		}
+
+		ai_chance = {
+			base = 60
+			modifier = {
+				add = 30
+				has_trait = greedy
+			}
+			modifier = {
+				add = -50
+				has_trait = compassionate
+			}
+		}
+	}
+
+	# Release some goods - moderate profit, avoid backlash
+	option = {
+		name = mt_manipulation.0009.b
+
+		remove_character_modifier = mt_hoarding_goods
+		add_gold = 400
+		add_piety = 50
+
+		# Reduce stress
+		if = {
+			limit = { has_trait = compassionate }
+			add_stress = -50
+		}
+
+		custom_tooltip = mt_manipulation.0009.b.tt
+
+		ai_chance = {
+			base = 40
+			modifier = {
+				add = 40
+				has_trait = compassionate
+			}
+		}
+	}
+}
+
+# 0010: Created false wine scarcity - prices soaring
+mt_manipulation.0010 = {
+	type = character_event
+	title = mt_manipulation.0010.t
+	desc = mt_manipulation.0010.desc
+	theme = intrigue
+
+	left_portrait = {
+		character = root
+		animation = personality_greedy
+	}
+
+	trigger = {
+		has_character_modifier = mt_hoarding_goods
+	}
+
+	weight_multiplier = {
+		base = 100
+	}
+
+	# Continue the scheme - maximum profit
+	option = {
+		name = mt_manipulation.0010.a
+
+		add_gold = 600
+		add_prestige = 50
+
+		# Risk detection increases
+		random = {
+			chance = 40
+			add_character_flag = {
+				flag = under_market_investigation
+				months = 6
+			}
+		}
+
+		if = {
+			limit = { has_trait = greedy }
+			add_stress = -25
+		}
+
+		custom_tooltip = mt_manipulation.0010.a.tt
+
+		ai_chance = {
+			base = 70
+			modifier = {
+				add = 20
+				has_trait = greedy
+			}
+		}
+	}
+
+	# End scheme early - take profits now
+	option = {
+		name = mt_manipulation.0010.b
+
+		remove_character_modifier = mt_hoarding_goods
+		add_gold = 350
+
+		custom_tooltip = mt_manipulation.0010.b.tt
+
+		ai_chance = {
+			base = 30
+		}
+	}
+}
+
+# 0011: Competitors discover your stockpile - threatened
+mt_manipulation.0011 = {
+	type = character_event
+	title = mt_manipulation.0011.t
+	desc = mt_manipulation.0011.desc
+	theme = intrigue
+
+	left_portrait = {
+		character = root
+		animation = worry
+	}
+
+	right_portrait = {
+		character = scope:rival_merchant
+		animation = schadenfreude
+	}
+
+	trigger = {
+		has_character_modifier = mt_hoarding_goods
+	}
+
+	immediate = {
+		random_living_character = {
+			limit = {
+				is_any_merchant_trigger = yes
+				NOT = { this = root }
+			}
+			save_scope_as = rival_merchant
+		}
+	}
+
+	weight_multiplier = {
+		base = 100
+	}
+
+	# Pay them off to keep quiet
+	option = {
+		name = mt_manipulation.0011.a
+
+		remove_short_term_gold = 300
+
+		scope:rival_merchant = {
+			add_opinion = {
+				target = root
+				modifier = bribed_opinion
+				opinion = 20
+			}
+		}
+
+		# Continue hoarding
+		custom_tooltip = mt_manipulation.0011.a.tt
+
+		ai_chance = {
+			base = 50
+			modifier = {
+				factor = 0
+				gold < 350
+			}
+		}
+	}
+
+	# Threaten them into silence
+	option = {
+		name = mt_manipulation.0011.b
+
+		trigger = {
+			intrigue >= 10
+		}
+
+		random_list = {
+			60 = {
+				# Success - they stay quiet
+				scope:rival_merchant = {
+					add_opinion = {
+						target = root
+						modifier = fear_opinion
+						opinion = -30
+					}
+				}
+				custom_tooltip = mt_manipulation.0011.b.success
+			}
+			40 = {
+				# They expose you
+				remove_character_modifier = mt_hoarding_goods
+				add_prestige = -100
+				add_character_flag = {
+					flag = under_market_investigation
+					years = 1
+				}
+				custom_tooltip = mt_manipulation.0011.b.failure
+			}
+		}
+
+		ai_chance = {
+			base = 30
+			modifier = {
+				add = 30
+				intrigue >= 14
+			}
+		}
+	}
+
+	# Dump goods immediately before exposure
+	option = {
+		name = mt_manipulation.0011.c
+
+		remove_character_modifier = mt_hoarding_goods
+		add_gold = 300
+
+		# Avoid investigation
+		custom_tooltip = mt_manipulation.0011.c.tt
+
+		ai_chance = {
+			base = 20
+		}
+	}
+}
+
+# 0012: Perfect timing - sold at peak price
+mt_manipulation.0012 = {
+	type = character_event
+	title = mt_manipulation.0012.t
+	desc = mt_manipulation.0012.desc
+	theme = stewardship
+
+	left_portrait = {
+		character = root
+		animation = happiness
+	}
+
+	trigger = {
+		has_character_modifier = mt_hoarding_goods
+	}
+
+	weight_multiplier = {
+		base = 100
+	}
+
+	# Sell everything at peak - huge profits
+	option = {
+		name = mt_manipulation.0012.a
+
+		remove_character_modifier = mt_hoarding_goods
+		add_gold = 1500
+		add_prestige = 150
+
+		if = {
+			limit = { has_trait = greedy }
+			add_stress = -75
+		}
+
+		# Celebrate success
+		add_character_modifier = {
+			modifier = mt_market_genius
+			years = 3
+		}
+
+		custom_tooltip = mt_manipulation.0012.a.tt
+
+		ai_chance = {
+			base = 100
+		}
+	}
+}
+
+# 0013: Goods spoiling in storage - holding too long
+mt_manipulation.0013 = {
+	type = character_event
+	title = mt_manipulation.0013.t
+	desc = mt_manipulation.0013.desc
+	theme = stewardship
+
+	left_portrait = {
+		character = root
+		animation = sadness
+	}
+
+	trigger = {
+		has_character_modifier = mt_hoarding_goods
+	}
+
+	weight_multiplier = {
+		base = 100
+	}
+
+	# Cut losses - sell what's left
+	option = {
+		name = mt_manipulation.0013.a
+
+		remove_character_modifier = mt_hoarding_goods
+
+		# Major losses
+		remove_long_term_gold = 200
+		add_prestige = -50
+
+		if = {
+			limit = { has_trait = greedy }
+			add_stress = 100
+		}
+
+		custom_tooltip = mt_manipulation.0013.a.tt
+
+		ai_chance = {
+			base = 100
+		}
+	}
+}
+
+# 0014: Miscalculated - others flood market while you hold
+mt_manipulation.0014 = {
+	type = character_event
+	title = mt_manipulation.0014.t
+	desc = mt_manipulation.0014.desc
+	theme = intrigue
+
+	left_portrait = {
+		character = root
+		animation = sadness
+	}
+
+	right_portrait = {
+		character = scope:competitor
+		animation = schadenfreude
+	}
+
+	trigger = {
+		has_character_modifier = mt_hoarding_goods
+	}
+
+	immediate = {
+		random_living_character = {
+			limit = {
+				is_any_merchant_trigger = yes
+				NOT = { this = root }
+			}
+			save_scope_as = competitor
+		}
+	}
+
+	weight_multiplier = {
+		base = 100
+	}
+
+	# Accept defeat - sell at reduced prices
+	option = {
+		name = mt_manipulation.0014.a
+
+		remove_character_modifier = mt_hoarding_goods
+
+		# Losses from crashed prices
+		remove_short_term_gold = 150
+		add_prestige = -75
+
+		if = {
+			limit = { has_trait = humble }
+			add_stress = -25
+		}
+
+		custom_tooltip = mt_manipulation.0014.a.tt
+
+		ai_chance = {
+			base = 60
+		}
+	}
+
+	# Hold even longer - desperate gamble
+	option = {
+		name = mt_manipulation.0014.b
+
+		# Risky - might recover or lose more
+		random_list = {
+			30 = {
+				# Market recovers
+				add_gold = 500
+				custom_tooltip = mt_manipulation.0014.b.success
+			}
+			70 = {
+				# Total loss
+				remove_character_modifier = mt_hoarding_goods
+				remove_long_term_gold = 400
+				add_prestige = -150
+				custom_tooltip = mt_manipulation.0014.b.failure
+			}
+		}
+
+		ai_chance = {
+			base = 40
+			modifier = {
+				add = 30
+				has_trait = stubborn
+			}
+		}
+	}
+}
+
+# 0015: Ruler demands you release goods during crisis
+mt_manipulation.0015 = {
+	type = character_event
+	title = mt_manipulation.0015.t
+	desc = mt_manipulation.0015.desc
+	theme = stewardship
+
+	left_portrait = {
+		character = root
+		animation = worry
+	}
+
+	right_portrait = {
+		character = liege
+		animation = rage
+	}
+
+	trigger = {
+		has_character_modifier = mt_hoarding_goods
+		exists = liege
+	}
+
+	weight_multiplier = {
+		base = 100
+	}
+
+	# Comply - release goods
+	option = {
+		name = mt_manipulation.0015.a
+
+		remove_character_modifier = mt_hoarding_goods
+
+		# Compensated but not full profit
+		add_gold = 200
+		add_piety = 100
+
+		reverse_add_opinion = {
+			target = liege
+			modifier = grateful_opinion
+			opinion = 30
+		}
+
+		custom_tooltip = mt_manipulation.0015.a.tt
+
+		ai_chance = {
+			base = 70
+		}
+	}
+
+	# Refuse - claim you have no stockpile
+	option = {
+		name = mt_manipulation.0015.b
+
+		trigger = {
+			intrigue >= 12
+		}
+
+		random_list = {
+			40 = {
+				# Get away with it
+				custom_tooltip = mt_manipulation.0015.b.success
+				add_gold = 800
+			}
+			60 = {
+				# Caught lying - severe punishment
+				remove_character_modifier = mt_hoarding_goods
+
+				reverse_add_opinion = {
+					target = liege
+					modifier = furious_opinion
+					opinion = -60
+				}
+
+				add_prestige = -200
+				remove_long_term_gold = 500
+
+				# Possible imprisonment
+				random = {
+					chance = 50
+					imprison = {
+						target = root
+						type = dungeon
+					}
+				}
+
+				custom_tooltip = mt_manipulation.0015.b.failure
+			}
+		}
+
+		ai_chance = {
+			base = 20
+			modifier = {
+				add = 20
+				has_trait = deceitful
+			}
+			modifier = {
+				add = -50
+				has_trait = honest
+			}
+		}
+	}
+
+	# Negotiate price
+	option = {
+		name = mt_manipulation.0015.c
+
+		trigger = {
+			diplomacy >= 12
+		}
+
+		remove_character_modifier = mt_hoarding_goods
+
+		# Better price than forced sale
+		add_gold = 400
+
+		reverse_add_opinion = {
+			target = liege
+			modifier = respect_opinion
+			opinion = 15
+		}
+
+		custom_tooltip = mt_manipulation.0015.c.tt
+
+		ai_chance = {
+			base = 40
+			modifier = {
+				add = 30
+				diplomacy >= 14
+			}
+		}
+	}
+}
+
+# 0016: Hailed as savior when you release goods (or condemned as hoarder)
+mt_manipulation.0016 = {
+	type = character_event
+	title = mt_manipulation.0016.t
+	desc = mt_manipulation.0016.desc
+	theme = diplomacy
+
+	left_portrait = {
+		character = root
+		animation = personality_honorable
+	}
+
+	trigger = {
+		has_character_modifier = mt_hoarding_goods
+	}
+
+	weight_multiplier = {
+		base = 100
+	}
+
+	# Release goods as charitable act
+	option = {
+		name = mt_manipulation.0016.a
+
+		remove_character_modifier = mt_hoarding_goods
+
+		# Modest profit but great reputation
+		add_gold = 300
+		add_prestige = 200
+		add_piety = 150
+
+		# Reputation boost
+		add_character_modifier = {
+			modifier = mt_generous_merchant
+			years = 10
+		}
+
+		custom_tooltip = mt_manipulation.0016.a.tt
+
+		ai_chance = {
+			base = 40
+			modifier = {
+				add = 40
+				has_trait = compassionate
+			}
+		}
+	}
+
+	# Sell at peak anyway - condemned as profiteer
+	option = {
+		name = mt_manipulation.0016.b
+
+		remove_character_modifier = mt_hoarding_goods
+
+		# Maximum profit but hated
+		add_gold = 900
+		add_prestige = -150
+		add_piety = -100
+
+		# Reputation damage
+		add_character_modifier = {
+			modifier = mt_heartless_profiteer
+			years = 10
+		}
+
+		if = {
+			limit = { has_trait = greedy }
+			add_stress = -50
+		}
+		if = {
+			limit = { has_trait = compassionate }
+			add_stress = 150
+		}
+
+		custom_tooltip = mt_manipulation.0016.b.tt
+
+		ai_chance = {
+			base = 60
+			modifier = {
+				add = 30
+				has_trait = greedy
+			}
+			modifier = {
+				add = -80
+				has_trait = compassionate
+			}
+		}
+	}
+}
+
+####################################
+# MARKET CRASHES (0017-0024)
+####################################
+
+# 0017: Successfully crashed competitor's primary market
+mt_manipulation.0017 = {
+	type = character_event
+	title = mt_manipulation.0017.t
+	desc = mt_manipulation.0017.desc
+	theme = intrigue
+
+	left_portrait = {
+		character = root
+		animation = schadenfreude
+	}
+
+	right_portrait = {
+		character = scope:rival_merchant
+		animation = sadness
+	}
+
+	trigger = {
+		has_character_modifier = mt_dumping_campaign_active
+		any_relation = {
+			type = rival
+			is_any_merchant_trigger = yes
+		}
+	}
+
+	immediate = {
+		random_relation = {
+			type = rival
+			limit = { is_any_merchant_trigger = yes }
+			save_scope_as = rival_merchant
+		}
+	}
+
+	weight_multiplier = {
+		base = 100
+	}
+
+	# Continue dumping - finish them off
+	option = {
+		name = mt_manipulation.0017.a
+
+		remove_short_term_gold = 200
+
+		# Rival loses heavily
+		scope:rival_merchant = {
+			remove_long_term_gold = 500
+			add_prestige = -100
+
+			add_opinion = {
+				target = root
+				modifier = hatred_opinion
+				opinion = -80
+			}
+		}
+
+		add_gold = 400
+		add_prestige = 50
+
+		if = {
+			limit = { has_trait = vengeful }
+			add_stress = -50
+		}
+
+		custom_tooltip = mt_manipulation.0017.a.tt
+
+		ai_chance = {
+			base = 70
+			modifier = {
+				add = 30
+				has_trait = vengeful
+			}
+		}
+	}
+
+	# Offer mercy - stop dumping
+	option = {
+		name = mt_manipulation.0017.b
+
+		remove_character_modifier = mt_dumping_campaign_active
+
+		scope:rival_merchant = {
+			add_opinion = {
+				target = root
+				modifier = grateful_opinion
+				opinion = 40
+			}
+		}
+
+		add_piety = 100
+
+		if = {
+			limit = { has_trait = compassionate }
+			add_stress = -50
+		}
+
+		custom_tooltip = mt_manipulation.0017.b.tt
+
+		ai_chance = {
+			base = 30
+			modifier = {
+				add = 50
+				has_trait = compassionate
+			}
+		}
+	}
+}
+
+# 0018: Dumping campaign bankrupting rivals
+mt_manipulation.0018 = {
+	type = character_event
+	title = mt_manipulation.0018.t
+	desc = mt_manipulation.0018.desc
+	theme = stewardship
+
+	left_portrait = {
+		character = root
+		animation = personality_bold
+	}
+
+	trigger = {
+		has_character_modifier = mt_dumping_campaign_active
+	}
+
+	weight_multiplier = {
+		base = 100
+	}
+
+	# Maintain the pressure
+	option = {
+		name = mt_manipulation.0018.a
+
+		remove_short_term_gold = 150
+
+		# Competitors continue to suffer
+		add_gold = 300
+
+		custom_tooltip = mt_manipulation.0018.a.tt
+
+		ai_chance = {
+			base = 80
+		}
+	}
+
+	# End campaign - accept current gains
+	option = {
+		name = mt_manipulation.0018.b
+
+		remove_character_modifier = mt_dumping_campaign_active
+
+		add_gold = 200
+		add_prestige = 30
+
+		custom_tooltip = mt_manipulation.0018.b.tt
+
+		ai_chance = {
+			base = 20
+		}
+	}
+}
+
+# 0019: Rival retaliates with their own dump
+mt_manipulation.0019 = {
+	type = character_event
+	title = mt_manipulation.0019.t
+	desc = mt_manipulation.0019.desc
+	theme = intrigue
+
+	left_portrait = {
+		character = root
+		animation = shock
+	}
+
+	right_portrait = {
+		character = scope:retaliating_rival
+		animation = rage
+	}
+
+	trigger = {
+		has_character_modifier = mt_dumping_campaign_active
+		any_living_character = {
+			is_any_merchant_trigger = yes
+			NOT = { this = root }
+		}
+	}
+
+	immediate = {
+		random_living_character = {
+			limit = {
+				is_any_merchant_trigger = yes
+				NOT = { this = root }
+			}
+			save_scope_as = retaliating_rival
+		}
+	}
+
+	weight_multiplier = {
+		base = 100
+	}
+
+	# Escalate - dump even more
+	option = {
+		name = mt_manipulation.0019.a
+
+		remove_long_term_gold = 300
+
+		# Risk spiraling out of control
+		random_list = {
+			40 = {
+				# You win the price war
+				add_gold = 600
+				custom_tooltip = mt_manipulation.0019.a.success
+			}
+			60 = {
+				# Both lose heavily
+				remove_long_term_gold = 200
+				add_prestige = -100
+				custom_tooltip = mt_manipulation.0019.a.failure
+			}
+		}
+
+		ai_chance = {
+			base = 40
+			modifier = {
+				add = 30
+				has_trait = stubborn
+			}
+			modifier = {
+				factor = 0
+				gold < 500
+			}
+		}
+	}
+
+	# Negotiate peace
+	option = {
+		name = mt_manipulation.0019.b
+
+		remove_character_modifier = mt_dumping_campaign_active
+
+		scope:retaliating_rival = {
+			add_opinion = {
+				target = root
+				modifier = respect_opinion
+				opinion = 20
+			}
+		}
+
+		# Stabilize market
+		add_gold = 150
+
+		custom_tooltip = mt_manipulation.0019.b.tt
+
+		ai_chance = {
+			base = 60
+			modifier = {
+				add = 20
+				diplomacy >= 12
+			}
+		}
+	}
+}
+
+# 0020: Price war spiraling out of control
+mt_manipulation.0020 = {
+	type = character_event
+	title = mt_manipulation.0020.t
+	desc = mt_manipulation.0020.desc
+	theme = stewardship
+
+	left_portrait = {
+		character = root
+		animation = worry
+	}
+
+	trigger = {
+		has_character_modifier = mt_dumping_campaign_active
+	}
+
+	weight_multiplier = {
+		base = 100
+	}
+
+	# Double down - go all in
+	option = {
+		name = mt_manipulation.0020.a
+
+		remove_long_term_gold = 500
+
+		random_list = {
+			30 = {
+				# Total victory
+				remove_character_modifier = mt_dumping_campaign_active
+				add_gold = 1200
+				add_prestige = 150
+				custom_tooltip = mt_manipulation.0020.a.success
+			}
+			70 = {
+				# Catastrophic loss
+				remove_character_modifier = mt_dumping_campaign_active
+				remove_long_term_gold = 300
+				add_prestige = -200
+
+				# Reputation destroyed
+				add_character_modifier = {
+					modifier = mt_ruined_merchant
+					years = 10
+				}
+
+				custom_tooltip = mt_manipulation.0020.a.failure
+			}
+		}
+
+		ai_chance = {
+			base = 30
+			modifier = {
+				add = 30
+				has_trait = ambitious
+			}
+			modifier = {
+				factor = 0
+				gold < 600
+			}
+		}
+	}
+
+	# Surrender - cut your losses
+	option = {
+		name = mt_manipulation.0020.b
+
+		remove_character_modifier = mt_dumping_campaign_active
+		remove_short_term_gold = 200
+		add_prestige = -100
+
+		if = {
+			limit = { has_trait = humble }
+			add_stress = -25
+		}
+
+		custom_tooltip = mt_manipulation.0020.b.tt
+
+		ai_chance = {
+			base = 70
+		}
+	}
+}
+
+# 0021: Both sides losing fortunes
+mt_manipulation.0021 = {
+	type = character_event
+	title = mt_manipulation.0021.t
+	desc = mt_manipulation.0021.desc
+	theme = stewardship
+
+	left_portrait = {
+		character = root
+		animation = sadness
+	}
+
+	trigger = {
+		has_character_modifier = mt_dumping_campaign_active
+		gold >= 100  # Still have some resources left
+	}
+
+	weight_multiplier = {
+		base = 100
+	}
+
+	# Continue fighting - stubbornness
+	option = {
+		name = mt_manipulation.0021.a
+
+		remove_short_term_gold = 150
+
+		# Mutual destruction continues
+		add_prestige = -50
+
+		if = {
+			limit = { has_trait = stubborn }
+			add_stress = -25
+		}
+
+		custom_tooltip = mt_manipulation.0021.a.tt
+
+		ai_chance = {
+			base = 40
+			modifier = {
+				add = 40
+				has_trait = stubborn
+			}
+		}
+	}
+
+	# Seek truce
+	option = {
+		name = mt_manipulation.0021.b
+
+		remove_character_modifier = mt_dumping_campaign_active
+
+		# Both parties stop
+		add_gold = 100
+		add_piety = 50
+
+		custom_tooltip = mt_manipulation.0021.b.tt
+
+		ai_chance = {
+			base = 60
+		}
+	}
+}
+
+# 0022: Industry begging for peace
+mt_manipulation.0022 = {
+	type = character_event
+	title = mt_manipulation.0022.t
+	desc = mt_manipulation.0022.desc
+	theme = diplomacy
+
+	left_portrait = {
+		character = root
+		animation = thinking
+	}
+
+	trigger = {
+		has_character_modifier = mt_dumping_campaign_active
+	}
+
+	weight_multiplier = {
+		base = 100
+	}
+
+	immediate = {
+		every_living_character = {
+			limit = {
+				is_any_merchant_trigger = yes
+				NOT = { this = root }
+			}
+			add_opinion = {
+				target = root
+				modifier = concerned_opinion
+				opinion = -20
+			}
+		}
+	}
+
+	# Ignore pleas - continue dumping
+	option = {
+		name = mt_manipulation.0022.a
+
+		# Isolated but potentially victorious
+		add_prestige = -75
+
+		if = {
+			limit = { has_trait = arrogant }
+			add_stress = -25
+		}
+
+		custom_tooltip = mt_manipulation.0022.a.tt
+
+		ai_chance = {
+			base = 30
+			modifier = {
+				add = 30
+				has_trait = arrogant
+			}
+		}
+	}
+
+	# Accept peace - restore stability
+	option = {
+		name = mt_manipulation.0022.b
+
+		remove_character_modifier = mt_dumping_campaign_active
+
+		# Restore relations
+		every_living_character = {
+			limit = {
+				is_any_merchant_trigger = yes
+				has_opinion_modifier = {
+					target = root
+					modifier = concerned_opinion
+				}
+			}
+			remove_opinion = {
+				target = root
+				modifier = concerned_opinion
+			}
+			add_opinion = {
+				target = root
+				modifier = trust_opinion
+				opinion = 30
+			}
+		}
+
+		add_gold = 200
+		add_prestige = 50
+
+		custom_tooltip = mt_manipulation.0022.b.tt
+
+		ai_chance = {
+			base = 70
+		}
+	}
+}
+
+# 0023: Regulatory intervention stops crash
+mt_manipulation.0023 = {
+	type = character_event
+	title = mt_manipulation.0023.t
+	desc = mt_manipulation.0023.desc
+	theme = stewardship
+
+	left_portrait = {
+		character = root
+		animation = worry
+	}
+
+	right_portrait = {
+		character = liege
+		animation = disapproval
+	}
+
+	trigger = {
+		has_character_modifier = mt_dumping_campaign_active
+		exists = liege
+	}
+
+	weight_multiplier = {
+		base = 100
+	}
+
+	# Comply with order to stop
+	option = {
+		name = mt_manipulation.0023.a
+
+		remove_character_modifier = mt_dumping_campaign_active
+		remove_short_term_gold = 200  # Fine
+
+		reverse_add_opinion = {
+			target = liege
+			modifier = trust_opinion
+			opinion = 10
+		}
+
+		custom_tooltip = mt_manipulation.0023.a.tt
+
+		ai_chance = {
+			base = 70
+		}
+	}
+
+	# Defy the order
+	option = {
+		name = mt_manipulation.0023.b
+
+		reverse_add_opinion = {
+			target = liege
+			modifier = angry_opinion
+			opinion = -50
+		}
+
+		remove_long_term_gold = 400  # Heavy fine
+		add_prestige = -150
+
+		# Risk imprisonment
+		random = {
+			chance = 40
+			imprison = {
+				target = root
+				type = dungeon
+			}
+		}
+
+		custom_tooltip = mt_manipulation.0023.b.tt
+
+		ai_chance = {
+			base = 10
+			modifier = {
+				add = 20
+				has_trait = arrogant
+			}
+		}
+	}
+}
+
+# 0024: Victory - competitor bankrupt, you control market
+mt_manipulation.0024 = {
+	type = character_event
+	title = mt_manipulation.0024.t
+	desc = mt_manipulation.0024.desc
+	theme = stewardship
+
+	left_portrait = {
+		character = root
+		animation = happiness
+	}
+
+	right_portrait = {
+		character = scope:bankrupt_rival
+		animation = sadness
+	}
+
+	trigger = {
+		has_character_modifier = mt_dumping_campaign_active
+		any_relation = {
+			type = rival
+			is_any_merchant_trigger = yes
+		}
+	}
+
+	immediate = {
+		random_relation = {
+			type = rival
+			limit = { is_any_merchant_trigger = yes }
+			save_scope_as = bankrupt_rival
+
+			# Rival is ruined
+			remove_long_term_gold = 1000
+			add_character_modifier = {
+				modifier = mt_bankrupt_merchant
+				years = 20
+			}
+		}
+	}
+
+	weight_multiplier = {
+		base = 100
+	}
+
+	# Celebrate victory - dominate market
+	option = {
+		name = mt_manipulation.0024.a
+
+		remove_character_modifier = mt_dumping_campaign_active
+
+		# Now establish monopoly
+		add_character_modifier = {
+			modifier = mt_market_monopoly_active
+			years = 5
+		}
+
+		add_gold = 1000
+		add_prestige = 200
+
+		if = {
+			limit = { has_trait = vengeful }
+			add_stress = -100
+		}
+
+		custom_tooltip = mt_manipulation.0024.a.tt
+
+		ai_chance = {
+			base = 80
+		}
+	}
+
+	# Show mercy to defeated rival
+	option = {
+		name = mt_manipulation.0024.b
+
+		remove_character_modifier = mt_dumping_campaign_active
+
+		# Help them recover
+		scope:bankrupt_rival = {
+			add_gold = 200
+			add_opinion = {
+				target = root
+				modifier = grateful_opinion
+				opinion = 60
+			}
+		}
+
+		add_piety = 150
+		add_prestige = 100
+
+		if = {
+			limit = { has_trait = compassionate }
+			add_stress = -75
+		}
+
+		custom_tooltip = mt_manipulation.0024.b.tt
+
+		ai_chance = {
+			base = 20
+			modifier = {
+				add = 50
+				has_trait = compassionate
+			}
+		}
+	}
+}
+
+####################################
+# RUMOR CAMPAIGNS (0025-0032)
+####################################
+
+# 0025: Spread rumor of grain shortage - prices spike
+mt_manipulation.0025 = {
+	type = character_event
+	title = mt_manipulation.0025.t
+	desc = mt_manipulation.0025.desc
+	theme = intrigue
+
+	left_portrait = {
+		character = root
+		animation = personality_bold
+	}
+
+	trigger = {
+		intrigue >= 8
+	}
+
+	weight_multiplier = {
+		base = 100
+	}
+
+	# Spread the rumor aggressively
+	option = {
+		name = mt_manipulation.0025.a
+
+		remove_short_term_gold = 50
+
+		# Success based on intrigue
+		if = {
+			limit = { intrigue >= 14 }
+			# High success
+			add_gold = 600
+			add_character_modifier = {
+				modifier = mt_rumor_master
+				years = 2
+			}
+		}
+		else_if = {
+			limit = { intrigue >= 10 }
+			# Moderate success
+			random_list = {
+				70 = {
+					add_gold = 400
+					custom_tooltip = mt_manipulation.0025.a.success
+				}
+				30 = {
+					# Caught
+					trigger_event = mt_manipulation.0028
+					custom_tooltip = mt_manipulation.0025.a.caught
+				}
+			}
+		}
+		else = {
+			# Low intrigue - high risk
+			random_list = {
+				40 = {
+					add_gold = 300
+					custom_tooltip = mt_manipulation.0025.a.success
+				}
+				60 = {
+					# Caught spreading lies
+					trigger_event = mt_manipulation.0028
+					custom_tooltip = mt_manipulation.0025.a.caught
+				}
+			}
+		}
+
+		if = {
+			limit = { has_trait = honest }
+			add_stress = 100
+		}
+
+		ai_chance = {
+			base = 70
+			modifier = {
+				add = -100
+				has_trait = honest
+			}
+		}
+	}
+
+	# Don't spread the rumor
+	option = {
+		name = mt_manipulation.0025.b
+
+		add_piety = 30
+
+		custom_tooltip = mt_manipulation.0025.b.tt
+
+		ai_chance = {
+			base = 30
+			modifier = {
+				add = 70
+				has_trait = honest
+			}
+		}
+	}
+}
+
+# 0026: False war rumors affecting trade goods
+mt_manipulation.0026 = {
+	type = character_event
+	title = mt_manipulation.0026.t
+	desc = mt_manipulation.0026.desc
+	theme = intrigue
+
+	left_portrait = {
+		character = root
+		animation = personality_bold
+	}
+
+	trigger = {
+		intrigue >= 10
+	}
+
+	weight_multiplier = {
+		base = 100
+	}
+
+	# Spread war rumors to manipulate prices
+	option = {
+		name = mt_manipulation.0026.a
+
+		remove_short_term_gold = 75
+
+		random_list = {
+			60 = {
+				# Success - massive profit
+				add_gold = 800
+				add_prestige = 50
+				custom_tooltip = mt_manipulation.0026.a.success
+			}
+			40 = {
+				# Exposed as rumormonger
+				add_prestige = -150
+				add_piety = -100
+
+				add_character_modifier = {
+					modifier = mt_liar_merchant
+					years = 10
+				}
+
+				custom_tooltip = mt_manipulation.0026.a.failure
+			}
+		}
+
+		if = {
+			limit = { has_trait = deceitful }
+			add_stress = -25
+		}
+
+		ai_chance = {
+			base = 50
+			modifier = {
+				add = 30
+				has_trait = deceitful
+			}
+		}
+	}
+
+	# Refuse to spread false war rumors
+	option = {
+		name = mt_manipulation.0026.b
+
+		add_piety = 50
+
+		if = {
+			limit = { has_trait = honest }
+			add_stress = -25
+		}
+
+		custom_tooltip = mt_manipulation.0026.b.tt
+
+		ai_chance = {
+			base = 50
+			modifier = {
+				add = 50
+				has_trait = honest
+			}
+		}
+	}
+}
+
+# 0027: Competitor spreading lies about your goods
+mt_manipulation.0027 = {
+	type = character_event
+	title = mt_manipulation.0027.t
+	desc = mt_manipulation.0027.desc
+	theme = intrigue
+
+	left_portrait = {
+		character = root
+		animation = rage
+	}
+
+	right_portrait = {
+		character = scope:lying_rival
+		animation = schadenfreude
+	}
+
+	trigger = {
+		any_living_character = {
+			is_any_merchant_trigger = yes
+			NOT = { this = root }
+		}
+	}
+
+	immediate = {
+		random_living_character = {
+			limit = {
+				is_any_merchant_trigger = yes
+				NOT = { this = root }
+			}
+			save_scope_as = lying_rival
+		}
+	}
+
+	weight_multiplier = {
+		base = 100
+	}
+
+	# Launch counter-rumor campaign
+	option = {
+		name = mt_manipulation.0027.a
+
+		trigger = {
+			intrigue >= 10
+		}
+
+		remove_short_term_gold = 100
+
+		random_list = {
+			60 = {
+				# Success - expose their lies
+				scope:lying_rival = {
+					add_prestige = -100
+					add_character_modifier = {
+						modifier = mt_exposed_liar
+						years = 5
+					}
+				}
+
+				add_prestige = 100
+				custom_tooltip = mt_manipulation.0027.a.success
+			}
+			40 = {
+				# Counter-campaign backfires
+				add_prestige = -50
+				custom_tooltip = mt_manipulation.0027.a.failure
+			}
+		}
+
+		ai_chance = {
+			base = 50
+			modifier = {
+				add = 30
+				intrigue >= 14
+			}
+		}
+	}
+
+	# Sue them legally (involves liege)
+	option = {
+		name = mt_manipulation.0027.b
+
+		trigger = {
+			exists = liege
+		}
+
+		remove_short_term_gold = 50
+
+		liege = {
+			trigger_event = {
+				id = mt_manipulation.0080
+				days = 14
+			}
+		}
+
+		custom_tooltip = mt_manipulation.0027.b.tt
+
+		ai_chance = {
+			base = 30
+			modifier = {
+				add = 20
+				diplomacy >= 12
+			}
+		}
+	}
+
+	# Ignore it
+	option = {
+		name = mt_manipulation.0027.c
+
+		# Reputation damage from unanswered accusations
+		add_prestige = -50
+
+		if = {
+			limit = { has_trait = humble }
+			add_stress = -25
+		}
+
+		custom_tooltip = mt_manipulation.0027.c.tt
+
+		ai_chance = {
+			base = 20
+		}
+	}
+}
+
+# 0028: Your rumor campaign exposed - scandal
+mt_manipulation.0028 = {
+	type = character_event
+	title = mt_manipulation.0028.t
+	desc = mt_manipulation.0028.desc
+	theme = intrigue
+
+	left_portrait = {
+		character = root
+		animation = shame
+	}
+
+	weight_multiplier = {
+		base = 100
+	}
+
+	# Accept punishment
+	option = {
+		name = mt_manipulation.0028.a
+
+		add_prestige = -200
+		add_piety = -150
+		remove_long_term_gold = 400
+
+		# Reputation destroyed
+		add_character_modifier = {
+			modifier = mt_known_liar
+			years = 15
+		}
+
+		# All merchants distrust you
+		every_living_character = {
+			limit = {
+				is_any_merchant_trigger = yes
+				NOT = { this = root }
+			}
+			add_opinion = {
+				target = root
+				modifier = liar_opinion
+				opinion = -40
+			}
+		}
+
+		if = {
+			limit = { has_trait = honest }
+			add_stress = 150
+		}
+
+		custom_tooltip = mt_manipulation.0028.a.tt
+
+		ai_chance = {
+			base = 60
+		}
+	}
+
+	# Try to bribe your way out
+	option = {
+		name = mt_manipulation.0028.b
+
+		trigger = {
+			gold >= 500
+		}
+
+		remove_long_term_gold = 500
+
+		random_list = {
+			40 = {
+				# Bribe works
+				add_prestige = -50
+				custom_tooltip = mt_manipulation.0028.b.success
+			}
+			60 = {
+				# Bribe exposed - worse scandal
+				add_prestige = -300
+				remove_long_term_gold = 200
+
+				add_character_modifier = {
+					modifier = mt_corrupt_liar
+					years = 20
+				}
+
+				# Possible imprisonment
+				if = {
+					limit = { exists = liege }
+					random = {
+						chance = 50
+						imprison = {
+							target = root
+							type = dungeon
+						}
+					}
+				}
+
+				custom_tooltip = mt_manipulation.0028.b.failure
+			}
+		}
+
+		ai_chance = {
+			base = 40
+			modifier = {
+				add = 30
+				intrigue >= 12
+			}
+			modifier = {
+				factor = 0
+				gold < 600
+			}
+		}
+	}
+}
+
+# 0029: Information warfare with rival merchant
+mt_manipulation.0029 = {
+	type = character_event
+	title = mt_manipulation.0029.t
+	desc = mt_manipulation.0029.desc
+	theme = intrigue
+
+	left_portrait = {
+		character = root
+		animation = personality_bold
+	}
+
+	right_portrait = {
+		character = scope:info_rival
+		animation = personality_bold
+	}
+
+	trigger = {
+		any_living_character = {
+			is_any_merchant_trigger = yes
+			NOT = { this = root }
+		}
+	}
+
+	immediate = {
+		random_living_character = {
+			limit = {
+				is_any_merchant_trigger = yes
+				NOT = { this = root }
+			}
+			save_scope_as = info_rival
+		}
+	}
+
+	weight_multiplier = {
+		base = 100
+	}
+
+	# Escalate the information war
+	option = {
+		name = mt_manipulation.0029.a
+
+		remove_short_term_gold = 150
+
+		# Intrigue duel
+		if = {
+			limit = {
+				intrigue > scope:info_rival.intrigue
+			}
+			# You win
+			add_gold = 500
+			add_prestige = 100
+
+			scope:info_rival = {
+				add_prestige = -100
+				add_opinion = {
+					target = root
+					modifier = rival_opinion
+					opinion = -50
+				}
+			}
+
+			custom_tooltip = mt_manipulation.0029.a.win
+		}
+		else = {
+			# They win
+			add_prestige = -100
+			remove_short_term_gold = 100
+
+			scope:info_rival = {
+				add_gold = 400
+				add_prestige = 80
+			}
+
+			custom_tooltip = mt_manipulation.0029.a.lose
+		}
+
+		ai_chance = {
+			base = 60
+			modifier = {
+				add = 30
+				intrigue >= 14
+			}
+		}
+	}
+
+	# Propose truce
+	option = {
+		name = mt_manipulation.0029.b
+
+		scope:info_rival = {
+			add_opinion = {
+				target = root
+				modifier = respect_opinion
+				opinion = 30
+			}
+		}
+
+		add_prestige = 30
+
+		custom_tooltip = mt_manipulation.0029.b.tt
+
+		ai_chance = {
+			base = 40
+		}
+	}
+}
+
+# 0030: Caught manipulating markets - trial
+mt_manipulation.0030 = {
+	type = character_event
+	title = mt_manipulation.0030.t
+	desc = mt_manipulation.0030.desc
+	theme = stewardship
+
+	left_portrait = {
+		character = root
+		animation = worry
+	}
+
+	right_portrait = {
+		character = liege
+		animation = disapproval
+	}
+
+	trigger = {
+		has_character_flag = under_market_investigation
+		exists = liege
+	}
+
+	weight_multiplier = {
+		base = 100
+	}
+
+	# Plead innocent
+	option = {
+		name = mt_manipulation.0030.a
+
+		random_list = {
+			30 = {
+				# Acquitted
+				remove_character_flag = under_market_investigation
+				add_prestige = 100
+				custom_tooltip = mt_manipulation.0030.a.success
+			}
+			70 = {
+				# Found guilty
+				market_manipulation_punishment_effect = yes
+				custom_tooltip = mt_manipulation.0030.a.failure
+			}
+		}
+
+		ai_chance = {
+			base = 30
+		}
+	}
+
+	# Confess and beg mercy
+	option = {
+		name = mt_manipulation.0030.b
+
+		remove_character_flag = under_market_investigation
+		remove_long_term_gold = 300
+		add_prestige = -100
+		add_piety = 50
+
+		# Lighter sentence
+		add_character_modifier = {
+			modifier = mt_repentant_manipulator
+			years = 5
+		}
+
+		reverse_add_opinion = {
+			target = liege
+			modifier = trust_opinion
+			opinion = 20
+		}
+
+		custom_tooltip = mt_manipulation.0030.b.tt
+
+		ai_chance = {
+			base = 50
+		}
+	}
+
+	# Bribe the judge
+	option = {
+		name = mt_manipulation.0030.c
+
+		trigger = {
+			gold >= 600
+			intrigue >= 12
+		}
+
+		remove_long_term_gold = 600
+
+		random_list = {
+			50 = {
+				# Bribe successful
+				remove_character_flag = under_market_investigation
+				add_prestige = 50
+				custom_tooltip = mt_manipulation.0030.c.success
+			}
+			50 = {
+				# Bribe exposed - maximum punishment
+				market_manipulation_punishment_effect = yes
+
+				add_prestige = -200
+				remove_long_term_gold = 300
+
+				# Definite imprisonment
+				imprison = {
+					target = root
+					type = dungeon
+				}
+
+				custom_tooltip = mt_manipulation.0030.c.failure
+			}
+		}
+
+		ai_chance = {
+			base = 20
+			modifier = {
+				add = 30
+				intrigue >= 16
+			}
+			modifier = {
+				factor = 0
+				gold < 700
+			}
+		}
+	}
+}
+
+# 0031: Successfully manipulated without detection
+mt_manipulation.0031 = {
+	type = character_event
+	title = mt_manipulation.0031.t
+	desc = mt_manipulation.0031.desc
+	theme = intrigue
+
+	left_portrait = {
+		character = root
+		animation = happiness
+	}
+
+	weight_multiplier = {
+		base = 100
+	}
+
+	# Celebrate your cunning
+	option = {
+		name = mt_manipulation.0031.a
+
+		add_prestige = 75
+
+		if = {
+			limit = { has_trait = deceitful }
+			add_stress = -50
+		}
+		if = {
+			limit = { has_trait = honest }
+			add_stress = 75
+		}
+
+		custom_tooltip = mt_manipulation.0031.a.tt
+
+		ai_chance = {
+			base = 100
+		}
+	}
+}
+
+# 0032: Rumor backfires - affects you negatively
+mt_manipulation.0032 = {
+	type = character_event
+	title = mt_manipulation.0032.t
+	desc = mt_manipulation.0032.desc
+	theme = intrigue
+
+	left_portrait = {
+		character = root
+		animation = sadness
+	}
+
+	weight_multiplier = {
+		base = 100
+	}
+
+	# Accept the consequences
+	option = {
+		name = mt_manipulation.0032.a
+
+		# Your own rumor hurts you
+		remove_short_term_gold = 200
+		add_prestige = -75
+
+		add_character_modifier = {
+			modifier = mt_own_victim
+			years = 2
+		}
+
+		if = {
+			limit = { has_trait = greedy }
+			add_stress = 75
+		}
+
+		custom_tooltip = mt_manipulation.0032.a.tt
+
+		ai_chance = {
+			base = 100
+		}
+	}
+}
+
+####################################
+# CARTELS & COLLUSION (0033-0040)
+####################################
+
+# 0033: Invited to join price-fixing cartel
+mt_manipulation.0033 = {
+	type = character_event
+	title = mt_manipulation.0033.t
+	desc = mt_manipulation.0033.desc
+	theme = intrigue
+
+	left_portrait = {
+		character = root
+		animation = thinking
+	}
+
+	right_portrait = {
+		character = scope:cartel_organizer
+		animation = personality_bold
+	}
+
+	trigger = {
+		NOT = { has_character_modifier = mt_cartel_member }
+		any_living_character = {
+			is_any_merchant_trigger = yes
+			NOT = { this = root }
+			has_character_modifier = mt_cartel_member
+		}
+	}
+
+	immediate = {
+		random_living_character = {
+			limit = {
+				is_any_merchant_trigger = yes
+				NOT = { this = root }
+			}
+			save_scope_as = cartel_organizer
+		}
+	}
+
+	weight_multiplier = {
+		base = 100
+	}
+
+	# Join the cartel
+	option = {
+		name = mt_manipulation.0033.a
+
+		remove_short_term_gold = 200  # Initiation fee
+
+		# Apply cartel effects
+		collusion_effect = yes
+
+		scope:cartel_organizer = {
+			add_opinion = {
+				target = root
+				modifier = trust_opinion
+				opinion = 40
+			}
+		}
+
+		if = {
+			limit = { has_trait = greedy }
+			add_stress = -50
+		}
+		if = {
+			limit = { has_trait = just }
+			add_stress = 100
+		}
+
+		custom_tooltip = mt_manipulation.0033.a.tt
+
+		ai_chance = {
+			base = 60
+			modifier = {
+				add = 30
+				has_trait = greedy
+			}
+			modifier = {
+				add = -100
+				has_trait = just
+			}
+		}
+	}
+
+	# Refuse and report them
+	option = {
+		name = mt_manipulation.0033.b
+
+		trigger = {
+			exists = liege
+		}
+
+		# Reward for exposing cartel
+		add_gold = 200
+		add_piety = 100
+		add_prestige = 50
+
+		scope:cartel_organizer = {
+			add_opinion = {
+				target = root
+				modifier = hatred_opinion
+				opinion = -100
+			}
+
+			# Investigation triggered
+			add_character_flag = {
+				flag = under_market_investigation
+				years = 1
+			}
+		}
+
+		if = {
+			limit = { has_trait = just }
+			add_stress = -75
+		}
+
+		custom_tooltip = mt_manipulation.0033.b.tt
+
+		ai_chance = {
+			base = 20
+			modifier = {
+				add = 60
+				has_trait = just
+			}
+		}
+	}
+
+	# Politely decline
+	option = {
+		name = mt_manipulation.0033.c
+
+		scope:cartel_organizer = {
+			add_opinion = {
+				target = root
+				modifier = disappointed_opinion
+				opinion = -20
+			}
+		}
+
+		custom_tooltip = mt_manipulation.0033.c.tt
+
+		ai_chance = {
+			base = 20
+		}
+	}
+}
+
+# 0034: Cartel working perfectly - shared profits
+mt_manipulation.0034 = {
+	type = character_event
+	title = mt_manipulation.0034.t
+	desc = mt_manipulation.0034.desc
+	theme = stewardship
+
+	left_portrait = {
+		character = root
+		animation = happiness
+	}
+
+	trigger = {
+		has_character_modifier = mt_cartel_member
+	}
+
+	weight_multiplier = {
+		base = 100
+	}
+
+	# Collect your share
+	option = {
+		name = mt_manipulation.0034.a
+
+		add_gold = 500
+		add_prestige = 30
+
+		if = {
+			limit = { has_trait = greedy }
+			add_stress = -50
+		}
+		if = {
+			limit = { has_trait = just }
+			add_stress = 50
+		}
+
+		# Schedule next profit cycle
+		trigger_event = {
+			id = mt_manipulation.0034
+			days = 180
+		}
+
+		custom_tooltip = mt_manipulation.0034.a.tt
+
+		ai_chance = {
+			base = 100
+		}
+	}
+}
+
+# 0035: Member cheating - undercutting agreed prices
+mt_manipulation.0035 = {
+	type = character_event
+	title = mt_manipulation.0035.t
+	desc = mt_manipulation.0035.desc
+	theme = intrigue
+
+	left_portrait = {
+		character = root
+		animation = rage
+	}
+
+	right_portrait = {
+		character = scope:cheating_member
+		animation = worry
+	}
+
+	trigger = {
+		has_character_modifier = mt_cartel_member
+	}
+
+	immediate = {
+		random_living_character = {
+			limit = {
+				is_any_merchant_trigger = yes
+				NOT = { this = root }
+				has_character_modifier = mt_cartel_member
+			}
+			save_scope_as = cheating_member
+		}
+	}
+
+	weight_multiplier = {
+		base = 100
+	}
+
+	# Punish the cheater
+	option = {
+		name = mt_manipulation.0035.a
+
+		scope:cheating_member = {
+			remove_character_modifier = mt_cartel_member
+
+			# Economic punishment
+			remove_long_term_gold = 300
+
+			add_opinion = {
+				target = root
+				modifier = angry_opinion
+				opinion = -50
+			}
+		}
+
+		# Restore cartel discipline
+		add_gold = 200
+
+		custom_tooltip = mt_manipulation.0035.a.tt
+
+		ai_chance = {
+			base = 60
+		}
+	}
+
+	# Give them a warning
+	option = {
+		name = mt_manipulation.0035.b
+
+		scope:cheating_member = {
+			add_opinion = {
+				target = root
+				modifier = grateful_opinion
+				opinion = 20
+			}
+		}
+
+		# Risk they cheat again
+		random = {
+			chance = 50
+			trigger_event = {
+				id = mt_manipulation.0035
+				days = { 90 180 }
+			}
+		}
+
+		custom_tooltip = mt_manipulation.0035.b.tt
+
+		ai_chance = {
+			base = 40
+			modifier = {
+				add = 30
+				has_trait = forgiving
+			}
+		}
+	}
+}
+
+# 0036: Betrayal - member reports cartel to authorities
+mt_manipulation.0036 = {
+	type = character_event
+	title = mt_manipulation.0036.t
+	desc = mt_manipulation.0036.desc
+	theme = intrigue
+
+	left_portrait = {
+		character = root
+		animation = shock
+	}
+
+	right_portrait = {
+		character = scope:betrayer
+		animation = personality_bold
+	}
+
+	trigger = {
+		has_character_modifier = mt_cartel_member
+	}
+
+	immediate = {
+		random_living_character = {
+			limit = {
+				is_any_merchant_trigger = yes
+				NOT = { this = root }
+				has_character_modifier = mt_cartel_member
+			}
+			save_scope_as = betrayer
+
+			# Betrayer removes their own cartel membership
+			remove_character_modifier = mt_cartel_member
+
+			# They get immunity
+			add_character_modifier = {
+				modifier = mt_cartel_informant
+				years = 10
+			}
+		}
+
+		# All cartel members investigated
+		every_living_character = {
+			limit = {
+				has_character_modifier = mt_cartel_member
+			}
+			add_character_flag = {
+				flag = under_market_investigation
+				years = 2
+			}
+		}
+	}
+
+	weight_multiplier = {
+		base = 100
+	}
+
+	# Try to pin blame on others
+	option = {
+		name = mt_manipulation.0036.a
+
+		trigger = {
+			intrigue >= 12
+		}
+
+		random_list = {
+			40 = {
+				# Success - you escape
+				remove_character_modifier = mt_cartel_member
+				remove_character_flag = under_market_investigation
+
+				add_prestige = 50
+				custom_tooltip = mt_manipulation.0036.a.success
+			}
+			60 = {
+				# Fail - you're the scapegoat
+				market_manipulation_punishment_effect = yes
+
+				add_prestige = -250
+				custom_tooltip = mt_manipulation.0036.a.failure
+			}
+		}
+
+		ai_chance = {
+			base = 40
+			modifier = {
+				add = 30
+				intrigue >= 16
+			}
+		}
+	}
+
+	# Confess and seek leniency
+	option = {
+		name = mt_manipulation.0036.b
+
+		remove_character_modifier = mt_cartel_member
+		remove_character_flag = under_market_investigation
+
+		remove_long_term_gold = 400
+		add_prestige = -150
+		add_piety = 75
+
+		add_character_modifier = {
+			modifier = mt_repentant_manipulator
+			years = 7
+		}
+
+		custom_tooltip = mt_manipulation.0036.b.tt
+
+		ai_chance = {
+			base = 40
+		}
+	}
+
+	# Flee jurisdiction
+	option = {
+		name = mt_manipulation.0036.c
+
+		remove_character_modifier = mt_cartel_member
+
+		# Extreme consequences
+		add_prestige = -300
+
+		if = {
+			limit = { exists = liege }
+			reverse_add_opinion = {
+				target = liege
+				modifier = furious_opinion
+				opinion = -100
+			}
+		}
+
+		# Wanted criminal
+		add_character_modifier = {
+			modifier = mt_fugitive_merchant
+			years = 20
+		}
+
+		custom_tooltip = mt_manipulation.0036.c.tt
+
+		ai_chance = {
+			base = 20
+			modifier = {
+				add = -50
+				is_independent_ruler = no
+			}
+		}
+	}
+}
+
+# 0037: Cartel crackdown - all members investigated
+mt_manipulation.0037 = {
+	type = character_event
+	title = mt_manipulation.0037.t
+	desc = mt_manipulation.0037.desc
+	theme = stewardship
+
+	left_portrait = {
+		character = root
+		animation = worry
+	}
+
+	right_portrait = {
+		character = liege
+		animation = rage
+	}
+
+	trigger = {
+		has_character_modifier = mt_cartel_member
+		has_character_flag = under_market_investigation
+		exists = liege
+	}
+
+	weight_multiplier = {
+		base = 100
+	}
+
+	# Cooperate with investigation
+	option = {
+		name = mt_manipulation.0037.a
+
+		remove_character_modifier = mt_cartel_member
+		remove_character_flag = under_market_investigation
+
+		# Moderate punishment
+		remove_long_term_gold = 350
+		add_prestige = -100
+
+		reverse_add_opinion = {
+			target = liege
+			modifier = trust_opinion
+			opinion = 15
+		}
+
+		custom_tooltip = mt_manipulation.0037.a.tt
+
+		ai_chance = {
+			base = 50
+		}
+	}
+
+	# Deny everything
+	option = {
+		name = mt_manipulation.0037.b
+
+		random_list = {
+			25 = {
+				# Get away with it
+				remove_character_flag = under_market_investigation
+				add_prestige = 75
+				custom_tooltip = mt_manipulation.0037.b.success
+			}
+			75 = {
+				# Caught lying - severe punishment
+				market_manipulation_punishment_effect = yes
+
+				add_prestige = -200
+
+				# Imprisonment likely
+				random = {
+					chance = 70
+					imprison = {
+						target = root
+						type = dungeon
+					}
+				}
+
+				custom_tooltip = mt_manipulation.0037.b.failure
+			}
+		}
+
+		ai_chance = {
+			base = 30
+			modifier = {
+				add = 30
+				intrigue >= 16
+			}
+		}
+	}
+
+	# Bribe officials heavily
+	option = {
+		name = mt_manipulation.0037.c
+
+		trigger = {
+			gold >= 700
+		}
+
+		remove_long_term_gold = 700
+
+		random_list = {
+			45 = {
+				# Bribe works
+				remove_character_flag = under_market_investigation
+				custom_tooltip = mt_manipulation.0037.c.success
+			}
+			55 = {
+				# Massive scandal
+				market_manipulation_punishment_effect = yes
+
+				add_prestige = -300
+				remove_long_term_gold = 300
+
+				# Imprisonment certain
+				imprison = {
+					target = root
+					type = dungeon
+				}
+
+				custom_tooltip = mt_manipulation.0037.c.failure
+			}
+		}
+
+		ai_chance = {
+			base = 20
+			modifier = {
+				factor = 0
+				gold < 800
+			}
+		}
+	}
+}
+
+# 0038: Must testify against fellow cartel members
+mt_manipulation.0038 = {
+	type = character_event
+	title = mt_manipulation.0038.t
+	desc = mt_manipulation.0038.desc
+	theme = intrigue
+
+	left_portrait = {
+		character = root
+		animation = thinking
+	}
+
+	right_portrait = {
+		character = scope:fellow_member
+		animation = worry
+	}
+
+	trigger = {
+		has_character_flag = under_market_investigation
+		OR = {
+			has_character_modifier = mt_cartel_member
+			has_character_modifier = mt_cartel_informant
+		}
+	}
+
+	immediate = {
+		random_living_character = {
+			limit = {
+				is_any_merchant_trigger = yes
+				NOT = { this = root }
+				has_character_modifier = mt_cartel_member
+			}
+			save_scope_as = fellow_member
+		}
+	}
+
+	weight_multiplier = {
+		base = 100
+	}
+
+	# Testify against them - save yourself
+	option = {
+		name = mt_manipulation.0038.a
+
+		remove_character_flag = under_market_investigation
+
+		if = {
+			limit = { has_character_modifier = mt_cartel_member }
+			remove_character_modifier = mt_cartel_member
+		}
+
+		# Immunity granted
+		add_character_modifier = {
+			modifier = mt_cartel_informant
+			years = 10
+		}
+
+		scope:fellow_member = {
+			# They face punishment
+			market_manipulation_punishment_effect = yes
+
+			add_opinion = {
+				target = root
+				modifier = hatred_opinion
+				opinion = -100
+			}
+		}
+
+		# All other cartel members hate you
+		every_living_character = {
+			limit = {
+				has_character_modifier = mt_cartel_member
+			}
+			add_opinion = {
+				target = root
+				modifier = betrayer_opinion
+				opinion = -80
+			}
+		}
+
+		if = {
+			limit = { has_trait = honest }
+			add_stress = -50
+		}
+
+		custom_tooltip = mt_manipulation.0038.a.tt
+
+		ai_chance = {
+			base = 50
+		}
+	}
+
+	# Refuse to testify - stay loyal
+	option = {
+		name = mt_manipulation.0038.b
+
+		# You face punishment instead
+		market_manipulation_punishment_effect = yes
+
+		scope:fellow_member = {
+			add_opinion = {
+				target = root
+				modifier = loyal_opinion
+				opinion = 60
+			}
+		}
+
+		# Other members respect your loyalty
+		every_living_character = {
+			limit = {
+				has_character_modifier = mt_cartel_member
+			}
+			add_opinion = {
+				target = root
+				modifier = respect_opinion
+				opinion = 40
+			}
+		}
+
+		add_piety = 100
+
+		if = {
+			limit = { has_trait = just }
+			add_stress = -75
+		}
+
+		custom_tooltip = mt_manipulation.0038.b.tt
+
+		ai_chance = {
+			base = 50
+			modifier = {
+				add = 30
+				has_trait = just
+			}
+		}
+	}
+}
+
+# 0039: Immunity offered if you expose others
+mt_manipulation.0039 = {
+	type = character_event
+	title = mt_manipulation.0039.t
+	desc = mt_manipulation.0039.desc
+	theme = intrigue
+
+	left_portrait = {
+		character = root
+		animation = thinking
+	}
+
+	right_portrait = {
+		character = liege
+		animation = personality_bold
+	}
+
+	trigger = {
+		has_character_modifier = mt_cartel_member
+		has_character_flag = under_market_investigation
+		exists = liege
+	}
+
+	weight_multiplier = {
+		base = 100
+	}
+
+	# Accept immunity - expose everyone
+	option = {
+		name = mt_manipulation.0039.a
+
+		remove_character_modifier = mt_cartel_member
+		remove_character_flag = under_market_investigation
+
+		# Grant immunity
+		add_character_modifier = {
+			modifier = mt_cartel_informant
+			years = 15
+		}
+
+		add_gold = 300
+
+		reverse_add_opinion = {
+			target = liege
+			modifier = grateful_opinion
+			opinion = 40
+		}
+
+		# All other cartel members punished
+		every_living_character = {
+			limit = {
+				has_character_modifier = mt_cartel_member
+			}
+
+			market_manipulation_punishment_effect = yes
+
+			add_opinion = {
+				target = root
+				modifier = hatred_opinion
+				opinion = -100
+			}
+		}
+
+		if = {
+			limit = { has_trait = just }
+			add_stress = 50
+		}
+
+		custom_tooltip = mt_manipulation.0039.a.tt
+
+		ai_chance = {
+			base = 60
+		}
+	}
+
+	# Refuse - face punishment with dignity
+	option = {
+		name = mt_manipulation.0039.b
+
+		market_manipulation_punishment_effect = yes
+
+		# Cartel members respect your loyalty
+		every_living_character = {
+			limit = {
+				has_character_modifier = mt_cartel_member
+			}
+			add_opinion = {
+				target = root
+				modifier = loyal_opinion
+				opinion = 50
+			}
+		}
+
+		add_piety = 150
+
+		if = {
+			limit = { has_trait = just }
+			add_stress = -100
+		}
+
+		custom_tooltip = mt_manipulation.0039.b.tt
+
+		ai_chance = {
+			base = 40
+			modifier = {
+				add = 40
+				has_trait = just
+			}
+			modifier = {
+				add = -30
+				has_trait = craven
+			}
+		}
+	}
+}
+
+# 0040: Cartel dissolved - return to competition
+mt_manipulation.0040 = {
+	type = character_event
+	title = mt_manipulation.0040.t
+	desc = mt_manipulation.0040.desc
+	theme = stewardship
+
+	left_portrait = {
+		character = root
+		animation = thinking
+	}
+
+	trigger = {
+		has_character_modifier = mt_cartel_member
+	}
+
+	weight_multiplier = {
+		base = 100
+	}
+
+	# Accept the end of the cartel
+	option = {
+		name = mt_manipulation.0040.a
+
+		remove_character_modifier = mt_cartel_member
+
+		# Final payout
+		add_gold = 300
+
+		add_piety = 50
+
+		if = {
+			limit = { has_trait = greedy }
+			add_stress = 50
+		}
+
+		custom_tooltip = mt_manipulation.0040.a.tt
+
+		ai_chance = {
+			base = 70
+		}
+	}
+
+	# Try to reform the cartel secretly
+	option = {
+		name = mt_manipulation.0040.b
+
+		trigger = {
+			intrigue >= 14
+		}
+
+		remove_character_modifier = mt_cartel_member
+
+		# Risky reformation attempt
+		random_list = {
+			40 = {
+				# Success - new cartel formed
+				collusion_effect = yes
+				custom_tooltip = mt_manipulation.0040.b.success
+			}
+			60 = {
+				# Immediate investigation
+				add_character_flag = {
+					flag = under_market_investigation
+					years = 2
+				}
+				add_prestige = -100
+				custom_tooltip = mt_manipulation.0040.b.failure
+			}
+		}
+
+		ai_chance = {
+			base = 30
+			modifier = {
+				add = 30
+				has_trait = greedy
+			}
+			modifier = {
+				add = 20
+				intrigue >= 18
+			}
+		}
+	}
+}
